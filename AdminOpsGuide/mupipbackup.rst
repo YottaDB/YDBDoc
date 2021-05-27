@@ -237,7 +237,7 @@ The format of the RECORD qualifier is:
 * -RECORD replaces the previously RECORDed transaction identifier for the database file.
 
 +++++++++
--Replace
+-REPlace
 +++++++++
 
 Overwrites the existing destination files.
@@ -253,7 +253,7 @@ The format of the REPLACE qualifier is:
 * -REPLACE is compatible only with -DATABASE.
 
 ++++++++++++++
--REPLinstance
+-REPLInstance
 ++++++++++++++
 
 Specifies the target location to place the backup of the replication instance file.
@@ -275,17 +275,17 @@ Includes blocks changed since the last specified backup. The format of the SINCE
 
 .. code-block:: none
 
-   -S[INCE]={DATABASE|BYTESTREAM|RECORD}
+   -S[ince]={Database|Bytestream|Record}
 
-* D[ATABASE] - Backup all changes since the last MUPIP BACKUP -DATABASE.
+* D[atabase] - Backup all changes since the last MUPIP BACKUP DATABASE.
 
-* B[YTESTREAM] - Backup all changes since the last MUPIP BACKUP -BYTESTREAM.
+* B[ytestream] - Backup all changes since the last MUPIP BACKUP BYTESTREAM.
 
-* R[ECORD] - Backup all changes since the last MUPIP BACKUP -RECORD.
+* R[ecord] - Backup all changes since the last MUPIP BACKUP RECORD.
 
-By default, MUPIP BACKUP -BYTESTREAM operates as -SINCE=DATABASE.
+By default, MUPIP BACKUP BYTESTREAM operates as :code:`-since=database`.
 
-Incompatible with: -TRANSACTION.
+Incompatible with: TRANSACTION.
 
 ++++++++++++
 -Transaction

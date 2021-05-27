@@ -78,7 +78,7 @@ Most MUPIP operations require write access to the database files with which they
 | Operations                                                        | MUPIP Command                         | Database Access Requirements                                                        |
 +===================================================================+=======================================+=====================================================================================+
 | Backup database files                                             | MUPIP BACKUP                          | Backup never requires standalone access and concurrent write access is controlled by|
-|                                                                   |                                       | -[NO]ONLINE.                                                                        |
+|                                                                   |                                       | [NO]ONLINE.                                                                         |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
 | Create and initialize database files                              | MUPIP CREATE                          | Standalone Access                                                                   |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
@@ -92,8 +92,8 @@ Most MUPIP operations require write access to the database files with which they
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
 | Properly close database files when processes terminate abnormally.| MUPIP RUNDOWN                         | Standalone access                                                                   |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
-| Modify database and/or journal file characteristics               | MUPIP SET                             | Standalone access is required if the MUPIP SET command specifies -ACCESS_METHOD,    |
-|                                                                   |                                       | -GLOBAL_BUFFERS, -MUTEX_SLOTS, -LOCK_SPACE or -NOJOURNAL, or if any of the -JOURNAL |
+| Modify database and/or journal file characteristics               | MUPIP SET                             | Standalone access is required if the MUPIP SET command specifies ACCESS_METHOD,     |
+|                                                                   |                                       | GLOBAL_BUFFERS, MUTEX_SLOTS, LOCK_SPACE or NOJOURNAL, or if any of the JOURNAL      |
 |                                                                   |                                       | options ENABLE, DISABLE, or BUFFER_SIZE are specified.                              |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
 | Grow the size of BG database files                                | MUPIP EXTEND                          | Concurrent Access                                                                   |
@@ -105,7 +105,7 @@ Most MUPIP operations require write access to the database files with which they
 | Prevent updates to database files                                 | MUPIP FREEZE                          | Standalone access.                                                                  |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
 | Check the integrity of GDS databases                              | MUPIP INTEG                           | Concurrent access. However, standalone access is required if MUPIP INTEG specifies  |
-|                                                                   |                                       | -FILE                                                                               |
+|                                                                   |                                       | FILE                                                                                |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
 | Import data into databases                                        | MUPIP LOAD                            | Although MUPIP LOAD works with concurrent access, you should always assess the      |
 |                                                                   |                                       | significance of performing a MUPIP LOAD operation when an application is running    |
@@ -180,7 +180,7 @@ The format of the CREATE command is:
 
    CR[EATE] [-R[EGION]=region-name]
 
-The single optional -REGION qualifier specifies a region for which to create a database file.
+The single optional REGION qualifier specifies a region for which to create a database file.
 
 Note that one YottaDB database file grows to a maximum size of 1,040,187,392(992Mi) blocks. This means, for example, that with an 8KB block size, the maximum single database file size is 1,792GB (8KB*224M). Note that this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files.
 
@@ -258,7 +258,7 @@ The MUPIP DUMPFHEAD command displays information about one or more database file
 -FILE file-name
 ~~~~~~~~~~~~~~~~
 
-Specifies the name of the database file for the MUPIP DUMPFHEAD operation. -FILE does not require a Global Directory. The format of the FILE qualifier is:
+Specifies the name of the database file for the MUPIP DUMPFHEAD operation. FILE does not require a Global Directory. The format of the FILE qualifier is:
 
 .. code-block:: none
 
@@ -266,7 +266,7 @@ Specifies the name of the database file for the MUPIP DUMPFHEAD operation. -FILE
 
 * The database filename must include the absolute or relative path.
 
-* The -FILE qualifier is incompatible with the -REGION qualifier.
+* The FILE qualifier is incompatible with the REGION qualifier.
 
 ~~~~~~~~~~~~~~~~~~~~
 -REGION region-list
@@ -280,9 +280,9 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 * The region-list identifies the target of DUMPFHEAD. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
-* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. DUMPFHEAD -REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_.
+* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. DUMPFHEAD REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_.
 
-* The -REGION qualifier is incompatible with the -FILE qualifier.
+* The REGION qualifier is incompatible with the FILE qualifier.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP DUMPFHEAD
@@ -443,11 +443,11 @@ Backs up certain globals or extracts data from the database for use by another s
    ]
    {-ST[DOUT]|file-name}
 
-* By default, MUPIP EXTRACT uses -FORMAT=ZWR.
+* By default, the FORMAT of MUPIP EXTRACT is ZWR.
 
 * MUPIP EXTRACT uses the Global Directory to determine which database files to use.
 
-* MUPIP EXTRACT supports user collation routines. When used without the -FREEZE qualifier, EXTRACT may operate concurrently with normal YottaDB database access.
+* MUPIP EXTRACT supports user collation routines. When used without the FREEZE qualifier, EXTRACT may operate concurrently with normal YottaDB database access.
 
 * To ensure that MUPIP EXTRACT reflects a consistent application state, suspend the database updates to all regions involved in the extract, typically with the FREEZE qualifier, or backup the database with the ONLINE qualifier and extract files from the backup.
 
@@ -473,7 +473,7 @@ Specifies the format of the output file. The format of the FORMAT qualifier is:
 
 The format code is any one of the following:
 
-1. B[INARY] - Binary format, used for database reorganization or short term backups. MUPIP EXTRACT -FORMAT=BINARY works much faster than MUPIP EXTRACT -FORMAT=GO and MUPIP EXTRACT -FORMAT=ZWR. Note: There is no defined standard to transport binary data from one YottaDB implementation to another. Furthermore, YottaDB reserves the right to modify the binary format in new versions. The first record of a BINARY format data file contains the header label. The header label is 87 characters long. The following table illustrates the components of the header label.
+1. B[INARY] - Binary format, used for database reorganization or short term backups. MUPIP EXTRACT FORMAT=BINARY works much faster than MUPIP EXTRACT FORMAT=GO and MUPIP EXTRACT FORMAT=ZWR. Note: There is no defined standard to transport binary data from one YottaDB implementation to another. Furthermore, YottaDB reserves the right to modify the binary format in new versions. The first record of a BINARY format data file contains the header label. The header label is 87 characters long. The following table illustrates the components of the header label.
 
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
    | Characters                 | Explanation                                                                                                          |
@@ -500,7 +500,7 @@ The format code is any one of the following:
    |                            | For extracts in UTF-8 mode, YottaDB prefixes UTF-8 and a space to -LABEL.                                            |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
 
-2. GO - Global Output format, used for files to transport or archive. -FORMAT=GO stores the data in record pairs. Each global node produces two records - the first contains the key and the second contains the value. GO format is only supported in M mode.
+2. GO - Global Output format, used for files to transport or archive. FORMAT=GO stores the data in record pairs. Each global node produces two records - the first contains the key and the second contains the value. GO format is only supported in M mode.
 
 3. ZWR - ZWRITE format, used for files to transport or archive that may contain non-graphical information. Each global node produces one record with both a key and data. Note that for non-ASCII data, M mode and UTF-8 mode extracts can differ, as the definition of printable characters differs.
 
@@ -533,7 +533,7 @@ By default, MUPIP EXTRACT does not "freeze" regions during operation.
 -LABEL
 ~~~~~~~~
 
-Specifies the text string that becomes the first record in the output file. MUPIP EXTRACT -FORMAT=BINARY truncates the label text to 32 characters. The format of the LABEL qualifier is:
+Specifies the text string that becomes the first record in the output file. MUPIP EXTRACT FORMAT=BINARY truncates the label text to 32 characters. The format of the LABEL qualifier is:
 
 .. code-block:: none
 
@@ -541,7 +541,7 @@ Specifies the text string that becomes the first record in the output file. MUPI
 
 * By default, EXTRACT uses the label "MUPIP EXTRACT."
 
-* For more detailed information about the -FORMAT=BINARY header label, refer to the description of EXTRACT -FORMAT=BINARY.
+* For more detailed information about the FORMAT=BINARY header label, refer to the description of EXTRACT FORMAT=BINARY.
 
 ~~~~~~
 -LOG
@@ -559,19 +559,19 @@ By default, EXTRACT operates -LOG.
 -NULL_IV
 ~~~~~~~~~
 
-Creates an encrypted binary extract with null IVs from a database with non-null IVs, which can be restored to a version that does not support non-null IVs. The format of the -NULL_IV qualifier is:
+Creates an encrypted binary extract with null IVs from a database with non-null IVs, which can be restored to a version that does not support non-null IVs. The format of the NULL_IV qualifier is:
 
 .. code-block:: none
 
    -[NO]NULL_IV
 
-* Older versions of YottaDB used empty (all zeros or "NULL_IV") initialization vectors(IVs) to encrypt or decrypt -FORMAT="BINARY" extracts.
+* Older versions of YottaDB used empty (all zeros or "NULL_IV") initialization vectors(IVs) to encrypt or decrypt FORMAT="BINARY" extracts.
 
 * The current and later versions use non-zero IVs.
 
 * Use the NULL_IV qualifier only on encrypted databases to create an encrypted binary extract in GDS BINARY EXTRACT LEVEL 8 format. This format can load data on any encrypted YottaDB database created with an older version.
 
-* The default is -NONULL_IV which produces a binary extract in GDS BINARY EXTRACT LEVEL 9 format.
+* The default is NONULL_IV which produces a binary extract in GDS BINARY EXTRACT LEVEL 9 format.
 
 ~~~~~~~
 -REGION
@@ -595,7 +595,7 @@ Specifies globals for a MUPIP EXTRACT operation. The format of the SELECT qualif
 
    -S[ELECT]= global-specification
 
-* By default, EXTRACT selects all globals, as if it had the qualifier -SELECT=*
+* By default, EXTRACT selects all globals, as if it had the qualifier SELECT=*
 
 * The caret symbol (^) in the specification of the global name is optional.
 
@@ -677,7 +677,7 @@ This command instructs EXTRACT to dump the global ^Tyrannosaurus to the device (
 FREEZE
 ++++++++++++++
 
-Temporarily suspends (freezes) updates to the database after ensuring a consistent state between memory and secondary storage, which, with -ACCESS_METHOD=BG, means after flushing global buffers. If you prefer a non-YottaDB utility to perform a backup or reorganization, you might use this facility to provide standalone access to your YottaDB database. You might use MUPIP FREEZE to suspend (and later resume) database updates for creating mirrored disk configuration or re-integrating a mirror.
+Temporarily suspends (freezes) updates to the database after ensuring a consistent state between memory and secondary storage, which, with ACCESS_METHOD=BG, means after flushing global buffers. If you prefer a non-YottaDB utility to perform a backup or reorganization, you might use this facility to provide standalone access to your YottaDB database. You might use MUPIP FREEZE to suspend (and later resume) database updates for creating mirrored disk configuration or re-integrating a mirror.
 
 BACKUP, INTEG, and REORG operations may implicitly freeze and unfreeze database regions. However, for most operations, this freeze/unfreeze happens internally and is transparent to the application.
 
@@ -691,21 +691,21 @@ The format of the MUPIP FREEZE command is:
 
 * MUPIP FREEZE waits for up to one minute so that concurrent KILL or MUPIP REORG operations can complete. If the KILL or MUPIP REORG commands do not complete within one minute, MUPIP FREEZE unfreezes any regions it had previously marked as frozen and terminates with an error.
 
-* To ensure that a copy or reorganized version of a database file contains a consistent set of records, concurrent MUPIP utilities, such as BACKUP (without the ONLINE qualifier) and EXTRACT, include mechanisms to ensure that the database does not change while the MUPIP utility is performing an action. YottaDB recommends the use of the -ONLINE qualifier with BACKUP.
+* To ensure that a copy or reorganized version of a database file contains a consistent set of records, concurrent MUPIP utilities, such as BACKUP (without the ONLINE qualifier) and EXTRACT, include mechanisms to ensure that the database does not change while the MUPIP utility is performing an action. YottaDB recommends the use of the ONLINE qualifier with BACKUP.
 
-* A MUPIP FREEZE can be removed only by the user who sets the FREEZE or by using -OVERRIDE.
+* A MUPIP FREEZE can be removed only by the user who sets the FREEZE or by using OVERRIDE.
 
-* A MUPIP FREEZE -ON can specify either -NOONLINE, the default, or -ONLINE, and if -ONLINE, can specify either -AUTORELEASE, the default, or -NOAUTORELEASE.
+* A MUPIP FREEZE ON can specify either NOONLINE, the default, or ONLINE, and if ONLINE, can specify either AUTORELEASE, the default, or NOAUTORELEASE.
 
-* A FREEZE specifying -ONLINE attempts to minimize the impact of the FREEZE on concurrently updating processes.
+* A FREEZE specifying ONLINE attempts to minimize the impact of the FREEZE on concurrently updating processes.
 
-* A FREEZE specifying -ONLINE -AUTORELEASE allows updates to continue immediately when YottaDB needs to update the database file. The processes release the freeze if they cannot find global buffers to do their work.
+* A FREEZE specifying ONLINE AUTORELEASE allows updates to continue immediately when YottaDB needs to update the database file. The processes release the freeze if they cannot find global buffers to do their work.
 
-* After MUPIP FREEZE -ON -NOONLINE, processes that are attempting updates "hang" until the FREEZE is removed by the MUPIP FREEZE -OFF command or DSE. Make sure that procedures for using MUPIP FREEZE, whether manual or automated, include provisions for removing the FREEZE in all appropriate cases, including when errors disrupt the normal flow.
+* After MUPIP FREEZE ON NOONLINE, processes that are attempting updates "hang" until the FREEZE is removed by the MUPIP FREEZE OFF command or DSE. Make sure that procedures for using MUPIP FREEZE, whether manual or automated, include provisions for removing the FREEZE in all appropriate cases, including when errors disrupt the normal flow.
 
 * MUPIP FREEZE sends a DBFREEZEON/DBFREEZEOFF message to the system log for each region whose freeze state is changed.
 
-* A -RECOVER/-ROLLBACK for a database reverts to a prior database update state. Therefore, a -RECOVER/-ROLLBACK immediately after a MUPIP FREEZE -ON removes the freeze. However, -RECOVER/-ROLLBACK does not succeed if there are processes attached (for example when a process attempts a database update immediately after a MUPIP FREEZE -ON) to the database.
+* A RECOVER/ROLLBACK for a database reverts to a prior database update state. Therefore, a RECOVER/ROLLBACK immediately after a MUPIP FREEZE ON removes the freeze. However, RECOVER/ROLLBACK does not succeed if there are processes attached (for example when a process attempts a database update immediately after a MUPIP FREEZE ON) to the database.
 
 FREEZE must include one of the qualifiers:
 
@@ -735,11 +735,11 @@ The format of the OFF qualifier is:
 
    OF[F]
 
-* A FREEZE -OFF which turns off a FREEZE -ONLINE -AUTORELEASE produces a OFRZNOTHELD warning to indicate that the freeze was automatically released and therefore did not protect whatever concurrent actions it was intended to guard.
+* A FREEZE OFF which turns off a FREEZE ONLINE AUTORELEASE produces a OFRZNOTHELD warning to indicate that the freeze was automatically released and therefore did not protect whatever concurrent actions it was intended to guard.
 
-* When used with -OVERRIDE, -OFF stops a freeze operation set by a process with a different userid.
+* When used with OVERRIDE, OFF stops a freeze operation set by a process with a different userid.
 
-* Incompatible with: -ON, -RECORD
+* Incompatible with: ON, RECORD
 
 ~~~~
 -ON
@@ -751,7 +751,7 @@ Specifies the start of a MUPIP FREEZE operation. The format of the ON qualifier 
 
    -ON
 
-Incompatible with: -OFF, -OVERRIDE
+Incompatible with: OFF, OVERRIDE
 
 ~~~~~~~~~~~~~~~~~~
 -[NO]A[UTORELEASE]
@@ -763,29 +763,29 @@ Controls the behavior of a FREEZE specified with -ONLINE when YottaDB must write
 
    -[NO]A[UTORELEASE]
 
-* -AUTORELEASE, the default, causes YottaDB to release the freeze if it needs to update the file before a FREEZE -OFF.
+* AUTORELEASE, the default, causes YottaDB to release the freeze if it needs to update the file before a FREEZE OFF.
 
-* -NOAUTORELEASE causes YottaDB to hold off actions that need to update the database file until someone issues a MUPIP FREEZE -OFF.
+* NOAUTORELEASE causes YottaDB to hold off actions that need to update the database file until someone issues a MUPIP FREEZE OFF.
 
-* -The actions that require YottaDB to write to the database file are:
+* The actions that require YottaDB to write to the database file are:
 
   * Insufficient global buffers to hold updates - YottaDB must flush buffers to make space to do any additional updates
 
   * Insufficient space in the database to hold updates - YottaDB must extend the file
 
-  * The journal file reaches its maximum size or someone issues a MUPIP SET -JOURNAL command - YottaDB must create a new journal file
+  * The journal file reaches its maximum size or someone issues a MUPIP SET JOURNAL command - YottaDB must create a new journal file
 
   * An epoch comes due - YottaDB must create a checkpoint
 
   * Someone issues a MUPIP BACKUP command - YottaDB must record state information to mark the beginning of the backup
 
-* When an -AUTORELEASE abandons a FREEZE, any actions that depend on the stability of the database file on secondary storage, such as a database copy, lose that protection and are not reliable, so they likely need to be repeated at a time when an -AUTORELEASE is less likely or when -NOONLINE is more appropriate.
+* When an AUTORELEASE abandons a FREEZE, any actions that depend on the stability of the database file on secondary storage, such as a database copy, lose that protection and are not reliable, so they likely need to be repeated at a time when an AUTORELEASE is less likely or when NOONLINE is more appropriate.
 
-* An -AUTORELEASE action produces an OFRZAUTOREL message in the operator log.
+* An AUTORELEASE action produces an OFRZAUTOREL message in the operator log.
 
-* An -AUTORELEASE action requires a FREEZE -OFF to reestablish a normal database state.
+* An AUTORELEASE action requires a FREEZE OFF to reestablish a normal database state.
 
-* Incompatible with: -OFF, -NOONLINE
+* Incompatible with: OFF, NOONLINE
 
 ~~~~~~~~
 -ONLINE
@@ -797,25 +797,25 @@ Controls the potential impact of a FREEZE on concurrently updating processes. Th
 
    -[NO]ONL[INE]
 
-* ON -NOONLINE, the default, causes the freeze to last until OFF, and makes management of the FREEZE straightforward.
+* ON NOONLINE, the default, causes the freeze to last until OFF, and makes management of the FREEZE straightforward.
 
-* ON -ONLINE, causes YottaDB to attempt to minimize the impact of the FREEZE on concurrently updating processes by taking a number of actions, as appropriate:
+* ON ONLINE, causes YottaDB to attempt to minimize the impact of the FREEZE on concurrently updating processes by taking a number of actions, as appropriate:
 
   * Switching journal files to provide maximum space
   * Performing an epoch to provide maximum time to the next epoch
   * Flushing the global buffers to make all available to hold updates
-  * Incompatible with: -AUTORELEASE, -OFF
+  * Incompatible with: AUTORELEASE, OFF
 
-* After performing these preparations, -ONLINE allows updating processes to make updates to global buffers but defer flushing them to the database file.
+* After performing these preparations, ONLINE allows updating processes to make updates to global buffers but defer flushing them to the database file.
 
-* -ONLINE cannot apply to MM databases, so a FREEZE -ONLINE skips any MM regions it encounters.
+* ONLINE cannot apply to MM databases, so a FREEZE ONLINE skips any MM regions it encounters.
 
-* Refer to -AUTORELEASE above for additional information.
+* Refer to AUTORELEASE above for additional information.
 
-* Incompatible with: -OFF
+* Incompatible with: OFF
 
 .. note::
-   If any database region is nearly full, run MUPIP EXTEND before attempting a MUPIP FREEZE -ON -ONLINE. Otherwise, should a database file extension become necessary after the MUPIP FREEZE takes effect, the freeze will be released (if -AUTORELEASE was specified or implicitly assumed by default) or all updates will be blocked (if -NOAUTORELEASE was specified) effectively turning the -ONLINE freeze into a -NOONLINE freeze.
+   If any database region is nearly full, run MUPIP EXTEND before attempting a MUPIP FREEZE ON ONLINE. Otherwise, should a database file extension become necessary after the MUPIP FREEZE takes effect, the freeze will be released (if AUTORELEASE was specified or implicitly assumed by default) or all updates will be blocked (if NOAUTORELEASE was specified) effectively turning the ONLINE freeze into a NOONLINE freeze.
 
 ~~~~~~~~~~
 -OVERRIDE
@@ -829,7 +829,7 @@ Release a freeze set by a process with a different userid. YottaDB provides OVER
 
 * OVERRIDE should not be necessary (and may even be dangerous) in most schemes.
 
-* Incompatible with: -AUTORELEASE, -ON, -ONLINE, -RECORD
+* Incompatible with: AUTORELEASE, ON, ONLINE, RECORD
 
 ~~~~~~~~
 -RECORD
@@ -843,11 +843,11 @@ The format of the RECORD qualifier is:
 
    -R[ECORD]
 
-* You might use -RECORD to integrate MUPIP BACKUP -BYTESTREAM with an external backup mechanism.
+* You might use RECORD to integrate MUPIP BACKUP BYTESTREAM with an external backup mechanism.
 
-* -RECORD replaces the previously RECORDed transaction identifier for the database file.
+* RECORD replaces the previously RECORDed transaction identifier for the database file.
 
-* Incompatiable with: -OFF and -OVERRIDE.
+* Incompatiable with: OFF and OVERRIDE.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP FREEZE
@@ -879,7 +879,7 @@ Example:
    $ mupip freeze -off
    $ set -e
 
-The set +e command instructs the shell to attempt all commands in the sequence , regardless of errors encountered by any command. This ensures that the freeze -off is processed even if the tar command fails. FREEZE prevents updates to all database files identified by the current Global Directory. The -record qualifier specifies that the current transaction in each database be stored in the RECORD portion of the database file header. The tar command creates a tape archive file on the device /dev/tape, containing all the files from /prod/app that have an extension of .dat. Presumably all database files in the current Global Directory are stored in that directory, with that extension. The second FREEZE command re-enables updates that were suspended by the first FREEZE. The set -e command re-enables normal error handling by the shell.
+The set +e command instructs the shell to attempt all commands in the sequence , regardless of errors encountered by any command. This ensures that the FREEZE OFF is processed even if the tar command fails. FREEZE prevents updates to all database files identified by the current Global Directory. The RECORD qualifier specifies that the current transaction in each database be stored in the RECORD portion of the database file header. The tar command creates a tape archive file on the device :code:`/dev/tape`, containing all the files from :code:`/prod/app` that have an extension of .dat. Presumably all database files in the current Global Directory are stored in that directory, with that extension. The second FREEZE command re-enables updates that were suspended by the first FREEZE. The :code:`set -e` command re-enables normal error handling by the shell.
 
 Example:
 
@@ -905,7 +905,7 @@ The format of the MUPIP FTOK command is:
 -DB
 ~~~
 
-Specifies that the file-name is a database file. By default, MUPIP FTOK uses -DB.
+Specifies that the file-name is a database file. By default, MUPIP FTOK uses DB.
 
 ~~~~~~~~~
 -JNLPOOL
@@ -958,8 +958,6 @@ Sends an interrupt signal [POSIX] SIGUSR1 to the specified process, whose signal
 
 * The implementation of INTRPT uses signals, and on Linux a non-root process can only send signals to other processes of the same userid. Superuser privilege is required to send signals to processes of other userids, regardless of group membership.
 
-.. _mupip-journal:
-
 ++++++++++
 JOURNAL
 ++++++++++
@@ -999,7 +997,7 @@ The format of the LOAD command is:
 
 * For information on loading with an M "percent utility," refer to the `%GI section of the "M Utility Routines" chapter in the Programmer's Guide <../ProgrammersGuide/utility.html#gi-util>`_. LOAD is typically faster, but the %GI utility can be customized.
 
-* Press <CTRL-C> to produce a status message from LOAD. Entering <CTRL-C> twice in quick succession stops LOAD. A LOAD that is manually stopped or stops because of an internal error is incomplete and may lack application level integrity, but will not adversely affect the database structure unless terminated with a kill -9.
+* Press <CTRL-C> to produce a status message from LOAD. Entering <CTRL-C> twice in quick succession stops LOAD. A LOAD that is manually stopped or stops because of an internal error is incomplete and may lack application level integrity, but will not adversely affect the database structure unless terminated with a :code:`kill -9`.
 
 .. note::
    The MUPIP EXTRACT or MUPIP LOAD procedure for large databases is time consuming due to the volume of data that has to be converted from binary to ZWR format (on source) and vice versa (on target). One must also consider the fact that the extracted file can be very large for a large database. Users must ensure there is adequate storage space to support the size of the extract file and the space occupied by the source and target databases. In order to reduce the total time and space it takes to transfer database content from one endian platform to another, it is efficient to convert the endian format in-place for a database and transfer the converted database. See MUPIP ENDIANCVT for more information on converting the endian format of a database file.
@@ -1022,17 +1020,17 @@ The format codes are:
 
 * MUPIP LOAD detects the file format (BINARY/ZWR/GO) based on the file header of the extracted files from MUPIP EXTRACT, ^%GO and DSE.
 
-* -FORMAT=BINARY only applies to GDS files. A BINARY format file loads significantly faster than a GO or ZWR format file. -FORMAT=BINARY works with data in a proprietary format. -FORMAT=BINARY has one header record, therefore LOAD -FORMAT=BINARY starts active work with record number two (2).
+* :code:`-format=binary` only applies to GDS files. A BINARY format file loads significantly faster than a GO or ZWR format file. FORMAT=BINARY works with data in a proprietary format. FORMAT=BINARY has one header record, therefore LOAD FORMAT=BINARY starts active work with record number two (2).
 
-* -FORMAT={ZWR|GO} applies to text files produced by tools such as MUPIP EXTRACT or %GO.
+* FORMAT={ZWR|GO} applies to text files produced by tools such as MUPIP EXTRACT or %GO.
 
 * For FORMAT={ZWR|GO} UTF-8 files not produced by MUPIP EXTRACT or %GO, the first line of the label must contain the case insensitive text "UTF-8".
 
-* For all -FORMAT={ZWR|GO} files not produced by MUPIP EXTRACT or %GO, the second line should contain the case insensitive text "ZWR" for zwr format or "GLO" for GO format and the two label lines must contain a total of more than 10 characters.
+* For all FORMAT={ZWR|GO} files not produced by MUPIP EXTRACT or %GO, the second line should contain the case insensitive text "ZWR" for zwr format or "GLO" for GO format and the two label lines must contain a total of more than 10 characters.
 
-* -FORMAT=GO expects the data in record pairs. Each global node requires one record for the key and one for the data.
+* FORMAT=GO expects the data in record pairs. Each global node requires one record for the key and one for the data.
 
-* -FORMAT=ZWR expects the data for each global node in a single record.
+* FORMAT=ZWR expects the data for each global node in a single record.
 
 ~~~~~~~
 -BEGIN
@@ -1045,12 +1043,12 @@ Specifies the record number of the input file with which LOAD should begin. Dire
    -BE[GIN]=integer
 
 .. note::
-   Always consider the number of header records for choosing a -BEGIN point. See FORMAT qualifier for more information.
+   Always consider the number of header records for choosing a BEGIN point. See FORMAT qualifier for more information.
 
 
-* For -FORMAT=GO input, the value is usually an odd number. As -FORMAT=BINARY requires important information from the header, this type of load requires an intact file header regardless of the -BEGIN value.
+* For FORMAT=GO input, the value is usually an odd number. As FORMAT=BINARY requires important information from the header, this type of load requires an intact file header regardless of the BEGIN value.
 
-* For -FORMAT = ZWR input, each record contains a complete set of reference and data information. The beginning values are not restricted, except to allow two records for the header.
+* For FORMAT=ZWR input, each record contains a complete set of reference and data information. The beginning values are not restricted, except to allow two records for the header.
 
 * By default, LOAD starts at the beginning of the input file.
 
@@ -1058,13 +1056,13 @@ Specifies the record number of the input file with which LOAD should begin. Dire
 -END
 ~~~~~
 
-Specifies the record number of the input file at which LOAD should stop. -END=integer must be greater than the -BEGIN=integer for LOAD to operate. LOAD terminates after processing the record of the number specified by -END or reaching the end of the input file. The format of the END qualifier is:
+Specifies the record number of the input file at which LOAD should stop. END integer value must be greater than the BEGIN integer value for LOAD to operate. LOAD terminates after processing the record of the number specified by END or reaching the end of the input file. The format of the END qualifier is:
 
 .. code-block:: none
 
    -E[ND]=integer
 
-The value of -FORMAT=GO input should normally be an even number. By default, LOAD continues to the end of the input file.
+The value of FORMAT=GO input should normally be an even number. By default, LOAD continues to the end of the input file.
 
 ~~~~~~~~~~~~
 -FILLFACTOR
@@ -1080,7 +1078,7 @@ Specifies the quantity of data stored in a database block. Subsequent run-time u
 
 * Users having database performance issues or a high rate of database updates must examine the defined FILL_FACTORs. Unless the application only uses uniform records, which is not typical for most applications, FILL_FACTORs do not work precisely.
 
-* By default, LOAD uses -FILL_FACTOR=100 for maximum data density.
+* By default, LOAD uses FILL_FACTOR=100 for maximum data density.
 
 .. note::
    FILL_FACTOR is useful when updates add or grow records reasonably uniformly across a broad key range. If updates are at ever-ascending or ever-descending keys, or if the record set and record sizes are relatively static in the face of updates, FILL_FACTOR does not provide much benefit.
@@ -1097,9 +1095,9 @@ Notifies MUPIP LOAD to load the extract file even if it was created by a MUPIP p
 
 .. note::
 
-   As using -IGNORECHSET bypasses YottaDB checks, use it only if you are sure that the extract file can be loaded correctly.
+   As using IGNORECHSET bypasses YottaDB checks, use it only if you are sure that the extract file can be loaded correctly.
 
--IGNORECHSET was added to YottaDB effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+IGNORECHSET was added to YottaDB effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ~~~~~~~~~
 -ONERROR
@@ -1200,7 +1198,7 @@ If the optional parameter dir1 is not specified, MUPIP RCTLDUMP dumps informatio
 
 * Lines of the form rec#... indicate the record number in the relinkctl file. Each relinkctl file can store a maximum of 1,000,000 records, i.e., the maximum number of routines in a directory with auto-relink enabled is one million. Each record stores a routine name (rtnname:), the current cycle for this object file record entry (cycle:) which gets bumped on every ZLINK or ZRUPDATE command, the hash of the object file last loaded for this routine name (objhash:), the number of different versions of object files loaded in the Rtnobj shared memory segments with this routine name (numvers:), the total byte-length of the one or more versions of object files currently loaded with this routine name (objlen:), the total length used up in shared memory for these object files where YottaDB allocates each object file a rounded-up perfect 2-power block of memory (shmlen:).
 
-Given a relinkctl file name, one can find the corresponding directory path using the Unix "strings" command on the Relinkctl file. For example, "strings /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002", corresponding to the above MUPIP RCTLDUMP output example, would output "/obj" the corresponding directory name.
+Given a relinkctl file name, one can find the corresponding directory path using the Unix "strings" command on the Relinkctl file. For example, :code:`strings /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002`, corresponding to the above MUPIP RCTLDUMP output example, would output :code:`/obj` the corresponding directory name.
 
 Example:
 
@@ -1252,10 +1250,10 @@ The format of the MUPIP REORG command is:
 
 * MUPIP REORG does not change the logical contents of the database, and can run on either the originating instance or replicating instance of an LMS application. In such cases, resuming REORGs in process should be part of the batch restart. See the `"Database Replication" chapter <./dbrepl.html>`_ for more information about running REORG on a dual site application.
 
-* Use MUPIP STOP (or <Ctrl-C> for an interactive REORG) to terminate a REORG process. Unless terminated with a kill -9, a REORG terminated by operator action or error is incomplete but does not adversely affect the database.
+* Use MUPIP STOP (or <Ctrl-C> for an interactive REORG) to terminate a REORG process. Unless terminated with a :code:`kill -9`, a REORG terminated by operator action or error is incomplete but does not adversely affect the database.
 
 .. note::
-   REORG focuses on optimum adjacency and a change to even a single block can cause it to perform a large number of updates with only marginal benefit. Therefore, YottaDB recommends not running successive REORGs close together in time, as much as can provide minimal benefit for a significant increase in database and journal activity. For the same reason, YottaDB recommends careful research and planning before using the -RESUME qualifier or complex uses of -EXCLUDE and -SELECT.
+   REORG focuses on optimum adjacency and a change to even a single block can cause it to perform a large number of updates with only marginal benefit. Therefore, YottaDB recommends not running successive REORGs close together in time, as much as can provide minimal benefit for a significant increase in database and journal activity. For the same reason, YottaDB recommends careful research and planning before using the RESUME qualifier or complex uses of EXCLUDE and SELECT.
 
 Assume two scenarios of putting values of ^x(1) to ^x(10000). In the first scenarios, fill values in a sequential manner. In the second scenario, enter values for odd subscripts and then enter values for the even subscripts.
 
@@ -1324,7 +1322,7 @@ The optional qualifiers for MUPIP REORG are:
 -DOWNGRADE
 ~~~~~~~~~~~~
 
-Changes the database blocks to V4 format of the upstream code base. The transaction number fields are reduced to 32 bits. In the event the CTN is too large to fit in 32 bits, a mupip integ -tn_reset will need to be performed prior to performing the mupip reorg -downgrade. The blks_to_upgrd counter increases to signify a downgrading database.
+Changes the database blocks to V4 format of the upstream code base. The transaction number fields are reduced to 32 bits. In the event the CTN is too large to fit in 32 bits, a MUPIP INTEG TN_RESET will need to be performed prior to performing the MUPIP REORG DOWNGRADE. The blks_to_upgrd counter increases to signify a downgrading database.
 
 .. code-block:: bash
 
@@ -1358,15 +1356,15 @@ Encrypts an unencrypted database or changes the encryption key of a database whi
 
    -ENCR[YPT]=<key>
 
-MUPIP provides <key> to the encryption plugin. The reference implementation of the plugin expects a key with the specified name in the encryption configuration file identified by $ydb_crypt_config. The configuration file must contain an entry in the database section for each database file mapping to a region specified in <region-list> that names the specified key as its key. The -ENCRYPT flag is incompatible with all other command line flags of MUPIP REORG except -REGION, and performs no operation other than changing the encryption key. If the specified key is already the encryption key of a database region, MUPIP REORG -ENCRYPT moves on to the next region after displaying a message (on stderr, where MUPIP operations send their output).
+MUPIP provides <key> to the encryption plugin. The reference implementation of the plugin expects a key with the specified name in the encryption configuration file identified by $ydb_crypt_config. The configuration file must contain an entry in the database section for each database file mapping to a region specified in <region-list> that names the specified key as its key. The ENCRYPT flag is incompatible with all other command line flags of MUPIP REORG except REGION, and performs no operation other than changing the encryption key. If the specified key is already the encryption key of a database region, MUPIP REORG ENCRYPT moves on to the next region after displaying a message (on stderr, where MUPIP operations send their output).
 
-As MUPIP REORG -ENCRYPT reads, re-encrypts, and writes every in-use block in each database file, its operations take a material amount of time on the databases of typical applications, and furthermore add an additional IO load to the system on which it runs. You can use the environment variable ydb_poollimit to ameliorate, but not eliminate the impact, at the cost of extending execution times. To minimize impact on production instances, YottaDB recommends running this operation on replicating secondary instances, rather than on originating primary instances.
+As MUPIP REORG ENCRYPT reads, re-encrypts, and writes every in-use block in each database file, its operations take a material amount of time on the databases of typical applications, and furthermore add an additional IO load to the system on which it runs. You can use the environment variable ydb_poollimit to ameliorate, but not eliminate the impact, at the cost of extending execution times. To minimize impact on production instances, YottaDB recommends running this operation on replicating secondary instances, rather than on originating primary instances.
 
--ENCRYPT switches the journal file for each database region when it begins operating on it, and again when it completes, and also records messages in the syslog for both events.
+ENCRYPT switches the journal file for each database region when it begins operating on it, and again when it completes, and also records messages in the syslog for both events.
 
-As is the case under normal operation when MUPIP REORG -ENCRYPT is not active, journaled databases are protected against system crashes when MUPIP REORG -ENCRYPT is in operation: MUPIP JOURNAL -ROLLBACK / -RECOVER recovers journaled database regions (databases that use NOBEFORE journaling continue to require -RECOVER / -ROLLBACK -FORWARD).
+As is the case under normal operation when MUPIP REORG ENCRYPT is not active, journaled databases are protected against system crashes when MUPIP REORG ENCRYPT is in operation: MUPIP JOURNAL ROLLBACK/RECOVER recovers journaled database regions (databases that use NOBEFORE journaling continue to require RECOVER/ROLLBACK FORWARD).
 
-Because a database file utilizes two keys while MUPIP REORG -ENCRYPT is underway, the database section of the configuration file provides for a single database file entry to specify multiple keys. For example, if the keys of database regions CUST and HIST, mapping to database files cust.dat and hist.dat in directory /var/myApp/prod, are to be changed from key1 to key2 using the command:
+Because a database file utilizes two keys while MUPIP REORG ENCRYPT is underway, the database section of the configuration file provides for a single database file entry to specify multiple keys. For example, if the keys of database regions CUST and HIST, mapping to database files cust.dat and hist.dat in directory /var/myApp/prod, are to be changed from key1 to key2 using the command:
 
 .. code-block:: none
 
@@ -1395,7 +1393,7 @@ then the database section of the configuration file must at least have the follo
 
 In other words, each database file entry can have multiple keys, and a key can be associated with multiple database files. With a configuration file that has multiple keys associated with the same database file, MUPIP CREATE uses the last entry. Other database operations use whichever key associated with the database file has a hash matching one in the database file header, reporting an error if no key matches. To improve efficiency when opening databases, you can delete entries for keys that are no longer used from the configuration file.
 
-MUPIP REORG -ENCR[YPT] can encrypt an unencrypted database only if the following command:
+MUPIP REORG ENCR[YPT] can encrypt an unencrypted database only if the following command:
 
 .. code-block:: none
 
@@ -1403,7 +1401,7 @@ MUPIP REORG -ENCR[YPT] can encrypt an unencrypted database only if the following
 
 has previously marked the database "encryptable".
 
-The command requires standalone access to the database.  It performs some basic encryption setup checks and requires the ydb_passwd environment variable to be defined and the GNUPGHOME environment variable to point to a valid directory in the environment. Just as encrypted databases use global buffers in pairs (for encrypted and unencrypted versions of blocks), a database marked as encryptable has global buffers allocated in pairs (i.e., the actual number of global buffers is twice the number reported by DSE DUMP -FILEHEADER) and requires correspondingly larger shared memory segments. To revert unencrypted but encryptable databases back to the "unencryptable" state, use the command:
+The command requires standalone access to the database.  It performs some basic encryption setup checks and requires the ydb_passwd environment variable to be defined and the GNUPGHOME environment variable to point to a valid directory in the environment. Just as encrypted databases use global buffers in pairs (for encrypted and unencrypted versions of blocks), a database marked as encryptable has global buffers allocated in pairs (i.e., the actual number of global buffers is twice the number reported by DSE DUMP FILEHEADER) and requires correspondingly larger shared memory segments. To revert unencrypted but encryptable databases back to the "unencryptable" state, use the command:
 
 .. code-block:: none
 
@@ -1417,27 +1415,27 @@ The above command also requires standalone access, and the result depends on the
 
 * prohibits encryption if the database is not encrypted.
 
-Under normal operation, a database file has only one key. Upon starting a MUPIP REORG -ENCRYPT to change the key, there are two keys, both of whose hashes YottaDB stores in the database file header. With a MUPIP REORG -ENCRYPT operation underway to change the key, normal database operations can continue, except for another MUPIP REORG -ENCRYPT or MUPIP EXTRACT in binary format. Other MUPIP operations, such as MUPIP BACKUP and MUPIP EXTRACT in ZWR format can occur. A MUPIP REORG -ENCRYPT operation can resume after an interruption, either unintentional, such as after a system crash and recovery, or intentional, i.e., an explicit MUPIP STOP of the MUPIP REORG -ENCRYPT process. To resume the REORG operation, reissue the original command, including the key parameter. (Note that supplying a key other than the one used in the original command produces an error.)
+Under normal operation, a database file has only one key. Upon starting a MUPIP REORG ENCRYPT to change the key, there are two keys, both of whose hashes YottaDB stores in the database file header. With a MUPIP REORG ENCRYPT operation underway to change the key, normal database operations can continue, except for another MUPIP REORG ENCRYPT or MUPIP EXTRACT in binary format. Other MUPIP operations, such as MUPIP BACKUP and MUPIP EXTRACT in ZWR format can occur. A MUPIP REORG ENCRYPT operation can resume after an interruption, either unintentional, such as after a system crash and recovery, or intentional, i.e., an explicit MUPIP STOP of the MUPIP REORG ENCRYPT process. To resume the REORG operation, reissue the original command, including the key parameter. (Note that supplying a key other than the one used in the original command produces an error.)
 
-After the MUPIP REORG -ENCRYPT process completes, subsequent MUPIP REORG -ENCRYPT operations on the same region(s) are disallowed until the following command is run:
+After the MUPIP REORG ENCRYPT process completes, subsequent MUPIP REORG ENCRYPT operations on the same region(s) are disallowed until the following command is run:
 
 .. code-block:: none
 
    MUPIP SET -ENCRYPTIONCOMPLETE -REGION <region-list>
 
-Blocking subsequent MUPIP REORG -ENCRYPT operations after one completes, provides time for a backup of the entire database before enabling further key changes. MUPIP SET -ENCRYPTIONCOMPLETE reports an error for any database region for which MUPIP REORG -ENCRYPT has not completed.
+Blocking subsequent MUPIP REORG ENCRYPT operations after one completes, provides time for a backup of the entire database before enabling further key changes. MUPIP SET ENCRYPTIONCOMPLETE reports an error for any database region for which MUPIP REORG ENCRYPT has not completed.
 
 .. note::
    YottaDB recommends rotating (changing) the encryption key of the database for better security. The frequency of encryption key rotation depends on your security requirements and policies.
 
 .. note::
-   MUPIP REORG -ENCRYPT does not enable switching between encryption algorithms. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: “Database Replication” <./dbrepl.html>`_ for more complete documentation.
+   MUPIP REORG ENCRYPT does not enable switching between encryption algorithms. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: “Database Replication” <./dbrepl.html>`_ for more complete documentation.
 
 ~~~~~~~~~
 -EXCLUDE
 ~~~~~~~~~
 
-Specifies that REORG not handle blocks that contain information about the globals in the associated list–this means they are neither reorganized nor swapped in the course of reorganizing other globals; -EXCLUDE can reduce the efficiency of REORG because it complicates and interferes with the block swapping actions that try to improve adjacency.
+Specifies that REORG not handle blocks that contain information about the globals in the associated list–this means they are neither reorganized nor swapped in the course of reorganizing other globals; EXCLUDE can reduce the efficiency of REORG because it complicates and interferes with the block swapping actions that try to improve adjacency.
 
 The format of the EXCLUDE qualifier is:
 
@@ -1465,7 +1463,7 @@ The format of the EXCLUDE qualifier is:
 
 * By default, REORG does not EXCLUDE any globals.
 
-* In case any global appears in the argument lists of both -SELECT and -EXCLUDE, REORG terminates with an error.
+* In case any global appears in the argument lists of both SELECT and EXCLUDE, REORG terminates with an error.
 
 ~~~~~~~~~~~~~
 -FILL_FACTOR
@@ -1511,7 +1509,7 @@ By default, MUPIP REORG attempts to rearrange blocks which are below the specifi
 -NOSPLIT
 ~~~~~~~~~~
 
--NOSPLIT specifies to MUPIP REORG to skip actions that decrease block density. The format of the NOSPLIT qualifier is:
+NOSPLIT specifies to MUPIP REORG to skip actions that decrease block density. The format of the NOSPLIT qualifier is:
 
 .. code-block:: none
 
@@ -1523,7 +1521,7 @@ By default, MUPIP REORG attempts to rearrange blocks which are above the specifi
 -NOSWAP
 ~~~~~~~~~
 
--NOSWAP specifies to MUPIP REORG to skip actions that increase block adjacency. The format of the NOSWAP qualifier is:
+NOSWAP specifies to MUPIP REORG to skip actions that increase block adjacency. The format of the NOSWAP qualifier is:
 
 .. code-block:: none
 
@@ -1535,7 +1533,7 @@ By default, MUPIP REORG attempts to rearrange blocks so that logically related b
 -RESUME
 ~~~~~~~~~
 
-For an interrupted REORG operation, -RESUME allows the user to resume the REORG operation from the point where the operation stopped. REORG stores the last key value in the database file header. The format of the RESUME qualifier is:
+For an interrupted REORG operation, RESUME allows the user to resume the REORG operation from the point where the operation stopped. REORG stores the last key value in the database file header. The format of the RESUME qualifier is:
 
 .. code-block:: none
 
@@ -1547,7 +1545,7 @@ For an interrupted REORG operation, -RESUME allows the user to resume the REORG 
 -REGION
 ~~~~~~~~
 
-Specifies that REORG operate in the regions in the associated list and restricts REORG to the globals in those regions that are mapped by the current global directory; it does not have the same interactions as -EXCLUDE and -SELECT, but it does not mitigate those interactions when combined with them.
+Specifies that REORG operate in the regions in the associated list and restricts REORG to the globals in those regions that are mapped by the current global directory; it does not have the same interactions as EXCLUDE and SELECT, but it does not mitigate those interactions when combined with them.
 
 The format of the REGION qualifier is:
 
@@ -1561,7 +1559,7 @@ region-list may specify more than one region of the current global directory in 
 -SELECT
 ~~~~~~~~~
 
-Specifies that REORG reorganizes only the globals in the associated list; globals not on the list may be modified by block swaps with selected globals unless they are named with -EXCLUDE; -SELECT can be difficult to use efficiently because it tends to de-optimize unselected globals unless they are named in an -EXCLUDE list (which introduces inefficiency).
+Specifies that REORG reorganizes only the globals in the associated list; globals not on the list may be modified by block swaps with selected globals unless they are named with EXCLUDE; SELECT can be difficult to use efficiently because it tends to de-optimize unselected globals unless they are named in an EXCLUDE list (which introduces inefficiency).
 
 The format of the SELECT qualifier is:
 
@@ -1573,7 +1571,7 @@ The format of the SELECT qualifier is:
 
 * One of the functions performed by REORG is to logically order the globals on which it operates within the file. Unless the EXCLUDE and SELECT qualifiers are properly used in tandem, repeating the command with different selections in the same file wastes work and leaves only the last selection well organized.
 
-* If you enter the REORG -SELECT=global-name-list command and the specified globals do not exist, REORG issues a message to the screen and continues to process any specified globals that exist. If REORG is unable to process any globals, it terminates with an error.
+* If you enter the REORG SELECT=global-name-list command and the specified globals do not exist, REORG issues a message to the screen and continues to process any specified globals that exist. If REORG is unable to process any globals, it terminates with an error.
 
 * Arguments for this qualifier may be an individual global name, a range of global names, or a list of names and prefixes followed by the wildcard symbol. The caret symbol (^) in the specification of the global is optional.
 
@@ -1600,13 +1598,13 @@ Specifies that REORG, after it has rearranged some or all of a region's contents
 
 The optional percentage (0-99) provides a minimum amount for the reclamation; in other words, REORG won't bother performing a file truncate unless it can give back at least this percentage of the file; the default (0) has it give back anything it can. TRUNCATE always returns space aligned with bit map boundaries, which fall at 512 database block intervals. TRUNCATE analyses the bit maps, and if appropriate, produces before image journal records as needed for recycled (formerly used) blocks; The journal extract of a truncated database file may contain INCTN records having the inctn opcode value 9 indicating that the specific block was marked from recycled to free by truncate.
 
-MUPIP REORG -TRUNCATE recognizes the -KEEP qualifier. The format of the -KEEP qualifier is:
+MUPIP REORG TRUNCATE recognizes the KEEP qualifier. The format of the KEEP qualifier is:
 
 .. code-block:: none
 
    [-KEEP=blocks|percent%]
 
-The argument to -KEEP specifies either a number of database blocks or a percentage (0-99), followed by a percent-sign (%), of the starting total blocks to exclude from truncation.
+The argument to KEEP specifies either a number of database blocks or a percentage (0-99), followed by a percent-sign (%), of the starting total blocks to exclude from truncation.
 
 .. note::
    TRUNCATE does not complete if there is a concurrent online BACKUP or use of the snapshot mechanism, for example by INTEG.
@@ -1681,7 +1679,7 @@ If the forecasted growth of a global is 5% per month from relatively uniformly d
 
 Example:
 
-The following example uses recorg -encrypt to encrypt a database "on the fly". This is a simple example created for demonstration purposes. It is NOT recommended for production use. Consult your YottaDB support channel for specific instructions on encrypting an unencrypted database.
+The following example uses REORG ENCRYPT to encrypt a database "on the fly". This is a simple example created for demonstration purposes. It is NOT recommended for production use. Consult your YottaDB support channel for specific instructions on encrypting an unencrypted database.
 
 Create an empty default unencrypted database.
 
@@ -1773,17 +1771,17 @@ Upgrades the GDS blocks that are still in V4 format, after completion of mupip u
 
 A block is considered to be too long to be upgraded from V4 format to V5 format if the records occupy more than blocksize-16 bytes. The presence of even one such block will prevent a database from being upgraded.
 
-After a database has been certified, such "too long" blocks can occur if the Reserved Bytes field is reduced with a dse change -fileheader command or if a mupip journal -recover or mupip journal -rollback command changes the state of the of the database to before the dbcertify certify operation.
+After a database has been certified, such "too long" blocks can occur if the Reserved Bytes field is reduced with a DSE CHANGE FILEHEADER command or if a MUPIP JOURNAL RECOVER or MUPIP JOURNAL ROLLBACK command changes the state of the of the database to before the dbcertify certify operation.
 
-This condition can be detected by mupip reorg -upgrade or during normal V5.0-000 operation when blocks are upgraded from V4 to V5 format. The only way to recover from this condition is to downgrade the database to V4 format and re-run both phases of dbcertify.
+This condition can be detected by MUPIP REORG UPGRADE or during normal V5.0-000 operation when blocks are upgraded from V4 to V5 format. The only way to recover from this condition is to downgrade the database to V4 format and re-run both phases of dbcertify.
 
-This condition can be avoided by not changing Reserved Bytes after any dbcertify step and before the mupip upgrade, and, in the event, a database has a mupip journal -recover or mupip journal -rollback performed on it, then to repeat the dbcertify steps before the mupip upgrade.
+This condition can be avoided by not changing Reserved Bytes after any dbcertify step and before the MUPIP UPGRADE, and, in the event, a database has a MUPIP JOURNAL RECOVER or MUPIP JOURNAL ROLLBACK performed on it, then to repeat the dbcertify steps before the MUPIP UPGRADE.
 
 ^^^^^^^^^^
 -nosafejnl
 ^^^^^^^^^^
 
-If before image journaling is active, mupip reorg -upgrade will generate before image records for these block changes even though there is no change to the data in the block. This is to ensure that backwards recovery can recover the database correctly, in the event of a system crash or power outage. In the event that a system has a battery-backed IO subsystem, or a SAN, it is unlikely that there will be incomplete writes to the journal files. As long as any pending write to the journal file is completed in the event of a system crash or power outage, the before image records are not required to recover the database. In the event your hardware guarantees that there will not be an incomplete IO write operation, you can reduce IO load on your system by suppressing the generation of these before images with the use of the -nosafejnl option. If your hardware does not provide such a guarantee, then YottaDB strongly recommends the use of the default behavior, which is to generate the before image records.
+If before image journaling is active, MUPIP REORG UPGRADE will generate before image records for these block changes even though there is no change to the data in the block. This is to ensure that backwards recovery can recover the database correctly, in the event of a system crash or power outage. In the event that a system has a battery-backed IO subsystem, or a SAN, it is unlikely that there will be incomplete writes to the journal files. As long as any pending write to the journal file is completed in the event of a system crash or power outage, the before image records are not required to recover the database. In the event your hardware guarantees that there will not be an incomplete IO write operation, you can reduce IO load on your system by suppressing the generation of these before images with the use of the NOSAFEJNL option. If your hardware does not provide such a guarantee, then YottaDB strongly recommends the use of the default behavior, which is to generate the before image records.
 
 .. code-block:: bash
 
@@ -1867,7 +1865,7 @@ Control the logical multi-site operation of YottaDB. For more information on the
 RESTORE
 +++++++++
 
-Integrates one or more BACKUP -INCREMENTAL files into a corresponding database. The transaction number in the first incremental backup must be one more than the current transaction number of the database. Otherwise, MUPIP RESTORE terminates with an error.
+Integrates one or more BACKUP INCREMENTAL files into a corresponding database. The transaction number in the first incremental backup must be one more than the current transaction number of the database. Otherwise, MUPIP RESTORE terminates with an error.
 
 The format of the RESTORE command is:
 
@@ -1878,13 +1876,13 @@ The format of the RESTORE command is:
 
 * file-name identifies the name of the database file that RESTORE uses as a starting point.
 
-* bytestrm-bkup-list specifies one or more bytestream backup files (generated with BACKUP -BYTESTREAM) to RESTORE into the database file specified with file-name. The file-list are separated by commas (,) and must be in sequential order, from the oldest transaction number to the most recent transaction number. RESTORE may take its input from a UNIX file on any device that supports such files.
+* bytestrm-bkup-list specifies one or more bytestream backup files (generated with BACKUP BYTESTREAM) to RESTORE into the database file specified with file-name. The file-list are separated by commas (,) and must be in sequential order, from the oldest transaction number to the most recent transaction number. RESTORE may take its input from a UNIX file on any device that supports such files.
 
-* bytestrm-bkup-list may also include a comma separated list of pipe commands or TCP socket addresses (a combination of IPv4 or IPV6 hostname and a port number) from where MUPIP RESTORE receives bytestream backup files (produced with BACKUP -BYTESTREAM).
+* bytestrm-bkup-list may also include a comma separated list of pipe commands or TCP socket addresses (a combination of IPv4 or IPV6 hostname and a port number) from where MUPIP RESTORE receives bytestream backup files (produced with BACKUP BYTESTREAM).
 
 * The current transaction number in the database must match the starting transaction number of each successive input to the RESTORE.
 
-* If the BACKUP -BYTESTREAM was created using -TRANSACTION=1, create a new database with MUPIP CREATE and do not access it, except the standalone MUPIP commands INTEG -FILE, EXTEND, and SET before initiating the RESTORE.
+* If the BACKUP BYTESTREAM was created using TRANSACTION=1, create a new database with MUPIP CREATE and do not access it, except the standalone MUPIP commands INTEG FILE, EXTEND, and SET before initiating the RESTORE.
 
 ~~~~~~~~~
 -EXTEND
@@ -1898,7 +1896,7 @@ The format of the EXTEND qualifier is:
 
    -[NO]E[XTEND]
 
-M activity between backups may automatically extend a database file. Therefore, the database file specified as the starting point for a RESTORE may require an extension before the RESTORE. If the database needs an extension and the command specifies -NOEXTEND, MUPIP displays a message and terminates. The message provides the sizes of the input and output database files and the number of blocks by which to extend the database. If the RESTORE specifies more than one incremental backup with a file list, the database file may require more than one extension.
+M activity between backups may automatically extend a database file. Therefore, the database file specified as the starting point for a RESTORE may require an extension before the RESTORE. If the database needs an extension and the command specifies NOEXTEND, MUPIP displays a message and terminates. The message provides the sizes of the input and output database files and the number of blocks by which to extend the database. If the RESTORE specifies more than one incremental backup with a file list, the database file may require more than one extension.
 
 By default, RESTORE automatically extends the database file.
 
@@ -1917,6 +1915,8 @@ This command restores backup.dat from incremental backups stored in directory sp
    $ mupip restore ydb.dat '"gzip -d -c online5pipe.inc.gz |"'
 
 This command uses a pipe to restore ydb.dat since its last DATABASE backup from the bytestream backup stored in online5pipe.inc.gz.
+
+.. _mupip-rundown:
 
 ++++++++++++++++
 RUNDOWN
@@ -1941,7 +1941,7 @@ Use RUNDOWN after a system crash or after the last process accessing a database 
 
 A successful MUPIP RUNDOWN of a database region removes any current MUPIP FREEZE.
 
-RUNDOWN -FILE can be directed to a statistics database file and works even if the corresponding actual database file does not exist.
+RUNDOWN FILE can be directed to a statistics database file and works even if the corresponding actual database file does not exist.
 
 To ensure database integrity, all system shutdown algorithms should include scripts that stop at YottaDB processes and perform RUNDOWN on all database files.
 
@@ -1954,15 +1954,15 @@ The RUNDOWN command may include one of the following qualifiers:
    -RELinkctl [dir1]
    -Override
 
-If the RUNDOWN command does not specify either -File or -Region, it checks all the IPC resources (shared memory) on the system and if they are associated with a YottaDB database, attempts to rundown that file. MUPIP RUNDOWN with no argument removes any statistics database file resources associated with actual database file resources it can remove.
+If the RUNDOWN command does not specify either FILE or REGION, it checks all the IPC resources (shared memory) on the system and if they are associated with a YottaDB database, attempts to rundown that file. MUPIP RUNDOWN with no argument removes any statistics database file resources associated with actual database file resources it can remove.
 
 ~~~~~~
 -FILE
 ~~~~~~
 
-Specifies that the argument is a file-name for a single database file. The -FILE qualifier is incompatible with the REGION qualifier. If the rundown parameter consists of a list of files, the command only operates on the first item on the list.
+Specifies that the argument is a file-name for a single database file. The FILE qualifier is incompatible with the REGION qualifier. If the rundown parameter consists of a list of files, the command only operates on the first item on the list.
 
-Incompatible with: -REGION
+Incompatible with: REGION
 
 ~~~~~~~~~
 -OVERRIDE
@@ -1978,7 +1978,7 @@ The region-list identifies the target of the RUNDOWN. region-list may specify mo
 
 Use the wildcard "*" to rundown all inactive regions in a global directory.
 
-Incompatible with: -FILE
+Incompatible with: FILE
 
 When MUPIP RUNDOWN has no qualifier, it performs rundown on all inactive database memory sections on the node. Because this form has no explicit list of databases, it does not perform any clean up on regions that have no abandoned memory segments but may not have been shutdown in a crash.
 
@@ -1986,9 +1986,9 @@ When MUPIP RUNDOWN has no qualifier, it performs rundown on all inactive databas
 -RELINKCTL
 ~~~~~~~~~~~
 
-Cleans up orphaned Relinkctl files. YottaDB strongly recommends avoiding actions that tend to make such cleanup necessary - for example, kill -9 of YottaDB processes or ipcrm -m of active Relinkctl and/or Rtnobj shared memory segments.
+Cleans up orphaned Relinkctl files. YottaDB strongly recommends avoiding actions that tend to make such cleanup necessary - for example, :code:`kill -9` of YottaDB processes or :code:`ipcrm -m` of active Relinkctl and/or Rtnobj shared memory segments.
 
-If the optional dir1 is not specified, MUPIP RUNDOWN -RELINKCTL examines the environment variable $ydb_routines, attempts to verify and correct their attach counts and runs down all its inactive auto-relink-enabled directories (those with with a \*-suffix). Alternatively, one can specify a directory path for the parameter dir1 and MUPIP RUNDOWN -RELINKCTL treats it as an auto-relink-enabled directory and runs down the resources associated with this directory. It prints a RLNKCTLRNDWNSUC message on a successful rundown and a RLNKCTLRNDWNFL message on a failure (usually because live processes are still accessing the Relinkctl file).
+If the optional dir1 is not specified, MUPIP RUNDOWN RELINKCTL examines the environment variable $ydb_routines, attempts to verify and correct their attach counts and runs down all its inactive auto-relink-enabled directories (those with with a \*-suffix). Alternatively, one can specify a directory path for the parameter dir1 and MUPIP RUNDOWN RELINKCTL treats it as an auto-relink-enabled directory and runs down the resources associated with this directory. It prints a RLNKCTLRNDWNSUC message on a successful rundown and a RLNKCTLRNDWNFL message on a failure (usually because live processes are still accessing the Relinkctl file).
 
 .. _mupip-set:
 
@@ -2002,7 +2002,7 @@ MUPIP SET is used for performance tuning and/or modifying certain database and j
 SIZE
 ++++++++++++
 
-Estimates and reports the size of global variables using a format that is similar to the one that appears at the end of the MUPIP INTEG -FULL report. In comparison with MUPIP INTEG -FAST -FULL, MUPIP SIZE provides the option of choosing any one of the three estimation techniques to estimate the size of global variables in a database file. These techniques vary in measurement speed and estimate accuracy. The format of the MUPIP SIZE command is:
+Estimates and reports the size of global variables using a format that is similar to the one that appears at the end of the MUPIP INTEG FULL report. In comparison with MUPIP INTEG FAST FULL, MUPIP SIZE provides the option of choosing any one of the three estimation techniques to estimate the size of global variables in a database file. These techniques vary in measurement speed and estimate accuracy. The format of the MUPIP SIZE command is:
 
 .. code-block:: none
 
@@ -2014,7 +2014,7 @@ The optional qualifiers of MUPIP SIZE are:
 -HEURISTIC=estimation_technique
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Specifies the estimation technique that MUPIP SIZE should use to estimate the size of global variables. The format of the -HEURISTIC qualifier is:
+Specifies the estimation technique that MUPIP SIZE should use to estimate the size of global variables. The format of the HEURISTIC qualifier is:
 
 .. code-block:: none
 
@@ -2031,24 +2031,24 @@ estimation-technique is one of the following:
 
 * impsample,samples=<smpls> : Uses importance sampling of random tree traversals to weight each sample of the specified number of samples (default is 1,000) in order to estimate the size of the tree at each level.
 
-* If -HEURISTIC is not specified, MUPIP SIZE uses the ARSAMPLE,SAMPLE=1000 estimation technique.
+* If HEURISTIC is not specified, MUPIP SIZE uses the ARSAMPLE,SAMPLE=1000 estimation technique.
 
 The 2 sigma column for the two sampling techniques shows the dispersion of the samples (in blocks) and the probability (rounded to a whole percentage) that the actual value falls farther away from the reported value by more than two sigma. With the scan method the "sample" is "complete," so any inaccuracy comes from concurrent updates.
 
 .. note::
-   For large databases, MUPIP SIZE is faster than MUPIP INTEG -FAST -FULL. IMPSAMPLE is expected to be the fastest estimation technique, followed by ARSAMPLE and then SCAN. In terms of accuracy, MUPIP INTEG -FAST -FULL is the most accurate.
+   For large databases, MUPIP SIZE is faster than MUPIP INTEG FAST FULL. IMPSAMPLE is expected to be the fastest estimation technique, followed by ARSAMPLE and then SCAN. In terms of accuracy, MUPIP INTEG FAST FULL is the most accurate.
 
 ~~~~~~~~~~~~~~~~~~~
 -ADJACENCY=integer
 ~~~~~~~~~~~~~~~~~~~
 
-Specifies the logical adjacency of data blocks that MUPIP SIZE should assume during estimation. By default, MUPIP SIZE assumes -ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP SIZE report. Note that adjacency is only a proxy for database organization and its usefulness may be limited by the technology and configuration of your secondary storage. See the :ref:`mupip-integ` section of this chapter for additional comments on adjacency.
+Specifies the logical adjacency of data blocks that MUPIP SIZE should assume during estimation. By default, MUPIP SIZE assumes ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP SIZE report. Note that adjacency is only a proxy for database organization and its usefulness may be limited by the technology and configuration of your secondary storage. See the :ref:`mupip-integ` section of this chapter for additional comments on adjacency.
 
 ~~~~~~~~
 -SELECT
 ~~~~~~~~
 
-Specifies the global variables on which MUPIP SIZE runs. If -SELECT is not specified, MUPIP SIZE selects all global variables.
+Specifies the global variables on which MUPIP SIZE runs. If SELECT is not specified, MUPIP SIZE selects all global variables.
 
 The format of the SELECT qualifier is:
 
@@ -2060,7 +2060,7 @@ global-name-list can be:
 
 * A comma separated list of global variables.
 
-* A range of global variables denoted by start:end syntax. For example, -select="g1:g4".
+* A range of global variables denoted by start:end syntax. For example, :code:`-select="g1:g4"`.
 
 * A global variable with wildcards, for example, "g*" (the name must be escaped to avoid shell filename expansion)
 
@@ -2107,7 +2107,7 @@ This example estimates the size of global variables g1, g2 and g3 using accept/r
 STOP
 ++++++++++
 
-Terminates a YottaDB image. The image executes an orderly disengagement from all databases that are currently open by the process, and then exits. A MUPIP STOP performs a kill -15 and therefore may also be used to stop non-YottaDB images.
+Terminates a YottaDB image. The image executes an orderly disengagement from all databases that are currently open by the process, and then exits. A MUPIP STOP performs a :code:`kill -15` and therefore may also be used to stop non-YottaDB images.
 
 The format of the STOP command is:
 
@@ -2120,7 +2120,9 @@ The format of the STOP command is:
 * To STOP a process belonging to its own account, a process requires no privileges. To STOP a process belonging to another account, MUPIP STOP must execute as root.
 
 .. note::
-   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a kill -9 signal. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances. In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Use three MUPIP STOPs in a row only as a last resort, and when you do, perform a MUPIP INTEG at your earliest opportunity thereafter to check for database structural damage, and repair any damage following the procedures in `Chapter 11 (Maintaining Database Integrity) <./integrity.html>`_.You may never have to perform a MUPIP STOP if your application is designed in a way that it reduces or eliminates the probability of a process getting in the final try of a transaction. For more information, refer to the `Programmers Guide <../ProgrammersGuide/index.html>`_.
+   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a :code:`kill -9` signal. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances. In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Use three MUPIP STOPs in a row only as a last resort, and when you do, perform a MUPIP INTEG at your earliest opportunity thereafter to check for database structural damage, and repair any damage following the procedures in `Chapter 11 (Maintaining Database Integrity) <./integrity.html>`_.You may never have to perform a MUPIP STOP if your application is designed in a way that it reduces or eliminates the probability of a process getting in the final try of a transaction. For more information, refer to the `Programmers Guide <../ProgrammersGuide/index.html>`_.
+
+.. _mupip-trigger:
 
 ++++++++++++++++
 TRIGGER
@@ -2153,11 +2155,11 @@ Loads a trigger definition file to the database. The format of the TRIGGERFILE q
 
 * For information on the syntax and usage of a trigger definition file, refer to the `Triggers <../ProgrammersGuide/triggers.html>`_ chapter and the `$ZTRIGGER() section in the Functions chapter of the Programmer's Guide <../ProgrammersGuide/functions.html#ztrigger-function>`_.
 
-* A MUPIP TRIGGER -TRIGGERFILE operation occurs within a transaction boundary, therefore, if even one trigger from the trigger definition file fails to parse correctly, MUPIP TRIGGER rolls back the entire trigger definition file load. Trigger maintenance operations reserve their output until the transaction commits at which time they deliver the entire output in a consistent way. MUPIP TRIGGER operations have an implicit timeout of zero (0), meaning the read must succeed on the first try or the command will act as if it received no input.
+* A MUPIP TRIGGER TRIGGERFILE operation occurs within a transaction boundary, therefore, if even one trigger from the trigger definition file fails to parse correctly, MUPIP TRIGGER rolls back the entire trigger definition file load. Trigger maintenance operations reserve their output until the transaction commits at which time they deliver the entire output in a consistent way. MUPIP TRIGGER operations have an implicit timeout of zero (0), meaning the read must succeed on the first try or the command will act as if it received no input.
 
-* MUPIP TRIGGER -TRIGGERFILE ignores blank lines and extra whitespace within lines. It treats lines with a semi-colon in the first position as comments and ignores their content.
+* MUPIP TRIGGER TRIGGERFILE ignores blank lines and extra whitespace within lines. It treats lines with a semi-colon in the first position as comments and ignores their content.
 
-* If the -NOPROMPT option is specified and the trigger definition file contains a :code:`-*` line, then YottaDB will delete all triggers without user confirmation.
+* If the NOPROMPT option is specified and the trigger definition file contains a :code:`-*` line, then YottaDB will delete all triggers without user confirmation.
 
 * MUPIP TRIGGER compiles the XECUTE action string and rejects the load if the compilation has errors.
 
@@ -2169,10 +2171,10 @@ Loads a trigger definition file to the database. The format of the TRIGGERFILE q
 
 * YottaDB triggers apply to spanning regions. When $ZTRIGGER() or MUPIP TRIGGER define triggers that apply to globals spanning multiple regions, each of the spanned regions install a definition.
 
-* Incompatible with: -SELECT
+* Incompatible with: SELECT
 
 .. note::
-   The trigger update summary reports count not only names and option changes as "modified" but also cases where a -COMMANDS list changed, even though those are functionally additions or deletions of separate trigger definitions.
+   The trigger update summary reports count not only names and option changes as "modified" but also cases where a COMMANDS list changed, even though those are functionally additions or deletions of separate trigger definitions.
 
 ~~~~~~~~~~~~~~~~~~
 -SELECT=name-list
@@ -2186,18 +2188,18 @@ Provides a facility to examine the current trigger definition. SELECT produces a
 
 * Name-list can include global names, delimited with a leading caret (^), and/or trigger names (user-defined or auto-generated) with no leading caret. You can specify a trailing asterisk(*) with either.
 
-* With no arguments specified, YottaDB treats -SELECT as -SELECT="*" and extracts a list of all current triggers.
+* With no arguments specified, YottaDB treats SELECT as :code:`-select="*"` and extracts a list of all current triggers.
 
 * Optionally, you can specify a file name to redirect the output of the command. If you do not specify a file name, MUPIP TRIGGER prompts for a file name. If you respond with an empty string (RETURN), MUPIP TRIGGER directs the output to STDOUT.
 
-* MUPIP TRIGGER -SELECT displays all output including errors on STDOUT.
+* MUPIP TRIGGER SELECT displays all output including errors on STDOUT.
 
-* For Trigger definition reporting operations, $ZTRIGGER("SELECT") and MUPIP TRIGGER -SELECT, return a non-zero exit status when their selection criteria encounter an error in the select.
+* For Trigger definition reporting operations, $ZTRIGGER("SELECT") and MUPIP TRIGGER SELECT, return a non-zero exit status when their selection criteria encounter an error in the select.
 
-* MUPIP TRIGGER -SELECT works even if a multi-line XECUTE string does not terminate with a newline character. For more information on multi-line XECUTE strings, refer to the -xecute="\|<<strlit1"\|>> section under Trigger Definition File in the `Triggers chapter </ProgrammersGuide/triggers.html>`_ and the `$ZTRIGGER() section in the Functions chapter of the Programmer's Guide <../ProgrammersGuide/functions.html#ztrigger-function>`_.
+* MUPIP TRIGGER SELECT works even if a multi-line XECUTE string does not terminate with a newline character. For more information on multi-line XECUTE strings, refer to the -xecute="\|<<strlit1"\|>> section under Trigger Definition File in the `Triggers chapter </ProgrammersGuide/triggers.html>`_ and the `$ZTRIGGER() section in the Functions chapter of the Programmer's Guide <../ProgrammersGuide/functions.html#ztrigger-function>`_.
 
 .. note::
-   The output from the MUPIP TRIGGER -SELECT command may not be identical to your trigger definition file. This is because YottaDB converts semantically identical syntax into a single internal representation; while -SELECT output may not be identical to the -TRIGGERFILE input, it has the same meaning. Additionally, MUPIP TRIGGER -SELECT displays a field called "Cycle" as part of a comment. Cycle is the number of trigger definition updates (addition, modification, or deletion) performed on a global node. MUPIP TRIGGER treats the deletion of a non-existent trigger as a success; if that is the only operation, or one of a set of successful operations, it returns success 0 to the shell. Also, MUPIP TRIGGER returns failure in case of trigger selection using trigger names where the number after the pound-sign (#) starts with a 0 (which is an impossible auto-generated trigger name).
+   The output from the MUPIP TRIGGER SELECT command may not be identical to your trigger definition file. This is because YottaDB converts semantically identical syntax into a single internal representation; while SELECT output may not be identical to the TRIGGERFILE input, it has the same meaning. Additionally, MUPIP TRIGGER SELECT displays a field called "Cycle" as part of a comment. Cycle is the number of trigger definition updates (addition, modification, or deletion) performed on a global node. MUPIP TRIGGER treats the deletion of a non-existent trigger as a success; if that is the only operation, or one of a set of successful operations, it returns success 0 to the shell. Also, MUPIP TRIGGER returns failure in case of trigger selection using trigger names where the number after the pound-sign (#) starts with a 0 (which is an impossible auto-generated trigger name).
 
 ~~~~~~~~~
 -UPGRADE
@@ -2211,7 +2213,7 @@ The format of the UPGRADE qualifier is:
 
    -UPGRADE
 
-If YottaDB encounters an old trigger definition it produces a NEEDTRIGUPGRD message. To preserve the possibility of a straightforward downgrade to an earlier version, perform a select "*" action with MUPIP TRIGGER (or $ZTRIGGER() and save the result. Note that TRIGGER -UPGRADE assumes that the existing trigger definitions are properly defined; if the prior release has produced defective triggers, delete them with a wild-card ("*"), and redefine the triggers in the new release. In the event of a downgrade, delete "*" all triggers before the downgrade and insert the saved version from before the upgrade. Attempting to perform a MUPIP TRIGGER -UPGRADE on a database without write authorization to the database produces a TRIGMODREGNOTRW error. The -UPGRADE qualifier is not compatible with any other MUPIP TRIGGER qualifier. Trigger upgrades from older versions may produce journal records based on the prior format that a MUPIP JOURNAL -RECOVER cannot process correctly, therefore, YottaDB recommends you do them with journaling off, and start with a backup and fresh journal files after the trigger upgrade.
+If YottaDB encounters an old trigger definition it produces a NEEDTRIGUPGRD message. To preserve the possibility of a straightforward downgrade to an earlier version, perform a select "*" action with MUPIP TRIGGER (or $ZTRIGGER() and save the result. Note that TRIGGER UPGRADE assumes that the existing trigger definitions are properly defined; if the prior release has produced defective triggers, delete them with a wild-card ("*"), and redefine the triggers in the new release. In the event of a downgrade, delete "*" all triggers before the downgrade and insert the saved version from before the upgrade. Attempting to perform a MUPIP TRIGGER UPGRADE on a database without write authorization to the database produces a TRIGMODREGNOTRW error. The UPGRADE qualifier is not compatible with any other MUPIP TRIGGER qualifier. Trigger upgrades from older versions may produce journal records based on the prior format that a MUPIP JOURNAL RECOVER cannot process correctly, therefore, YottaDB recommends you do them with journaling off, and start with a backup and fresh journal files after the trigger upgrade.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP TRIGGER
@@ -2262,7 +2264,7 @@ This command displays the triggers. A sample output looks like the following:
 
 *To modify an existing trigger for global node ^Acct("ID")*:
 
-You cannot directly replace an existing trigger definition with a new one. With the exception of -NAME and -OPTIONS, to change an existing trigger, you have to delete the existing trigger definition and then add the modified trigger definition as a new trigger. Note that YottaDB performs two different trigger comparisons to match trigger definitions depending on whether or not S[ET] is the trigger invocation command. If there is a S[ET], then the comparison is based on the global name and subscripts, PIECES, [Z]DELIM, and XECUTE. If there is no SET, YottaDB compares only the global node with subscripts and the -XECUTE code value.
+You cannot directly replace an existing trigger definition with a new one. With the exception of NAME and OPTIONS, to change an existing trigger, you have to delete the existing trigger definition and then add the modified trigger definition as a new trigger. Note that YottaDB performs two different trigger comparisons to match trigger definitions depending on whether or not S[ET] is the trigger invocation command. If there is a S[ET], then the comparison is based on the global name and subscripts, PIECES, [Z]DELIM, and XECUTE. If there is no SET, YottaDB compares only the global node with subscripts and the XECUTE code value.
 
 Begin by executing the following command:
 
@@ -2417,137 +2419,137 @@ MUPIP Command Summary
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
 | Command                              | Objects                                     | Main Qualifier                                                                           |
 +======================================+=============================================+==========================================================================================+
-| B[ACKUP]                             | region-name                                 | * -BK[UPDBJNL]=DISABLE | OFF                                                             |
-|                                      | file-name                                   | * -B[YTESTREAM] -NET[TIMEOUT]=seconds                                                    |
-|                                      |                                             | * -C[OMPREHENSIVE]                                                                       |
-|                                      |                                             | * -DA[TABASE] -REPLA[CE]                                                                 |
-|                                      |                                             | * -DBG                                                                                   |
-|                                      |                                             | * -I[NCREMENTAL]                                                                         |
-|                                      |                                             | * -[NO]J[OURNAL][=journal-options-list]                                                  |
-|                                      |                                             | * -NETTIMEOUT                                                                            |
-|                                      |                                             | * -[NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]                                          |
-|                                      |                                             | * -O[NLINE]                                                                              |
-|                                      |                                             | * -RECORD                                                                                |
-|                                      |                                             | * -REPLI[NSTANCE]=OFF | ON                                                               |
-|                                      |                                             | * -S[INCE]={DATABASE|BYTESTREAM|RECORD}                                                  |
-|                                      |                                             | * -T[RANSACTION=hexa;transaction_number]                                                 |
+| B[ACKUP]                             | region-name                                 | * BK[UPDBJNL]=DISABLE | OFF                                                              |
+|                                      | file-name                                   | * B[YTESTREAM] NET[TIMEOUT]=seconds                                                      |
+|                                      |                                             | * C[OMPREHENSIVE]                                                                        |
+|                                      |                                             | * DA[TABASE] REPLA[CE]                                                                   |
+|                                      |                                             | * DBG                                                                                    |
+|                                      |                                             | * I[NCREMENTAL]                                                                          |
+|                                      |                                             | * [NO]J[OURNAL][=journal-options-list]                                                   |
+|                                      |                                             | * NETTIMEOUT                                                                             |
+|                                      |                                             | * [NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]                                           |
+|                                      |                                             | * O[NLINE]                                                                               |
+|                                      |                                             | * RECORD                                                                                 |
+|                                      |                                             | * REPLI[NSTANCE]=OFF | ON                                                                |
+|                                      |                                             | * S[INCE]={DATABASE|BYTESTREAM|RECORD}                                                   |
+|                                      |                                             | * T[RANSACTION=hexa;transaction_number]                                                  |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| CR[EATE]                             | \-                                          | * -R[EGION]=region-name                                                                  |
+| CR[EATE]                             | \-                                          | * R[EGION]=region-name                                                                   |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| DO[WNGRADE]                          | file-name                                   | * -V[ERSION]={V4|V5}                                                                     |
+| DO[WNGRADE]                          | file-name                                   | * V[ERSION]={V4|V5}                                                                      |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
 | DU[MPFHEAD]                          | file-name or region-list                    | * \-                                                                                     |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| EN[DIANCVT]                          | file-name                                   | * -OUTDB=<outdb-file>                                                                    |
-|                                      |                                             | * -OV[ERRIDE]                                                                            |
+| EN[DIANCVT]                          | file-name                                   | * OUTDB=<outdb-file>                                                                     |
+|                                      |                                             | * OV[ERRIDE]                                                                             |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
 | EXI[T]                               | \-                                          | * \-                                                                                     |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| EXTE[ND]                             | region-name                                 | * -B[LOCKS]=blocks                                                                       |
+| EXTE[ND]                             | region-name                                 | * B[LOCKS]=blocks                                                                        |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| EXTR[ACT]                            | \-                                          | * -FO[RMAT]=GO|B[INARY]|Z[WR]                                                            |
-|                                      |                                             | * -FR[EEZE]                                                                              |
-|                                      |                                             | * -LA[BEL]=text                                                                          |
-|                                      |                                             | * -[NO]L[OG]                                                                             |
-|                                      |                                             | * -S[ELECT]=global-name-list                                                             |
-|                                      |                                             | * -O[CHSET]=character-set                                                                |
-|                                      |                                             | * -R[EGION]=region-list                                                                  |
+| EXTR[ACT]                            | \-                                          | * FO[RMAT]=GO|B[INARY]|Z[WR]                                                             |
+|                                      |                                             | * FR[EEZE]                                                                               |
+|                                      |                                             | * LA[BEL]=text                                                                           |
+|                                      |                                             | * [NO]L[OG]                                                                              |
+|                                      |                                             | * S[ELECT]=global-name-list                                                              |
+|                                      |                                             | * O[CHSET]=character-set                                                                 |
+|                                      |                                             | * R[EGION]=region-list                                                                   |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| F[REEZE]                             | region-list                                 | * -DBG                                                                                   |
-|                                      |                                             | * -OF[F] [-OV[ERRIDE]]                                                                   |
-|                                      |                                             | * -ON [-[NO]ONL[INE] [-[NO]A[UTORELEASE]] [-R[ECORD]]]                                   |
+| F[REEZE]                             | region-list                                 | * DBG                                                                                    |
+|                                      |                                             | * OF[F] [OV[ERRIDE]]                                                                     |
+|                                      |                                             | * ON [[NO]ONL[INE] [[NO]A[UTORELEASE]] [R[ECORD]]]                                       |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| FT[OK]                               | File-name                                   | * -D[B]                                                                                  |
-|                                      |                                             | * -J[NLPOOL]                                                                             |
-|                                      |                                             | * -R[ECVPOOL]                                                                            |
+| FT[OK]                               | File-name                                   | * D[B]                                                                                   |
+|                                      |                                             | * J[NLPOOL]                                                                              |
+|                                      |                                             | * R[ECVPOOL]                                                                             |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
 | H[ELP]                               | command-option                              | * \-                                                                                     |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| I[NTEG]                              | File-name or region-list                    | * -A[DJACENCY]=integer                                                                   |
-|                                      |                                             | * -BL[OCK]=hexa;block-number]                                                            |
-|                                      |                                             | * -BR[IEF]                                                                               |
-|                                      |                                             | * -FA[ST]                                                                                |
-|                                      |                                             | * -FI[LE]                                                                                |
-|                                      |                                             | * -FU[LL]                                                                                |
-|                                      |                                             | * -[NO]K[EYRANGES]                                                                       |
-|                                      |                                             | * -[NO][MAP]=integer                                                                     |
-|                                      |                                             | * -[NO]MAXK[EYSIZE]=integer                                                              |
-|                                      |                                             | * -R[EGION]                                                                              |
-|                                      |                                             | * -[NO]ST[ATS]                                                                           |
-|                                      |                                             | * -SU[BSCRIPT]=subscript                                                                 |
-|                                      |                                             | * -TN[_RESET]                                                                            |
-|                                      |                                             | * -[NO]TR[ANSACTION][=integer]                                                           |
+| I[NTEG]                              | File-name or region-list                    | * A[DJACENCY]=integer                                                                    |
+|                                      |                                             | * BL[OCK]=hexa;block-number]                                                             |
+|                                      |                                             | * BR[IEF]                                                                                |
+|                                      |                                             | * FA[ST]                                                                                 |
+|                                      |                                             | * FI[LE]                                                                                 |
+|                                      |                                             | * FU[LL]                                                                                 |
+|                                      |                                             | * [NO]K[EYRANGES]                                                                        |
+|                                      |                                             | * [NO][MAP]=integer                                                                      |
+|                                      |                                             | * [NO]MAXK[EYSIZE]=integer                                                               |
+|                                      |                                             | * R[EGION]                                                                               |
+|                                      |                                             | * [NO]ST[ATS]                                                                            |
+|                                      |                                             | * SU[BSCRIPT]=subscript                                                                  |
+|                                      |                                             | * TN[_RESET]                                                                             |
+|                                      |                                             | * [NO]TR[ANSACTION][=integer]                                                            |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| J[OURNAL]                            | file-name                                   | * -EX[TRACT][=file-specification|-stdout]                                                |
-|                                      |                                             | * -REC[OVER] | -RO[LLBACK]                                                               |
-|                                      |                                             | * -SH[OW][=show-option-list]                                                             |
-|                                      |                                             | * -[NO]V[ERIFY]                                                                          |
-|                                      |                                             | * -BA[CKWARD] | -FO[RWARD]                                                               |
+| J[OURNAL]                            | file-name                                   | * EX[TRACT][=file-specification|-stdout]                                                 |
+|                                      |                                             | * REC[OVER] | RO[LLBACK]                                                                 |
+|                                      |                                             | * SH[OW][=show-option-list]                                                              |
+|                                      |                                             | * [NO]V[ERIFY]                                                                           |
+|                                      |                                             | * BA[CKWARD] | FO[RWARD]                                                                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| L[OAD]                               | file-name                                   | * -BE[GIN]=integer                                                                       |
-|                                      |                                             | * -BLOCK_DENSITY                                                                         |
-|                                      |                                             | * -E[ND]=integer                                                                         |
-|                                      |                                             | * -FI[LLFACTOR]=integer                                                                  |
-|                                      |                                             | * -FO[RMAT]=GO|B[INARY]|Z[WR]                                                            |
-|                                      |                                             | * -S[TDIN]                                                                               |
-|                                      |                                             | * -O[NERROR]                                                                             |
+| L[OAD]                               | file-name                                   | * BE[GIN]=integer                                                                        |
+|                                      |                                             | * BLOCK_DENSITY                                                                          |
+|                                      |                                             | * E[ND]=integer                                                                          |
+|                                      |                                             | * FI[LLFACTOR]=integer                                                                   |
+|                                      |                                             | * FO[RMAT]=GO|B[INARY]|Z[WR]                                                             |
+|                                      |                                             | * S[TDIN]                                                                                |
+|                                      |                                             | * O[NERROR]                                                                              |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| REO[RG]                              | \-                                          | * -ENCR[YPT]=key                                                                         |
-|                                      |                                             | * -E[XCLUDE]=global-name-list                                                            |
-|                                      |                                             | * -FI[LL_FACTOR]=integer                                                                 |
-|                                      |                                             | * -I[NDEX_FILL_FACTOR]=integer                                                           |
-|                                      |                                             | * -REG[ION]                                                                              |
-|                                      |                                             | * -R[ESUME]                                                                              |
-|                                      |                                             | * -S[ELECT]=global-name-list                                                             |
-|                                      |                                             | * -T[RUNCATE][=percentage]                                                               |
-|                                      |                                             | * -UP[GRADE]                                                                             |
-|                                      |                                             | * -REG[ION] region-list                                                                  |
+| REO[RG]                              | \-                                          | * ENCR[YPT]=key                                                                          |
+|                                      |                                             | * E[XCLUDE]=global-name-list                                                             |
+|                                      |                                             | * FI[LL_FACTOR]=integer                                                                  |
+|                                      |                                             | * I[NDEX_FILL_FACTOR]=integer                                                            |
+|                                      |                                             | * REG[ION]                                                                               |
+|                                      |                                             | * R[ESUME]                                                                               |
+|                                      |                                             | * S[ELECT]=global-name-list                                                              |
+|                                      |                                             | * T[RUNCATE][=percentage]                                                                |
+|                                      |                                             | * UP[GRADE]                                                                              |
+|                                      |                                             | * REG[ION] region-list                                                                   |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| REP[LICATE]                          | file-name                                   | * -E[DITINSTANCE]                                                                        |
-|                                      |                                             | * -I[NSTANCE_CREATE]                                                                     |
-|                                      |                                             | * -R[ECEIVER]                                                                            |
-|                                      |                                             | * -S[OURCE]                                                                              |
-|                                      |                                             | * -UPDA[TEPROC]                                                                          |
+| REP[LICATE]                          | file-name                                   | * E[DITINSTANCE]                                                                         |
+|                                      |                                             | * I[NSTANCE_CREATE]                                                                      |
+|                                      |                                             | * R[ECEIVER]                                                                             |
+|                                      |                                             | * S[OURCE]                                                                               |
+|                                      |                                             | * UPDA[TEPROC]                                                                           |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| RE[STORE]                            | file-name or file-list                      | * -[NO]E[XTEND]                                                                          |
+| RE[STORE]                            | file-name or file-list                      | * [NO]E[XTEND]                                                                           |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| RU[NDOWN]                            | file-name or region-name                    | * -F[ILE]                                                                                |
-|                                      |                                             | * -R[EGION]                                                                              |
-|                                      |                                             | * -RELINKCTL [dir]                                                                       |
-|                                      |                                             | * -OVERRIDE                                                                              |
+| RU[NDOWN]                            | file-name or region-name                    | * F[ILE]                                                                                 |
+|                                      |                                             | * R[EGION]                                                                               |
+|                                      |                                             | * RELINKCTL [dir]                                                                        |
+|                                      |                                             | * OVERRIDE                                                                               |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| SE[T]                                | file-name or region-name                    | * SE[T] {-FI[LE] file-name|-JN[LFILE] journal-file-name|-REG[ION] region-list|           |
-|                                      |                                             |   \-REP[LICATION]={ON|OFF}}                                                              |
-|                                      |                                             | * -AC[CESS_METHOD]={BG|MM}                                                               |
-|                                      |                                             | * -[NO]AS[YNCIO]                                                                         |
-|                                      |                                             | * -[NO]DE[FER_TIME][=seconds]                                                            |
-|                                      |                                             | * -[NO]DEFER_ALLOCATE                                                                    |
-|                                      |                                             | * -E[XTENSION_COUNT]=integer(no of blocks)                                               |
-|                                      |                                             | * -F[LUSH_TIME]=integer                                                                  |
-|                                      |                                             | * -G[LOBAL_BUFFERS]=integer                                                              |
-|                                      |                                             | * -[NO]INST[_FREEZE_ON_ERROR]                                                            |
-|                                      |                                             | * -JN[LFILE]journal-file-name                                                            |
-|                                      |                                             | * -K[EY_SIZE]=bytes                                                                      |
-|                                      |                                             | * -L[OCK_SPACE]=integer                                                                  |
-|                                      |                                             | * -M[UTEX_SLOTS]=integer                                                                 |
-|                                      |                                             | * -[NO]LCK_SHARES_DB_CRIT                                                                |
-|                                      |                                             | * -PA[RTIAL_RECOV_BYPASS]                                                                |
-|                                      |                                             | * -[NO]Q[DBRUNDOWN]                                                                      |
-|                                      |                                             | * -REC[ORD_SIZE]=bytes                                                                   |
-|                                      |                                             | * -REG[ION] region-list                                                                  |
-|                                      |                                             | * -REP[LICATION]={ON|OFF}                                                                |
-|                                      |                                             | * -RES[ERVED_BYTES]=integer]                                                             |
-|                                      |                                             | * -SLEE[P_SPIN_COUNT]=integer                                                            |
-|                                      |                                             | * -SPIN[_SLEEP_LIMIT]=nanoseconds                                                        |
-|                                      |                                             | * -STAN[DALONENOT]                                                                       |
-|                                      |                                             | * -[NO]STAT[S]                                                                           |
-|                                      |                                             | * -V[ERSION]={V4|V6}                                                                     |
-|                                      |                                             | * -W[AIT_DISK]=integer                                                                   |
+| SE[T]                                | file-name or region-name                    | * SE[T] {FI[LE] file-name|JN[LFILE] journal-file-name|REG[ION] region-list|              |
+|                                      |                                             |   \REP[LICATION]={ON|OFF}}                                                               |
+|                                      |                                             | * AC[CESS_METHOD]={BG|MM}                                                                |
+|                                      |                                             | * [NO]AS[YNCIO]                                                                          |
+|                                      |                                             | * [NO]DE[FER_TIME][=seconds]                                                             |
+|                                      |                                             | * [NO]DEFER_ALLOCATE                                                                     |
+|                                      |                                             | * E[XTENSION_COUNT]=integer(no of blocks)                                                |
+|                                      |                                             | * F[LUSH_TIME]=integer                                                                   |
+|                                      |                                             | * G[LOBAL_BUFFERS]=integer                                                               |
+|                                      |                                             | * [NO]INST[_FREEZE_ON_ERROR]                                                             |
+|                                      |                                             | * JN[LFILE]journal-file-name                                                             |
+|                                      |                                             | * K[EY_SIZE]=bytes                                                                       |
+|                                      |                                             | * L[OCK_SPACE]=integer                                                                   |
+|                                      |                                             | * M[UTEX_SLOTS]=integer                                                                  |
+|                                      |                                             | * [NO]LCK_SHARES_DB_CRIT                                                                 |
+|                                      |                                             | * PA[RTIAL_RECOV_BYPASS]                                                                 |
+|                                      |                                             | * [NO]Q[DBRUNDOWN]                                                                       |
+|                                      |                                             | * REC[ORD_SIZE]=bytes                                                                    |
+|                                      |                                             | * REG[ION] region-list                                                                   |
+|                                      |                                             | * REP[LICATION]={ON|OFF}                                                                 |
+|                                      |                                             | * RES[ERVED_BYTES]=integer]                                                              |
+|                                      |                                             | * SLEE[P_SPIN_COUNT]=integer                                                             |
+|                                      |                                             | * SPIN[_SLEEP_LIMIT]=nanoseconds                                                         |
+|                                      |                                             | * STAN[DALONENOT]                                                                        |
+|                                      |                                             | * [NO]STAT[S]                                                                            |
+|                                      |                                             | * V[ERSION]={V4|V6}                                                                      |
+|                                      |                                             | * W[AIT_DISK]=integer                                                                    |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
-| TRIGGER                              | \-                                          | * -TRIG[GERFILE]=<trigger_definitions_file>                                              |
-|                                      |                                             | * -NOPR[OMPT]                                                                            |
-|                                      |                                             | * -SELE[CT][=name-list|*][<select-output-file>]                                          |
-|                                      |                                             | * -UPGRADE                                                                               |
+| TRIGGER                              | \-                                          | * TRIG[GERFILE]=<trigger_definitions_file>                                               |
+|                                      |                                             | * NOPR[OMPT]                                                                             |
+|                                      |                                             | * SELE[CT][=name-list|*][<select-output-file>]                                           |
+|                                      |                                             | * UPGRADE                                                                                |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
 | ST[OP]                               | process-id                                  | * process-id                                                                             |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+
@@ -2559,31 +2561,31 @@ The following table summarizes the qualifiers.
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
 | Main Qualifier                               |  MUPIP Command                                                               | Options/Qualifiers                                                   |
 +==============================================+==============================================================================+======================================================================+
-| -EDITINSTANCE                                | :ref:`mupip-replicate`                                                       | * -CHANGE                                                            |
-|                                              |                                                                              | * -DETAIL                                                            |
-|                                              |                                                                              | * -OFFSET=hexa                                                       |
-|                                              |                                                                              | * -VALUE=hexa                                                        |
-|                                              |                                                                              | * -SIZE=hexa                                                         |
-|                                              |                                                                              | * -[NO]QDBRUNDOWN                                                    |
+| EDITINSTANCE                                 | :ref:`mupip-replicate`                                                       | * CHANGE                                                             |
+|                                              |                                                                              | * DETAIL                                                             |
+|                                              |                                                                              | * OFFSET=hexa                                                        |
+|                                              |                                                                              | * VALUE=hexa                                                         |
+|                                              |                                                                              | * SIZE=hexa                                                          |
+|                                              |                                                                              | * [NO]QDBRUNDOWN                                                     |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -FENCES=<fence-options-list>                 | :ref:`mupip-journal`                                                         | * ALWAYS                                                             |
+| FENCES=<fence-options-list>                  | :ref:`mupip-journal`                                                         | * ALWAYS                                                             |
 |                                              |                                                                              | * NONE                                                               |
 |                                              | -RECOVER                                                                     | * PROCESS                                                            |
 |                                              |                                                                              |                                                                      |
 |                                              | -ROLLBACK                                                                    |                                                                      |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -OFF                                         | :ref:`mupip-freeze`                                                          | * -OVERRIDE                                                          |
-|                                              |                                                                              | * -RECORD                                                            |
+| OFF                                          | :ref:`mupip-freeze`                                                          | * OVERRIDE                                                           |
+|                                              |                                                                              | * RECORD                                                             |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -ON                                          | :ref:`mupip-freeze`                                                          | * -[NO]ONLINE                                                        |
-|                                              |                                                                              | * -[NO]AUTORELEASE                                                   |
+| ON                                           | :ref:`mupip-freeze`                                                          | * [NO]ONLINE                                                         |
+|                                              |                                                                              | * [NO]AUTORELEASE                                                    |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -INSTANCE_CREATE                             | :ref:`mupip-replicate`                                                       | * -NAME                                                              |
-|                                              |                                                                              | * -NOREPLACE                                                         |
-|                                              |                                                                              | * -SUPPLEMENTARY                                                     |
-|                                              |                                                                              | * -[NO]QDBRUNDOWN                                                    |
+| INSTANCE_CREATE                              | :ref:`mupip-replicate`                                                       | * NAME                                                               |
+|                                              |                                                                              | * NOREPLACE                                                          |
+|                                              |                                                                              | * SUPPLEMENTARY                                                      |
+|                                              |                                                                              | * [NO]QDBRUNDOWN                                                     |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -JOURNAL=<journal-options-list>              | :ref:`mupip-backup` and                                                      | * ALIGNSIZE=integer                                                  |
+| JOURNAL=<journal-options-list>               | :ref:`mupip-backup` and                                                      | * ALIGNSIZE=integer                                                  |
 |                                              | :ref:`mupip-set`                                                             | * ALLOCATION=integer                                                 |
 |                                              |                                                                              | * AUTOSWITCHLIMIT=integer                                            |
 |                                              |                                                                              | * BEFORE_IMAGES                                                      |
@@ -2598,140 +2600,140 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * SYNC_IO                                                            |
 |                                              |                                                                              | * YIELD_LIMIT=integer                                                |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -LOOKBACK_LIMIT=lookback-option-list         | -RECOVER                                                                     | * TIME="time"                                                        |
+| LOOKBACK_LIMIT=lookback-option-list          | -RECOVER                                                                     | * TIME="time"                                                        |
 |                                              |                                                                              |                                                                      |
 |                                              | -ROLLBACK                                                                    | * OPERATIONS=integer                                                 |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -RECEIVER                                    | :ref:`mupip-replicate`                                                       | * -BUFFSIZE=integer                                                  |
-|                                              |                                                                              | * -CHANGELOG                                                         |
-|                                              |                                                                              | * -CHECKHEALTH                                                       |
-|                                              |                                                                              | * -CMPLVL=integer                                                    |
-|                                              |                                                                              | * -FILTER=filter_name                                                |
-|                                              |                                                                              | * -he[lpers]=[m[,n]]                                                 |
-|                                              |                                                                              | * -INITIALIZE                                                        |
-|                                              |                                                                              | * -CMPLVL=n                                                          |
-|                                              |                                                                              | * -LISTENPORT=integer                                                |
-|                                              |                                                                              | * -LOG=logfile                                                       |
-|                                              |                                                                              | * -LOG_INTERVAL=integer                                              |
-|                                              |                                                                              | * -NORESYNC                                                          |
-|                                              |                                                                              | * -RESUME=strm_num                                                   |
-|                                              |                                                                              | * -REUSE=instname                                                    |
-|                                              |                                                                              | * -SHOWBACKLOG                                                       |
-|                                              |                                                                              | * -SHUTDOWN                                                          |
-|                                              |                                                                              | * -START                                                             |
-|                                              |                                                                              | * -STATSLOG=[ON|OFF]                                                 |
-|                                              |                                                                              | * -STOPSOURCEFILTER                                                  |
+| RECEIVER                                     | :ref:`mupip-replicate`                                                       | * BUFFSIZE=integer                                                   |
+|                                              |                                                                              | * CHANGELOG                                                          |
+|                                              |                                                                              | * CHECKHEALTH                                                        |
+|                                              |                                                                              | * CMPLVL=integer                                                     |
+|                                              |                                                                              | * FILTER=filter_name                                                 |
+|                                              |                                                                              | * he[lpers]=[m[,n]]                                                  |
+|                                              |                                                                              | * INITIALIZE                                                         |
+|                                              |                                                                              | * CMPLVL=n                                                           |
+|                                              |                                                                              | * LISTENPORT=integer                                                 |
+|                                              |                                                                              | * LOG=logfile                                                        |
+|                                              |                                                                              | * LOG_INTERVAL=integer                                               |
+|                                              |                                                                              | * NORESYNC                                                           |
+|                                              |                                                                              | * RESUME=strm_num                                                    |
+|                                              |                                                                              | * REUSE=instname                                                     |
+|                                              |                                                                              | * SHOWBACKLOG                                                        |
+|                                              |                                                                              | * SHUTDOWN                                                           |
+|                                              |                                                                              | * START                                                              |
+|                                              |                                                                              | * STATSLOG=[ON|OFF]                                                  |
+|                                              |                                                                              | * STOPSOURCEFILTER                                                   |
 |                                              |                                                                              | * TIMEOUT=seconds                                                    |
 |                                              |                                                                              | * TLSID=label                                                        |
-|                                              |                                                                              | * -UPDATEONLY                                                        |
-|                                              |                                                                              | * -UPDATERESYNC=/path/to/bkup-orig-inst                              |
+|                                              |                                                                              | * UPDATEONLY                                                         |
+|                                              |                                                                              | * UPDATERESYNC=/path/to/bkup-orig-inst                               |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -RECOVER                                     | :ref:`mupip-journal`                                                         | * -AFTER=time                                                        |
-|                                              |                                                                              | * -APPLY_AFTER_IMAGE                                                 |
-|                                              |                                                                              | * -BACKWARD                                                          |
-|                                              |                                                                              | * -BEFORE=time                                                       |
-|                                              |                                                                              | * -[NO]BROKENTRANS=file                                              |
-|                                              |                                                                              | * -CHAIN                                                             |
-|                                              |                                                                              | * -CHECKTN                                                           |
-|                                              |                                                                              | * -[NO]ER[ROR_LIMIT][=integer]                                       |
-|                                              |                                                                              | * -FENCES=fence-option-list                                          |
-|                                              |                                                                              | * -FORWARD                                                           |
-|                                              |                                                                              | * -FULL                                                              |
-|                                              |                                                                              | * -GLOBAL=<global_list>                                              |
-|                                              |                                                                              | * -ID=<pid_list>                                                     |
-|                                              |                                                                              | * -INTERACTIVE                                                       |
-|                                              |                                                                              | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
-|                                              |                                                                              | * -[NO]LOSTTRANS[=file]                                              |
-|                                              |                                                                              | * -RED[IRECT]=file-pair-list                                         |
-|                                              |                                                                              | * -SINCE=time                                                        |
-|                                              |                                                                              | * -VERBOSE                                                           |
-|                                              |                                                                              | * -VERIFY                                                            |
+| RECOVER                                      | :ref:`mupip-journal`                                                         | * AFTER=time                                                         |
+|                                              |                                                                              | * APPLY_AFTER_IMAGE                                                  |
+|                                              |                                                                              | * BACKWARD                                                           |
+|                                              |                                                                              | * BEFORE=time                                                        |
+|                                              |                                                                              | * [NO]BROKENTRANS=file                                               |
+|                                              |                                                                              | * CHAIN                                                              |
+|                                              |                                                                              | * CHECKTN                                                            |
+|                                              |                                                                              | * [NO]ER[ROR_LIMIT][=integer]                                        |
+|                                              |                                                                              | * FENCES=fence-option-list                                           |
+|                                              |                                                                              | * FORWARD                                                            |
+|                                              |                                                                              | * FULL                                                               |
+|                                              |                                                                              | * GLOBAL=<global_list>                                               |
+|                                              |                                                                              | * ID=<pid_list>                                                      |
+|                                              |                                                                              | * INTERACTIVE                                                        |
+|                                              |                                                                              | * LOOKBACK_LIMIT=<lookback_limit_options>                            |
+|                                              |                                                                              | * [NO]LOSTTRANS[=file]                                               |
+|                                              |                                                                              | * RED[IRECT]=file-pair-list                                          |
+|                                              |                                                                              | * SINCE=time                                                         |
+|                                              |                                                                              | * VERBOSE                                                            |
+|                                              |                                                                              | * VERIFY                                                             |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -EXTRACT                                     | :ref:`mupip-journal`                                                         | * -AFTER=time                                                        |
-|                                              |                                                                              | * -BEFORE=time                                                       |
-|                                              |                                                                              | * -[NO]BROKENTRANS=file                                              |
-|                                              |                                                                              | * -CHAIN                                                             |
-|                                              |                                                                              | * -CHECKTN                                                           |
-|                                              |                                                                              | * -[NO]ER[ROR_LIMIT]=integer]                                        |
-|                                              |                                                                              | * -FENCES=fence-option-list                                          |
-|                                              |                                                                              | * -FULL                                                              |
-|                                              |                                                                              | * -GLOBAL=<global_list>                                              |
-|                                              |                                                                              | * -ID=<pid_list>                                                     |
-|                                              |                                                                              | * -INTERACTIVE                                                       |
-|                                              |                                                                              | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
-|                                              |                                                                              | * -[NO]LOSTTRANS[=file]                                              |
-|                                              |                                                                              | * -REGION                                                            |
-|                                              |                                                                              | * -SINCE=time                                                        |
-|                                              |                                                                              | * -VERBOSE                                                           |
-|                                              |                                                                              | * -VERIFY                                                            |
+| EXTRACT                                      | :ref:`mupip-journal`                                                         | * AFTER=time                                                         |
+|                                              |                                                                              | * BEFORE=time                                                        |
+|                                              |                                                                              | * [NO]BROKENTRANS=file                                               |
+|                                              |                                                                              | * CHAIN                                                              |
+|                                              |                                                                              | * CHECKTN                                                            |
+|                                              |                                                                              | * [NO]ER[ROR_LIMIT]=integer]                                         |
+|                                              |                                                                              | * FENCES=fence-option-list                                           |
+|                                              |                                                                              | * FULL                                                               |
+|                                              |                                                                              | * GLOBAL=<global_list>                                               |
+|                                              |                                                                              | * ID=<pid_list>                                                      |
+|                                              |                                                                              | * INTERACTIVE                                                        |
+|                                              |                                                                              | * LOOKBACK_LIMIT=<lookback_limit_options>                            |
+|                                              |                                                                              | * [NO]LOSTTRANS[=file]                                               |
+|                                              |                                                                              | * REGION                                                             |
+|                                              |                                                                              | * SINCE=time                                                         |
+|                                              |                                                                              | * VERBOSE                                                            |
+|                                              |                                                                              | * VERIFY                                                             |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -ROLLBACK                                    | :ref:`mupip-journal`                                                         | * -APPLY_AFTER_IMAGE                                                 |
-|                                              |                                                                              | * -BACKWARD                                                          |
-|                                              |                                                                              | * -BEFORE=time                                                       |
-|                                              |                                                                              | * -[NO]BROKENTRANS=file                                              |
-|                                              |                                                                              | * -[NO]ER[ROR_LIMIT][=integer]                                       |
-|                                              |                                                                              | * -FENCES=fence-option-list                                          |
-|                                              |                                                                              | * -FETCHRESYNC                                                       |
-|                                              |                                                                              | * -LOOKBACK_LIMIT=<lookback_limit_options>                           |
-|                                              |                                                                              | * -[NO]LOSTTRANS[=file]                                              |
-|                                              |                                                                              | * -RES[YNC]=hexa;journal_sequence_number                             |
-|                                              |                                                                              | * -VERBOSE                                                           |
-|                                              |                                                                              | * -VERIFY                                                            |
+| ROLLBACK                                     | :ref:`mupip-journal`                                                         | * APPLY_AFTER_IMAGE                                                  |
+|                                              |                                                                              | * BACKWARD                                                           |
+|                                              |                                                                              | * BEFORE=time                                                        |
+|                                              |                                                                              | * [NO]BROKENTRANS=file                                               |
+|                                              |                                                                              | * [NO]ER[ROR_LIMIT][=integer]                                        |
+|                                              |                                                                              | * FENCES=fence-option-list                                           |
+|                                              |                                                                              | * FETCHRESYNC                                                        |
+|                                              |                                                                              | * LOOKBACK_LIMIT=<lookback_limit_options>                            |
+|                                              |                                                                              | * [NO]LOSTTRANS[=file]                                               |
+|                                              |                                                                              | * RES[YNC]=hexa;journal_sequence_number                              |
+|                                              |                                                                              | * VERBOSE                                                            |
+|                                              |                                                                              | * VERIFY                                                             |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -SHOW=<show-option-list>                     | :ref:`mupip-journal`                                                         | * -ACTIVE_PROCESSES                                                  |
-|                                              |                                                                              | * -ALL                                                               |
-|                                              |                                                                              | * -BROKEN_TRANSACTIONS                                               |
-|                                              |                                                                              | * -HEADER                                                            |
-|                                              |                                                                              | * -PROCESSES                                                         |
-|                                              |                                                                              | * -STATISTICS                                                        |
-|                                              |                                                                              | * -AFTER=time                                                        |
-|                                              |                                                                              | * -USER=user-list                                                    |
-|                                              |                                                                              | * -TRANSACTION=[KILL|SET]                                            |
-|                                              |                                                                              | * -INTERACTIVE                                                       |
-|                                              |                                                                              | * -GLOBAL=<global_list>                                              |
-|                                              |                                                                              | * -ID=<pid_list>                                                     |
-|                                              |                                                                              | * -INTERACTIVE                                                       |
+| SHOW=<show-option-list>                      | :ref:`mupip-journal`                                                         | * ACTIVE_PROCESSES                                                   |
+|                                              |                                                                              | * ALL                                                                |
+|                                              |                                                                              | * BROKEN_TRANSACTIONS                                                |
+|                                              |                                                                              | * HEADER                                                             |
+|                                              |                                                                              | * PROCESSES                                                          |
+|                                              |                                                                              | * STATISTICS                                                         |
+|                                              |                                                                              | * AFTER=time                                                         |
+|                                              |                                                                              | * USER=user-list                                                     |
+|                                              |                                                                              | * TRANSACTION=[KILL|SET]                                             |
+|                                              |                                                                              | * INTERACTIVE                                                        |
+|                                              |                                                                              | * GLOBAL=<global_list>                                               |
+|                                              |                                                                              | * ID=<pid_list>                                                      |
+|                                              |                                                                              | * INTERACTIVE                                                        |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -SINCE                                       | :ref:`mupip-backup`                                                          | * -BYTESTREAM                                                        |
-|                                              |                                                                              | * -COMPREHENSIVE                                                     |
-|                                              |                                                                              | * -DATABASE                                                          |
-|                                              |                                                                              | * -INCREMENTAL                                                       |
-|                                              |                                                                              | * -RECORD                                                            |
+| SINCE                                        | :ref:`mupip-backup`                                                          | * BYTESTREAM                                                         |
+|                                              |                                                                              | * COMPREHENSIVE                                                      |
+|                                              |                                                                              | * DATABASE                                                           |
+|                                              |                                                                              | * INCREMENTAL                                                        |
+|                                              |                                                                              | * RECORD                                                             |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -SO[URCE]                                    | :ref:`mupip-replicate`                                                       | * -ACTIVATE                                                          |
-|                                              |                                                                              | * -BUFFSIZE=Buffer_size                                              |
-|                                              |                                                                              | * -CHANGELOG                                                         |
-|                                              |                                                                              | * -CHECKHEALTH                                                       |
-|                                              |                                                                              | * -CMPLVL=integer                                                    |
-|                                              |                                                                              | * -CONNECTPARAMS=connection_options                                  |
-|                                              |                                                                              | * -DEACTIVATE                                                        |
-|                                              |                                                                              | * -DETAIL                                                            |
-|                                              |                                                                              | * -FILTER=filter_name                                                |
-|                                              |                                                                              | * -FREEZE=on/off                                                     |
-|                                              |                                                                              | * -[NO]COMMENT=string                                                |
-|                                              |                                                                              | * -INSTSECONDARY=secondary_instance name                             |
-|                                              |                                                                              | * -NOJNLFILEONLY                                                     |
-|                                              |                                                                              | * -JNLPOOL-LOG=log_file                                              |
-|                                              |                                                                              | * -LOG_INTERVAL=integer                                              |
-|                                              |                                                                              | * -LOSTTNCOMPLETE                                                    |
-|                                              |                                                                              | * -NEEDRESTART                                                       |
-|                                              |                                                                              | * -PASSIVE                                                           |
-|                                              |                                                                              | * -[NO]PLAINTEXTFALLBACK                                             |
-|                                              |                                                                              | * -PROPAGATEPRIMARY                                                  |
-|                                              |                                                                              | * -RENEGOTIATE_INTERVAL=minutes                                      |
-|                                              |                                                                              | * -ROOTPRIMARY                                                       |
-|                                              |                                                                              | * -SECONDARY=secondary_instance_name                                 |
-|                                              |                                                                              | * -SHOWBACKLOG                                                       |
-|                                              |                                                                              | * -SHUTDOWN                                                          |
-|                                              |                                                                              | * -START                                                             |
-|                                              |                                                                              | * -STATSLOG                                                          |
-|                                              |                                                                              | * -STOPSOURCEFILTER                                                  |
-|                                              |                                                                              | * -TIMEOUT=seconds                                                   |
-|                                              |                                                                              | * -TLSID=label                                                       |
-|                                              |                                                                              | * -UPDOK                                                             |
-|                                              |                                                                              | * -UPDNOTOK                                                          |
-|                                              |                                                                              | * -ZEROBACKLOG                                                       |
+| SO[URCE]                                     | :ref:`mupip-replicate`                                                       | * ACTIVATE                                                           |
+|                                              |                                                                              | * BUFFSIZE=Buffer_size                                               |
+|                                              |                                                                              | * CHANGELOG                                                          |
+|                                              |                                                                              | * CHECKHEALTH                                                        |
+|                                              |                                                                              | * CMPLVL=integer                                                     |
+|                                              |                                                                              | * CONNECTPARAMS=connection_options                                   |
+|                                              |                                                                              | * DEACTIVATE                                                         |
+|                                              |                                                                              | * DETAIL                                                             |
+|                                              |                                                                              | * FILTER=filter_name                                                 |
+|                                              |                                                                              | * FREEZE=on/off                                                      |
+|                                              |                                                                              | * [NO]COMMENT=string                                                 |
+|                                              |                                                                              | * INSTSECONDARY=secondary_instance name                              |
+|                                              |                                                                              | * NOJNLFILEONLY                                                      |
+|                                              |                                                                              | * JNLPOOL-LOG=log_file                                               |
+|                                              |                                                                              | * LOG_INTERVAL=integer                                               |
+|                                              |                                                                              | * LOSTTNCOMPLETE                                                     |
+|                                              |                                                                              | * NEEDRESTART                                                        |
+|                                              |                                                                              | * PASSIVE                                                            |
+|                                              |                                                                              | * [NO]PLAINTEXTFALLBACK                                              |
+|                                              |                                                                              | * PROPAGATEPRIMARY                                                   |
+|                                              |                                                                              | * RENEGOTIATE_INTERVAL=minutes                                       |
+|                                              |                                                                              | * ROOTPRIMARY                                                        |
+|                                              |                                                                              | * SECONDARY=secondary_instance_name                                  |
+|                                              |                                                                              | * SHOWBACKLOG                                                        |
+|                                              |                                                                              | * SHUTDOWN                                                           |
+|                                              |                                                                              | * START                                                              |
+|                                              |                                                                              | * STATSLOG                                                           |
+|                                              |                                                                              | * STOPSOURCEFILTER                                                   |
+|                                              |                                                                              | * TIMEOUT=seconds                                                    |
+|                                              |                                                                              | * TLSID=label                                                        |
+|                                              |                                                                              | * UPDOK                                                              |
+|                                              |                                                                              | * UPDNOTOK                                                           |
+|                                              |                                                                              | * ZEROBACKLOG                                                        |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| -VERSION={V4|V5}                             | :ref:`mupip-downgrade`                                                       | * file-name                                                          |
+| VERSION={V4|V5}                              | :ref:`mupip-downgrade`                                                       | * file-name                                                          |
 |                                              | and :ref:`mupip-upgrade`                                                     |                                                                      |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+

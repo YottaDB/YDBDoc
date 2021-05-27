@@ -604,6 +604,8 @@ ydb_mstack_size
 ++++++++++++++++++
 **ydb_mstack_size (gtm_stack_size)** specifies the M stack size (in KiB). If ydb_mstack_size is not set or set to 0, YottaDB uses the default M stack size (that is, 272KiB). The minimum supported size is 25 KiB; YottaDB reverts values smaller than this to 25 KiB. The maximum supported size is 10000 KiB; YottaDB reverts values larger than this to 10000 KiB.
 
+.. _ydb-mupjnl-parallel:
+
 ++++++++++++++++++++++
 ydb_mupjnl_parallel
 ++++++++++++++++++++++

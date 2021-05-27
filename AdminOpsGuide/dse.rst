@@ -1493,6 +1493,8 @@ Specifies the number of blocks, block headers, or records to DUMP.
 
 Incompatible with: -ALL, -FILEHEADER and -UPDPROC.
 
+.. _dse-dump-fileheader:
+
 ^^^^^^^^^^^^^
 -F[ILEHEADER]
 ^^^^^^^^^^^^^
