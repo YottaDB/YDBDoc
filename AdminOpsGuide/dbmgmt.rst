@@ -3583,7 +3583,7 @@ Loads a trigger definition file to the database. The format of the TRIGGERFILE q
 
 * MUPIP TRIGGER -TRIGGERFILE ignores blank lines and extra whitespace within lines. It treats lines with a semi-colon in the first position as comments and ignores their content.
 
-* If the -NOPROMPT option is specified and the trigger definition file contains a :code:`-*` line,then YottaDB will delete all the triggers without user confirmation.
+* If the -NOPROMPT option is specified and the trigger definition file contains a :code:`-*` line, then YottaDB will delete all triggers without user confirmation.
 
 * MUPIP TRIGGER compiles the XECUTE action string and rejects the load if the compilation has errors.
 

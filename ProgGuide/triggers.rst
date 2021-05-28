@@ -71,11 +71,16 @@ To apply this trigger definition file to YottaDB, all you do is to load it using
 
 **-triggername\|-trigger-name-prefix\*\|-\* .**
 
-:code:`-triggername` deletes a user-specified trigger name called triggername from the database. :code:`-triggername*` deletes all those user-defined triggers whose starting name match triggername. :code:`-*` deletes all triggers; if the MUPIP TRIGGER command does not specify -NOPROMPT , YottaDB displays a warning and asks for user confirmation before deleting all triggers. If MUPIP TRIGGER command specifies -NOPROMPT and the definition file includes a -\* line, YottaDB deletes all the triggers without user confirmation. $ZTRIGGER() performs deletions -NOPROMPT. :code:`+triggername` issues an error; to add a new user-specified trigger name, use :code:`-name=strlit2`.
+* :code:`-triggername` deletes a user-specified trigger called *triggername* from the database.
+* :code:`-triggername*` deletes all user-defined triggers whose names start with *triggername*.
+* :code:`-*` deletes all triggers; if the MUPIP TRIGGER command does not specify -NOPROMPT, YottaDB displays a warning and asks for user confirmation before deleting all triggers. If MUPIP TRIGGER command specifies -NOPROMPT and the definition file includes a -\* line, YottaDB deletes all the triggers without user confirmation. $ZTRIGGER() performs deletions -NOPROMPT.
+* :code:`+triggername` issues an error; to add a new user-specified trigger name, use :code:`-name=strlit2`.
 
 **\{\+\|-\}trigvn**
 
-trigvn is a global node on which you set up a trigger. -trigvn deletes any triggers in the database that match the specified trigger. +trigvn adds or replaces the specified trigger. If the specified trigger exists (with a matching specification), MUPIP TRIGGER or $ZTRIGGER() treats the matching definition as a no-op, resulting in no database update. If you want to specify more than one global node for the same trigger code, the following rules apply:
+* :code:`trigvn` is a global node on which you set up a trigger.
+* :code:`-trigvn` deletes any triggers in the database that match the specified trigger.
+* :code:`+trigvn` adds or replaces the specified trigger. If the specified trigger exists (with a matching specification), MUPIP TRIGGER or $ZTRIGGER() treats the matching definition as a no-op, resulting in no database update. If you want to specify more than one global node for the same trigger code, the following rules apply:
 
 1. You can use :ref:`patterns <pattern-match-op>` and ranges (using ":") for subscripts.
 2. You can specify a semicolon (;) separated list for subscripts. For example: ^A(1;2;3).
