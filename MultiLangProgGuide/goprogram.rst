@@ -175,13 +175,15 @@ Go CallMT()
 
         func CallMT(tptoken uint64, errstr *BufferT, retvallen uint32, rtnname string, rtnargs ...interface{}) (string, error)
 
-As a wrapper for the C function `ydb_ci_t() <../ProgrammersGuide/extrout.html#ydb-ci-t-intf>`_, the :code:`CallMT()` function is used to call M routines from Go, used when a single call to the function is anticipated. :code:`CallMT()` only supports read-only parameters.
+As a wrapper for the C function `ydb_ci_t() <../ProgrammersGuide/extrout.html#ydb-ci-t-intf>`_, the :code:`CallMT()` function is used to call M routines from Go, used when a single call to the function is anticipated.
 
 - :code:`retvallen` needs to be of sufficient size to hold any value returned by the call. If the output value exceeds the buffer size, a SIG-11 failure is likely as it will overwrite adjacently allocated memory, damaging storage management headers.
 
 - If a return value is specified but has not been configured in the call-in descriptor file or vice-versa, a parameter mismatch situation is created.
 
 - :code:`rtnargs` refers to a list of 0 or more arguments passed to the called routine. As all arguments are passed as strings after conversion by fmt.Sprintf("%v", parm), any argument that can be so converted can be used here. Any error returned by fmt.Sprintf() is returned as an error by :code:`CallMT()`. Note that passing an array will generate a string containing an entire array, which may be unexpected. The number of parameters possible is restricted to 34 (for 64-bit systems) or 33 (for 32-bit systems).
+
+- Note that functions that are defined in the call-in table (refer `call-in table <../ProgrammersGuide/extrout.html#call-in-table>`_ in the M Programmer's Guide) that have IO (input/output) or O (output) parameters can **only** be defined as string variables (and not literals) as the wrapper will try to put the updated values back into these variables.
 
 Example:
 
@@ -883,7 +885,7 @@ Go CallMDesc CallMDescT()
 
         func (mdesc *CallMDesc) CallMDescT(tptoken uint64, errstr *BufferT, retvallen uint32, rtnargs ...interface{}) (string, error)
 
-As a wrapper for the C function `ydb_cip_t() <../ProgrammersGuide/extrout.html#ydb-cip-t-intf>`_, the :code:`CallMDescT()` is a method of the :code:`CallMDesc` (call descriptor) structure which, during the first call, saves information in the :code:`CallMDesc` structure that makes all following calls using the same descriptor structure able to run much faster by bypassing a lookup of the function name and going straight to the M routine being called. :code:`CallMDescT()` only supports read-only parameters.
+As a wrapper for the C function `ydb_cip_t() <../ProgrammersGuide/extrout.html#ydb-cip-t-intf>`_, the :code:`CallMDescT()` is a method of the :code:`CallMDesc` (call descriptor) structure which, during the first call, saves information in the :code:`CallMDesc` structure that makes all following calls using the same descriptor structure able to run much faster by bypassing a lookup of the function name and going straight to the M routine being called.
 
 - :code:`CallMDescT()` requires a :code:`CallMDesc` structure to have been created and initialized with the :code:`SetRtnName()` method.
 
