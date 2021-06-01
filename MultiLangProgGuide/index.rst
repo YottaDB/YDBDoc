@@ -30,6 +30,7 @@ Index
    cprogram
    goprogram
    perlprogram
+   pythonprogram
    rustprogram
    programmingnotes
    LICENSE
