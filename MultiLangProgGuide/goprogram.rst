@@ -183,7 +183,7 @@ As a wrapper for the C function `ydb_ci_t() <../ProgrammersGuide/extrout.html#yd
 
 - :code:`rtnargs` refers to a list of 0 or more arguments passed to the called routine. As all arguments are passed as strings after conversion by fmt.Sprintf("%v", parm), any argument that can be so converted can be used here. Any error returned by fmt.Sprintf() is returned as an error by :code:`CallMT()`. Note that passing an array will generate a string containing an entire array, which may be unexpected. The number of parameters possible is restricted to 34 (for 64-bit systems) or 33 (for 32-bit systems).
 
-- Note that functions that are defined in the call-in table (refer `call-in table <../ProgrammersGuide/extrout.html#call-in-table>`_ in the M Programmer's Guide) that have IO (input/output) or O (output) parameters can **only** be defined as string variables (and not literals) as the wrapper will try to put the updated values back into these variables.
+- Note that functions that are defined in the call-in table (refer `call-in table <../ProgrammersGuide/extrout.html#call-in-table>`_ in the M Programmer's Guide) that have IO (input/output) or O (output) parameters can **only** be defined as string variables (and not literals) as the wrapper will try to put the updated values back into these variables. The parameter values need to be passed by reference otherwise it will result in an error.
 
 Example:
 
