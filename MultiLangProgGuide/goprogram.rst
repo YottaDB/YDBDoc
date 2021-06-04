@@ -1323,3 +1323,15 @@ YottaDB has a strong need to carefully shutdown databases at process end making 
 
 .. note::
 	This discussion applies *only* to *asynchronous* signals as defined by Go, i.e., signals that are sent to the process by itself, e.g., with :code:`syscall.Kill()`. It does *not* apply to *synchronous* signals that are signals that are raised by the hardware itself or by the OS as a consequence of executing code, i.e., SIGBUS, SIGFPE, SIGILL and SIGSEGV. A process that receives a synchronous signal will terminate without shutting down the database properly. Should such an event occur, you should verify database integrity when convenient (see `MUPIP INTEG <../AdminOpsGuide/dbmgmt.html#integ>`_), and take appropriate action if damage is encountered (see `MUPIP JOURNAL RECOVER BACKWARD <../AdminOpsGuide/ydbjournal.html#backward-recovery>`_ / `MUPIP JOURNAL ROLLBACK BACKWARD <../AdminOpsGuide/ydbjournal.html#rollback-on-line-noo-nline>`_).
+
+++++++++++++++++++++
+Database Integrity
+++++++++++++++++++++
+
+When a process terminates, the YottaDB runtime system drives an exit handler to assure that all databases are rundown, and that proper cleanup of storage is completed. YottaDB does this by using an :code:`atexit()` handler that it defines during initialization. However, this is unreliable with Go. Therefore, our **strong** recommendation is to add a :code:`defer yottadb.Exit()` statement to the Go main routine. When the main routine exits, this drives the exit handler to do database rundown and clean up.
+
+The above works well in application processes that terminate normally through the main routine. However, when a process terminates abnormally, e.g., with a fatal error, the exit handler is not always driven, and database cleanup does not always occur. For this reason, we also **strongly** recommend a `MUPIP RUNDOWN <../AdminOpsGuide/dbmgmt.html#rundown>`_ of an application database after the last process that has it open terminates, especially if it is not assured that all processes terminated normally. If all processes terminate normally, this is not required.
+
+.. note::
+
+   Fatal error handlers in the YottaDB runtime system use a :code:`panic()` call to unwind the process through the main program, which calls :code:`yottadb.Exit()`. While this does not guarantee that :code:`yottadb.Exit()` is called in the highly concurrent Go runtime environment, it makes that call likely.
