@@ -28,6 +28,9 @@ Welcome to the Administration and Operations Guide!
    basicops
    gde
    dbmgmt
+   mupipbackup
+   mupipinteg
+   mupipset
    ydbjournal
    dbrepl
    mlocks
