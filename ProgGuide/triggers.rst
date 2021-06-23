@@ -196,11 +196,11 @@ The following table briefly describes all ISVs (Intrinsic Special Variables) ava
 +-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
 | :ref:`ztwormhole-isv` | $ZTWORMHOLE allows you to specify a string up to 128KB that you want to make available during trigger execution. You can use $ZTWORMHOLE to    |
 |                       | supply application context or process context to your trigger logic. Because $ZTWORMHOLE is retained throughout the duration of the process,   |
-|                       | you can read/write $ZTWORMHOLE both from inside and outside a trigger. Note that if trigger code does not reference $ZTWORMHOLE, YottaDB does  |
-|                       | not make it available to MUPIP (via the journal files or replication stream). Therefore, if a replicating secondary has different trigger code |
-|                       | than the initiating primary (an unusual configuration) and the triggers on the replicating node require information from $ZTWORMHOLE, the      |
-|                       | triggers on the initiating node must reference $ZTWORMHOLE to ensure YottaDB maintains the data it contains for use by the update process on   |
-|                       | the replicating node. YottaDB allows you to change $ZTWORMHOLE within trigger code so that a triggered update can trigger other updates but    |
+|                       | you can read/write $ZTWORMHOLE both from inside and outside a trigger. Note that if trigger code does not reference/set $ZTWORMHOLE, YottaDB   |
+|                       | does not make it available to MUPIP (via the journal files or replication stream). Therefore, if a replicating secondary has different trigger |
+|                       | code than the initiating primary (an unusual configuration) and the triggers on the replicating node require information from $ZTWORMHOLE, the |
+|                       | triggers on the initiating node must reference/set $ZTWORMHOLE to ensure YottaDB maintains the data it contains for use by the update process  |
+|                       | on the replicating node. YottaDB allows you to change $ZTWORMHOLE within trigger code so that a triggered update can trigger other updates but |
 |                       | because of the arbitrary ordering of triggers matching the same node (refer to the discussion on trigger chaining below), such an approach     |
 |                       | requires careful design and implementation.                                                                                                    |
 +-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+

@@ -1895,8 +1895,11 @@ Legend (All hexadecimal fields have a 0x prefix. All numeric fields otherwise ar
 |                                          | \* 00010 (2) => update to a global that had at least one trigger |
 |                                          | defined, even if no trigger matched this update                  |
 |                                          |                                                                  |
-|                                          | \* 00100 (4) => $ZTWORMHOLE holds the empty string ("") at the   |
-|                                          | time of this update or was not referenced during this update     |
+|                                          | \* 00100 (4) => This is a reserved bit. Currently unused.        |
+|                                          | It was previously 1 if $ZTWORMHOLE held the empty string at the  |
+|                                          | time of the update  or was not referenced during this update     |
+|                                          | But in YottaDB r1.32 it was determined to lead to unexpected     |
+|                                          | scenarios and so that meaning was removed (as part of YDB#727).  |
 |                                          |                                                                  |
 |                                          | \* 01000 (8) => update did not invoke any triggers even if they  |
 |                                          | existed (for example, MUPIP LOAD)                                |
