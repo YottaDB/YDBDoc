@@ -1240,6 +1240,8 @@ Region Qualifiers
 
 The following -REGION qualifiers can be used with the ADD, CHANGE, or TEMPLATE commands.
 
+.. _region-no-autodb:
+
 ~~~~~~~~~~~~~~
 -[NO]AU[TODB]
 ~~~~~~~~~~~~~~
@@ -1506,6 +1508,8 @@ Segment Qualifiers
 ++++++++++++++++++++
 
 The following -SEGMENT qualifiers can be used with the ADD, CHANGE, or TEMPLATE commands.
+
+.. _segment-access-method:
 
 ~~~~~~~~~~~~~~~~~~~~~~
 -AC[CESS_METHOD]=code

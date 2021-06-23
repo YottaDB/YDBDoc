@@ -1935,6 +1935,16 @@ $ZYERROR is implicitly NEWed on entry to the routine specified by $ZYERROR. Howe
 
 YottaDB permits $ZYERROR to be modified by the SET and NEW commands.
 
+---------------
+$ZYINTRSIG
+---------------
+
+$ZYINTRSIG is a read only ISV that holds the value :code:`"SIGUSR1"` or :code:`"SIGUSR2"` depending on whether a :code:`SIGUSR1` or :code:`SIGUSR2` signal triggers the current :code:`$ZINTERRUPT` invocation (i.e. if :code:`$ZINTERRUPT` is 1). If :code:`$ZINTERRUPT` is 0, :code:`$ZYINTRSIG` holds the value :code:`" "`. Note that the value can be :code:`"SIGUSR2"` only if the environment variable :code:`ydb_treat_sigusr2_like_sigusr1` was set to a non-zero value.
+
+:code:`$ZYINTRSIG` allows M code inside :code:`$ZINTERRUPT` differentiate whether it was a :code:`SIGUSR1` or :code:`SIGUSR2` that invoked the :code:`$ZINTERRUPT` mechanism and take different actions if necessary.
+
+$ZYINTRSIG was added to YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
+
 ------------------
 $ZYRELEASE
 ------------------
@@ -1997,7 +2007,7 @@ The function $ZYISSQLNULL() returns 1 if its sole argument has a value of $ZYSQL
 
 Using $ZYSQLNULL as a subscript or assigning it as the value of a global variable (including implicitly with a MERGE), using it as a subscript in a LOCK/ZALLOCATE/ZDEALLOCATE command, or in a context that expects an integer or a numeric value raises the ZYSQLNULLNOTVALID error. Other than usage as an operand as discussed above, $ZYSQLNULL in a context that expects a string, e.g. :code:`$ASCII($ZYSQLNULL,1)`, is treated like the empty string  :code:`""`.
 
-$ZYSQLNULL was added to YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+$ZYSQLNULL was added to YottaDB effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 .. _trigger-isvs:
 
@@ -2158,6 +2168,8 @@ Note that if a trigger sets values of $ZTWORMHOLE or NEW's it within the trigger
 Note that if trigger code does not reference/set $ZTWORMHOLE, YottaDB does not make it available to MUPIP (via the journal files or replication stream). Therefore, if a replicating secondary has different trigger code than the initiating primary and the triggers on the replicating node require information from $ZTWORMHOLE, the triggers on the initiating node must reference/set $ZTWORMHOLE to ensure YottaDB maintains the data it contains for use by the update process on the replicating node. While you can change $ZTWORMHOLE within trigger code, because of the arbitrary ordering of trigger invocation on the same node, if multiple triggers for the same update modify $ZTWORMHOLE to different values, the final value of $ZTWORMHOLE after all triggers have been invoked (which is what gets stored in the journal file and gets replicated across to the replicating instance update process) becomes unpredictable. Therefore, such an approach requires careful design and implementation.
 
 YottaDB allows $ZTWORMHOLE to be NEW'd. NEWing $ZTWORMHOLE is like NEWing `$ZGBLDIR <https://docs.yottadb.com/ProgrammersGuide/isv.html#zgbldir>`_ in that the NEW'd value is initialized with the value pushed on the stack (i.e. $ZTWORMHOLE retains its original value after the NEW). However, like other NEWs, YottaDB restores $ZTWORMHOLE's value when the stack level pops.
+
+The ability to propagate a value of $ZTWORMHOLE set in a trigger was added in `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
 
 The following table summarizes the read/write permissions assigned to all trigger-related ISVs within trigger context and outside trigger context.
 

@@ -1776,7 +1776,7 @@ Here are some $VIEW("REGION",gvn) outputs:
    YDB>w $view("REGION","^a")
    DEFAULT,A1,A2,A3,A5,A4
 
-Support for $VIEW("REGION","^*"), which returns the name of the region in the global directory mapped to by the * namespace, was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
+Support for $VIEW("REGION","^*"), which returns the name of the region in the global directory mapped to by the * namespace, was added effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 .. _zahandle-function:
 
@@ -1893,12 +1893,18 @@ Returns the transformed representation of the first argument expr in a normalize
 
 .. code-block:: none
 
-   $ZATRANSFORM(expr,intexpr[,{0|1}][,{0|1}])
+   $ZATRANSFORM(expr,intexpr[,{0|1|2|-2}][,{0|1}])
 
 * The expression specifies the string to transform.
 * The intexpr specifies the ID of the alternative transform to use.
-* The optional third argument specifies whether the transform is to normalized form, by default or if zero (0), or, if one (1), the reverse transform from the normalized to the native form.
-* The optional forth argument specifes whether to use standard M collation of numbers before strings, the default or zero (0), or to sort all values as strings (1).
+* The optional third argument specifies :
+     * zero (0): the transform is to normalized form
+     * one (1): the reverse transform from the normalized to the native form
+     * two (2): the character which collates immediately after the first character of the first argument, or the empty string if no character does
+     * minus two (-2): the character which collates immediately before the first character of the first argument, or the empty string if no character does
+* The optional fourth argument specifes whether to use standard M collation of numbers before strings, the default or zero (0), or to sort all values as strings (1).
+
+$ZATRANSFORM() options were modified in YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
 
 Please see the section on $ZCOLLATE() for a similar alternative.
 
@@ -2416,7 +2422,7 @@ Example:
    999999999999999999 DE0B6B3A763FFFF
    YDB>
 
-Base conversion was added to $ZCONVERT() effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
+Base conversion was added to $ZCONVERT() effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 .. _zdata-function:
 
@@ -2837,7 +2843,7 @@ Example:
 
 Shows default file name and type of the files created containing the zshow dump information and the difference when the name and type are specified.
 
-The second parameter was added to $ZJOBEXAM() effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+The second parameter was added to $ZJOBEXAM() effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 .. _zjustify-function:
 
@@ -3015,6 +3021,10 @@ The keywords for the fifth argument $ZPARSE() are:
 NULL (""): Returns a full file-specification or device
 
 "SYNTAX_ONLY": Disables checking for the existence of the directory or device.
+
+"SYMLINK": Returns the file name of the actual file rather than the symbolic link, with $ZPARSE() following the link or chain of links.
+
+The SYMLINK keyword was added to YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
 
 ++++++++++++++++++++++++++++++
 Examples of $ZPARSE()
@@ -3349,7 +3359,7 @@ There are four possible return values from $ZSIGPROC():
 .. note::
    Although $ZSIGPROC() works today as a way to invoke the asynchronous interrupt mechanism of YottaDB processes to XECUTE $ZINTERRUPT because the underlying mechanism uses the USR1 signal, YottaDB reserves the right to change the underlying mechanism to suit its convenience and sending a SIGUSR1 may cease to work as a way to invoke the asynchronous interrupt mechanism. Use MUPIP INTRPT as the supported and stable API to invoke the asynchronous interrupt mechanism.
 
-In release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ $ZSIGPROC() was enhanced to allow signals to be specified by name.
+In release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ $ZSIGPROC() was enhanced to allow signals to be specified by name.
 
 ++++++++++++++++++++++++++
 Examples of $ZSIGPROC()
@@ -3544,7 +3554,7 @@ In many ways, the $ZSUBSTR() function is similar to the $ZEXTRACT() function. Fo
 $ZSYSLOG()
 ----------------------
 
-Sends its string parameter to the system log and always returns TRUE (1). The text appears in the syslog with the same format as any other YottaDB syslog message (that is, in the user.info log with YDB-MUMPS[pid]" or "YDB-MUPIP[pid]" prefix along with instance information where appropriate). The $ZSYSLOG() function sends the argument to syslog facility. The format of the $ZSYSLOG() function is:
+Sends its string parameter to the system log and always returns TRUE (1). Syslog entries logged by $ZSYSLOG() show :code:`"YDB-"` followed by the process executable :code:`proc/<pid>/comm` converted to upper case as the SYSLOG_IDENTIFIER field (along with instance information where appropriate). The $ZSYSLOG() function sends the argument to syslog facility. The format of the $ZSYSLOG() function is:
 
 .. code-block:: none
 
@@ -3836,7 +3846,7 @@ Examples of $ZYHASH()
 .. note::
    $ZYHASH() should never be used when cryptographic quality hashes are needed.
 
-$ZYHASH() is in YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+$ZYHASH() is in YottaDB effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 -----------------
 $ZYISSQLNULL()
@@ -3860,4 +3870,31 @@ Examples of $ZYISSQLNULL()
    0
    YDB>
 
-$ZYISSQLNULL() is in YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+$ZYISSQLNULL() is in YottaDB effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+
+-------------
+$ZYSUFFIX()
+-------------
+
+Returns a 128-bit `MurmurHash3 <https://en.wikipedia.org/wiki/MurmurHash#MurmurHash3>`_ of its string argument rendered as a 22 character alphanumeric (i.e., 0-9, a-z, A-Z) sequence suitable for concatenation to an application identifier (e.g., :code:`"^%MyApp"`) to generate names for global variables, local variables, and routines that are unique for all practical purposes.
+
+.. code-block:: none
+
+   $ZYSU[FFIX](string)
+
+.. note::
+
+   * YottaDB supports names that are unique in the first 31 characters, and
+   * the function may return different sequences for the same :code:`string` on different platforms
+
++++++++++++++++++++++++++
+Examples of $ZYSUFFIX()
++++++++++++++++++++++++++
+
+.. code-block:: bash
+
+   YDB>write $zysuffix("abc")
+   jKHjZ0MZwBJAqO6sGQV7F5
+   YDB>
+
+$ZYSUFFIX() was added in YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.

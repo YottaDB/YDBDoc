@@ -124,6 +124,8 @@ Incompatible with: -JNLFILE
 
 The following sections describe the action qualifiers of the MUPIP SET command exclusive of the details related to journaling and replication, which are described in `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_ and `Chapter 7: “Database Replication” <./dbrepl.html>`_. All of these qualifiers are incompatible with the -JNLFILE and -REPLICATION qualifiers.
 
+.. _set-access-method:
+
 +++++++++++++++
 -ACCESS_METHOD
 +++++++++++++++
@@ -175,6 +177,8 @@ With -DEFER_ALLOCATE, YottaDB instructs the file system to create the database f
 * To switch an existing database file so it immediately preallocates all blocks, first use MUPIP SET -NODEFER_ALLOCATE to set the switch in the database file header, followed by MUPIP EXTEND -BLOCKS=n, where n >= 0. Failures to preallocate space produce a PREALLOCATEFAIL error.
 
 * The default is DEFER_ALLOCATE.
+
+.. _mupip-set-epochtaper:
 
 +++++++++++++
 -EPOCHTAPER

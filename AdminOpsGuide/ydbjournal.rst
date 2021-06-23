@@ -1530,6 +1530,12 @@ ROLLBACK FORWARD accepts only CHECKTN, which is the default, but does not accept
 
 CHECKTN is incompatible with BACKWARD.
 
+   - [CO]RRUPTDB
+
+Extracts journal records into a single file even if the database is corrupt or missing. Always specify a journal name when you are using CORRUPTDB. CORRUPTDB does not recognize the wildcard character "*" for journal file name and is incompatible with FENCES, LOST, and BROKEN qualifiers.
+
+CORRUPTDB qualifier was added to YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
+
 .. code-block:: none
 
    -[NO]ER[ROR_LIMIT][=integer]

@@ -2472,6 +2472,14 @@ Determines whether four digit year code is active for $ZDATE() function. YottaDB
 
 If no value is given with the VIEW command, it turns four digit code on. It is equivalent to the intrinsic special variable $ZDATEFORM. Use $ZDATEFORM to set this VIEW keyword. Also, logical name environment variable ydb_zdate_form may be used to set the initial value to this factor.
 
+~~~~~~~~~~~~~~~~~~~~~~~
+ZTRIGGER_OUTPUT:value
+~~~~~~~~~~~~~~~~~~~~~~~
+
+VIEW "ZTRIGGER_OUTPUT":0 disables output from the $ZTRIGGER function, while VIEW "ZTRIGGER_OUTPUT" or VIEW "ZTRIGGER_OUTPUT":1 enables this output.
+
+Processes start with the default behavior of the output enabled. The function $VIEW("ZTRIGGER_OUTPUT") returns 1 if this setting is enabled and 0 if disabled.
+
 ++++++++++++++++++++++++
 Examples of VIEW
 ++++++++++++++++++++++++
@@ -3037,8 +3045,14 @@ The format of the ZHALT command is:
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether YottaDB executes the command.
 * The optional integer expression specifies the return code. If an integer expression is not specified, ZHALT returns 0. Because UNIX limits return codes to zero through 255, ZHALT returns intexpr modulo 256, unless the intexpr is non-zero but the intexpr modulo 256 is zero, in which case ZHALT returns a (non-success) value of 255 so that the return code is non-zero.
+* A ZHALT with a non-zero argument while inside a :code:`ydb_ci*()` invocation causes :code:`ydb_ci*()` to return a status of that non-zero value. A :code:`ZHALT 0` (or the equivalent HALT) while inside a :code:`ydb_ci*()` function causes :code:`ydb_ci*()` to return a status of 0.
 * If no arguments are specified, at least two (2) spaces must follow the command to separate it from the next command on the line. Note that additional commands do not serve any purpose unless the ZHALT has a postconditional.
 * A ZHALT releases all shared resources held by the process, such as devices OPENed in YottaDB, databases, and YottaDB LOCKs. If the the process has an active M transaction (the value of $TLEVEL is greater than zero (0)), YottaDB performs a ROLLBACK prior to terminating.
+
+.. note::
+
+   * When invoked through :code:`ydb_ci*()`, a ZHALT argument can be a 4-byte integer with the entire 4-byte value returned. As before, a ZHALT that returns to the shell (i.e., M code directly invoked from the shell) has a 0-255 value as its status.
+   * When :code:`ydb_ci*()` returns a status of a non-zero value, any return/output type parameters should be assumed uninitialized, whereas they are set for zero return values.
 
 +++++++++++++++++
 Examples of ZHALT
@@ -3276,6 +3290,8 @@ If the path to a file is non-existent, the request is ignored except in the case
 For each auto-relink enabled directory which a YottaDB process accesses while searching through $ZROUTINES, YottaDB creates a small control file (Relinkctl) in the directory identified by $ydb_linktmpdir (defaulting to $ydb_tmp, which in turn defaults to /tmp, if unspecified). The names of these files are of the form ydb-relinkctl-<murmur> where <murmur> is a hash of the realpath() to an auto-relink directory; for example: /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002). With each Relinkctl file, YottaDB creates and associates a block of shared memory that contains associated control structures. Among the structures is a cycle number corresponding to each routine found in the routine directory; a change in the cycle number informs a process that it may need to determine whether there is a new version of a routine. Although YottaDB only creates relinkctl records for routines that actually exist on disk, it may increment cycle numbers for existing relinkctl records even if they no longer exist on disk.
 
 YottaDB creates both the Relinkctl file and shared memory with permissions based on the logic described in the "IPC Permissions" column of the `Shared Resource Authorization Permissions <../AdminOpsGuide/securityph.html#share-rsc-auth-permissions>`_ section in the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_, except that the object directory, rather than the database file, provides the base permissions.
+
+Orphaned relinkctl files associated with an object directory are automatically cleaned up on subsequent reuse of that object directory. An orphaned relinkctl file exists if the last YottaDB process using it does not shutdown cleanly, typically the result of a SIGKILL, but also possible with SIGINT (sent by Ctrl-C) or SIGTERM (sent by `MUPIP STOP <../AdminOpsGuide/dbmgmt.html#mupip-stop>`_).
 
 The MUPIP RCTLDUMP command reports information related to relinkctl files and their associated shared memory segments.
 
@@ -3632,10 +3648,10 @@ Codes may be upper- or lower-case. Invalid codes produce a run-time error. Multi
 
 If you are using a local variable destination and place another code ahead of "V", the effect is to have the results of the earlier code also appear in the results of the "V" code.
 
-If the wildcard (\*) occurs in the list, ZSHOW uses the default order (ZSHOW "IVBDLGR" ):
+If the wildcard (\*) occurs in the list, ZSHOW uses the default order (ZSHOW "VIBDLGR" ):
 
-* intrinsic special variables
 * local variables
+* intrinsic special variables
 * ZBREAK information
 * device information
 * LOCK and ZALLOCATE information

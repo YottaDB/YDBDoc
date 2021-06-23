@@ -589,6 +589,10 @@ The conversion utilities are:
 
 The conversion utilities can be invoked as extrinsic functions.
 
+.. note::
+
+   All base conversion utility programs (%DH, %DO, %HD, %HO, %OD, and %OH) convert input until the first invalid character and then ignore the remaining characters.
+
 .. _dh-util:
 
 ++++++++++++++
@@ -724,7 +728,7 @@ This example invokes %DO as an extrinsic function with the label FUNC. The first
 %HD
 ++++
 
-The %HD utility converts numeric values from hexadecimal to decimal. %HD returns the decimal number in the read-write variable %HD. %HD rejects input numbers beginning with a minus (-) sign and returns null (""). The routine has entry points for interactive or non-interactive use.
+The %HD utility converts numeric values from hexadecimal to decimal, accepting strings starting with a case independent :code:`"0x"`. %HD returns the decimal number in the read-write variable %HD. %HD rejects input numbers beginning with a minus (-) sign and returns null (""). The routine has entry points for interactive or non-interactive use.
 
 **Utility Labels**
 
@@ -783,7 +787,7 @@ This example invokes %HD as an extrinsic function with the label FUNC and writes
 %HO
 ++++
 
-The %HO utility converts numeric values from hexadecimal to octal. %HO returns the octal number in the read-write variable %HO. %HO rejects input numbers beginning with a minus (-) sign and returns null (""). The routine has entry points for interactive or non-interactive use.
+The %HO utility converts numeric values from hexadecimal to octal, accepting strings starting with a case independent :code:`"0x"`. %HO returns the octal number in the read-write variable %HO. %HO rejects input numbers beginning with a minus (-) sign and returns null (""). The routine has entry points for interactive or non-interactive use.
 
 **Utility Labels**
 

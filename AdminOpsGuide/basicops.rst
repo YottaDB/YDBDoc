@@ -137,6 +137,56 @@ ydb_env_set creates the following aliases:
 
 If /var/log/yottadb/$ydb_rel directory exists, ydb_env_set sets it as the value for $ydb_log. If ydb_env_set does not find /var/log/yottadb/$ydb_rel, it uses $ydb_tmp to set the value of $ydb_log.
 
+Sourcing :code:`ydb_env_set` manages a three region database:
+
+#. A DEFAULT region in which empty string (:code:`""`) subscripts are disabled. Except for global variables mapped to the YDBOCTO and YDBAIM regions, the properties of this region are unchanged.
+
+#. A YDBOCTO region, intended to be used by the `Octo SQL plugin <https://gitlab.com/YottaDB/DBMS/YDBOcto/>`_ with the following properties:
+
+    * Empty string subscripts are enabled.
+
+    * :code:`^%ydbOcto*` global variables (with all combinations of capitalization of :code:`"Octo"`) are mapped to YDBOCTO.
+
+    * The key size is 1019 bytes and the record size is 1MiB.
+
+    * The default database filename is :code:`$ydb_dir/$ydb_rel/g/%ydbocto.dat` and the default journal file is :code:`$ydb_dir/$ydb_rel/g/%ydbocto.mjl`.
+
+    * The block size is 2KiB, with an initial allocation of 10000 blocks, extended by 20000 blocks.
+
+    * 2000 global buffers.
+
+    Except for these differences, the properties of the YDBOCTO region are the same as those of the DEFAULT region.
+
+#. A YDBAIM region, intended to be used by the `Application Independent Metadata plugin <https://gitlab.com/YottaDB/Util/YDBAIM>`_ with the following properties:
+
+    * Empty string subscripts are enabled.
+
+    * :code:`^%ydbAIM*` global variables (with all combinations of capitalization of :code:`"AIM"`) are mapped to YDBAIM.
+
+    * The key size is 992 bytes and the record size is 1008 bytes.
+
+    * The default database filename is :code:`$ydb_dir/$ydb_rel/g/%ydbaim.dat`. Journaling is not enabled by default, as Application Independent Metadata can be (re)created from application data at any time, on demand.
+
+    * The block size for YDBAIM is 1KiB, with an initial allocation of 20000 blocks, extended by 40000 blocks.
+
+    * The YDBAIM region uses the :ref:`MM access method <segment-access-method>`.
+
+    * Sourcing :code:`ydb_env_set` does not create the database file. The YDBAIM region has :ref:`AutoDB <region-no-autodb>` set in the global directory and the first access to a global variable mapped to the YDBAIM region automatically creates the database file.
+
+    * Sourcing :code:`ydb_env_set` when recovering from an unclean shutdown (such as when coming back up from a system crash) deletes the YDBAIM region, whereas it performs RECOVER / ROLLBACK BACKWARD on the DEFAULT and YDBOCTO regions. To make YDBAIM region recoverable, :ref:`change the access method to BG <set-access-method>`, and :ref:`enable and turn on before-image journaling <set-action-qualifiers>`.
+
+Additionally:
+
+- The default mode is UTF-8 if YottaDB was installed with UTF-8 support.
+
+- For UTF-8 mode, sourcing :code:`ydb_env_set` checks whether a locale is set in the LC_ALL or LC_CTYPE environment variables. If not, it uses the first UTF-8 locale in the :code:`locale -a` output, and terminates with an error if one is not found.
+
+- In case of error, the location of the error file is output.
+
+Sourcing :code:`ydb_env_set` handles the case where replication is turned on.
+
+:code:`ydb_env_set` was modified in YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_, to create a three region database.
+
 ++++++++++
 gtmscshrc
 ++++++++++
@@ -218,14 +268,13 @@ If you intend to use Database Encryption, set the ydb_passwd and ydb_crypt_confi
     ydb -run <entryref> to start executing at an entryref
     ydb -help / ydb -h / ydb -? to display this text
 
+.. _env-vars:
 
 ------------------------
  Environment Variables
 ------------------------
 
-.. _env-vars:
-
-(Last updated: `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_)
+(Last updated: `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_)
 
 YottaDB supports both ydb_* environment variables and gtm* environment variables. If the ydb* environment variable is not defined, but the gtm* environment variable is defined, the ydb* environment variable is also defined to have the same value as the gtm* environment variable the first time the gtm* environment variable is read. If the ydb* environment variable and the gtm* environment variable are both defined, the ydb* environment variable value takes precedence.
 
@@ -826,6 +875,13 @@ ydb_tprestart_log_first
 ydb_trace_gbl_name
 +++++++++++++++++++++
 **ydb_trace_gbl_name (gtm_trace_gbl_name)** enables YottaDB tracing at process startup. Setting ydb_trace_gbl_name to a valid global variable name instructs YottaDB to report the data in the specified global when a VIEW command disables the tracing, or implicitly at process termination. This setting behaves as if the process issued a VIEW "TRACE" command at process startup. However, ydb_trace_gbl_name has a capability not available with the VIEW command, such that if the environment variable is defined but evaluates to zero (0) or to the empty string, YottaDB collects the M-profiling data in memory and discards it when the process terminates (this feature is mainly used for in-house testing). Note that having this feature activated for processes that otherwise don't open a database file (such as GDE) can cause them to encounter an error.
+
+++++++++++++++++++++++++++++++++
+ydb_treat_sigusr2_like_sigusr1
+++++++++++++++++++++++++++++++++
+**ydb_treat_sigusr2_like_sigusr1** when set to a non-zero numeric value, "yes" or "TRUE" (case-insensitive), or a leading substring of "yes" or "true", causes a YottaDB process to treat a USR2 signal just as it would a SIGUSR1 (by invoking $ZINTERRUPT mechanism). The default behavior is to ignore SIGUSR2.
+
+ydb_treat_sigusr2_like_sigusr1 was added to YottaDB release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
 
 ++++++++++++++++++++
 ydb_trigger_etrap

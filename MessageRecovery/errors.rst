@@ -7739,16 +7739,6 @@ MUPIP Error: This indicates that an operation initiated by MUPIP LOAD with the q
 
 Action: Specify a record that is within the actual file.
 
-------------------
-LOADBGSZ2
-------------------
-
-LOADBGSZ2, Load error: BEGIN too large. No records loaded
-
-MUPIP Error: This error is returned when the BEGIN qualifier's value exceeds the maximum (4GB - 1) value.
-
-Action: Reduce the size of the parameter value and retry.
-
 --------------------
 LOADCTRLY
 --------------------
@@ -7778,16 +7768,6 @@ LOADEDSZ, Load error: END too small. No records loaded.
 MUPIP Error: This indicates that a MUPIP LOAD operation did not occur because the record specified for the qualifier END= is smaller than 2.
 
 Action: Modify the qualifier END= value.
-
----------------
-LOADEDSZ2
----------------
-
-LOADEDSZ2, Load error: END too large. No records loaded.
-
-MUPIP Error: This error is produced when the END qualifier's value exceeds the maximum (4GB - 1) value.
-
-Action: Reduce the size of the parameter value and retry.
 
 -----------------
 LOADEOF
@@ -14892,6 +14872,18 @@ Run Time Error: This indicates that a $ZROUTINES function that does not allow wi
 
 Action: Replace the wild card with a specific directory name.
 
+---------------------
+WORDEXPFAILED
+---------------------
+
+WORDEXPFAILED, wordexp() call for string ssss returned tttt error. See wordexp() man pages for details
+
+Run Time Error: This indicates that the command $VIEW("WORDEXP",tttt), received the tttt error code from the OS wordexp() function which it called.
+
+Action: Refer to the OS wordexp() documentation to identify the error and correct the application accordingly.
+
+WORDEXPFAILED was added to YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
+
 ------------------
 WRITEERROR
 ------------------
@@ -15066,9 +15058,9 @@ Action: Ensure that the number of input arguments in the external call matches t
 ZCCONVERT
 -------------------
 
-ZCCONVERT, External call: error converting output argument
+ZCCONVERT, External call: error converting output argument from external call
 
-Run Time Error: This indicates that an external call or $ZCALL() function failed because an output argument supplied by the external routine did not match the corresponding output description in the external call table.
+Run Time Error: This indicates that an external call failed because an output argument supplied by the external routine did not match the corresponding output description in the external call table.
 
 Action: Change the external call table or the called routine so that they correspond.
 

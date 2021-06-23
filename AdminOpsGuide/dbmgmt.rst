@@ -2006,7 +2006,7 @@ Estimates and reports the size of global variables using a format that is simila
 
 .. code-block:: none
 
-   MUPIP SI[ZE] [-h[euristic]=estimation_technique] [-s[elect]=global-name-list] [-r[egion]=region-list] [-a[djacency]=integer]
+   MUPIP SI[ZE] [-h[euristic]=estimation_technique] [-s[elect]=global-name-list] [-r[egion]=region-list] [-a[djacency]=integer] [-su[bscript]]=global-list
 
 The optional qualifiers of MUPIP SIZE are:
 
@@ -2078,6 +2078,30 @@ Specifies the region on which MUPIP SIZE runs. If REGION is not specified, MUPIP
 
 The regions in the region-list are case-insensitive. The specified region-list is converted into upper case before processing.
 
+~~~~~~~~~~~~
+-SUBSCRIPT
+~~~~~~~~~~~~
+
+Specifies the subscripted/non-subscripted global variables on which MUPIP SIZE runs. SUBSCRIPT is incompatible with SELECT.
+
+The format of the SUBSCRIPT qualifier is:
+
+.. code-block:: none
+
+   -SU[BSCRIPT]=global-list
+
+*global-list* can be:
+
+    * A range of global variables denoted by start:end syntax. For example, :code:`-subscript="^g1:^g4"`.
+
+    * A range of subscripted global variables denoted by start:end syntax. For example, :code:`-subscript="^g(1):^g(4)"`
+
+.. note::
+
+   Apart from randomness caused by sampling heuristics, MUPIP SIZE also has randomness from concurrent updates because it does not use the snapshot technique that MUPIP INTEG uses.
+
+SUBSCRIPT qualifier was added to YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
+
 ~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP SIZE
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -2102,6 +2126,8 @@ This example estimates the size of global variables g1, g2 and g3 using accept/r
 
 .. note::
    Apart from randomness caused by sampling heuristics, MUPIP SIZE also has randomness from concurrent updates because it does not use the snapshot technique that MUPIP INTEG uses.
+
+.. _mupip-stop:
 
 ++++++++++
 STOP
@@ -2132,8 +2158,8 @@ Examines or loads trigger definitions. The format of the MUPIP TRIGGER command i
 
 .. code-block:: none
 
-   TRIGGER {-TRIG[GERFILE]=<trigger_definitions_file>
-   [-NOPR[OMPT]]|[-SELE[CT][=name-list|*][<select-output-file>]|-UPGRADE}
+   TRIGGER {-STDIN|-TRIG[GERFILE]=<trigger_definitions_file>
+   [-NOPR[OMPT]]|[-SELE[CT][=name-list|*][-STDOUT|<select-output-file>]|-UPGRADE}
 
 Before you run the MUPIP TRIGGER command:
 
@@ -2214,6 +2240,38 @@ The format of the UPGRADE qualifier is:
    -UPGRADE
 
 If YottaDB encounters an old trigger definition it produces a NEEDTRIGUPGRD message. To preserve the possibility of a straightforward downgrade to an earlier version, perform a select "*" action with MUPIP TRIGGER (or $ZTRIGGER() and save the result. Note that TRIGGER UPGRADE assumes that the existing trigger definitions are properly defined; if the prior release has produced defective triggers, delete them with a wild-card ("*"), and redefine the triggers in the new release. In the event of a downgrade, delete "*" all triggers before the downgrade and insert the saved version from before the upgrade. Attempting to perform a MUPIP TRIGGER UPGRADE on a database without write authorization to the database produces a TRIGMODREGNOTRW error. The UPGRADE qualifier is not compatible with any other MUPIP TRIGGER qualifier. Trigger upgrades from older versions may produce journal records based on the prior format that a MUPIP JOURNAL RECOVER cannot process correctly, therefore, YottaDB recommends you do them with journaling off, and start with a backup and fresh journal files after the trigger upgrade.
+
+~~~~~~~~
+-STDIN
+~~~~~~~~
+
+Reads input triggers to be set from stdin.
+
+The format of the STDIN qualifier is:
+
+.. code-block:: none
+
+   -STDIN
+
+STDIN is incompatible with any other option.
+
+STDIN qualifier was added to YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
+
+~~~~~~~~~
+-STDOUT
+~~~~~~~~~
+
+Reports on triggers from the database to stdout.
+
+The format of the STDOUT qualifier is:
+
+.. code-block:: none
+
+   -STDOUT
+
+STDOUT is only valid for SELECT and therefore is incompatible with the STDIN, TRIGGERFILE, and UPGRADE options.
+
+STDOUT qualifier was added to YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP TRIGGER
