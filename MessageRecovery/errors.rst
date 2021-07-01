@@ -9987,7 +9987,7 @@ NOREGION
 
 NOREGION, REGION not found: xxxx
 
-LKE Error: This indicates that a SHOW or CLEAR command with the qualifier REGION=xxxx could not locate region xxxx in the current Global Directory.
+Utility Error: This error can be issued by various MUPIP, DSE, LKE commands that specify a REGION=xxxx qualifier value but the region name could not be located in the current Global Directory. This error can also be issued in case the special region name of :code:`*` is specified and all regions have the AUTODB flag turned on and their corresponding database file does not exist.
 
 Action: Look for and correct any typographical errors in the region name. Use GDE to look in the Global Directory for names of defined regions.
 
