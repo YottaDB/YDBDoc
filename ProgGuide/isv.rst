@@ -1802,7 +1802,7 @@ $ZTIMEOUT controls a single process wide timer. The format of the $ZTIMEOUT ISV 
 * The optional timeout in seconds specifies with millisecond accuracy how long from the current time the timer interrupts the process. If the specified timeout is negative, YottaDB cancels the timer. If the timeout is zero, YottaDB treats it as it would a DO of the vector.
 * The optional labelref specifies a code vector defining a fragment of M code to which YottaDB transfers control as if with a DO when the timeout expires. If the timeout is missing, the assignment must start with a colon and only changes the vector, and in this case, if the timeout is the empty string, YottaDB removes any current vector.
 
-Note that YottaDB only recognizes interrupts such as from $ZTIMEOUT at points where it can properly resume operation, such as the beginning of a line, when waiting on a command with a timeout, or when starting a FOR iteration. When a timeout occurs, if the last assignment specified no vector, YottaDB uses the current $ETRAP or $ZTRAP. YottaDB rejects an attempted KILL of $ZTIMeout with the VAREXPECTED error and an attempted NEW of $ZTIMeout with the SVNONEW error.
+Note that YottaDB only recognizes interrupts such as from $ZTIMEOUT at points where it can properly resume operation, such as the beginning of a line, when waiting for a command with a timeout, or when starting a FOR iteration. When a timeout occurs, if the last assignment specified no vector, YottaDB uses the current $ETRAP or $ZTRAP. YottaDB rejects an attempted KILL of $ZTIMeout with the VAREXPECTED error and an attempted NEW of $ZTIMeout with the SVNONEW error.
 
 Example:
 

@@ -1076,7 +1076,7 @@ Use only with: -FILEHEADER
 -SLEE[P_SPIN_COUNT]=integer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Changes the hexadecimal Mutex Sleep Spin Count that controls the number of times a process waiting on a shared resource (usually a database) suspends its activity after exhausting its Mutex Hard Spin Count and before enqeueing itself to be awakened by a process releasing the resource.
+Changes the hexadecimal Mutex Sleep Spin Count that controls the number of times a process waiting for a shared resource (usually a database) suspends its activity after exhausting its Mutex Hard Spin Count and before enqeueing itself to be awakened by a process releasing the resource.
 
 Use only with: -FILEHEADER
 

@@ -36,6 +36,8 @@ Language
 Use American English, not British.
 For example, use suffix :code:`-ize/-yze/-ization` not :code:`-ise/-yse/-isation`.
 
+A common error in American English is to use the term *waiting on* instead of *waiting for*. While a waiter at a restaurant waits **on** customers, a command or function waits **for** something.
+
 Use Active Voice instead of Passive Voice. This is because active voice conveys a strong, direct and clear tone.
 When the *subject* of a sentence performs the verb's action, we say that the sentence is in *active voice*. Although the reader is rarely explicitly addressed in our documentation, he/she is considered to be the *subject*.
 
@@ -53,7 +55,7 @@ Acronyms
 
 For a small document the first usage of an acronym should spell out the entire name followed by the acronym in parentheses. The acronym alone may be used in all other instances.
 
-For a large document have a glossary of acronyms with their entire names. Every occurrence of an acronym in the documentation will link to the appropriate entry in the glossary.
+For a large document have a glossary of acronyms with their entire names. Every occurrence of an acronym in the documentation should link to the appropriate entry in the glossary.
 
 Don't use a full stop after an acronym unless it is the last word in a sentence.
 
