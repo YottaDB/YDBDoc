@@ -627,8 +627,8 @@ ZMessage Codes
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378154 | DBBADPNTR, xxxx Bad pointer value in directory                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381936 | DBBADUPGRDSTATE, Correcting conflicting values for fields describing database version upgrade state in the file header for region rrrr (ffff) - make fresh backups with|
-|           | new journal files immediately.                                                                                                                                         |
+| 150381936 | DBBADUPGRDSTATE, Correcting conflicting values for fields describing database version upgrade state in the file header for region rrrr (ffff) - make fresh backups     |
+|           | with new journal files immediately.                                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378186 | DBBDBALLOC, xxxx Block doubly allocated                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
