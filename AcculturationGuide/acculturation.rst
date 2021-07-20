@@ -1993,7 +1993,7 @@ Backup when an application is not running is straightforward – just copy the d
 
 .. note::
 
-   As a protection against operational mishaps, database files store their current journal file name in the database file header and journal file headers store their database file names. Copying database files when they are not open, or taking a snapshot with a MUPIP FREEZE will create database file copies that include journal file names. As this weakens the protection, consider a `MUPIP SET NOJOURNAL <../AdminOpsGuide/ydbjournal.html#set-action-qualifiers>`_ on copied database files to wipe journal file names from the file headers of copied database files. `MUPIP BACKUP BACKUPDBJNL=DISABLE <../AdminOpsGuide/mupipbackup.html#mupip-backup-bkupdbjnl>`_ also provides this option.
+   As a protection against operational mishaps, database files store their current journal file name in the database file header and journal file headers store their database file names. Copying database files when they are not open, or taking a snapshot with a MUPIP FREEZE will create database file copies that include journal file names. As this weakens the protection, consider a `MUPIP SET NOJOURNAL <../AdminOpsGuide/ydbjournal.html#set-action-qualifiers>`_ on copied database files to wipe journal file names from the file headers of copied database files. `MUPIP BACKUP BACKUPDBJNL=DISABLE <../AdminOpsGuide/dbmgmt.html#mupip-backup-bkupdbjnl>`_ also provides this option.
 
 +++++++++++++++++
 Exercise - Backup

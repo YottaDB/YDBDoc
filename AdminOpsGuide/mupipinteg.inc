@@ -10,16 +10,6 @@
 .. #                                                             #
 .. ###############################################################
 
-.. index::
-   MUPIP INTEG
-
-================
-5.2 MUPIP INTEG
-================
-
-.. contents::
-   :depth: 3
-
 Performs an integrity check on a YottaDB database file. You can perform structural integrity checks on one or more regions in the current Global Directory without bringing down (suspending database updates) your application. However, a MUPIP INTEG on a single file database requires standalone access but does not need a Global Directory. The order in which the MUPIP INTEG command selects database regions is a function of the file system layout and may vary as files are moved or created. Execute MUPIP INTEG operations one database file at a time to generate an report where the output always lists database files in a predictable sequence. For example, to compare output with a reference file, run INTEG on one file at a time.
 
 Always use MUPIP INTEG in the following conditions:
@@ -75,19 +65,19 @@ YottaDB strongly recommends fixing the following errors as soon as they are disc
 
 * Integrity errors in an index block - these may cause accelerating damage when processes make updates to that area of the database region using the faulty index. For more information, refer to `Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_.
 
-MUPIP INTEG -FAST and the "regular" INTEG both report these errors (These qualifiers are described later in this section). Other database errors do not pose the threat of rapidly spreading problems in GDS files. After the YottaDB database repair, assess the type of damage, the risk of continued operations, and the disruption in normal operation caused by the time spent repairing the database. For information on analyzing and correcting database errors, refer to `Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_. Contact your YottaDB support channel for help assessing INTEG errors.
+MUPIP INTEG FAST and the "regular" INTEG both report these errors (These qualifiers are described later in this section). Other database errors do not pose the threat of rapidly spreading problems in GDS files. After the YottaDB database repair, assess the type of damage, the risk of continued operations, and the disruption in normal operation caused by the time spent repairing the database. For information on analyzing and correcting database errors, refer to `Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_. Contact your YottaDB support channel for help assessing INTEG errors.
 
------------------
+~~~~~~~~~~~~~~~~~
 INTEG Qualifiers
------------------
+~~~~~~~~~~~~~~~~~
 
 The following sections describe the qualifiers of the INTEG command.
 
-++++++++++++
+^^^^^^^^^^^^
 -ADJACENCY
-++++++++++++
+^^^^^^^^^^^^
 
-Specifies the logical adjacency of data blocks that MUPIP INTEG should assume while diagnosing the database. By default, MUPIP INTEG operates with -ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP INTEG report.
+Specifies the logical adjacency of data blocks that MUPIP INTEG should assume while diagnosing the database. By default, MUPIP INTEG operates with ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP INTEG report.
 
 * The complexity of contemporary disk controllers and the native file system may render this report superfluous. But when it is meaningful, this report measures the logical adjacency of data.
 
@@ -99,11 +89,11 @@ The format of the ADJACENCY qualifier is:
 
    -AD[JACENCY]=integer
 
-++++++++
+^^^^^^^^
 -BLOCK
-++++++++
+^^^^^^^^
 
-Specifies the block for MUPIP INTEG command to start checking a sub-tree of the database. MUPIP INTEG -BLOCK cannot detect "incorrectly marked busy errors".
+Specifies the block for MUPIP INTEG command to start checking a sub-tree of the database. MUPIP INTEG BLOCK cannot detect "incorrectly marked busy errors".
 
 The format of the BLOCK qualifier is:
 
@@ -113,11 +103,11 @@ The format of the BLOCK qualifier is:
 
 * Block numbers are displayed in an INTEG error report or by using DSE.
 
-* Incompatible with: -SUBSCRIPT and -TN_RESET
+* Incompatible with: SUBSCRIPT and TN_RESET
 
-+++++++
+^^^^^^^
 -BRIEF
-+++++++
+^^^^^^^
 
 Displays a single summary report by database file of the total number of directory, index and data blocks. The format of the BRIEF qualifier is:
 
@@ -127,11 +117,11 @@ Displays a single summary report by database file of the total number of directo
 
 * By default, MUPIP INTEG uses the BRIEF qualifier.
 
-* Incompatible with: -FULL
+* Incompatible with: FULL
 
-++++++
+^^^^^^
 -FAST
-++++++
+^^^^^^
 
 Checks only index blocks. FAST does not check data blocks.
 
@@ -142,19 +132,19 @@ The format of the FAST qualifier is:
    -FA[ST]
 
 
-* -FAST produces results significantly faster than a full INTEG because the majority of blocks in a typical database are data blocks.
+* FAST produces results significantly faster than a full INTEG because the majority of blocks in a typical database are data blocks.
 
-* While INTEG -FAST is not a replacement for a full INTEG, it very quickly detects those errors that must be repaired immediately to prevent accelerating database damage.
+* While INTEG FAST is not a replacement for a full INTEG, it very quickly detects those errors that must be repaired immediately to prevent accelerating database damage.
 
 * By default, INTEG checks all active index and data blocks in the database.
 
-* -FAST reports include adjacency information.
+* FAST reports include adjacency information.
 
-* Incompatible with: -TN_RESET.
+* Incompatible with: TN_RESET.
 
-++++++
+^^^^^^
 -FILE
-++++++
+^^^^^^
 
 Specifies the name of the database file for the MUPIP INTEG operation. FILE requires exclusive (stand-alone) access to a database file and does not require a Global Directory. The format of the FILE qualifier is:
 
@@ -162,32 +152,32 @@ Specifies the name of the database file for the MUPIP INTEG operation. FILE requ
 
    -FI[LE]
 
-* With stand-alone access to the file, MUPIP INTEG -FILE is able to check whether the reference count is zero. A non-zero reference count indicates prior abnormal termination of the database.
+* With stand-alone access to the file, MUPIP INTEG FILE is able to check whether the reference count is zero. A non-zero reference count indicates prior abnormal termination of the database.
 
-* The -FILE qualifier is incompatible with the -REGION qualifier.
+* The FILE qualifier is incompatible with the REGION qualifier.
 
-* By default, INTEG operates on -FILE.
+* By default, INTEG operates on FILE.
 
-++++++
+^^^^^^
 -FULL
-++++++
+^^^^^^
 
-Displays an expanded report for a MUPIP INTEG operation. With -FULL specified, MUPIP INTEG displays the number of index and data blocks in the directory tree and in each global variable tree as well as the total number of directory, index and data blocks. The format of the FULL qualifier is:
+Displays an expanded report for a MUPIP INTEG operation. With FULL specified, MUPIP INTEG displays the number of index and data blocks in the directory tree and in each global variable tree as well as the total number of directory, index and data blocks. The format of the FULL qualifier is:
 
 .. code-block:: none
 
    -FU[LL]
 
 
-* The -FULL qualifier is incompatible with the -BRIEF qualifier.
+* The FULL qualifier is incompatible with the BRIEF qualifier.
 
-* By default, INTEG reports are -BRIEF.
+* By default, INTEG reports are BRIEF.
 
-* Use -FULL to have INTEG report all global names in a region or list of regions.
+* Use FULL to have INTEG report all global names in a region or list of regions.
 
-+++++++++++
+^^^^^^^^^^^
 -KEYRANGES
-+++++++++++
+^^^^^^^^^^^
 
 Specify whether the MUPIP INTEG report includes key ranges that it detects which identify the data suspected of problems. The format of the KEYRANGES qualifier is:
 
@@ -195,11 +185,11 @@ Specify whether the MUPIP INTEG report includes key ranges that it detects which
 
    -[NO]K[EYRANGES]
 
-By default, INTEG displays -KEYRANGES.
+By default, INTEG displays KEYRANGES.
 
-+++++
+^^^^^
 -MAP
-+++++
+^^^^^
 
 Specifies the maximum number of "incorrectly marked busy errors" that MUPIP INTEG reports. The format of the MAP qualifier is:
 
@@ -210,9 +200,9 @@ Specifies the maximum number of "incorrectly marked busy errors" that MUPIP INTE
 
 * <max_imb_errors> specifies the threshold limit for the number of incorrectly marked busy errors.
 
-* -NOMAP automatically sets a high threshold limit of 1000000 (1 million) incorrectly marked busy errors (-MAP=1000000).
+* NOMAP automatically sets a high threshold limit of 1000000 (1 million) incorrectly marked busy errors (MAP=1000000).
 
-* By default, INTEG reports a maximum of 10 map errors (-MAP=10).
+* By default, INTEG reports a maximum of 10 map errors (MAP=10).
 
 .. note::
    MUPIP INTEG reports all "incorrectly marked free" errors as they require prompt action. MAP does not restrict their reports.
@@ -220,11 +210,11 @@ Specifies the maximum number of "incorrectly marked busy errors" that MUPIP INTE
 An error in an index block prevents INTEG from processing potentially large areas of the database. A single "primary" error may cause large numbers of "secondary" incorrectly marked busy errors, which are actually useful in identifying valid blocks that have no valid index pointer. Because "real" or primary incorrectly marked busy errors only make "empty" blocks unavailable to the system, they are low impact and do not require immediate repair.
 
 .. note::
-   After a database recovery with -RECOVER (for example, using -BEFORE_TIME) or -ROLLBACK (for example, using -FETCHRESYNC), the database may contain incorrectly marked busy errors. Although these errors are benign, they consume available space. Schedule repairs on the next opportunity.
+   After a database recovery with RECOVER (for example, using BEFORE_TIME) or ROLLBACK (for example, using FETCHRESYNC), the database may contain incorrectly marked busy errors. Although these errors are benign, they consume available space. Schedule repairs on the next opportunity.
 
-+++++++++++++
+^^^^^^^^^^^^^
 -MAXKEYSIZE
-+++++++++++++
+^^^^^^^^^^^^^
 
 Specifies the maximum number of "key size too large" errors that a MUPIP INTEG operation reports. The format of the MAXKEYSIZE qualifier is:
 
@@ -232,17 +222,17 @@ Specifies the maximum number of "key size too large" errors that a MUPIP INTEG o
 
    -[NO]MAX[KEYSIZE][=integer]
 
-* By default, INTEG reports a maximum of 10 key size errors (-MAXKEYSIZE=10).
+* By default, INTEG reports a maximum of 10 key size errors (MAXKEYSIZE=10).
 
-* -NOMAXKEYSIZE removes limits on key size reporting so that INTEG reports all "key size too large" errors.
+* NOMAXKEYSIZE removes limits on key size reporting so that INTEG reports all "key size too large" errors.
 
-* -NOMAXKEYSIZE does not accept assignment of an argument.
+* NOMAXKEYSIZE does not accept assignment of an argument.
 
-* "Key size too large" errors normally only occur if a DSE CHANGE -FILEHEADER -KEY_MAX_SIZE command reduces the maximum key size.
+* "Key size too large" errors normally only occur if a DSE CHANGE FILEHEADER KEY_MAX_SIZE command reduces the maximum key size.
 
-++++++++
+^^^^^^^^
 -ONLINE
-++++++++
+^^^^^^^^
 
 Specifies that while a MUPIP INTEG operation is active, other processes can update the database without affecting the result of the backup. Allows checking database structural integrity to run concurrently with database updates. The format of the ONLINE qualifier is:
 
@@ -250,19 +240,19 @@ Specifies that while a MUPIP INTEG operation is active, other processes can upda
 
    -[NO]O[NLINE]
 
-* -NOONLINE specifies that the database should be frozen during MUPIP INTEG.
+* NOONLINE specifies that the database should be frozen during MUPIP INTEG.
 
 * By default, MUPIP INTEG is online.
 
-* Since MUPIP INTEG -ONLINE does not freeze database updates, it cannot safely correct errors in the "blocks to upgrade" and "free blocks" fields in the file header, while MUPIP INTEG -NOONLINE can correct these fields.
+* Since MUPIP INTEG ONLINE does not freeze database updates, it cannot safely correct errors in the "blocks to upgrade" and "free blocks" fields in the file header, while MUPIP INTEG NOONLINE can correct these fields.
 
-* As it checks each database file, MUPIP INTEG -ONLINE creates a sparse file of the same size as the database. As each YottaDB process updates the database, it places a copy of the old block in the sparse file before updating the database. For any database blocks with a newer transaction number than the start of the INTEG, MUPIP uses the copy in the sparse file. Thus, analogous with MUPIP BACKUP -ONLINE, INTEG reports on the state of the database as of when it starts, not when it completes. Note: a command such as ls -l shows sparse files at their full size, but does not show actual disk usage. Use a command such as du -sh to see actual disk usage.
+* As it checks each database file, MUPIP INTEG ONLINE creates a sparse file of the same size as the database. As each YottaDB process updates the database, it places a copy of the old block in the sparse file before updating the database. For any database blocks with a newer transaction number than the start of the INTEG, MUPIP uses the copy in the sparse file. Thus, analogous with MUPIP BACKUP ONLINE, INTEG reports on the state of the database as of when it starts, not when it completes. Note: a command such as ls -l shows sparse files at their full size, but does not show actual disk usage. Use a command such as :code:`du -sh` to see actual disk usage.
 
-* The environment variable ydb_snaptmpdir can be used to indicate a directory where MUPIP should place the snapshot files (used by MUPIP INTEG -ONLINE). If ydb_snaptmpdir does not exist, INTEG uses the location specified by ydb_baktmpdir and if neither of those environment variables is defined, INTEG places the snapshot files in the current directory at the time you issue the INTEG command. MUPIP and YottaDB processes automatically clean up these temporary snapshot files under a wide variety of conditions.
+* The environment variable ydb_snaptmpdir can be used to indicate a directory where MUPIP should place the snapshot files (used by MUPIP INTEG ONLINE). If ydb_snaptmpdir does not exist, INTEG uses the location specified by ydb_baktmpdir and if neither of those environment variables is defined, INTEG places the snapshot files in the current directory at the time you issue the INTEG command. MUPIP and YottaDB processes automatically clean up these temporary snapshot files under a wide variety of conditions.
 
-* Temporary directory security settings must allow write access by the MUPIP process and by all processes updating the database. MUPIP creates the temporary file with the same access as the database file so processes updating the database can write to the temporary file. If the database is encrypted, the updating processes write encrypted blocks to the snapshot file and the MUPIP INTEG process must start with access to appropriate key information as it does even -NOONLINE.
+* Temporary directory security settings must allow write access by the MUPIP process and by all processes updating the database. MUPIP creates the temporary file with the same access as the database file so processes updating the database can write to the temporary file. If the database is encrypted, the updating processes write encrypted blocks to the snapshot file and the MUPIP INTEG process must start with access to appropriate key information as it does even NOONLINE.
 
-*  MUPIP INTEG -NOONLINE [-FAST] {-REGION|-FILE} clears the KILLs in progress and the Abandoned Kills flags if the run includes the entire database and there are no incorrectly marked busy blocks.
+*  MUPIP INTEG NOONLINE [FAST] {REGION|FILE} clears the KILLs in progress and the Abandoned Kills flags if the run includes the entire database and there are no incorrectly marked busy blocks.
 
 * Only one online integ can be active per database region. If an online integ is already active, a subsequent one issues an error and immediately terminates. If an online integ does not successfully complete, YottaDB cleans it up in one of the following ways:
 
@@ -271,11 +261,11 @@ Specifies that while a MUPIP INTEG operation is active, other processes can upda
   * subsequent MUPIP RUNDOWN ensures the release of resources held by prior unsuccessful online integs for the specified regions.
   * For every 64K transactions after the online integ initiation, online integ checks YottaDB's health for improperly abandoned online integs and releases resources held by any it finds.
 
-* Incompatible with: -FILE, -TN_RESET (there should be no need to use -TN_RESET on a YottaDB database).
+* Incompatible with: FILE, TN_RESET (there should be no need to use TN_RESET on a YottaDB database).
 
-++++++++
+^^^^^^^^
 -REGION
-++++++++
+^^^^^^^^
 
 Specifies that the INTEG parameter identifies one or more regions rather than a database file. The format of the REGION qualifier is:
 
@@ -285,17 +275,17 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 * The region-list identifies the target of INTEG. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
-* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. INTEG -REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_
+* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. INTEG REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_
 
-* Because a KILL may briefly defer marking the blocks it releases "free" in the bit maps, INTEG -REGION may report spurious "block incorrectly marked busy" errors. These errors are benign. If these errors occur in conjunction with a "Kill in progress" error, resolve the errors after the "Kill in progress" error is no longer present.
+* Because a KILL may briefly defer marking the blocks it releases "free" in the bit maps, INTEG REGION may report spurious "block incorrectly marked busy" errors. These errors are benign. If these errors occur in conjunction with a "Kill in progress" error, resolve the errors after the "Kill in progress" error is no longer present.
 
-* By default, INTEG operates -FILE.
+* By default, INTEG operates FILE.
 
-* Incompatible with: -FILE, -TN_RESET
+* Incompatible with: FILE, TN_RESET
 
-+++++++++++
+^^^^^^^^^^^
 -SUBSCRIPT
-+++++++++++
+^^^^^^^^^^^
 
 Specifies a key (an unsubscripted or subscripted global name) or a range of keys to INTEG.
 
@@ -303,19 +293,19 @@ An unsubscripted global name key may be enclosed in single or double quotes (for
 
 Identify a range by separating the beginning key and ending key with a colon (:code:`:`).
 
--SUBSCRIPT cannot detect incorrectly marked busy errors. The format of the SUBSCRIPT qualifier is:
+SUBSCRIPT cannot detect incorrectly marked busy errors. The format of the SUBSCRIPT qualifier is:
 
 .. code-block:: none
 
    -SU[BSCRIPT]=subscript
 
-Specify SUBSCRIPT only if the path to the keys in the subscript is not damaged. If the path is questionable or known to be damaged, use DSE to find the block(s) and INTEG -BLOCK.
+Specify SUBSCRIPT only if the path to the keys in the subscript is not damaged. If the path is questionable or known to be damaged, use DSE to find the block(s) and INTEG BLOCK.
 
-Incompatible with: -BLOCK, -TN_RESET
+Incompatible with: BLOCK, TN_RESET
 
-+++++++
+^^^^^^^
 -STATS
-+++++++
+^^^^^^^
 
 Specifies INTEG to check any active statistics database associated with the region(s) specified for the command. The format of the STATS qualifier is:
 
@@ -323,13 +313,13 @@ Specifies INTEG to check any active statistics database associated with the regi
 
    -[NO]ST[ATS]
 
-Specify STATS only if you have reason to understand that statistics reporting is failing with database errors or reporting incorrect results. Because -FILE requires standalone access and statistic databases are automatically created and removed it is incompatible with -STATS. The default is NOSTATS.
+Specify STATS only if you have reason to understand that statistics reporting is failing with database errors or reporting incorrect results. Because FILE requires standalone access and statistic databases are automatically created and removed it is incompatible with STATS. The default is NOSTATS.
 
-Incompatible with: -BLOCK, -FILE, -TN_RESET
+Incompatible with: BLOCK, FILE, TN_RESET
 
-++++++++++
+^^^^^^^^^^
 -TN_RESET
-++++++++++
+^^^^^^^^^^
 
 Resets block transaction numbers and backup event recorded transaction numbers to one (1), and the current transaction number to two (2) which makes the backup event recorded transaction numbers more meaningful and useful. It also issues an advisory message to perform a backup.
 
@@ -341,23 +331,23 @@ The format of the TN_RESET qualifier is:
 
 * Transaction numbers can go up to 18,446,744,073,709,551,615. This means that a transaction processing application that runs flat out at a non-stop rate of 1,000,000 updates per second would need a TN reset approximately every 584,554 years.
 
-* The -TN_RESET qualifier rewrites all blocks holding data. If the transaction overflow resets to zero (0) database operation is disrupted.
+* The TN_RESET qualifier rewrites all blocks holding data. If the transaction overflow resets to zero (0) database operation is disrupted.
 
-* The -TN_RESET qualifier is a protective mechanism that prevents the transaction overflow from resetting to 0.
+* The TN_RESET qualifier is a protective mechanism that prevents the transaction overflow from resetting to 0.
 
 * By default, INTEG does not modify the block transaction numbers.
 
 .. note::
-   There should never be a need for a -TN_RESET on the database, even when cleaning up after a runaway process.
+   There should never be a need for a TN_RESET on the database, even when cleaning up after a runaway process.
 
-* The -TN_RESET qualifier is incompatible with the -FAST, -BLOCK, -REGION, and -SUBSCRIPT qualifiers.
+* The TN_RESET qualifier is incompatible with the FAST, BLOCK, REGION, and SUBSCRIPT qualifiers.
 
 .. note::
    Any time a YottaDB update opens a database file that was not properly closed, YottaDB increments the transaction number by 1000. This automatic increment prevents problems induced by abnormal database closes, but users must always consider this factor in their operational procedures. The rate at which YottaDB "uses up" transaction numbers is a function of operational procedures and real database updates.
 
-++++++++++++++
+^^^^^^^^^^^^^^
 -TRANSACTION
-++++++++++++++
+^^^^^^^^^^^^^^
 
 Specifies the maximum number of block transaction-number-too-large errors that MUPIP INTEG reports. The format of the TRANSACTION qualifier is:
 
@@ -365,17 +355,17 @@ Specifies the maximum number of block transaction-number-too-large errors that M
 
    -[NO]TR[ANSACTION][=integer]
 
-* -NOTRANSACTION removes limits on transaction reporting so MUPIP INTEG reports all transaction number errors.
+* NOTRANSACTION removes limits on transaction reporting so MUPIP INTEG reports all transaction number errors.
 
-* -NOTRANSACTION does not accept assignment of an argument.
+* NOTRANSACTION does not accept assignment of an argument.
 
-* A system crash may generate many "block transaction number too large" errors. These errors can cause problems for BACKUP -INCREMENTAL and for transaction processing. Normally, the automatic increment of 1000 blocks that YottaDB adds when a database is reopened averts these errors. If a problem still exists after the database is reopened, users can use a value in the DSE CHANGE -FILEHEADER -CURRENT_TN= command to quickly fix "block transaction number too large" errors.
+* A system crash may generate many "block transaction number too large" errors. These errors can cause problems for BACKUP INCREMENTAL and for transaction processing. Normally, the automatic increment of 1000 blocks that YottaDB adds when a database is reopened averts these errors. If a problem still exists after the database is reopened, users can use a value in the DSE CHANGE FILEHEADER CURRENT_TN= command to quickly fix "block transaction number too large" errors.
 
-* By default, INTEG reports a maximum of 10 block transaction errors (-TRANSACTION=10).
+* By default, INTEG reports a maximum of 10 block transaction errors (TRANSACTION=10).
 
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP INTEG
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example:
 
@@ -443,7 +433,7 @@ This command performs a MUPIP INTEG operation only on the index block of the dat
   Free             6809              NA              NA            NA
   Total          348559              NA              NA        337621
 
-Note the NA entries for Data type. It means that the MUPIP INTEG -FAST operation checked only index blocks.
+Note the NA entries for Data type. It means that the MUPIP INTEG FAST operation checked only index blocks.
 
 .. code-block:: bash
 

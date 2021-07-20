@@ -164,7 +164,7 @@ The MUPIP commands described in this section are used for common database operat
 BACKUP
 ++++++++++++
 
-Saves the contents of the database. Refer to `MUPIP BACKUP documentation <./mupipbackup.html>`_ for information about its format and qualifiers.
+.. include:: mupipbackup.inc
 
 .. _mupip-create:
 
@@ -937,7 +937,7 @@ The format of the MUPIP HASH command is:
 INTEG
 ++++++++++++
 
-MUPIP INTEG performs an integrity check on a YottaDB database file. Refer to `MUPIP INTEG documentation <./mupipinteg.html>`_ for information about its format and qualifiers.
+.. include:: mupipinteg.inc
 
 .. _mupip-intrpt:
 
@@ -1996,7 +1996,7 @@ If the optional dir1 is not specified, MUPIP RUNDOWN RELINKCTL examines the envi
 SET
 +++++++
 
-MUPIP SET is used for performance tuning and/or modifying certain database and journal file attributes. Refer to `MUPIP SET documentation <./mupipset.html>`_ for information about its format and qualifiers.
+.. include:: mupipset.inc
 
 ++++++++++++
 SIZE
