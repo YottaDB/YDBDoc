@@ -47,7 +47,18 @@ or as an expression element,
 
 Where packagename, like the name elements, is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation - a later section describes how to transform this into a more richly punctuated name, should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the up-arrow (^). For more information on M names, labelrefs and parameter-lists, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
 
-Example:
+Examples:
+
+`YDBzlib <https://gitlab.com/YottaDB/Util/YDBZlib>`_ consists of an M module %ZLIB, which in turn calls `zlib <http://zlib.net/>`_, to provide the following entryrefs:
+
+.. code_block:: none
+
+   $$compress2^%ZLIB(origstr,.compstr,level)
+   $$uncompress^%ZLIB(compstr,.uncompstr)
+   $$version^%ZLIB
+   $$zlibversion^%ZLIB
+
+compress2 compresses origstr and returns the compressed string in compstr; level is the string passed to zlib as the compression level (-1 through 9, defaulting to -1 if not specified, which in turn instructs zlib to use its default compression).  uncompress expands compstr and provides the result in uncompstr.  Both compress2 and uncompress return the status returned by the underlying zlib code; 0 for a normal return.
 
 .. code-block:: none
 
