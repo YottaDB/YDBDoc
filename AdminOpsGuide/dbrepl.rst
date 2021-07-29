@@ -387,6 +387,8 @@ Also an instance can only receive a single SI replication stream. Malvern cannot
 
 The total number of replication streams that an instance can source is sixteen, with any combination of BC and SI replication.
 
+.. _repl-architecture:
+
 +++++++++++++++++++++++++++++++
 Replication Architecture
 +++++++++++++++++++++++++++++++
@@ -3673,6 +3675,12 @@ If, in your environment, the same hostname is used for both IPv4 and IPv6, Yotta
 ^^^^^^^^
 
 Starts the Source Server in passive mode.
+
+Each replicated instance requires a :ref:`Journal Pool <repl-architecture>` to be created. As Source Server processes create and manage Journal Pools, even a replicated secondary instance requires a Source Server to be started to create the Journal Pool. A Source Server intended only to create the Journal Pool and not attempt to connect with a downstream Receiver Server is started with the PASSIVE option.
+
+.. note::
+
+   One and only one of PASSIVE or SECONDARY must be specified with START.
 
 ^^^^^^^^^^^^^^^^^^^^
 -log=<log file name>
