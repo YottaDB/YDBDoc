@@ -3197,11 +3197,13 @@ To set up a new replicating instance of an originating instance for the first ti
 
 If you are running a recent version of YottaDB:
 
-- Take a backup of the database and the replication instance file of the originating instance together at the same time with BACKUP -REPLINSTANCE and transfer them to the location of the replicating instance. If the originator's replicating instance file was newly created, take its backup while the Source Server is running to ensure that the backup contains at least one history record.
+- Take a backup of the database and the replication instance file of the originating instance together at the same time with :code:`mupip backup -replinstance=backup_dir/<repl_file_name> '*' backup_dir/` and transfer them to the location of the replicating instance. The backup of the instance file would be stored in the file :code:`backup_dir/inst.repl` and the backup of the database files would be stored in the directory :code:`backup_dir/`. If the originator's replicating instance file is newly created, take its backup while the Source Server is running to ensure that the backup contains at least one history record.
 
 .. code-block:: bash
 
-   mupip backup -replinst=backupA
+   mupip backup -replinst=backup_dir/inst.repl '*' backup_dir/
+
+- Transfer the backup files to the location of the replicating instance.
 
 - Use MUPIP REPLICATE -EDITINST -NAME=<secondary-instname> to change the replicating instance's name.
 
