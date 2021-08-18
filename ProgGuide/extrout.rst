@@ -51,7 +51,7 @@ Examples:
 
 `YDBzlib <https://gitlab.com/YottaDB/Util/YDBZlib>`_ consists of an M module %ZLIB, which in turn calls `zlib <http://zlib.net/>`_, to provide the following entryrefs:
 
-.. code_block:: none
+.. code-block:: none
 
    $$compress2^%ZLIB(origstr,.compstr,level)
    $$uncompress^%ZLIB(compstr,.uncompstr)

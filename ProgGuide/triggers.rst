@@ -68,15 +68,18 @@ To apply this trigger definition file to YottaDB, all you do is to load it using
 
 {-triggername\|-triggername-prefix\*\|-\*\|{+|-}trigvn -commands=cmd[,...] -xecute=strlit1 [-[z]delim=expr][-pieces=[lvn=]int1[:int2][;...]] [-options={[no]i[solation]|[no]c[onsistencycheck]}...] [-name=strlit2]}
 
-
-**-triggername\|-trigger-name-prefix\*\|-\* .**
+++++++++++++++++++++++++++++++++++++++++++++
+-triggername\|-trigger-name-prefix\*\|-\* .
+++++++++++++++++++++++++++++++++++++++++++++
 
 * :code:`-triggername` deletes a user-specified trigger called *triggername* from the database.
 * :code:`-triggername*` deletes all user-defined triggers whose names start with *triggername*.
 * :code:`-*` deletes all triggers; if the MUPIP TRIGGER command does not specify -NOPROMPT, YottaDB displays a warning and asks for user confirmation before deleting all triggers. If MUPIP TRIGGER command specifies -NOPROMPT and the definition file includes a -\* line, YottaDB deletes all the triggers without user confirmation. $ZTRIGGER() performs deletions -NOPROMPT.
 * :code:`+triggername` issues an error; to add a new user-specified trigger name, use :code:`-name=strlit2`.
 
-**\{\+\|-\}trigvn**
+++++++++++++++++
+\{\+\|-\}trigvn
+++++++++++++++++
 
 * :code:`trigvn` is a global node on which you set up a trigger.
 * :code:`-trigvn` deletes any triggers in the database that match the specified trigger.
@@ -92,7 +95,9 @@ To apply this trigger definition file to YottaDB, all you do is to load it using
 
 In order to account for any non-standard collation, YottaDB evaluates string subscript ranges using the global specific collation when an application update first invokes a trigger - as a consequence, it detects and reports range issues at run-time rather than from MUPIP TRIGGER or $ZTRIGGER(), so test appropriately. For example, YottaDB reports a run-time error for an inverted subscript range such as (ASCII) C:A.
 
-**-command=cmd**
++++++++++++++
+-command=cmd
++++++++++++++
 
 cmd is the trigger invocation command. Currently, you can specify one or more of S[ET], K[ILL], ZTR[IGGER], or ZK[ILL]. A subsequent YottaDB release may support ZTK[ILL] for triggering on descendent nodes of a KILLed ancestor, but, while current versions accept ZTK, they convert it into K. If cmd specifies multiple command values, YottaDB treats each M command as a separate trigger. Note that even if you specify both SET and KILL, only one M command matches at any given time. Trigger code is not executed in the following conditions:
 
@@ -101,7 +106,9 @@ cmd is the trigger invocation command. Currently, you can specify one or more of
 * A ZKILL or ZWITHDRAW of a node that has descendents but no data and a trigger with cmd=ZK.
 * The trigger uses the "piece" syntax (described below) and no triggering piece changes in the update.
 
-**-xecute="\|<<strlit1"\|>>**
+++++++++++++++++++++++++++
+-xecute="\|<<strlit1"\|>>
+++++++++++++++++++++++++++
 
 strlit1 specifies the trigger code that is executed when an update matches trigvn. If strlit1 is a single line, enclose it with quotes (") and make sure that the quotes inside strlit1 are doubled as in normal M syntax.
 
@@ -126,9 +133,11 @@ Example:
     do stop^test2
     >>
 
-**[-pieces=int1[:int2][;...]]**
+++++++++++++++++++++++++++++
+[-pieces=int1[:int2][;...]]
+++++++++++++++++++++++++++++
 
-If cmd is :code:`S[et]`, you can specify an optional piece list sequence where :code:`int2`>:code:`int1` and :code:`int1`::code:`int2` denotes a integer range from :code:`int1` to :code:`int2`. The trigger gets executed only when any piece from the specified piece list changes. Note that if the prior and new value of the node (specified by the SET command that invoked the :code:`S[et]` trigger) both contain fewer pieces than :code:`int1`, piece number :code:`int1` is considered as not having changed in value and no trigger is invoked.
+If cmd is :code:`S[et]`, you can specify an optional piece list sequence where :code:`int2` > :code:`int1` and :code:`int1` : :code:`int2` denotes a integer range from :code:`int1` to :code:`int2`. The trigger gets executed only when any piece from the specified piece list changes. Note that if the prior and new value of the node (specified by the SET command that invoked the :code:`S[et]` trigger) both contain fewer pieces than :code:`int1`, piece number :code:`int1` is considered as not having changed in value and no trigger is invoked.
 
 If your trigvn has a list "Window|Chair|Table|Door" and you want to execute the trigger only when the value of the 3rd or 4th piece changes, you might specify the following trigger definition:
 
@@ -147,15 +156,21 @@ does not invoke the trigger.
 
 You can also specify a range for your piece sequence. For example, 3:5;7;9:11 specifies a trigger on pieces 3 through 5,7 and 9 through 11. YottaDB merges any overlapping values or ranges - for example, 3:6;7 is the same as 3:7.
 
-**[-[z]delim=expr]**
++++++++++++++++++
+[-[z]delim=expr]
++++++++++++++++++
 
 You can specify an optional piece delimiter using -[z]delim=expr where expr is a string literal or an expression (with very limited syntax) evaluating to a string separating the pieces (e.g., "|") in the values of nodes, and is interpreted as an ASCII or UTF-8 string based on the environment variable ydb_chset. To allow for unprintable delimiters in the delimiter expression, MUPIP TRIGGER only accepts $CHAR() and $ZCHAR() and string concatenation (_) as embellishments to the string literals. If zdelim specifies a delimiter, YottaDB uses the equivalent of $ZPIECE() to match pieces and to identify changes in $ZTUPDATE() (refer to the ISV description for additional information); otherwise, if delim specifies a delimiter, YottaDB uses the equivalent of $PIECE() for the current mode (M or UTF-8). Specifying both -delim and -zdelim for the same trigger produces an error.
 
-**[-options= {no]i[solation]\|[[no]c[onsistencycheck]}...**
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[-options= {no]i[solation]\|[[no]c[onsistencycheck]}...
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 You can specify [NO]ISOLATION or [NO]CONSISTENCYCHECK as a property of the triggered database updates. NOISOLATION is a facility for your application to instruct YottaDB where the application logic and database schema take responsibility for ensuring the ACID property of ISOLATION, and that any apparent collisions are purely coincidental from multiple global nodes resident in the same physical block which serves as the YottaDB level of granularity in conflict checking. In the current release, this trigger designation is notational only - you must still implement NOISOLATION at the process level with the VIEW command, but you can use the trigger designation in planning to move to schema-based control of this facility. NOCONSISTENCYCHECK is a facility for your application to instruct YottaDB that application logic and schema take responsibility for ensuring the ACID property of CONSISTENCY. The [NO]CONSISTENCYCHECK feature is not yet implemented and will be made available in a future YottaDB release. For now, you can plan to move CONSISTENCY responsibility from your application to a trigger and implement it later when this feature becomes available. Note: -options are not part of the trigger signature and so can be modified without deleting an existing trigger.
 
-**[-name=strlit2]**
+++++++++++++++++
+[-name=strlit2]
+++++++++++++++++
 
 strlit2 is a user-specified trigger name. It is an alphanumeric string of up to 28 characters. It must start with an alphabetic character or a percent sign (%). Note: -name is not part of the trigger signature and so can be modified without deleting an existing trigger. Note also that the name can be used to delete a trigger - this alternative avoids potential issues with text variations in the code associated with the -xecute qualifier which is part of the trigger signature when the variations do not have semantic significance.
 
