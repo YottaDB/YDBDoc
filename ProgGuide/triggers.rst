@@ -105,6 +105,7 @@ cmd is the trigger invocation command. Currently, you can specify one or more of
 * A KILL of a node that has a cmd=ZK trigger, but no cmd=K trigger.
 * A ZKILL or ZWITHDRAW of a node that has descendents but no data and a trigger with cmd=ZK.
 * The trigger uses the "piece" syntax (described below) and no triggering piece changes in the update.
+* The trigger can use the :code:`delim` syntax without using the :code:`piece` syntax, but effectively end up as if :code:`piece` syntax was being used and cause no triggers to be invoked.
 
 ++++++++++++++++++++++++++
 -xecute="\|<<strlit1"\|>>
@@ -161,6 +162,11 @@ You can also specify a range for your piece sequence. For example, 3:5;7;9:11 sp
 +++++++++++++++++
 
 You can specify an optional piece delimiter using -[z]delim=expr where expr is a string literal or an expression (with very limited syntax) evaluating to a string separating the pieces (e.g., "|") in the values of nodes, and is interpreted as an ASCII or UTF-8 string based on the environment variable ydb_chset. To allow for unprintable delimiters in the delimiter expression, MUPIP TRIGGER only accepts $CHAR() and $ZCHAR() and string concatenation (_) as embellishments to the string literals. If zdelim specifies a delimiter, YottaDB uses the equivalent of $ZPIECE() to match pieces and to identify changes in $ZTUPDATE() (refer to the ISV description for additional information); otherwise, if delim specifies a delimiter, YottaDB uses the equivalent of $PIECE() for the current mode (M or UTF-8). Specifying both -delim and -zdelim for the same trigger produces an error.
+
+.. note::
+
+   SET trigger is not invoked if -delim is specified and new value is an empty string.
+   Defining :code:`-delim` in the SET trigger causes an implicit :code:`-piece` specification to happen. The SET trigger is invoked only if at least one piece changes in value from before. If the node did not exist previously, all pieces had an empty value before. If all the pieces have the empty value in the new value of the node, no pieces have different values and the :code:`SET` trigger is never invoked.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 [-options= {no]i[solation]\|[[no]c[onsistencycheck]}...
