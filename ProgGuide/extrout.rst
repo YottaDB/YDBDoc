@@ -75,6 +75,10 @@ compress2 compresses origstr and returns the compressed string in compstr; level
 
 The called routines follow the C calling conventions. They must be compiled as position independent code and linked as a shareable library.
 
+.. note::
+
+   As the M language is single-threaded, code in other languages called from M in processes where the initial language is M must not call back to M or call the YottaDB runtime system from multiple threads. Any such calls must use only the thread from which M code calls the non-M code. In practice, this means that calling out to single-threaded languages like Python is safe, calling to languages like C where threading is under program control requires external code to be appropriately written, and calling to languages like Go which are inherently multi-threaded is not supported. To write an application where calls from M to a language like Go are required, make Go the initial language of the processes, and call M code from Go code. That M code can then call Go code.
+
 ----------------------------------
 Creating a Shareable Library
 ----------------------------------
