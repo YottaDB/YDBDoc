@@ -13298,7 +13298,11 @@ STACKCRIT, Stack space critical
 
 Run Time Error: This indicates that the process has consumed almost all of the available stack space.
 
-Action: Look for infinite recursion. If you do not take immediate action to reduce your stack, YottaDB is likely to produce a STACKOFLOW error, which terminates the process. Examine the stack with ZSHOW. Trim the stack using QUIT, ZGOTO, HALT or ZHALT.
+Action: If you do not take immediate action to reduce stack usage, YottaDB is likely to produce a STACKOFLOW error, which terminates the process. There are two common causes:
+
+ * Infinite recursion. The most common cause of infinite recursion is a buggy error trap. Whatever the cause, you can examine the stack with ZSHOW, and use ZGOTO, QUIT to try to regain control of the process, or HALT or ZHALT to terminate the process.
+
+ * Application level memory leak caused by NEW of local variables in a loop. Correct the application code to NEW variables outside any loop, and replace the NEW inside loops with KILL.
 
 -----------------
 STACKOFLOW
