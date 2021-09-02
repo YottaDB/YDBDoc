@@ -1625,11 +1625,13 @@ The format of the TSTART command is:
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * If $TLEVEL is 0 before the TSTART, the TSTART starts a transaction; otherwise it starts a sub-transaction.
-* If the TSTART initiates a transaction and the portion of the argument before the colon (:) delimiter is empty, the transaction is not eligible for RESTART. If the TSTART starts a transaction ($TLEVEL=0) and the portion of the argument before the colon is not empty, the transaction is eligible for RESTART. If the TSTART is nested (starts a sub-transaction), its arguments have no effect on whether the transaction is eligible for RESTART.
-* If the portion of the argument before the colon is an asterisk (*), any subsequent RESTART restores all local variables to the value they had when the TSTART was executed.
-* If the portion of the argument before the colon is an unsubscripted local variable name or a list of such names enclosed in parentheses, a RESTART restores the named variables to the value they had when the TSTART was executed.
-* If the portion of the argument before the colon is a set of empty parentheses (), a RESTART does not restore any local variables.
-* The optional portion of the argument after the colon is a keyword or a colon-separated list of keywords enclosed in parentheses, where the keywords specify transaction characteristics.
+* The arguments to TSTART comprise an optional list of local variables followed by an optional colon (:) delimiter together with a colon-separated list of keywords enclosed in parentheses where the keywords specify transaction characteristics.
+* If the TSTART starts a transaction and the portion of the argument before the optional colon is empty, the transaction is not eligible for RESTART.
+* If the TSTART starts a transaction and the portion of the argument before the optional colon is not empty, the transaction is eligible for RESTART.
+* If the TSTART starts a sub-transaction, its arguments have no effect on whether the transaction is eligible for RESTART.
+* If the portion of the argument before the optional colon is an asterisk (*), any subsequent RESTART restores all local variables to the value they had when the TSTART was executed.
+* If the portion of the argument before the optional colon is an unsubscripted local variable name or a list of such names enclosed in parentheses, a RESTART restores the named variables to the value they had when the TSTART was executed.
+* If the portion of the argument before the optional colon is a set of empty parentheses (), a RESTART does not restore any local variables.
 * An indirection operator and an expression atom evaluating to a TSTART argument form a legal argument for a TSTART.
 * Using TSTART in direct mode may not behave as expected because there is no code repository to support an appropriate transaction restart.
 
