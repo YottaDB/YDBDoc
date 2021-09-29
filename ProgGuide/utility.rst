@@ -2394,7 +2394,7 @@ This example instructs ^%RSE to write all lines where the text string occurs to 
 %RSEL
 ++++++++++
 
-The %RSEL utility selects M routines. %RSEL selects routines using directories specified by the YottaDB special variable $ZROUTINES. $ZROUTINES contains an ordered list of directories that certain YottaDB functions use to locate source and object files. If $ZROUTINES is not defined, %RSEL searches only the current default directory. Other YottaDB utilities call %RSEL.
+The %RSEL utility selects M routines. %RSEL selects routines using directories specified by the YottaDB special variable $ZROUTINES. $ZROUTINES contains an ordered list of directories that certain YottaDB functions use to locate source and object files. If $ZROUTINES is not defined, YottaDB sets it in the environment to :code:`$ydb_dist/libyottadbutil.so` if it exists, and to :code:`$ydb_dist` if it does not, and then uses that value. Other YottaDB utilities call %RSEL.
 
 %RSEL prompts for the name of a routine(s).
 
