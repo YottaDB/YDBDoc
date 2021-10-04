@@ -329,7 +329,7 @@ $zyrelease
 Transaction Processing
 +++++++++++++++++++++++
 
-YottaDB provides a mechanism for an application to implement `ACID (Atomic, Consistent, Isolated, Durable) transactions <https://en.wikipedia.org/wiki/ACID>`_, ensuring strict serialization of transactions, using `optimistic concurrency control <http://sites.fas.harvard.edu/~cs265/papers/kung-1981.pdf>`_.
+YottaDB provides a mechanism for an application to implement `ACID (Atomic, Consistent, Isolated, Durable) transactions <https://en.wikipedia.org/wiki/ACID>`_, ensuring strict serialization of transactions, using `optimistic concurrency control <https://www.eecs.harvard.edu/~htk/publication/1981-tods-kung-robinson.pdf>`_.
 
 Here is a simplified view [#]_ of YottaDB's implementation of optimistic concurrency control:
 
