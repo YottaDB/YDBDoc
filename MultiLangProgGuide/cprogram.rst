@@ -636,7 +636,7 @@ ydb_delete_excl_s() / ydb_delete_excl_st()
 
 :code:`ydb_delete_excl_s()` and :code:`ydb_delete_excl_st()` delete the trees of all local variables except those in the :code:`*varnames` array. It is an error for :code:`*varnames` to include a global or intrinsic special variable.
 
-In the special case where :code:`namecount` is zero, :code:`ydb_delete_excl_s()` and :code:`ydb_delete_excl_st()` delete all local variables.
+In the special case where :code:`namecount` is zero, :code:`ydb_delete_excl_s()` and :code:`ydb_delete_excl_st()` delete all local variables. In this case, the :code:`varnames` parameter is ignored so any value can be passed in for that parameter but we recommend that applications pass a :code:`NULL` value.
 
 If your application mixes M and non M code, and you wish to use :code:`ydb_delete_excl_s()` to delete local variables that are aliases, formal parameters, or actual parameters passed by reference, make sure you understand what (sub)trees are being deleted. This warning does not apply to applications that do not include M code.
 
