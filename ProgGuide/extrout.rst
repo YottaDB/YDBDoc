@@ -108,7 +108,7 @@ YottaDB uses an "external call table" to map the typeless data of M into the typ
 
 The optional case-insensitive keyword SIGSAFE following the parameter list specifies that the external call does not create its own signal handlers. This allows YottaDB to avoid burdensome signal handler coordination for the external call. By default, YottaDB saves and restores signal setups for external calls.
 
-entryref is an M entryref, return-value is ydb_long_t, ydb_status_t, or void, and parameters are in the format:
+entryref is an M entryref, return-value is one of the legal types listed below, and parameters are in the format:
 
 .. code-block:: none
 
