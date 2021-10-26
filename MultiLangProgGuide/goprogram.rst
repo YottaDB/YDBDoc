@@ -576,8 +576,8 @@ Go BufferT SetValBAry()
         func (buft *BufferT) SetValBAry(tptoken uint64, errstr *BufferT, value []byte) error
 
 - If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
-- If the length of :code:`val` is greater than the :code:`len_alloc` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`, make no changes and return INVSTRLEN.
-- Otherwise, copy the bytes of :code:`val` to the referenced buffer and set the :code:`len_used` field to the length of :code:`val`.
+- If the length of :code:`value` is greater than the :code:`len_alloc` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`, make no changes and return INVSTRLEN.
+- Otherwise, copy the bytes of :code:`value` to the referenced buffer and set the :code:`len_used` field to the length of :code:`value`.
 
 ++++++++++++++++++++++++
 Go BufferT SetValStr()
@@ -588,8 +588,8 @@ Go BufferT SetValStr()
         func (buft *BufferT) SetValStr(tptoken uint64, errstr *BufferT, value string) error
 
 - If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
-- If the length of :code:`val` is greater than the :code:`len_alloc` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`, make no changes and return INVSTRLEN.
-- Otherwise, copy the bytes of :code:`val` to the referenced buffer and set the :code:`len_used` field to the length of :code:`val`.
+- If the length of :code:`value` is greater than the :code:`len_alloc` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`, make no changes and return INVSTRLEN.
+- Otherwise, copy the bytes of :code:`value` to the referenced buffer and set the :code:`len_used` field to the length of :code:`value`.
 
 ++++++++++++++++++++++++
 Go BufferT Str2ZwrST()
@@ -1082,7 +1082,7 @@ Go KeyT SetValST()
 
 .. code-block:: go
 
-        func (key *KeyT) SetST(tptoken uint64, errstr *BufferT, value *BufferT) error
+        func (key *KeyT) SetValST(tptoken uint64, errstr *BufferT, value *BufferT) error
 
 Matching `Go SetValE()`_, at the referenced local or global variable node, or the intrinsic special variable, :code:`SetValST()` wraps :ref:`ydb-set-s-st-fn` to set the value specified by :code:`value`.
 
