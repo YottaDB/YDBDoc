@@ -144,11 +144,8 @@ Below are examples illustrating how to handle exceptions both with and without u
 
     try:
         yottadb.node_next(varname="^myglobal", subsarray=("sub1", "sub2"))
-    except YDBError as e:
-        if yottadb.YDB_ERR_NODEEND == e.code():
-            print("Specific case: handle YDB_ERR_NODEEND differently")
-        else:
-            raise e  # Bubble up the exception as it is not expected
+    except YDBNodeEnd:
+        print("Specific case: handle YDB_ERR_NODEEND differently")
 
 There are, however, a few special exceptions in YDBPython that are used to signal events that are not necessarily errors, but may need special handling. These are distinguished by unique exception classes apart from :code:`yottadb.YDBError`:
 
@@ -260,7 +257,7 @@ Python ci()
 
 .. code-block:: python
 
-        def ci(routine: AnyStr, args: Sequence[Any] = (), has_retval: bool = False) -> Any
+        def ci(routine: AnyStr, args: Tuple[Any] = (), has_retval: bool = False) -> Any
 
 As a wrapper for the C function , the :code:`ci()` function is used to call M routines from Python, used when a single call to the function is anticipated. :code:`ci()` supports both read-only and read-write parameters.
 
@@ -268,7 +265,7 @@ If the specified routine has a return value, the caller of :code:`ci()` must spe
 
 If a return value is specified but has not been configured in the `call-in descriptor file <https://gitlab.com/YottaDB/Lang/YDBPython/-/blob/master/tests/calltab.ci>`_ or vice-versa, a parameter mismatch situation is created. In the parameter mismatch case, the error returned will be arbitrary and so may be inconsistent across calls. Accordingly, it is recommended to always ensure that routine parameters and return types are correctly specified in the call-in descriptor file.
 
-- :code:`args` refers to a list of 0 or more arguments passed to the called routine. Arguments must be passed as Python :code:`str`, :code:`bytes`, or :code:`int` objects. When calling routines that accept 0 arguments, the :code:`args` field can simply be omitted or an empty :code:`Sequence` passed (the default). Any output arguments will be returned as a Python :code:`bytes` object and can be subsequently cast to another Python type. The number of parameters possible is restricted to 34 (for 64-bit systems) or 33 (for 32-bit systems). If the maximum number of parameters is exceeded, a :code:`ValueError` will be raised.
+- :code:`args` refers to a list of 0 or more arguments passed to the called routine. Arguments must be passed as Python :code:`str`, :code:`bytes`, or :code:`int` objects. When calling routines that accept 0 arguments, the :code:`args` field can simply be omitted or an empty :code:`Tuple` passed (the default). Any output arguments will be returned as a Python :code:`bytes` object and can be subsequently cast to another Python type. The number of parameters possible is restricted to 34 (for 64-bit systems) or 33 (for 32-bit systems). If the maximum number of parameters is exceeded, a :code:`ValueError` will be raised.
 - :code:`has_retval` is set to :code:`False` by default. Accordingly, if the given routine has a return value :code:`has_retval` will need to explicitly be set to :code:`True`.
 
 For example, see the below setup for a sample :code:`HelloWorld2` routine.
@@ -318,7 +315,7 @@ Python cip()
 
 .. code-block:: python
 
-        def cip(routine: AnyStr, args: Sequence[Any] = (), has_retval: bool = False) -> Any
+        def cip(routine: AnyStr, args: Tuple[Any] = (), has_retval: bool = False) -> Any
 
 As a wrapper for the C function `ydb_cip() <../ProgrammersGuide/extrout.html#ydb-cip-t-intf>`_, the :code:`cip()` function is used to call M routines from Python, used when repeated calls to the function are anticipated. Performance is slightly improved using :code:`cip()` in such cases since this function saves a hash table lookup compared to :code:`ci()`. :code:`cip()` supports both read-only and read-write parameters.
 
@@ -326,7 +323,7 @@ If the specified routine has a return value, the caller of :code:`cip()` must sp
 
 If a return value is specified but has not been configured in the `call-in descriptor file <https://gitlab.com/YottaDB/Lang/YDBPython/-/blob/master/tests/calltab.ci>`_ or vice-versa, a parameter mismatch situation is created.
 
-- :code:`args` refers to a list of 0 or more arguments passed to the called routine. Arguments must be passed as Python :code:`str`, :code:`bytes`, or :code:`int` objects. When calling routines that accept 0 arguments, the :code:`args` field can simply be omitted or an empty :code:`Sequence` passed (the default). Any output arguments will be returned as a Python :code:`bytes` object and can be subsequently cast to another Python type. The number of parameters possible is restricted to 34 (for 64-bit systems) or 33 (for 32-bit systems). If the maximum number of parameters is exceeded, a :code:`ValueError` will be raised.
+- :code:`args` refers to a list of 0 or more arguments passed to the called routine. Arguments must be passed as Python :code:`str`, :code:`bytes`, or :code:`int` objects. When calling routines that accept 0 arguments, the :code:`args` field can simply be omitted or an empty :code:`Tuple` passed (the default). Any output arguments will be returned as a Python :code:`bytes` object and can be subsequently cast to another Python type. The number of parameters possible is restricted to 34 (for 64-bit systems) or 33 (for 32-bit systems). If the maximum number of parameters is exceeded, a :code:`ValueError` will be raised.
 - :code:`has_retval` is set to :code:`False` by default. Accordingly, if the given routine has a return value :code:`has_retval` will need to explicitly be set to :code:`True`.
 
 For example, see the below setup for a sample :code:`HelloWorld3` routine.
@@ -378,7 +375,7 @@ Python data()
 
 .. code-block:: python
 
-    def data(varname: AnyStr, subsarray: Sequence[AnyStr] = ()) -> int
+    def data(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> int
 
 As a wrapper for the C function :ref:`ydb-data-s-st-fn`, :code:`data()` returns an integer value of 0, 1, 10, or 11 for the specified local or global variable node indicating what data may or may not be stored on or under that node. The meaning of these values is as follows:
 
@@ -387,7 +384,7 @@ As a wrapper for the C function :ref:`ydb-data-s-st-fn`, :code:`data()` returns 
 + 10: There is no value, but there is a subtree.
 + 11: There are both a value and a subtree.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If the underlying :ref:`ydb-data-s-st-fn` call returns an error, the function raises an exception containing the error code and message.
 
 .. code-block:: python
@@ -407,11 +404,11 @@ Python delete_node()
 
 .. code-block:: python
 
-    def delete_node(varname: AnyStr, subsarray: Sequence[AnyStr] = ()) -> None
+    def delete_node(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> None
 
 As a wrapper for the C function :ref:`ydb-delete-s-st-fn`, :code:`delete_node()` deletes the value stored at the given local or global variable node, if any, but leaves any subtree intact.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If the underlying :ref:`ydb-delete-s-st-fn` call returns an error, the function raises an exception containing the error code and message.
 
 .. code-block:: python
@@ -430,11 +427,11 @@ Python delete_tree()
 
 .. code-block:: python
 
-    def delete_tree(varname: AnyStr, subsarray: Sequence[AnyStr] = ()) -> None
+    def delete_tree(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> None
 
 As a wrapper for the C function :ref:`ydb-delete-s-st-fn`, :code:`delete_tree()` deletes both the value and subtree, if any, of the given local or global variable node.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If the underlying :ref:`ydb-delete-s-st-fn` call returns an error, the function raises an exception containing the error code and message.
 
 .. code-block:: python
@@ -453,11 +450,11 @@ Python get()
 
 .. code-block:: python
 
-    def get(varname: AnyStr, subsarray: Sequence[AnyStr] = ()) -> Optional[bytes]
+    def get(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> Optional[bytes]
 
 As a wrapper for the C function :ref:`ydb-get-s-st-fn`, :code:`get()` returns the value at the referenced global or local variable node, or intrinsic special variable.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If the underlying :ref:`ydb-get-s-st-fn` call returns an error of GVUNDEF or LVUNDEF, the function returns a value of :code:`None` and does not raise an exception.
 - If the underlying :ref:`ydb-get-s-st-fn` call returns an error other than GVUNDEF or LVUNDEF, the function raises an exception containing the error code and message.
 - Otherwise, it returns the value at the node.
@@ -474,11 +471,11 @@ Python incr()
 
 .. code-block:: python
 
-    def incr(varname: AnyStr, subsarray: Sequence[bytes] = (), increment: Union[int, float, str, bytes] = "1") -> bytes
+    def incr(varname: AnyStr, subsarray: Tuple[AnyStr] = (), increment: Union[int, float, str, bytes] = "1") -> bytes
 
 As a wrapper for the C function :ref:`ydb-incr-s-st-fn`, :code:`incr()` atomically increments the referenced global or local variable node by the value of :code:`increment`, with the result stored in the node and returned by the function. The value of the unit of incrementation may be passed as either a Python :code:`str` or :code:`int` object.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If a value for the :code:`increment` parameter is omitted, the default increment is 1.
 - If the underlying :ref:`ydb-incr-s-st-fn` call returns an error, the function raises an exception containing the error code and message.
 
@@ -494,7 +491,7 @@ Python lock()
 
 .. code-block:: python
 
-    def lock(keys: Sequence[Sequence[Union[tuple, Optional["Key"]]]] = (), timeout_nsec: int = 0) -> None
+    def lock(keys: Tuple[Tuple[Union[tuple, Optional["Key"]]]] = (), timeout_nsec: int = 0) -> None
 
 As a wrapper for the C function :ref:`ydb-lock-s-st-fn`, :code:`lock()` releases all lock resources currently held and then attempts to acquire the named lock resources referenced. If no lock resources are specified, it simply releases all lock resources currently held and returns.
 
@@ -504,7 +501,7 @@ If lock resources are specified, upon return, the process will have acquired all
 
 - If :code:`timeout_nsec` exceeds :code:`yottadb.YDB_MAX_TIME_NSEC`, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_TIME2LONG == YDBError.code()`
 - If the lock resource names exceeds the maximum number supported (currently 11), the function raises a :code:`yottadb.YDBError` exception where :code:`yottadb.YDB_ERR_PARMOFLOW == YDBError.code()`
-- If :code:`keys` is not a sequence of tuples representing variable name and subscript pairs, or a series of :code:`yottadb.Key` objects, then the function raises a :code:`yottadb.YDBError` exception where :code:`yottadb.YDB_ERR_INVLNPAIRLIST == YDBError.code()`
+- If :code:`keys` is not a Tuple of tuples representing variable name and subscript pairs, or a series of :code:`yottadb.Key` objects, then the function raises a :code:`yottadb.YDBError` exception where :code:`yottadb.YDB_ERR_INVLNPAIRLIST == YDBError.code()`
 - If it is able to acquire the lock resource within :code:`timeout_nsec` nanoseconds, it returns holding the lock, otherwise it raises a :code:`YDBTimeoutError` exception. If :code:`timeout_nsec` is zero, the function makes exactly one attempt to acquire the lock, which is the default behavior if a value for :code:`timeout_nsec` is omitted.
 - If the underlying :ref:`ydb-lock-s-st-fn` call returns any other error, the function raises an exception containing the error code and message.
 
@@ -583,11 +580,11 @@ Python lock_decr()
 
 .. code-block:: python
 
-    def lock_decr(varname: AnyStr, subsarray: Sequence[bytes] = ()) -> None
+    def lock_decr(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> None
 
 As a wrapper for the C function :ref:`ydb-lock-decr-s-st-fn`, :code:`lock_decr()` decrements the count of the lock name referenced, releasing it if the count goes to zero or ignoring the invocation if the process does not hold the lock.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If the underlying :ref:`ydb-lock-decr-s-st-fn` call returns an error, the function raises an exception containing the error code and message.
 
 .. code-block:: python
@@ -605,11 +602,11 @@ Python lock_incr()
 
 .. code-block:: python
 
-    def lock_incr(varname: AnyStr, subsarray: Sequence[bytes] = (), timeout_nsec: int = 0) -> None
+    def lock_incr(varname: AnyStr, subsarray: Tuple[AnyStr] = (), timeout_nsec: int = 0) -> None
 
 As a wrapper for the C function :ref:`ydb-lock-incr-s-st-fn`, :code:`lock_incr()` attempts to acquire the referenced lock resource name without releasing any locks the process already holds.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If the process already holds the named lock resource, the function increments its count and returns.
 - If :code:`timeout_nsec` exceeds :code:`yottadb.YDB_MAX_TIME_NSEC`, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_TIME2LONG == YDBError.code()`
 - If it is able to acquire the lock resource within :code:`timeout_nsec` nanoseconds, it returns holding the lock, otherwise it raises a :code:`YDBTimeoutError` exception. If :code:`timeout_nsec` is zero, the function makes exactly one attempt to acquire the lock, which is the default behavior if :code:`timeout_nsec` is omitted.
@@ -647,13 +644,13 @@ Python node_next()
 
 .. code-block:: python
 
-    def node_next(varname: AnyStr, subsarray: Sequence[bytes] = ()) -> tuple
+    def node_next(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> Tuple[bytes, ...]
 
 As a wrapper for the C function :ref:`ydb-node-next-s-st-fn`, :code:`node_next()` facilitates depth first traversal of a local or global variable tree.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If there is a next node, it returns the subscripts of that next node as a tuple of Python :code:`bytes` objects.
-- If there is no node following the specified node, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()`
+- If there is no node following the specified node, a :code:`yottadb.YDBNodeEnd` exception will be raised.
 - If the underlying :ref:`ydb-node-next-s-st-fn` call returns any other error, the function raises an exception containing the error code and message.
 
 .. code-block:: python
@@ -661,17 +658,16 @@ As a wrapper for the C function :ref:`ydb-node-next-s-st-fn`, :code:`node_next()
     # Initialize a test node and maintain full subscript list for later validation
     subs = []
     for i in range(1, 6):
-        subs.append(("sub" + str(i)))
+        all_subs.append((b"sub" + bytes(str(i), encoding="utf-8")))
         yottadb.set("mylocal", subs, ("val" + str(i)))
     # Begin iteration over subscripts of node
-    node_subs = yottadb.node_next("mylocal")
+    node_subs = ()
     while True:
         try:
             node_subs = yottadb.node_next("mylocal", node_subs)
-            print(node_subs)  # Prints ("sub1",), ("sub1, "sub2"), etc. successively
-        except yottadb.YDBError as e:
-            if yottadb.YDB_ERR_NODEEND == e.code():
-                break
+            print(node_subs)  # Prints (b'sub1',), (b'sub1', b'sub2'), etc. successively
+        except yottadb.YDBNodeEnd:
+            break
 
 ++++++++++++++++++++++
 Python node_previous()
@@ -679,13 +675,13 @@ Python node_previous()
 
 .. code-block:: python
 
-    def node_previous(varname: AnyStr, subsarray: Sequence[bytes] = ()) -> tuple
+    def node_previous(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> Tuple[bytes, ...]
 
 As a wrapper for the C function :ref:`ydb-node-previous-s-st-fn`, :code:`node_previous()` facilitates reverse depth first traversal of a local or global variable tree.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If there is a previous node, it returns the subscripts of that previous node as a tuple of Python :code:`bytes` objects, or an empty tuple if that previous node is the root.
-- If there is no node preceding the specified node, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()`
+- If there is no node preceding the specified node, a :code:`yottadb.YDBNodeEnd` exception will be raised.
 - If the underlying :ref:`ydb-node-previous-s-st-fn` call returns any other error, the function raises an exception containing the error code and message.
 
 .. code-block:: python
@@ -693,18 +689,17 @@ As a wrapper for the C function :ref:`ydb-node-previous-s-st-fn`, :code:`node_pr
     # Initialize test node and maintain full subscript list for later validation
     subs = []
     for i in range(1, 6):
-        subs.append(("sub" + str(i)))
+        all_subs.append((b"sub" + bytes(str(i), encoding="utf-8")))
         yottadb.set("mylocal", subs, ("val" + str(i)))
     # Begin iteration over subscripts of node
     node_subs = yottadb.node_previous("mylocal", subs)
-    print(node_subs)  # Prints ('sub1', 'sub2', 'sub3', 'sub4')
+    print(node_subs)  # Prints (b'sub1', b'sub2', b'sub3', b'sub4')
     while True:
         try:
             node_subs = yottadb.node_previous("mylocal", node_subs)
-            print(node_subs)  # Prints ('sub1', 'sub2', 'sub3'), ('sub1', 'sub2'), and ('sub1',), successively
-        except yottadb.YDBError as e:
-            if yottadb.YDB_ERR_NODEEND == e.code():
-                break
+            print(node_subs)  # Prints (b'sub1', b'sub2', b'sub3'), (b'sub1', b'sub2'), and (b'sub1',), successively
+        except yottadb.YDBNodeEnd as e:
+            break
 
 ++++++++++++++++++++++
 Python open_ci_table()
@@ -746,11 +741,11 @@ Python set()
 
 .. code-block:: python
 
-    def set(varname: AnyStr, subsarray: Sequence[AnyStr] = (), value: AnyStr = "") -> None
+    def set(varname: AnyStr, subsarray: Tuple[AnyStr] = (), value: AnyStr = "") -> None
 
 As a wrapper for the C function :ref:`ydb-set-s-st-fn`, :code:`set()` updates the value at the referenced local or global variable node, or the intrinsic special variable to the value contained in the Python :code:`str` or :code:`bytes` object passed via the :code:`value` parameter.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If :code:`value` is omitted, the node will be set to the empty string by default.
 - If the underlying :ref:`ydb-set-s-st-fn` call returns an error, the function raises an exception containing the error code and message.
 
@@ -787,16 +782,16 @@ Python subscript_next()
 
 .. code-block:: python
 
-    def subscript_next(varname: AnyStr, subsarray: Sequence[AnyStr] = ()) -> bytes
+    def subscript_next(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> bytes
 
 As a wrapper for the C function :ref:`ydb-subscript-next-s-st-fn`, :code:`subscript_next()` facilitates breadth-first traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the subscript level is zero, and variable names should be iterated over instead of subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the subscript level is zero, and variable names should be iterated over instead of subscripts.
 - If there is a next subscript with a node and/or a subtree, this function returns the subscript at the level of the last subscript in :code:`subsarray`
-- If there is no next node or subtree at that level of the subtree, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()`
+- If there is no next node or subtree at that level of the subtree, a :code:`yottadb.YDBNodeEnd` exception will be raised.
 - If the underlying :ref:`ydb-subscript-next-s-st-fn` call returns any other error, the function raises an exception containing the error code and message.
 
-In the special case where :code:`subsarray` is empty, :code:`subscript_next()` returns the name of the next global or local variable, and raises a :code:`yottadb.YDBError` exception where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()` if there is no global or local variable following :code:`varname`.
+In the special case where :code:`subsarray` is empty, :code:`subscript_next()` returns the name of the next global or local variable, and raises a :code:`yottadb.YDBNodeEnd` exception if there is no global or local variable following :code:`varname`.
 
 .. code-block:: python
 
@@ -811,9 +806,8 @@ In the special case where :code:`subsarray` is empty, :code:`subscript_next()` r
     while True:
         try:
             print(yottadb.subscript_next("^myglobal", ("sub1", subscript)))  # Prints 'sub3', 'sub4', and 'sub5', successively
-        except yottadb.YDBError as e:
-            if yottadb.YDB_ERR_NODEEND == e.code():
-                break
+        except yottadb.YDBNodeEnd:
+            break
 
     # subscript_next() also works with subscripts that include data that is not ASCII or valid UTF-8
     yottadb.set("mylocal", (b"sub1\x80",)), "val1"),  # Test subscripts with byte strings that are not ASCII or valid UTF-8
@@ -826,8 +820,8 @@ In the special case where :code:`subsarray` is empty, :code:`subscript_next()` r
     print(yottadb.subscript_next(varname="mylocal", subsarray=("sub3\x80",)))  # Prints b"sub4\x80"
     try:
         print(yottadb.subscript_next(varname="mylocal", subsarray=("sub4\x80",)))
-    except YDBError as e:
-        assert yottadb.YDB_ERR_NODEEND == e.code()
+    except YDBNodeEnd:
+        pass
 
 +++++++++++++++++++++++++++
 Python subscript_previous()
@@ -835,16 +829,16 @@ Python subscript_previous()
 
 .. code-block:: python
 
-    def subscript_previous(varname: bytes, subsarray: Sequence[bytes] = ()) -> bytes
+    def subscript_previous(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> bytes
 
 As a wrapper for the C function :ref:`ydb-subscript-previous-s-st-fn`, :code:`subscript_previous()` facilitates reverse breadth-first traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
 
-- If :code:`subsarray` is omitted, an empty :code:`Sequence` is passed by default, signifying that the subscript level is zero, and variable names should be iterated over instead of subscripts.
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the subscript level is zero, and variable names should be iterated over instead of subscripts.
 - If there is a previous subscript with a node and/or a subtree, it returns the subscript at the level of the last subscript in :code:`subsarray`
-- If there is no next node or subtree at that level of the subtree, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()`
+- If there is no next node or subtree at that level of the subtree, a :code:`yottadb.YDBNodeEnd` exception will be raised.
 - If the underlying :ref:`ydb-subscript-previous-s-st-fn` call returns any other error, the function raises an exception containing the error code and message.
 
-In the special case where :code:`subsarray` is empty :code:`subscript_previous()` returns the name of the previous global or local variable, and raises a :code:`yottadb.YDBError` exception where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()` if there is no global or local variable preceding :code:`varname`.
+In the special case where :code:`subsarray` is empty :code:`subscript_previous()` returns the name of the previous global or local variable, and raises a :code:`yottadb.YDBNodeEnd` exception if there is no global or local variable preceding :code:`varname`.
 
 .. code-block:: python
 
@@ -859,9 +853,8 @@ In the special case where :code:`subsarray` is empty :code:`subscript_previous()
     while True:
         try:
             print(yottadb.subscript_previous("^myglobal", ("sub1", subscript)))  # Prints 'sub4', 'sub3', and 'sub2', successively
-        except yottadb.YDBError as e:
-            if yottadb.YDB_ERR_NODEEND == e.code():
-                break
+        except yottadb.YDBNodeEnd as e:
+            break
 
 ++++++++++++++++++++++++
 Python switch_ci_table()
@@ -885,7 +878,7 @@ Python tp()
 
 .. code-block:: python
 
-    def tp(callback: object, args: tuple = None, transid: str = "", varnames: Sequence[AnyStr] = None, **kwargs,)
+    def tp(callback: object, args: tuple = None, transid: str = "", varnames: Tuple[AnyStr] = None, **kwargs,)
 
 As a wrapper for the C function :ref:`ydb-tp-s-st-fn`, :code:`tp()` provides an interface for performing basic YottaDB transaction processing from Python code. Specifically, :code:`tp()` allows users of the Python wrapper to safely call user-defined Python functions containing transaction logic that modifies or updates one or more nodes within a YottaDB database.
 
@@ -929,7 +922,7 @@ The following example demonstrates a simple usage of :code:`tp()`. Specifically,
     # Define a simple wrapper function to call the callback function via tp().
     # This wrapper will then be used to spawn multiple processes, each of which
     # calls tp() using the callback function.
-    def wrapper(function: Callable[..., object], args: Sequence[AnyStr]) -> int:
+    def wrapper(function: Callable[..., object], args: Tuple[AnyStr]) -> int:
         return yottadb.tp(function, args=args)
 
     # Create keys
@@ -1113,7 +1106,7 @@ Key.subsarray
 .. code-block:: python
 
     key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    print(key.subsarray) # Prints ['sub1', 'sub2']
+    print(key.subsarray) # Prints ["sub1", "sub2"]
 
 ++++++++++++++
 Key.subscripts
@@ -1412,12 +1405,12 @@ Key.node_next()
 
 .. code-block:: python
 
-    def node_next(varname: AnyStr, subsarray: Sequence[bytes] = ()) -> tuple
+    def node_next(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> Tuple[bytes, ...]
 
 Matching `Python node_next()`_, :code:`Key.node_next()` wraps :ref:`ydb-node-next-s-st-fn` to facilitate depth first traversal of the local or global variable tree represented by the given :code:`Key` object.
 
 - If there is a next node, it returns the subscripts of that next node as a tuple of Python :code:`bytes` objects.
-- If there is no node following the specified node, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()`
+- If there is no node following the specified node, a :code:`yottadb.YDBNodeEnd` exception will be raised.
 
 +++++++++
 Key.set()
@@ -1448,9 +1441,9 @@ Matching `Python subscript_next()`_, :code:`Key.subscript_next()` wraps :ref:`yd
 
 - If :code:`reset` is omitted, it is set to :code:`False` by default.
 - At the level of the last subscript, if there is a next subscript with a node and/or a subtree that subscript will be returned as a :code:`bytes` object.
-- If there is no next node or subtree at that level of the subtree, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()`. :code:`Key.subscript_next()` will always raise such a :code:`yottadb.YDBError` exception if the :code:`Key` object has no nodes or subtrees at its given subscript level.
-- A :code:`yottadb.YDBError` exception where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()` will be raised on all subsequent calls to :code:`Key.subscript_next()` after exhausting all nodes and/or subtrees as described above
-- To enable re-traversal of the current subscript level, the user may pass a value of :code:`True` to :code:`Key.subscript_next()`, which will cause the function to return the next subscript at the current level, as if :code:`Key.subscript_next()` was not previously called and a :code:`yottadb.YDBError` exception where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()` was not previously raised.
+- If there is no next node or subtree at that level of the subtree, a :code:`yottadb.YDBNodeEnd` exception will be raised.
+- A :code:`yottadb.YDBNodeEnd` exception will be raised on all subsequent calls to :code:`Key.subscript_next()` after exhausting all nodes and/or subtrees as described above
+- To enable re-traversal of the current subscript level, the user may pass a value of :code:`True` to :code:`Key.subscript_next()`, which will cause the function to return the next subscript at the current level, as if :code:`Key.subscript_next()` was not previously called and a :code:`yottadb.YDBNodeEnd` exception was not previously raised.
 
 The following example sets a value on multiple nodes at the first subscript level of a local variable, then iterates over each subscript at this level in two ways. First, the subscripts are iterated over using a :code:`Key.subscript_next()` manually in a succession of hard-coded calls.  Then, the starting subscript of the iteration is reset after iterating over all subscripts at that level. Finally, the subscripts are again iterated over, but this time using a :code:`while` loop instead of hard-coded individual calls to :code:`Key.subscript_next()`.
 
@@ -1469,24 +1462,21 @@ The following example sets a value on multiple nodes at the first subscript leve
 
     try:
         key.subscript_next()
-    except yottadb.YDBError as e:
-        if yottadb.YDB_ERR_NODEEND == e.code():
-            print(key[key.subscript_next(reset=True)].value)  # Prints b"1"
-            print(key[key.subscript_next()].value)  # Prints b"2"
-            print(key[key.subscript_next()].value)  # Prints b"3"
-            print(key[key.subscript_next()].value)  # Prints b"4"
-        else:
-            raise e
+    except yottadb.YDBNodeEnd:
+        print(key[key.subscript_next(reset=True)].value)  # Prints b"1"
+        print(key[key.subscript_next()].value)  # Prints b"2"
+        print(key[key.subscript_next()].value)  # Prints b"3"
+        print(key[key.subscript_next()].value)  # Prints b"4"
 
     try:
         sub = key.subscript_next(reset=True)  # Resets starting subscript to ""
-    except yottadb.YDBError as e:
+    except yottadb.YDBNodeEnd:
         # There are subscripts defined for the given Key, so a reset of subscript_next's
         # next subscript to the default starting subscript of "" should not return
         # a YDBError of YDB_ERR_NODEEND. If, on the other hand, there were no subscripts for the
         # given Key, subscript.next() would always raise a YDBError of YDB_ERR_NODEEND, regardless of
         # whether the `reset` argument is set to True or not.
-        assert yottadb.YDB_ERR_NODEEND != e.code():
+        assert False
 
     count = 1
     print(sub)  # Prints "sub1"
@@ -1495,11 +1485,8 @@ The following example sets a value on multiple nodes at the first subscript leve
             sub = key.subscript_next()
             count += 1
             assert sub == "sub" + str(count)
-        except yottadb.YDBError as e:
-            if yottadb.YDB_ERR_NODEEND == e.code():
-                break
-            else:
-                raise e
+        except yottadb.YDBNodeEnd:
+            break
 
 ++++++++++++++++++++++++
 Key.subscript_previous()
@@ -1513,7 +1500,7 @@ Matching `Python subscript_previous()`_, :code:`Key.subscript_previous()` wraps 
 
 - If :code:`reset` is omitted, it is set to :code:`False` by default.
 - At the level of the last subscript, if there is a previous subscript with a node and/or a subtree that subscript will be returned as a :code:`bytes` object.
-- If there is no previous node or subtree at that level of the subtree, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_NODEEND == YDBError.code()`
+- If there is no previous node or subtree at that level of the subtree, a :code:`yottadb.YDBNodeEnd` exception will be raised.
 
 The following example sets a value on multiple nodes at the first subscript level of a local variable, then iterates over each subscript at this level in two ways. First, the subscripts are iterated over using a :code:`Key.subscript_previous()` manually in a succession of hard-coded calls.  Then, the starting subscript of the iteration is reset after iterating over all subscripts at that level. Finally, the subscripts are again iterated over, but this time using a :code:`while` loop instead of hard-coded individual calls to :code:`Key.subscript_previous()`.
 
@@ -1532,24 +1519,21 @@ The following example sets a value on multiple nodes at the first subscript leve
 
     try:
         key.subscript_previous()
-    except yottadb.YDBError as e:
-        if yottadb.YDB_ERR_NODEEND == e.code():
-            print(key[key.subscript_previous(reset=True)].value)  # Prints b"4"
-            print(key[key.subscript_previous()].value)  # Prints b"3"
-            print(key[key.subscript_previous()].value)  # Prints b"2"
-            print(key[key.subscript_previous()].value)  # Prints b"1"
-        else:
-            raise e
+    except yottadb.YDBNodeEnd:
+        print(key[key.subscript_previous(reset=True)].value)  # Prints b"4"
+        print(key[key.subscript_previous()].value)  # Prints b"3"
+        print(key[key.subscript_previous()].value)  # Prints b"2"
+        print(key[key.subscript_previous()].value)  # Prints b"1"
 
     try:
         sub = key.subscript_previous(reset=True)  # Resets starting subscript to ""
-    except yottadb.YDBError as e:
+    except yottadb.YDBNodeEnd:
         # There are subscripts defined for the given Key, so a reset of subscript_previous's
         # previous subscript to the default starting subscript of "" should not return
         # a YDBError of YDB_ERR_NODEEND. If, on the other hand, there were no subscripts for the
         # given Key, subscript.previous() would always raise a YDBError of YDB_ERR_NODEEND, regardless of
         # whether the `reset` argument is set to True or not.
-        assert yottadb.YDB_ERR_NODEEND != e.code():
+        assert False
 
     count = 4
     print(sub)  # Prints "sub4"
@@ -1558,11 +1542,8 @@ The following example sets a value on multiple nodes at the first subscript leve
             sub = key.subscript_previous()
             count -= 1
             assert sub == "sub" + str(count)
-        except yottadb.YDBError as e:
-            if yottadb.YDB_ERR_NODEEND == e.code():
-                break
-            else:
-                raise e
+        except yottadb.YDBNodeEnd as e:
+            break
 
 -----------------------------------
 YottaDB Key class magic methods
