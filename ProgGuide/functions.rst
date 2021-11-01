@@ -1051,15 +1051,16 @@ Assume that X is defined as in the :ref:`examples-of-qlength` earlier in this ch
 $QUERY()
 ------------------
 
-Returns the next subscripted local or global variable node name, independent of level, which follows the node specified by its argument in M collating sequence and has a data value.
+Returns the next or previous subscripted local or global variable node name, independent of level, which follows or precedes the node specified by its argument in M collating sequence and has a data value.
 
 The format for the $QUERY function is:
 
 .. code-block:: none
 
-   $Q[UERY](glvn)
+   $Q[UERY](glvn[,expr])
 
-* The subscripted or unsubscripted global or local variable name specifies the starting node from which $QUERY() searches for a node with a data value.
+* The subscripted or unsubscripted global or local variable name specifies the starting node from which $QUERY() searches for the next or previous node with a data value.
+* The optional expression (second argument) specifies the direction for the $QUERY(); 1 specifies forward operation and -1 specifies reverse operation. Any other values for the expression will cause an error.
 * If $QUERY() finds no node after the specified global or local variable, it returns an empty string.
 * With stdnullcoll, if $Data(glvn(""))=1 (or 11), $Query(glvn("")) returns glvn(1) (assuming glvn(1) exists). Applications looking for a node with a "null" subscript must use $D(glvn("")) to test the existence of glvn(""). $Q(glvn("...")) never returns the starting-point (glvn("")) even though glvn("") may exist.
 
@@ -1105,6 +1106,24 @@ produces the results:
    ^X(1,2,5,9)=1259
    ^X(1,6)=16
    ^X("B",1)=AB
+
+And the following routine (reverse $QUERY):
+
+.. code-block:: none
+
+   set y="^X(""B"",1)"
+   for  do  quit:y=""  write !,y,"=",@y set y=$query(@y,-1)
+
+produces the following results:
+
+.. code-block:: none
+
+   ^X("B",1)=AB
+   ^X(1,6)=16
+   ^X(1,2,5,9)=1259
+   ^X(1,2,4)=124
+   ^X(1,2,3,7)=1237
+   ^X(1,2,3)=123
 
 Example:
 
