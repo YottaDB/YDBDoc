@@ -222,12 +222,16 @@ Python API Functions
 * `Python lock_decr()`_
 * `Python lock_incr()`_
 * `Python message()`_
+* `Python node_next()`_
+* `Python node_previous()`_
+* `Python nodes()`_
 * `Python open_ci_table()`_
 * `Python release()`_
 * `Python set()`_
 * `Python str2zwr()`_
 * `Python subscript_next()`_
 * `Python subscript_previous()`_
+* `Python subscripts()`_
 * `Python switch_ci_table()`_
 * `Python tp()`_
 * `Python transaction()`_
@@ -701,6 +705,69 @@ As a wrapper for the C function :ref:`ydb-node-previous-s-st-fn`, :code:`node_pr
         except yottadb.YDBNodeEnd as e:
             break
 
+++++++++++++++
+Python nodes()
+++++++++++++++
+
+.. code-block:: python
+
+    def nodes(varname: bytes, subsarray: Tuple[bytes] = ()) -> NodesIter:
+
+The :code:`nodes()` function provides a convenient, Pythonic interface for iteratively performing depth-first traversals starting from the given YottaDB local or global variable node, as specified by the :code:`varname` and :code:`subscripts` arguments.
+
+Specifically, :code:`nodes()` returns a Python :code:`NodesIter` iterator object that yields a :code:`List` of subscripts representing the next node in the tree on each iteration, in accordance with the behavior for `Python node_next()`_.
+
+Similarly, the :code:`reversed` version of the returned :code:`NodesIter` iterator will yield a :code:`List` of subscripts representing the previous node in the tree on each iteration, in accordance with the behavior for `Python node_previous()`_.
+
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
+- If there is a next node for a given iteration, the :code:`NodesIter` iterator will return the subscripts of that next node as a tuple of Python :code:`bytes` objects.
+- If this iterator is passed to the :code:`next()` built-in function and there is no subscript following the subscript previously returned, a :code:`StopIteration` exception will be raised.
+- If the underlying `Python node_next()`_ or `Python node_previous()`_ call returns any other error, the :code:`NodesIter` iterator will raise an exception containing the error code and message.
+
+.. code-block:: python
+
+    # Create list of subscript arrays representing some database nodes
+    nodes = [
+        (b"sub1",),
+        (b"sub1", b"subsub1"),
+        (b"sub1", b"subsub2"),
+        (b"sub1", b"subsub3"),
+        (b"sub2",),
+        (b"sub2", b"subsub1"),
+        (b"sub2", b"subsub2"),
+        (b"sub2", b"subsub3"),
+        (b"sub3",),
+        (b"sub3", b"subsub1"),
+        (b"sub3", b"subsub2"),
+        (b"sub3", b"subsub3"),
+    ]
+
+    # Set various nodes in the database
+    for node in nodes:
+        yottadb.set("^myglobal", node, str(nodes.index(node)))
+
+    # Iterate over all nodes under a global variable
+    for node in yottadb.nodes("^myglobal"):
+        # Prints: b'0', b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9', b'10', b'11'
+        print(yottadb.get("^myglobal", node))
+
+    # Iterate over some nodes under a global variable, beginning at a
+    # subscript in the middle of the tree.
+    for node in yottadb.nodes("^myglobal", ("sub2",)):
+        # b'5', b'6', b'7', b'8', b'9', b'10', b'11'
+        print(yottadb.get("^myglobal", node))
+
+    # Iterate over all nodes under a global variable, in reverse order
+    for node in reversed(yottadb.nodes("^myglobal")):
+        # b'11', b'10', b'9', b'8', b'7', b'6', b'5', b'4', b'3', b'2', b'1', b'0'
+        print(yottadb.get("^myglobal", node))
+
+    # Iterate over some nodes under a global variable in reverse order,
+    # beginning at a subscript in the middle of the tree.
+    for node in reversed(yottadb.nodes("^myglobal", ("sub2",))):
+        # b'7', b'6', b'5', b'4', b'3', b'2', b'1', b'0'
+        print(yottadb.get("^myglobal", node))
+
 ++++++++++++++++++++++
 Python open_ci_table()
 ++++++++++++++++++++++
@@ -855,6 +922,48 @@ In the special case where :code:`subsarray` is empty :code:`subscript_previous()
             print(yottadb.subscript_previous("^myglobal", ("sub1", subscript)))  # Prints 'sub4', 'sub3', and 'sub2', successively
         except yottadb.YDBNodeEnd as e:
             break
+
++++++++++++++++++++
+Python subscripts()
++++++++++++++++++++
+
+.. code-block:: python
+
+    def subscripts(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> SubscriptsIter
+
+The :code:`subscripts()` function provides a convenient, Pythonic interface for iteratively performing breadth-first traversals at the specified subscript level, starting from the given YottaDB local or global variable node, as specified by the :code:`varname` and :code:`subscripts` arguments.
+
+Specifically, :code:`subscripts()` returns a Python :code:`SubscriptsIter` iterator object that yields a :code:`bytes` object representing the next subscript at the given subscript level on each iteration, in accordance with the behavior for `Python subscript_next()`_.
+
+Similarly, the :code:`reversed` version of the returned :code:`SubscriptsIter` iterator will yield a :code:`bytes` object representing the previous subscript at the given subscript level on each iteration, in accordance with the behavior for `Python subscript_previous()`_.
+
+- If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts. In this case, :code:`subscripts()` will iterate over every local or global variable in the database starting from the local or global variable name specified.
+- If there is a next subscript for a given iteration, the :code:`SubscriptsIter` iterator will return the subscript at that subscript level as a Python :code:`bytes` object.
+- If this iterator is passed to the :code:`next()` built-in function and there is no subscript following the subscript previously returned, a :code:`StopIteration` exception will be raised.
+- If the underlying `Python subscript_next()`_ or `Python subscript_previous()`_ call returns any other error, the :code:`SubscriptsIter` iterator will raise an exception containing the error code and message.
+
+.. code-block:: python
+
+    subs = [b"sub1", b"sub2", b"sub3"]
+    # Set various nodes in the database
+    for sub in subs:
+        yottadb.set("^myglobal", (sub,), str(subs.index(sub)))
+
+    # Iterate over all subscripts under a global variable
+    for subscript in yottadb.subscripts("^myglobal", ("",)):
+        print(subscript)  # Prints b'sub1', b'sub2', b'sub3'
+
+    # Iterate over some subscripts under a global variable
+    for subscript in yottadb.subscripts("^myglobal", ("sub1",)):
+        print(subscript)  # Prints b'sub2', b'sub3'
+
+    # Iterate over all subscripts under a global variable, in reverse
+    for subscript in reversed(yottadb.subscripts("^myglobal", ("",))):
+        print(subscript)  # Prints b'sub3', b'sub2', b'sub1'
+
+    # Iterate over some subscripts under a global variable, in reverse
+    for subscript in reversed(yottadb.subscripts("^myglobal", ("sub3",))):
+        print(subscript)  # Prints b'sub2', b'sub1'
 
 ++++++++++++++++++++++++
 Python switch_ci_table()
