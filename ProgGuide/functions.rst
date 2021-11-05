@@ -42,14 +42,14 @@ The format for the $ASCII function is:
 
 * The expression is the source string from which $ASCII() extracts the character it decodes.
 * intexpr contains the position within the expression of the character that $ASCII() decodes. If intexpr is missing, $ASCII() returns a result based on the first character position.
-* If intexpr evaluates to before the beginning or after the end of the expression, $ASCII() returns a value of negative one (-1).
+* If intexpr evaluates to before the beginning or after the end of the expression, $ASCII() returns a value of -1.
 
 $ASCII() provides a means of examining non-graphic characters in a string. When used with $CHAR(), $ASCII() also provides a means to perform arithmetic operations on the codes associated with characters.
 
 $ZASCII() is the parallel function of $ASCII(). $ZASCII() interprets the string argument as a sequence of bytes (rather than a sequence of characters) and can perform all byte-oriented $ASCII() operations. For more information, refer to :ref:`zascii-function`.
 
 ++++++++++++++++++++
-Examples of ASCII()
+Examples of $ASCII()
 ++++++++++++++++++++
 
 Example:
@@ -157,20 +157,18 @@ The following table summarizes $DATA() return values.
 $DATA() Results
 ++++++++++++++++
 
-+---------------+----------------------------------------------------------+--------------------------------------------------------------+
-|                                        Value                                                                                            |
-+===============+==========================================================+==============================================================+
-|               | Descendants (No)                                         | Descendants (Yes)                                            |
-+---------------+----------------------------------------------------------+--------------------------------------------------------------+
-| NO            | 0                                                        | 10                                                           |
-+---------------+----------------------------------------------------------+--------------------------------------------------------------+
-| YES           | 1                                                        | 11                                                           |
-+---------------+----------------------------------------------------------+--------------------------------------------------------------+
++----------+---------------------+-------------------+
+| Value    | Descendants (No)    | Descendants (Yes) |
++==========+=====================+===================+
+| NO       | 0                   | 10                |
++----------+---------------------+-------------------+
+| YES      | 1                   | 11                |
++----------+---------------------+-------------------+
 
 $DATA() return values can also be understood as a pair of truth-values where the left describes descendants and the right describes data and where M suppresses any leading zero (representing no descendants).
 
 +++++++++++++++++++++
-Examples for $DATA()
+Examples of $DATA()
 +++++++++++++++++++++
 
 Example:
@@ -228,7 +226,7 @@ The format for the $EXTRACT function is:
 
 $EXTRACT() provides a tool for manipulating strings based on character positions.
 
-For a yottadb process started in UTF-mode, $EXTRACT interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $EXTRACT() produces a run-time error when it encounters a character in the reserved range of the Unicode® Standard, but it does not process the characters that fall after the span specified by the arguments. The parallel function of $EXTRACT() is $ZEXTRACT(). Use $ZEXTRACT() for byte-oriented operations. For more information, refer to `zextract-function`.
+For a yottadb process started in UTF-mode, $EXTRACT interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $EXTRACT() produces a run-time error when it encounters a character in the reserved range of the Unicode® Standard, but it does not process the characters that fall after the span specified by the arguments. The parallel function of $EXTRACT() is $ZEXTRACT(). Use $ZEXTRACT() for byte-oriented operations. For more information, refer to :ref:`zextract-function`.
 
 $EXTRACT() can be used on the left-hand side of the equal sign (=) of a SET command to set a substring of a string. This construct permits easy maintenance of individual pieces within a string. It can also be used to right justify a value padded with blank characters. For more information on SET $EXTRACT(), refer to :ref:`set-command`.
 
@@ -301,7 +299,7 @@ The format for the $FIND function is:
 * If $FIND() locates the substring, it returns the position after the last character of the substring. If the end of the substring coincides with the end of the string (expr1), it returns an integer equal to the length of the string plus one ($L(expr1)+1).
 * If $FIND() does not locate the substring, it returns zero (0).
 * For a process started in UTF-8 mode, $FIND() interprets the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $FIND() produces a run-time error when it encounters a malformed character, but it does not process the characters that fall after the span specified by the arguments.
-* $ZFIND() is the Z equivalent function $FIND(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZFIND() interprets argument as a sequence of bytes (rather than a sequence of characters) and can perform byte-oriented $FIND() operations.For more information, refer to :ref:`zfind-function`.
+* $ZFIND() is the Z equivalent function $FIND(). Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZFIND() interprets argument as a sequence of bytes (rather than a sequence of characters) and can perform byte-oriented $FIND() operations. For more information, refer to :ref:`zfind-function`.
 
 $FIND() provides a tool to locate substrings. The ([) operator and the two-argument $LENGTH() are other tools that provide related functionality.
 
@@ -758,7 +756,7 @@ The format for the $ORDER function is:
 * $ORDER() can be used as a tool for retrieving data from M sparse arrays in an ordered fashion, independent of the order in which it was entered. In M, routines generally sort by SETting data into an array with appropriate subscripts and then retrieving the information with $ORDER().
 * $ORDER() returns subscripts, not data values, and does not discriminate between nodes that have data values and nodes that have descendants. Once $ORDER() provides the subscript, the routine must use the subscript to access the data value, if appropriate. Using $ORDER() maintains the naked reference indicator, even if $ORDER() returns a null.
 * YottaDB optionally permits the use of null subscripts. This feature is enabled via the VIEW command for local variables and a REGION qualifier in GDE for global variables. When an application uses null subscripts, they are "invisible" in a $ORDER() loop so the application must test for them as a special case, perhaps using $DATA().
-* $Order() returns local array subscripts with values that are numeric, but non-canonical (over 18 digit), as strings.
+* $ORDER() returns local array subscripts with values that are numeric, but non-canonical (over 18 digit), as strings.
 
 .. note::
    Name-level $ORDER() always returns an empty string when used with extended references.
@@ -972,7 +970,7 @@ Returns the number of subscripts in a variable name. The format is:
 
 .. code-block:: none
 
-   $QL[ENGTH] (namevalue)
+   $QL[ENGTH](namevalue)
 
 * The namevalue has the form of an evaluated subscripted or unsubscripted global variable.
 * $QLENGTH() returns a value which is derived from namevalue. If namevalue has the form NAME(s1, s2,..., sn), then the function returns n; if the name is unsubscripted, $QLENGTH() yields a length of zero (0).
@@ -1008,15 +1006,14 @@ The format of the $QSUBSCRIPT function is:
 
    $QS[UBSCRIPT](namevalue, intexpr)
 
-The namevalue has the form of an evaluated subscripted or unsubscripted global or local variable name.
+* The namevalue has the form of an evaluated subscripted or unsubscripted global or local variable name.
+* The intexpr selects the component of the name as follows:
 
-The intexpr selects the component of the name as follows:
-
-* -2 : is reserved but may be "error",
-* -1 : for environment,
-* 0 : for the unsubscripted name,
-* 1 : for the first subscript,
-* 2 : for the second subscript, and so on.
+  * -2 : is reserved but may be "error",
+  * -1 : for environment,
+  * 0 : for the unsubscripted name,
+  * 1 : for the first subscript,
+  * 2 : for the second subscript, and so on.
 
 If the second argument selects a component that is not part of the specified name, $QSUBSCRIPT() returns an empty string ("").
 
@@ -1062,7 +1059,7 @@ The format for the $QUERY function is:
 * The subscripted or unsubscripted global or local variable name specifies the starting node from which $QUERY() searches for the next or previous node with a data value.
 * The optional expression (second argument) specifies the direction for the $QUERY(); 1 specifies forward operation and -1 specifies reverse operation. Any other values for the expression will cause an error.
 * If $QUERY() finds no node after the specified global or local variable, it returns an empty string.
-* With stdnullcoll, if $Data(glvn(""))=1 (or 11), $Query(glvn("")) returns glvn(1) (assuming glvn(1) exists). Applications looking for a node with a "null" subscript must use $D(glvn("")) to test the existence of glvn(""). $Q(glvn("...")) never returns the starting-point (glvn("")) even though glvn("") may exist.
+* With stdnullcoll, if $DATA(glvn(""))=1 (or 11), $QUERY(glvn("")) returns glvn(1) (assuming glvn(1) exists). Applications looking for a node with a "null" subscript must use $D(glvn("")) to test the existence of glvn(""). $Q(glvn("...")) never returns the starting-point (glvn("")) even though glvn("") may exist.
 
 $QUERY() can be used as a tool for scanning an entire array for nodes that have data values. Because $QUERY() can return a result specifying a different level than its argument, the result provides a full variable name. This contrasts with $ORDER(), which returns a subscript value. To access the data value at a node, a $ORDER() return can be used as a subscript; however, a $QUERY() return must be used with indirection. Because arrays tend to have homogeneous values within a level but not between levels, $QUERY() is more useful as a tool in utility programs than in application programs. The $QUERY() can be useful in avoiding nested $ORDER loops.
 
@@ -1323,16 +1320,16 @@ The format for the $STACK function is:
      For run-time errors, YottaDB does not provide a "PLACE" within a line (unlike it does for compilation errors), but it reports a label, offset, and routine.
 
 * When $STACK has only one argument, values corresponding to available stack levels specify a return value that indicates how the level was created, as follows:
-* If intexpr is zero (0), the function returns information on how YottaDB was invoked.
-* If intexpr is minus one (-1), the function returns the highest level for which $STACK can return information. Note that, if $ECODE="", $STACK(-1) returns the same value as the $STACK ISV.
-* If intexpr is greater than zero (0) and less than or equal to $STACK(-1), indicates how this level of process stack was created ("DO", "TRIGGER" - for a stack level invoked by a trigger, "XECUTE", or "$$" - for an extrinsic function).
+  * If intexpr is zero (0), the function returns information on how YottaDB was invoked.
+  * If intexpr is minus one (-1), the function returns the highest level for which $STACK can return information. Note that, if $ECODE="", $STACK(-1) returns the same value as the $STACK ISV.
+  * If intexpr is greater than zero (0) and less than or equal to $STACK(-1), indicates how this level of process stack was created ("DO", "TRIGGER" - for a stack level invoked by a trigger, "XECUTE", or "$$" - for an extrinsic function).
 * $STACK(lvl) reports "ZINTR" for a stack level invoked by MUPIP INTRPT.
 * If intexpr is greater than $STACK (-1), the function returns an empty string.
 * During error handling, $STACK() return a snapshot of the state of the stack at the time of error. Even if subsequent actions add stack levels, $STACK() continues to report the same snapshot for the levels as of the time of the error. $STACK() reports the latest stack information only after the code clears $ECODE.
 * $STACK() assists in debugging programs.
 
 .. note::
-   $STACK() returns similar information to ZSHOW "S" when ""=$ECODE, but when $ECODE contains error information, $STACK() returns information as of the time of a prior error, generally the first entry in $ECODE. For $STACK() to return current information, be sure that error handing code does a SET $ECODE="" before restoring the normal flow of control.
+   $STACK() returns similar information to ZSHOW "S" when ""=$ECODE, but when $ECODE contains error information, $STACK() returns information as of the time of a prior error, generally the first entry in $ECODE. For $STACK() to return current information, be sure that error handling code does a SET $ECODE="" before restoring the normal flow of control.
 
 +++++++++++++++++++++++++
 Examples of $STACK()
@@ -1431,7 +1428,7 @@ Example:
    %YDB-E-SETECODE, Non-empty value assigned to $ECODE (user-defined error trap)
    YDB>
 
-This example shows how SETing $ECODE=.. makes $STACK() reports current information. Notice how ^do dstacktst(0) and ^dostacktst(1) without clearing $ECODE in between displays information frozen at the time of the first error (else condition).
+This example shows how SETing $ECODE=.. makes $STACK() report current information. Notice how ^do dstacktst(0) and ^dostacktst(1) without clearing $ECODE in between displays information frozen at the time of the first error (else condition).
 
 --------------------
 $TEXT()
@@ -1917,6 +1914,7 @@ Returns the transformed representation of the first argument expr in a normalize
 * The expression specifies the string to transform.
 * The intexpr specifies the ID of the alternative transform to use.
 * The optional third argument specifies :
+
      * zero (0): the transform is to normalized form
      * one (1): the reverse transform from the normalized to the native form
      * two (2): the character which collates immediately after the first character of the first argument, or the empty string if no character does
@@ -2333,7 +2331,7 @@ The format for the $ZCOLLATE function is:
 
 .. code-block:: none
 
-   $ZCO[llate](glvn,intexpr[,{0|1}])
+   $ZCO[LLATE](glvn,intexpr[,{0|1}])
 
 * The subscripted or unsubscripted global or local variable name specifies the key to transform.
 * The integer expression specifies the ID of the alternative transform to use.
@@ -3839,7 +3837,7 @@ Example:
 $ZYHASH()
 -----------------
 
-Returns the 128-bit `MurmurHash3 <https://en.wikipedia.org/wiki/MurmurHash#MurmurHash3>`_ of a string as a hexadecimal string prefixed with :code:"0x". This is equivalent to calling the C API function `ydb_mmrhash_128() <../MultiLangProgGuide/cprogram.html#ydb-mmrhash-128-fn>`_ and passing its return value to `ydb_mmrhash_128_hex() <../MultiLangProgGuide/cprogram.html#ydb-mmrhash-128-hex-fn>`_
+Returns the 128-bit `MurmurHash3 <https://en.wikipedia.org/wiki/MurmurHash#MurmurHash3>`_ of a string as a hexadecimal string prefixed with :code:`"0x"`. This is equivalent to calling the C API function `ydb_mmrhash_128() <../MultiLangProgGuide/cprogram.html#ydb-mmrhash-128-fn>`_ and passing its return value to `ydb_mmrhash_128_hex() <../MultiLangProgGuide/cprogram.html#ydb-mmrhash-128-hex-fn>`_
 
 .. code-block:: none
 
@@ -3904,7 +3902,7 @@ Returns a 128-bit `MurmurHash3 <https://en.wikipedia.org/wiki/MurmurHash#MurmurH
 .. note::
 
    * YottaDB supports names that are unique in the first 31 characters, and
-   * the function may return different sequences for the same :code:`string` on different platforms
+   * The function may return different sequences for the same :code:`string` on different platforms
 
 +++++++++++++++++++++++++
 Examples of $ZYSUFFIX()

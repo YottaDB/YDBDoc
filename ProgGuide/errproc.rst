@@ -1084,27 +1084,32 @@ The extensions are:
 
 The ZSHOW command displays information about the current M environment. A ZSHOW argument may contain an expression that contains codes selecting one or more types of information for output.
 
-A: selects auto-relink information
-
-B: selects ZBREAK information
-
-C: provides the list of loaded external call packages and their routines. ZSHOW "C" does not report packages that are accessible but have not been accessed by the process.
-
-D: selects open device information
-
-G: selects global statistic information
-
-I: selects intrinsic special variables
-
-L: selects locks held by the process
-
-R: selects the M stack but with routine hashes
-
-S: selects the M stack
-
-V: selects local variables
-
-\*: selects all possible ZSHOW information except A.
++--------------+-------------------------------------------------------------------------------+
+| Code         | Description                                                                   |
++==============+===============================================================================+
+| A            | Selects auto-relink information                                               |
++--------------+-------------------------------------------------------------------------------+
+| B            | Selects ZBREAK information                                                    |
+| C            | Provides the list of loaded external call packages and their routines. ZSHOW  |
+|              | "C" does not report packages that are accessible but have not been accessed by|
+|              | the process.                                                                  |
++--------------+-------------------------------------------------------------------------------+
+| D            | Selects open device information                                               |
++--------------+-------------------------------------------------------------------------------+
+| G            | Selects global statistic information                                          |
++--------------+-------------------------------------------------------------------------------+
+| I            | Selects intrinsic special variables                                           |
++--------------+-------------------------------------------------------------------------------+
+| L            | Selects locks held by the process                                             |
++--------------+-------------------------------------------------------------------------------+
+| R            | Selects the M stack but with routine hashes                                   |
++--------------+-------------------------------------------------------------------------------+
+| S            | Selects the M stack                                                           |
++--------------+-------------------------------------------------------------------------------+
+| V            | Selects local variables                                                       |
++--------------+-------------------------------------------------------------------------------+
+| \*           | Selects information equivalent to ZSHOW "VIBDLGR"                             |
++--------------+-------------------------------------------------------------------------------+
 
 A ZSHOW with no argument displays the M stack on the current device. It lists the program stack from initiation to the current execution level.
 

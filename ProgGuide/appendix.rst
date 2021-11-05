@@ -249,7 +249,7 @@ Validate all input from $ZCMDLINE as if it were from a READ for user input.
 Extrinsic Functions and Special Variables ($$)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When a subroutine needs to return a single value or an an array of values, choose an Extrinsic invocation over a DO in order to minimize scoping risks.
+When a subroutine needs to return a single value or an array of values, choose an Extrinsic invocation over a DO in order to minimize scoping risks.
 
 ~~~~~~~~~~
 Triggers

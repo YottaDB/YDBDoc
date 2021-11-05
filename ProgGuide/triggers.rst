@@ -24,7 +24,7 @@
 Triggers
 --------------------
 
-YottaDB allows you to set up a trigger mechanism that automatically executes a defined action in response to a database update operation on a matching global node. The trigger mechanism executes a fragment of M code (trigger code) "before" or "as part of" a database update. You can define the specifications of this mechanism in a Trigger Definition File. For a trigger on KILL (and ZKILL), YottaDB executes trigger code "before" the KILL operation. For example, a trigger on KILL ^CIF(:,1) might clear old cross references. For a trigger on SET, YottaDB executes trigger code "as part of" the SET operation. Within trigger logic, the ISV $ZTOLDVAL provides read access to the value of global node prior to the update and $ZTVALUE provides read/write access to the tentative SET value. This allows you to modify the tentative SET value before YottaDB commits it to the database. The term "as part of" means that SET triggers execute intertwined with the SET operation. Although it is not yet committed the database, the tentative new value appears to the process as assigned but the process must SET $ZTVALUE to make any revision to the tentative value, because a SET of the global node would nest the trigger recursively - a pathological condition. YottaDB executes SET triggers during a MERGE update where YottaDB internally performs a series of SET operations and while performing a $INCREMENT() operation where YottaDB internally performs a SET operation. For all triggers, YottaDB handles the database update event and the triggered actions as an Atomic (all or nothing) transaction. Because triggers use application code and are always part of an implicit or explicit TP transaction, trigger code must conform to the ACID conventions discussed in the TP documentation.
+YottaDB allows you to set up a trigger mechanism that automatically executes a defined action in response to a database update operation on a matching global node. The trigger mechanism executes a fragment of M code (trigger code) "before" or "as part of" a database update. You can define the specifications of this mechanism in a Trigger Definition File. For a trigger on KILL (and ZKILL), YottaDB executes trigger code "before" the KILL operation. For example, a trigger on KILL ^CIF(:,1) might clear old cross references. For a trigger on SET, YottaDB executes trigger code "as part of" the SET operation. Within trigger logic, the ISV $ZTOLDVAL provides read access to the value of global node prior to the update and $ZTVALUE provides read/write access to the tentative SET value. This allows you to modify the tentative SET value before YottaDB commits it to the database. The term "as part of" means that SET triggers execute intertwined with the SET operation. Although it is not yet committed to the database, the tentative new value appears to the process as assigned but the process must SET $ZTVALUE to make any revision to the tentative value, because a SET of the global node would nest the trigger recursively - a pathological condition. YottaDB executes SET triggers during a MERGE update where YottaDB internally performs a series of SET operations and while performing a $INCREMENT() operation where YottaDB internally performs a SET operation. For all triggers, YottaDB handles the database update event and the triggered actions as an Atomic (all or nothing) transaction. Because triggers use application code and are always part of an implicit or explicit TP transaction, trigger code must conform to the ACID conventions discussed in the TP documentation.
 
 Triggers meet many application needs including (but not limited to) the following:
 
@@ -60,7 +60,7 @@ A trigger definition file is a text file used for adding new triggers, modifying
 
 An automatically generated trigger name is a string comprised of two parts. Using the global name as a base, YottaDB takes the first part as an alphanumeric string of up to 21 characters starting with an alphabetic character or a percent sign (%). The trailing part consists of an automatically incremented number in the form of #n# where n is a whole number that monotonically increases from 1 to 999999 that uniquely identifies a trigger for the same update. For example, if no trigger names are specified in the trigger definition file, YottaDB automatically generates trigger names Account#1#, Account#2#, and Account#3# for the first three triggers defined for global variable ^Account. An attempt to use automatic assignment for more than a million triggers produces an error. Once the numeric portion of the auto generated names reaches 999999, you must reload all triggers associated with the global variables that use the auto generated name space. At run-time YottaDB generates a trailing suffix of a hash-sign (#) followed by up to two characters to ensure that every trigger has a unique designation, even when the environment is complex. The run-time suffix applies to both user-specified and automatically generated trigger names. It helps in differentiating triggers with the same name in different database files.
 
-Suppose you want to set up a trigger called TrigAcct on every s ^Acct("ID") to invoke the routine ^OpenAccount. Your trigger definition file may have an entry like +^Acct("ID") -command=S -xecute="do ^OpenAccount" -name=TrigAcct. The following diagram identifies the different parts of this trigger definition:
+Suppose you want to set up a trigger called TrigAcct on every s ^Acct("ID") to invoke the routine ^OpenAccount. Your trigger definition file may have an entry like :code:`+^Acct("ID") -command=S -xecute="do ^OpenAccount" -name=TrigAcct`. The following diagram identifies the different parts of this trigger definition:
 
 .. image:: accttrig.svg
 
@@ -69,7 +69,7 @@ To apply this trigger definition file to YottaDB, all you do is to load it using
 {-triggername\|-triggername-prefix\*\|-\*\|{+|-}trigvn -commands=cmd[,...] -xecute=strlit1 [-[z]delim=expr][-pieces=[lvn=]int1[:int2][;...]] [-options={[no]i[solation]|[no]c[onsistencycheck]}...] [-name=strlit2]}
 
 ++++++++++++++++++++++++++++++++++++++++++++
--triggername\|-trigger-name-prefix\*\|-\* .
+-triggername\|-triggername-prefix\*\|-\* .
 ++++++++++++++++++++++++++++++++++++++++++++
 
 * :code:`-triggername` deletes a user-specified trigger called *triggername* from the database.
@@ -85,13 +85,13 @@ To apply this trigger definition file to YottaDB, all you do is to load it using
 * :code:`-trigvn` deletes any triggers in the database that match the specified trigger.
 * :code:`+trigvn` adds or replaces the specified trigger. If the specified trigger exists (with a matching specification), MUPIP TRIGGER or $ZTRIGGER() treats the matching definition as a no-op, resulting in no database update. If you want to specify more than one global node for the same trigger code, the following rules apply:
 
-1. You can use :ref:`patterns <pattern-match-op>` and ranges (using ":") for subscripts.
-2. You can specify a semicolon (;) separated list for subscripts. For example: ^A(1;2;3).
-3. An asterisk (*) can be used to match any subscript value. For example, ^A(\*,2) matches ^A(1,2) and ^A(2,2) but not ^A(1,3).
-4. You can specify a selection list that includes a mix of points, ranges and patterns, but a pattern cannot serve as either end of a range. For example, :,"a":"d";?1U is a valid specification but :,"a":?1A is not.
-5. You can specify a local variable name for each subscript. For example instead of ^X(1,:,:), you can specify ^X(1,lastname=:,firstname=:). This causes YottaDB to define local variables lastname and firstname to the actual second and third level subscripts respectively from the global node invoking this trigger. The trigger code can then use these variables just like any other M local variable. As described in the Trigger Execution Environment section, trigger code executes in a clean environment - as if all code is preceded by an implicit NEW - the implicit assignments apply only within the scope of the trigger code and don't conflict or affect any run-time code or other triggers.
-6. You cannot use the @ operator, unspecified subscripts (for example, ^A() or ^A(:,)) or local or global variable names as subscripts.
-7. You cannot use patterns and ranges for the global variable name. Therefore, you cannot set a single trigger for ^Acct*.
+  1. You can use :ref:`patterns <pattern-match-op>` and ranges (using ":") for subscripts.
+  2. You can specify a semicolon (;) separated list for subscripts. For example: ^A(1;2;3).
+  3. An asterisk (*) can be used to match any subscript value. For example, ^A(\*,2) matches ^A(1,2) and ^A(2,2) but not ^A(1,3).
+  4. You can specify a selection list that includes a mix of points, ranges and patterns, but a pattern cannot serve as either end of a range. For example, :,"a":"d";?1U is a valid specification but :,"a":?1A is not.
+  5. You can specify a local variable name for each subscript. For example instead of ^X(1,:,:), you can specify ^X(1,lastname=:,firstname=:). This causes YottaDB to define local variables lastname and firstname to the actual second and third level subscripts respectively from the global node invoking this trigger. The trigger code can then use these variables just like any other M local variable. As described in the Trigger Execution Environment section, trigger code executes in a clean environment - as if all code is preceded by an implicit NEW - the implicit assignments apply only within the scope of the trigger code and don't conflict or affect any run-time code or other triggers.
+  6. You cannot use the @ operator, unspecified subscripts (for example, ^A() or ^A(:,)) or local or global variable names as subscripts.
+  7. You cannot use patterns and ranges for the global variable name. Therefore, you cannot set a single trigger for ^Acct*.
 
 In order to account for any non-standard collation, YottaDB evaluates string subscript ranges using the global specific collation when an application update first invokes a trigger - as a consequence, it detects and reports range issues at run-time rather than from MUPIP TRIGGER or $ZTRIGGER(), so test appropriately. For example, YottaDB reports a run-time error for an inverted subscript range such as (ASCII) C:A.
 
@@ -172,13 +172,19 @@ You can specify an optional piece delimiter using -[z]delim=expr where expr is a
 [-options= {no]i[solation]\|[[no]c[onsistencycheck]}...
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-You can specify [NO]ISOLATION or [NO]CONSISTENCYCHECK as a property of the triggered database updates. NOISOLATION is a facility for your application to instruct YottaDB where the application logic and database schema take responsibility for ensuring the ACID property of ISOLATION, and that any apparent collisions are purely coincidental from multiple global nodes resident in the same physical block which serves as the YottaDB level of granularity in conflict checking. In the current release, this trigger designation is notational only - you must still implement NOISOLATION at the process level with the VIEW command, but you can use the trigger designation in planning to move to schema-based control of this facility. NOCONSISTENCYCHECK is a facility for your application to instruct YottaDB that application logic and schema take responsibility for ensuring the ACID property of CONSISTENCY. The [NO]CONSISTENCYCHECK feature is not yet implemented and will be made available in a future YottaDB release. For now, you can plan to move CONSISTENCY responsibility from your application to a trigger and implement it later when this feature becomes available. Note: -options are not part of the trigger signature and so can be modified without deleting an existing trigger.
+You can specify [NO]ISOLATION or [NO]CONSISTENCYCHECK as a property of the triggered database updates. NOISOLATION is a facility for your application to instruct YottaDB where the application logic and database schema take responsibility for ensuring the ACID property of ISOLATION, and that any apparent collisions are purely coincidental from multiple global nodes resident in the same physical block which serves as the YottaDB level of granularity in conflict checking. In the current release, this trigger designation is notational only - you must still implement NOISOLATION at the process level with the VIEW command, but you can use the trigger designation in planning to move to schema-based control of this facility. NOCONSISTENCYCHECK is a facility for your application to instruct YottaDB that application logic and schema take responsibility for ensuring the ACID property of CONSISTENCY. *The [NO]CONSISTENCYCHECK feature is not yet implemented and will be made available in a future YottaDB release.* For now, you can plan to move CONSISTENCY responsibility from your application to a trigger and implement it later when this feature becomes available.
+
+.. note::
+   -options are not part of the trigger signature and so can be modified without deleting an existing trigger.
 
 ++++++++++++++++
 [-name=strlit2]
 ++++++++++++++++
 
-strlit2 is a user-specified trigger name. It is an alphanumeric string of up to 28 characters. It must start with an alphabetic character or a percent sign (%). Note: -name is not part of the trigger signature and so can be modified without deleting an existing trigger. Note also that the name can be used to delete a trigger - this alternative avoids potential issues with text variations in the code associated with the -xecute qualifier which is part of the trigger signature when the variations do not have semantic significance.
+strlit2 is a user-specified trigger name. It is an alphanumeric string of up to 28 characters. It must start with an alphabetic character or a percent sign (%).
+
+.. note::
+   -name is not part of the trigger signature and so can be modified without deleting an existing trigger. Also note, that the name can be used to delete a trigger - this alternative avoids potential issues with text variations in the code associated with the -xecute qualifier which is part of the trigger signature when the variations do not have semantic significance.
 
 ---------------------------------------
 Trigger ISVs Summary
@@ -192,7 +198,7 @@ The following table briefly describes all ISVs (Intrinsic Special Variables) ava
 | :ref:`ztdata-isv`     | A fast path alternative to $DATA(@$REFERENCE)#2 for a SET or $DATA(@$REFERENCE) of the node for a KILL update.                                 |
 +-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
 | :ref:`ztdelim-isv`    | $ZTDE[LIM] returns the piece delimiter/separator, as specified by -delim or -zdelim in the trigger definition. This allows SET type triggers   |
-|                       | to extract updated pieces defined in $ZTUPDATE andr KILL/ZKILL type triggers to extract the relevant pieces in the node value (of the          |
+|                       | to extract updated pieces defined in $ZTUPDATE and KILL/ZKILL type triggers to extract the relevant pieces in the node value (of the           |
 |                       | node being killed) without having the piece separator hard coded into the trigger routine. $ZTDELIM is the empty string outside of a           |
 |                       | trigger context. It is also the empty string inside a trigger context if -delim or -zdelim was not specified in the trigger definition.        |
 +-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -285,7 +291,7 @@ This section contains a simple example showing how a YottaDB trigger can automat
 
 Using your editor, create a trigger definition file called triggers.trg with the following entry:
 
-+^CIF(acn=:,1) -delim="|" -pieces=2 -commands=SET,KILL -xecute="Do ^XNAMEinCIF"
+:code:`+^CIF(acn=:,1) -delim="|" -pieces=2 -commands=SET,KILL -xecute="Do ^XNAMEinCIF"`
 
 In this definition:
 
@@ -378,7 +384,7 @@ If KILL or ZKILL updates a global node matching a trigger definition, YottaDB ex
 Set
 +++++++++
 
-If a SET updates a global node matching a trigger definition, YottaDB executes the trigger code after the node has been updated in the process address space, but before it is applied to the database. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. if $ZTVALUE is set during trigger execution, the trigger logic commits the value of a node from the value of $ZTVALUE.
+If a SET updates a global node matching a trigger definition, YottaDB executes the trigger code after the node has been updated in the process address space, but before it is applied to the database. When the trigger execution completes, the trigger logic commits the value of a node from the process address space only if $ZTVALUE is not set. If $ZTVALUE is set during trigger execution, the trigger logic commits the value of a node from the value of $ZTVALUE.
 
 Consider the following example:
 
@@ -526,7 +532,7 @@ Triggers in Journaling and Database Replication
 YottaDB handles "trigger definitions" and "triggered updates" differently.
 
 * Trigger definition changes appear in both journal files and replication streams so the definitions propagate to recovered and replicated databases.
-* Triggered updates appear in the journal file, since MUPIP JOURNAL RECOVER/ROLLBACK to not invoke triggers. However, they do not appear in the replication stream since the Update Process on a replicating instance applies triggers and processes their logic.
+* Triggered updates appear in the journal file, since MUPIP JOURNAL RECOVER and MUPIP JOURNAL ROLLBACK do not invoke triggers. However, they do not appear in the replication stream since the Update Process on a replicating instance applies triggers and processes their logic.
 
 +++++++++++
 Journaling
@@ -658,7 +664,7 @@ For any replication stream record indicating triggers were invoked, the Update P
 MUPIP Trigger and $ZTRIGGER()
 -----------------------------
 
-MUPIP TRIGGER provides a facility to examine and update triggers. The $ZTRIGGER() function performs trigger maintenance actions analogous to those performed by MUPIP TRIGGER. $ZTRIGGER() returns the truth value expression depending on the success of the specified action. You choice of MUPIP TRIGGER or $ZTRIGGER() for trigger maintenance should depend on your current application development model and configuration management practices. Both MUPIP TRIGGER and $ZTRIGGER() use the same trigger definition syntax. You should familiarize yourself with the syntax of an entry in a trigger definition file before exploring MUPIP TRIGGER and $ZTRIGGER(). For more information and usage examples of MUPIP TRIGGER, refer to the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_. For more information and usage examples of $ZTRIGGER(), refer to “$ZTRIgger()”.
+MUPIP TRIGGER provides a facility to examine and update triggers. The $ZTRIGGER() function performs trigger maintenance actions analogous to those performed by MUPIP TRIGGER. $ZTRIGGER() returns the truth value expression depending on the success of the specified action. Your choice of MUPIP TRIGGER or $ZTRIGGER() for trigger maintenance should depend on your current application development model and configuration management practices. Both MUPIP TRIGGER and $ZTRIGGER() use the same trigger definition syntax. You should familiarize yourself with the syntax of an entry in a trigger definition file before exploring MUPIP TRIGGER and $ZTRIGGER(). For more information and usage examples of MUPIP TRIGGER, refer to the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_. For more information and usage examples of $ZTRIGGER(), refer to :ref:`ztrigger-function`.
 
 
 

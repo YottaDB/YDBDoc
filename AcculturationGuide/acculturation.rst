@@ -19,7 +19,7 @@ Acculturation Workshop
 
 Welcome to the YottaDB Acculturation Workshop!
 
-Copyright © 2017-2020 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
+Copyright © 2017-2021 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
 
 Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsidiaries. All Rights Reserved.
 
@@ -272,7 +272,7 @@ Now that YottaDB is installed and configured, change to the :code:`$ydb_dir` dir
 Access from C
 ~~~~~~~~~~~~~
 
-YottaDB comes with a `C API <../MultiLangProgGuide/cprogram.html>`_ and all you need to use it is the :code:`gcc` compiler, which is included in the virtual machine. Download the `sayhelloC.c <./sayhelloC.c>`_ program into the yottadbuser directory, compile it and run it. Notice that it has set a node in the database (the MUPIP EXTRACT command prints database contents):
+YottaDB comes with a `C API <../MultiLangProgGuide/cprogram.html>`_ and all you need to use it is the :code:`gcc` compiler, which is included in the virtual machine. Download the `sayhelloC.c <./sayhelloC.c>`_ program into the :code:`yottadbuser` directory, compile it and run it. Notice that it has set a node in the database (the MUPIP EXTRACT command prints database contents):
 
 .. code-block:: bash
 
@@ -308,7 +308,7 @@ Access from Go
     ok      lang.yottadb.com/go/yottadb     5.259s
     yottadbuser@yottadbworkshop:~$
 
-Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the yottadbuser directory, compile it and run it. Notice that it too has set a node in the database:
+Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the :code:`yottadbuser` directory, compile it and run it. Notice that it too has set a node in the database:
 
 .. code-block:: bash
 
@@ -327,7 +327,7 @@ Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the yottadbuser dir
 Access from M
 ~~~~~~~~~~~~~
 
-YottaDB includes a complete language implementation for M. Download the `sayhelloM.m <./sayhelloM.m>`_ program into the .yottadb/r directory and run it (there is no need for a separate compilation step, as there was for C and Go):
+YottaDB includes a complete language implementation for M. Download the `sayhelloM.m <./sayhelloM.m>`_ program into the :code:`.yottadb/r` directory and run it (there is no need for a separate compilation step, as there was for C and Go):
 
 .. code-block:: bash
 
@@ -382,7 +382,7 @@ YottaDB can also be accessed from Perl, which requires the Perl :code:`yottadb` 
    $ make test TEST_DB=1 # optional, accesses database
    $ sudo make install
 
-Download the `sayhelloPerl.pl <./sayhelloPerl.pl>`_ program into the yottadbuser directory, change its access permissions to make it executable and run it.
+Download the `sayhelloPerl.pl <./sayhelloPerl.pl>`_ program into the :code:`yottadbuser` directory, change its access permissions to make it executable and run it.
 
 .. code-block:: bash
 
@@ -984,7 +984,7 @@ Upon bringing the system back up from a crash or unclean shutdown (shutdown with
 * For database regions that are not journaled, delete the database files and create new files
 * Database regions that are journaled using before image journaling (the type in the exercises above) are recovered using the databases with the MUPIP JOURNAL RECOVER BACKWARD command.
 * Database regions that are journaled using nobefore image journaling are recovered by restoring a backup and using the MUPIP JOURNAL RECOVER FORWARD command.
-* Database regions that constitute replicated instances (see ref:`db-repl`) are recovered using the MUPIP JOURNAL ROLLBACK rather than MUPIP JOURNAL RECOVER.
+* Database regions that constitute replicated instances (see :ref:`db-repl`) are recovered using the MUPIP JOURNAL ROLLBACK rather than MUPIP JOURNAL RECOVER.
 
 In all cases using journaling, the recovery point after a crash is the same - the last update in the journal files.
 

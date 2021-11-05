@@ -133,13 +133,13 @@ ydb_dist
 
 ydb_dist is used to establish the location of the installed YottaDB program and support files.
 
-The syntax for ydb_dist is as follows:
+The syntax for :code:`ydb_dist` is as follows:
 
 .. code-block:: bash
 
    $ ydb_dist=<distribution-directory>
 
-The standard installation places these files in /usr/local/lib/yottadb.
+The standard installation places these files in :code:`/usr/local/lib/yottadb`.
 
 Example:
 
@@ -148,7 +148,7 @@ Example:
    $ ydb_dist=/usr/local/lib/yottadb/r128
    $ export ydb_dist
 
-This identifies /usr/local/lib/yottadb/r128 as the location of the installed YottaDB files.
+This identifies :code:`/usr/local/lib/yottadb/r128` as the location of the installed YottaDB files.
 
 Add ydb_dist to your PATH environment variable to have UNIX search the YottaDB installation directory (when processing a command to activate or run an image). This allows you to activate YottaDB and the utilities without explicitly specifying a path.
 
@@ -170,7 +170,7 @@ ydb_gbldir defines the path to a Global Directory. A Global Directory maps globa
 
 If you maintain multiple global directories, define ydb_gbldir to the Global Directory you currently want to use.
 
-The syntax of a ydb_gbldir definition is:
+The syntax of a :code:`ydb_gbldir` definition is:
 
 .. code-block:: bash
 
@@ -183,7 +183,7 @@ Example:
    $ ydb_gbldir=/usr/staff/yottadb.gld
    $ export ydb_gbldir
 
-This specifies /usr/staff as the directory containing the Global Directory file named yottadb.gld.
+This specifies :code:`/usr/staff` as the directory containing the Global Directory file named yottadb.gld.
 
 +++++++++++++++
 ydb_principal
@@ -191,14 +191,14 @@ ydb_principal
 
 The ydb_principal environment variable specifies the value for $principal, which designates the absolute pathname of the principal $IO device. This is an MDC Type A enhancement to standard M.
 
-The following is an example of ydb_principal definition:
+The following is an example of :code:`ydb_principal` definition:
 
 .. code-block:: bash
 
    $ ydb_principal=/usr/filename
    $ export ydb_principal
 
-This specifies the /usr/filename as the principal $IO device, effective until changed further or until you logout of the particular session.
+This specifies the :code:`/usr/filename` as the principal $IO device, effective until changed further or until you logout of the particular session.
 
 +++++++++++++++
 ydb_routines
@@ -212,7 +212,7 @@ The ydb_routines environment variable specifies a search list of possible locati
 
 The directories in the search list must be separated by a space and enclosed in quotation marks (" "). Environment variables are accepted in the search list.
 
-The following is an example of ydb_routines definition:
+The following is an example of :code:`ydb_routines` definition:
 
 .. code-block:: bash
 

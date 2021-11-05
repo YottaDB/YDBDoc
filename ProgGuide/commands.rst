@@ -287,10 +287,12 @@ The format of the FOR command is:
 * The optional numeric expression after the first colon (:) delimiter specifies the increment for each iteration. The FOR command does not increment the control variable on the first iteration.
 * The optional numeric expression after the second colon (:) delimiter specifies the limiting value for the control variable. This terminating expression is evaluated only when the control variable is initialized to the corresponding initial value, then used for all subsequent iterations.
 * YottaDB does not execute the commands on the same line following the FOR if:
+
    * The increment is non-negative and the initial value of the control variable is greater than the limiting value.
    * The increment is negative and the initial value of the control variable is less than the limiting value.
 
 * After the first iteration, YottaDB does not alter the control variable and ceases execution under the control of the FOR if:
+
    * The increment is non-negative, and altering the control variable by the increment would cause the control variable to be greater than the limiting value.
    * The increment is negative, and altering the control variable by the increment would cause the control variable to be less than the limiting value.
 
@@ -1052,7 +1054,7 @@ The format of MERGE command is:
 * When both are global variables, the state of the naked indicator is unchanged if glvn2 is undefined ($DATA(glvn2)=0).
 * In all other cases including $DATA(glvn2)=10, the naked indicator takes the same value that it would have if the SET command replaced the MERGE command and glvn2 had a value.
 * If glvn1 is a descendant of glvn2, or if glvn2 is a descendant of glvn1; YottaDB generates an error.
-* If $data(glvn2) is 0 then the command is a NOOP and YottaDB issues no errors.
+* If $DATA(glvn2) is 0 then the command is a NOOP and YottaDB issues no errors.
 * An indirection operator and an expression atom evaluating to a list of one or more MERGE arguments form a legal argument for a MERGE.
 
 .. note::
@@ -3573,7 +3575,7 @@ This command displays the trigger code for trigger name A#1#.
 These are some examples of disambiguator combinations.
 
 -----------------------
-ZRUPDATE
+ZRUPdate
 -----------------------
 
 Publishes the new versions of routines to subscribers. The format of the ZRUPDATE command is:
@@ -3622,29 +3624,36 @@ ZSHOW Information Codes
 
 A ZSHOW argument is an expression containing codes selecting one or more types of information.
 
-A: A stands for Autorelink and provides output in the same format as MUPIP RCTLDUMP, but restricted to the routines contained in the relinkctl areas in use by the process issuing the command. ZSHOW "*" does not include ZSHOW "A" because of an expectation that the typical volume of the information does not provide a good return for its value. If you wish your error handling or INTRPT routines to dump this information, ask for it explicitly, possibly by doing a ZSHOW "A" into a local variable before doing a ZSHOW "*".
-
-B: displays active ZBREAK breakpoints
-
-C: provides the list of loaded external call packages and their routines. ZSHOW "C" does not report packages that are accessible but have not been accessed by the process.
-
-D: displays device information
-
-G: displays the access statistics for global variables and access to database file since process startup. When the process does not have access to the current shared statistics, ZSHOW "G" return a question-mark (?) at the end of the output strings.
-
-I: displays the current values of all intrinsic special variables
-
-L: displays LOCKs and ZALLOCATEs held by the process
-
-R: displays the invocation stack and a hash based on the MurmurHash3 algorithm of M source code for each routine on the stack.
-
-S: displays the invocation stack
-
-T: displays the cross-region summary (total) lines associated with G and L codes. Lines associated with G end with a question-mark (?) when the process does not have access to the current shared statistics.
-
-V: displays local and alias variables
-
-\* displays all possible types of ZSHOW information
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Code   | Description                                                                                                                                                                                                 |
++========+=============================================================================================================================================================================================================+
+| A      | A stands for Autorelink and provides output in the same format as MUPIP RCTLDUMP, but restricted to the routines contained in the relinkctl areas in use by the process issuing the command.                |
+|        | ZSHOW "*" does not include ZSHOW "A" because of an expectation that the typical volume of the information does not provide a good return for its value. If you wish your error handling or INTRPT routines  |
+|        | to dump this information, ask for it explicitly, possibly by doing a ZSHOW "A" into a local variable before doing a ZSHOW "*".                                                                              |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| B      | Displays active ZBREAK breakpoints                                                                                                                                                                          |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| C      | Provides the list of loaded external call packages and their routines. ZSHOW "C" does not report packages that are accessible but have not been accessed by the process.                                    |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| D      | Displays device information                                                                                                                                                                                 |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| G      | Displays the access statistics for global variables and access to database file since process startup. When the process does not have access to the current shared statistics, ZSHOW "G" return a           |
+|        | question-mark (?) at the end of the output strings.                                                                                                                                                         |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| I      | Displays the current values of all intrinsic special variables                                                                                                                                              |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| L      | Displays LOCKs and ZALLOCATEs held by the process                                                                                                                                                           |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| R      | Displays the invocation stack and a hash based on the MurmurHash3 algorithm of M source code for each routine on the stack.                                                                                 |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| S      | Displays the invocation stack                                                                                                                                                                               |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| T      | Displays the cross-region summary (total) lines associated with G and L codes. Lines associated with G end with a question-mark (?) when the process does not have access to the current shared statistics. |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| V      | Displays local and alias variables                                                                                                                                                                          |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| \*     | Displays information that is equivalent to ZSHOW "VIBDLGR".                                                                                                                                                 |
++--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Codes may be upper- or lower-case. Invalid codes produce a run-time error. Multiple occurrences of the same code in one ZSHOW argument only produce one output instance of the corresponding information. The order of the first appearance of the codes in the argument determines the order of the corresponding output instances.
 

@@ -121,7 +121,8 @@ As database operations such as :ref:`ydb-set-s-st-fn` set timers, subsequent sys
 
 If YottaDB is used within a process with other code that cannot co-exist, or be made to co-exist, with YottaDB, for example, by safely saving and restoring handlers, separate the logic into multiple processes or use a client/server database configuration to place application logic and the database engine in separate processes (see :ref:`client-server-op`).
 
-To reiterate because of its importance: **never** replace YottaDB's :code:`SIGALRM` handler.
+.. note::
+   To reiterate because of its importance: **never** replace YottaDB's :code:`SIGALRM` handler.
 
 -------
 Forking
@@ -175,7 +176,7 @@ When a single-threaded application calls a YottaDB function, the application cod
 
 In a multi-threaded application, the YottaDB engine runs in its own thread, which is distinct from any application thread. When a multi-threaded application calls a YottaDB function, the function puts a request on a queue for the YottaDB engine, and blocks awaiting a response – in other words, any call to YottaDB is synchronous as far as the caller is concerned, even if servicing that call results in asynchronous activity within the process. Meanwhile, other application threads continue to run, with the YottaDB engine handling queued requests one at at time. An implication of this architecture is that multi-threaded functions of the Simple API cannot recurse – a call to a multi-threaded function when another is already on the C stack of a thread results in a `SIMPLEAPINEST <../MessageRecovery/errors.html#simpleapinest-error>`_ error. While this is conceptually simple for applications that do not use :ref:`txn-proc`, transaction processing in a threaded environment requires special consideration (see :ref:`threads-txn-proc`).
 
-:ref:`prog-in-m` is single-threaded and single-threaded applications can call into M code, and M code can call single threaded C code as documented in `Chapter 11 (Integrating External Routines) of the M Programmers Guide <../ProgrammersGuide/extrout.html>`_ Multi-threaded C applications are able to call M code through the functions :code:`ydb_ci_t()` and :code:`ydb_cip_t()` functions as documented `there <../ProgrammersGuide/extrout.html#call-in-intf>`_, with the restriction that if M code called through :code:`ydb_ci_t()` or :code:`ydb_cip_t()` calls out to C code, that C code is not permitted to start a transaction using :code:`ydb_tp_st()`.
+:ref:`prog-in-m` is single-threaded and single-threaded applications can call into M code, and M code can call single threaded C code as documented in `Chapter 11 (Integrating External Routines) of the M Programmers Guide <../ProgrammersGuide/extrout.html>`_. Multi-threaded C applications are able to call M code through the :code:`ydb_ci_t()` and :code:`ydb_cip_t()` functions as documented `here <../ProgrammersGuide/extrout.html#call-in-intf>`_, with the restriction that if M code called through :code:`ydb_ci_t()` or :code:`ydb_cip_t()` calls out to C code, that C code is not permitted to start a transaction using :code:`ydb_tp_st()`.
 
 Note that triggers, which are written in M, run in the thread of the YottaDB engine, and are unaffected by multi-threaded Simple API calls already on an application process thread's stack. However, if a trigger calls C code, and that C code calls :code:`ydb_ci_t()` or :code:`ydb_cip_t()`, that C code is not permitted to call :code:`ydb_tp_st()`.
 
@@ -204,15 +205,17 @@ To accomplish this, the :ref:`c-simple-api` functions for threaded applications 
   - If :code:`tptoken` is that of a higher level transaction within which the current transaction is nested, the call blocks until the nested transaction completes (or nested transactions complete, since there may be multiple nesting levels).
   - If :code:`tptoken` does not correspond to a higher level transaction (e.g., if it corresponds to a closed transaction or a nonexistent one), YottaDB returns an error.
 
-Note: if the function implementing a transaction spawns threads (or coroutines executing in threads), those threads/coroutines must:
+.. note::
+   If the function implementing a transaction spawns threads (or coroutines executing in threads), those threads/coroutines must:
 
-- terminate before the function returns to YottaDB;
-- use a current :code:`tptoken` when invoking YottaDB (in effect, switching transaction contexts ­ technically this violates ACID transaction properties but perhaps reasonable in a few restricted cases, such as creating background worker threads); or
-- not invoke YottaDB.
+     - terminate before the function returns to YottaDB;
+     - use a current :code:`tptoken` when invoking YottaDB (in effect, switching transaction contexts ­ technically this violates ACID transaction properties but perhaps reasonable in a few restricted cases, such as creating background worker threads); or
+     - not invoke YottaDB.
 
 Should a thread/coroutine spawned in a function implementing transaction logic invoke YottaDB after the function has returned, the thread/coroutine will get an invalid token error message unless it uses a current :code:`tptoken`.
 
-Note: Sharing or passing :code:`tptoken` values between threads/coroutines can lead to deadlocks and other hard-to-debug situations. YottaDB strongly recommends against such usage. If you have a legitimate use case, design it so that you can debug it when the inevitable error condition occurs.
+.. note::
+   Sharing or passing :code:`tptoken` values between threads/coroutines can lead to deadlocks and other hard-to-debug situations. YottaDB strongly recommends against such usage. If you have a legitimate use case, design it so that you can debug it when the inevitable error condition occurs.
 
 -------------------
 Timers and Timeouts

@@ -1027,15 +1027,15 @@ On a screen or a printer, it is displayed in 4 columns. Internally, YottaDB stor
 +-----------+---------------------+--------------------------------+----------------------------------------------+
 | Number    | Character           | Unicode code-point             | Name                                         |
 +===========+=====================+================================+==============================================+
-| 1         | अ                   | U+0905                         | DEVANAGARI LETTER A                          |
+| 1         | |dev-a|             | U+0905                         | DEVANAGARI LETTER A                          |
 +-----------+---------------------+--------------------------------+----------------------------------------------+
-| 2         | च                   | U+091A                         | DEVANAGARI LETTER CA                         |
+| 2         | |dev-ca|            | U+091A                         | DEVANAGARI LETTER CA                         |
 +-----------+---------------------+--------------------------------+----------------------------------------------+
-| 3         |                     | U+094D                         | DEVANAGARI SIGN VIRAMA                       |
+| 3         | |dev-sign-virama|   | U+094D                         | DEVANAGARI SIGN VIRAMA                       |
 +-----------+---------------------+--------------------------------+----------------------------------------------+
-| 4         | छ                   | U+091B                         | DEVANAGARI LETTER CHA                        |
+| 4         | |dev-cha|           | U+091B                         | DEVANAGARI LETTER CHA                        |
 +-----------+---------------------+--------------------------------+----------------------------------------------+
-| 5         | ी                   | U+0940                         | DEVANAGARI VOWEL SIGN II                     |
+| 5         | |dev-sign-ii|       | U+0940                         | DEVANAGARI VOWEL SIGN II                     |
 +-----------+---------------------+--------------------------------+----------------------------------------------+
 
 The Devanagari writing system (U+0900 to U+097F) is based on the representation of syllables as contrasted with the use of an alphabet in English. Therefore, it uses the half-form of a consonant to represent certain syllables. The above example uses the half-form of the consonant (U+091A).
@@ -1179,6 +1179,13 @@ Adhere to the following rules of thumb to design and develop Unicode-based appli
 * Specify CHSET="M" or otherwise handle illegal characters during the I/O operations.
 * Communicate with any external routines using a compatible character encoding form.
 * Compile and run programs in the same setting of $ZCHSET and "BADCHAR".
+
+.. |dev-a|    unicode:: U+0905 .. DEVANAGARI LETTER A
+.. |dev-ca|    unicode:: U+091A .. DEVANAGARI LETTER CA
+.. |dev-sign-virama|    unicode:: U+094D .. DEVANAGARI SIGN VIRAMA
+.. |dev-cha|    unicode:: U+091B .. DEVANAGARI LETTER CHA
+.. |dev-sign-ii|    unicode:: U+0940 .. DEVANAGARI VOWEL SIGN II
+
 
 
 

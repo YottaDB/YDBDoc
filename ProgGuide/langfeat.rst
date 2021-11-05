@@ -366,7 +366,9 @@ With historical null collation, for the same command output will be as follows:
 M Commands/Functions
 ~~~~~~~~~~~~~~~~~~~~~
 
-**ZWRITE**:
+^^^^^^^
+ZWRITE
+^^^^^^^
 
 Since with standard collation, null subscripts collate before numeric and string subscripts, ZWR output will be different if nodes with null subscripts exist.
 
@@ -385,7 +387,9 @@ With the same data and historical null collation, the output of ZWR will be as f
    lcl("")=2
    lcl("x")=4
 
-**$ORDER()**:
+^^^^^^^^^
+$ORDER()
+^^^^^^^^^
 
 If the last subscript in the subscripted global or local variable name passed as a parameter to $ORDER() is null and a subscripted global or local variable with a null subscript exists, $ORDER() returns the next node at the specified level.
 
@@ -423,9 +427,17 @@ If the last subscript in the subscripted global or local variable name is null a
    YDB>WRITE $ORDER(lcl("x"),-1)
    1
 
-**$ZPREVIOUS()** : is equivalent to $ORDER() with second argument -1.
+^^^^^^^^^^^^^
+$ZPREVIOUS()
+^^^^^^^^^^^^^
 
-**$QUERY()**: With stdnullcoll, if $D(glvn(""))=1 (or 11), $Q(glvn("")) will return glvn(1) [assuming glvn(1) exists]. Software should execute $D(glvn("")) to test the existence of glvn(""). $Q(glvn("...")) will never return the starting-point (glvn("")) even though glvn("") may exist.
+It is equivalent to $ORDER() with second argument -1.
+
+^^^^^^^^^
+$QUERY()
+^^^^^^^^^
+
+With stdnullcoll, if $D(glvn(""))=1 (or 11), $Q(glvn("")) will return glvn(1) [assuming glvn(1) exists]. Software should execute $D(glvn("")) to test the existence of glvn(""). $Q(glvn("...")) will never return the starting-point (glvn("")) even though glvn("") may exist.
 
 .. code-block:: bash
 
@@ -452,11 +464,11 @@ For more details about the behavior of these functions with historical null coll
 MUPIP Binary Extract and Load
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* MUPIP EXTRACT -BINARY issues NULLCOLLDIFF error if it needs to extract from multiple databases with different STDNULCOLL settings.
-* MUPIP EXTRACT -BINARY writes a new field in the binary extract header to note down the first database's STDNULCOLL setting.
-* MUPIP LOAD –BINARY on a binary extract transforms the null subscripts appropriately if the STDNULCOLL setting of the target database is different from the setting in the binary extract header.
-* MUPIP LOAD –BINARY is able to successfully load onto multiple databases with different STDNULCOLL settings.
-* MUPIP EXTRACT -ZWR and MUPIP LOAD -ZWR will work no matter what the YottaDB version of the source and destination databases, and no matter what the null (or other) collation setting of the source and destination databases.
+* MUPIP EXTRACT BINARY issues NULLCOLLDIFF error if it needs to extract from multiple databases with different STDNULCOLL settings.
+* MUPIP EXTRACT BINARY writes a new field in the binary extract header to note down the first database's STDNULCOLL setting.
+* MUPIP LOAD BINARY on a binary extract transforms the null subscripts appropriately if the STDNULCOLL setting of the target database is different from the setting in the binary extract header.
+* MUPIP LOAD BINARY is able to successfully load onto multiple databases with different STDNULCOLL settings.
+* MUPIP EXTRACT ZWR and MUPIP LOAD ZWR will work no matter what the YottaDB version of the source and destination databases, and no matter what the null (or other) collation setting of the source and destination databases.
 
 ~~~~~~~~~~~~~~~~~~
 Replication
@@ -614,7 +626,9 @@ To facilitate application migration to YottaDB from other M implementations (for
 
 The use of this facility is enabled by the definition of the environment variable ydb_env_translate, which contains the path of a shared library with the following entry point:
 
-**ydb_env_xlate**
+^^^^^^^^^^^^^^
+ydb_env_xlate
+^^^^^^^^^^^^^^
 
 If the shared object is not accessible or the entry point is not accessible, YottaDB reports an error.
 
@@ -1272,19 +1286,24 @@ The repetition count consists of either a single integer literal or a period (.)
 
 The pattern codes are:
 
-**A** alphabetic characters upper or lower case
-
-**C** control characters ASCII 0-31 and 127
-
-**E** any character; used to pass all characters in portions of the string where the pattern is not restricted
-
-**L** lower-case alphabetic characters, ASCII 97-122
-
-**N** digits 0-9, ASCII 48-57
-
-**P** punctuation, ASCII 32-47, 58-64, 91-96, 123-126
-
-**U** upper-case alphabetic characters, ASCII 65-90
++----------+--------------------------------------------------------------------------------+
+| Code     | Description                                                                    |
++==========+================================================================================+
+| A        | alphabetic characters upper or lower case                                      |
++----------+--------------------------------------------------------------------------------+
+| C        | control characters ASCII 0-31 and 127                                          |
++----------+--------------------------------------------------------------------------------+
+| E        | any character; used to pass all characters in portions of the string where the |
+|          | pattern is not restricted                                                      |
++----------+--------------------------------------------------------------------------------+
+| L        | lower-case alphabetic characters, ASCII 97-122                                 |
++----------+--------------------------------------------------------------------------------+
+| N        | digits 0-9, ASCII 48-57                                                        |
++----------+--------------------------------------------------------------------------------+
+| P        | punctuation, ASCII 32-47, 58-64, 91-96, 123-126                                |
++----------+--------------------------------------------------------------------------------+
+| U        | upper-case alphabetic characters, ASCII 65-90                                  |
++----------+--------------------------------------------------------------------------------+
 
 Pattern codes may be upper or lower case and may be replaced with a string literal. YottaDB allows the M pattern match definition of patcodes A, C, N, U, L, and P to be extended or changed, (A can only be modified implicitly by modifying L or U) and new patcodes added. For detailed information on enabling this functionality, see `Chapter 12: “Internationalization” <./internatn.html>`_.
 

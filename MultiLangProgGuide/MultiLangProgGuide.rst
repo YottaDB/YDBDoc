@@ -71,7 +71,7 @@ You must have at least `Docker <https://www.docker.com/community-edition>`_ 17.0
 
 To run a pre-built image: :code:`docker run --rm -it yottadb/yottadb` to run the image but not persist any changes you make, and :code:`docker run -it yottadb/yottadb` for persistent changes.
 
-Volumes are supported by mounting the :code:`/data` directory. To mount the local directory :code:`ydb-data` into the container to save your database and routines locally and use them in the container, add an appropriate command line parameter before the yottadb/yottadb argument, e.g., :code:`docker run -it -v \`pwd\`/ydb-data:/data yottadb/yottadb`
+Volumes are supported by mounting the :code:`/data` directory. To mount the local directory :code:`ydb-data` into the container to save your database and routines locally, and to use them in the container, add an appropriate command line parameter before the yottadb/yottadb argument, e.g., :code:`docker run -it -v \`pwd\`/ydb-data:/data yottadb/yottadb`
 
 This creates a :code:`ydb-data` directory in your current working directory. After the container is shutdown and removed, delete the directory if you want to remove all data created in the YottaDB container (such as your database and routines).
 
@@ -177,7 +177,11 @@ When viewed as :code:`["Capital","Belgium","Brussels"]` each component is a stri
 - Variables are ASCII strings from 1 to 31 characters, the first of which is "%", or a letter from "A" through "Z" and "a" through "z". Subsequent characters are alphanumeric ("A" through "Z", "a" through "z", and "0" through "9"). Variable names are case-sensitive, and variables of a given type are always in ASCII order (i.e., "Capital" always precedes "Population").
 - Subscripts are sequences of bytes from 0 bytes (the null or empty string, "") to 1048576 bytes (1MiB). When a subscript is a :ref:`canonical number <canonical-numbers>`, YottaDB internally converts it to, and stores it as, a number. When ordering subscripts:
 
-  - Empty string subscripts precede all numeric subscripts. By default, YottaDB prohibits empty string subscripts for global variables but permits them for local variables (see :ref:`lcl-gbl-var`). *Note: YottaDB recommends against the practice of using empty string subscripts in applications.* [#]_
+  - Empty string subscripts precede all numeric subscripts. By default, YottaDB prohibits empty string subscripts for global variables but permits them for local variables (see :ref:`lcl-gbl-var`).
+
+    .. note::
+       YottaDB recommends against the practice of using empty string subscripts in applications.* [#]_
+
   - Numeric subscripts precede string subscripts. Numeric subscripts are in numeric order.
   - String subscripts follow numeric subscripts and collate in byte order. Where the natural byte order does not result in linguistically and culturally correct ordering of strings, YottaDB has a framework for an application to create and use custom collation routines.
 
@@ -394,7 +398,7 @@ Since YottaDB resources such as locks belong to a process rather than a thread w
 Locks and Transaction Processing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:ref:`txn-proc` and Locks solve overlapping though not congruent use cases. For example, consider application code to transfer $100 from a customer's savings account to that same customer's savings account, which would likely include the requirement that business transactions on an account must be serializable. This can be implemented by acquiring a lock on that customer (with an application coded so that other accesses to that customer are blocked till the lock is released) or by executing the transfer inside a YottaDB transaction (which provides ACID properties). Unless the application logic or data force pathological transaction restarts that cannot be eliminated or worked around, transaction processing's optimistic concurrency control typically results in better application throughput than the pessimistic concurrency control that locks imply.
+:ref:`txn-proc` and Locks solve overlapping though not congruent use cases. For example, consider application code to transfer $100 from a customer's checking account to that same customer's savings account, which would likely include the requirement that business transactions on an account must be serializable. This can be implemented by acquiring a lock on that customer (with an application coded so that other accesses to that customer are blocked till the lock is released) or by executing the transfer inside a YottaDB transaction (which provides ACID properties). Unless the application logic or data force pathological transaction restarts that cannot be eliminated or worked around, transaction processing's optimistic concurrency control typically results in better application throughput than the pessimistic concurrency control that locks imply.
 
 In general, we recommend using either transaction processing or locks, and not mixing them. However, there may be business logic that requires the use of locks for some logic, but otherwise permits the use of transaction processing. If an application must mix them, the following rules apply:
 
