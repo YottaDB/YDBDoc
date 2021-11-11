@@ -1053,7 +1053,7 @@ As discussed under :ref:`txn-proc`, a function implementing transaction processi
 
 If :code:`namecount>0`, :code:`varnames[i]` where :code:`0≤i<namecount` specifies local variable names whose values are restored to their original values when the transaction is restarted. In the special case where :code:`namecount=1` and :code:`varnames[0]` provides the value :code:`"*"`, all local variables are restored on a restart. It is an error for a :code:`varnames` to include a global or intrinsic special variable.
 
-A top level :code:`ydb_tp_s()` and :code:`ydb-tp_st()` can return:
+A top level :code:`ydb_tp_s()` and :code:`ydb_tp_st()` can return:
 
 - :code:`YDB_OK`;
 - :code:`YDB_TP_ROLLBACK`;
@@ -1503,7 +1503,7 @@ ydb_stdout_stderr_adjust() / ydb_stdout_stderr_adjust_t()
 
 The functions check whether stdout (file descriptor 1) and stderr (file descriptor 2) are the same file, and if so, route stderr writes to stdout instead. This ensures that output appears in the order in which it was written; otherwise owing to IO buffering, output can appear in an order different from that in which it was written. Application code which mixes C and M code, and which explicitly redirects stdout or stderr (e.g., using :code:`dup2()`), should call one of these functions as soon as possible after the redirection. :code:`ydb_stdout_stderr_adjust()` and :code:`ydb_stdout_stderr_adjust_t()` return :code:`YDB_OK`.
 
-Please see the `Simple API introduction <c-simple-api>` for details about parameter allocation.
+Please see the :ref:`Simple API introduction <c-simple-api>` for details about parameter allocation.
 
 .. _ydb-thread-is-main-fn:
 
