@@ -842,7 +842,7 @@ A function implementing logic for a transaction should return :code:`int` with o
 - :code:`YDB_TP_RESTART` to indicate that the transaction should restart, either because application logic has so determined or because a YottaDB function called by the function has returned TPRESTART.
 - :code:`YDB_TP_ROLLBACK` to indicate that :code:`TpST()` should not commit the transaction, and should return ROLLBACK to the caller.
 
-The :code:`BufferTArray` receiving the :code:`TpST()` method is a list of local variables whose values should be saved, and restored to their original values when the transaction restarts. If the :code:`cbuftary` structures have not been allocated or :code:`elemsUsed` is zero, no local variables are saved and restored; and if :code:`elemsUsed` is 1, and that sole element references the string "*" all local variables are saved and restored.
+The :code:`BufferTArray` receiving the :code:`TpST()` method is a list of local variables whose values should be saved, and restored to their original values when the transaction restarts. If the :code:`buftary` structures have not been allocated or :code:`elemsUsed` is zero, no local variables are saved and restored; and if :code:`elemsUsed` is 1, and that sole element references the string "*" all local variables are saved and restored.
 
 A case-insensitive value of "BA" or "BATCH" for :code:`transid` indicates to YottaDB that it need not ensure Durability for this transaction (it continues to ensure Atomicity, Consistency, and Isolation), as discussed under :ref:`ydb-tp-s-st-fn`.
 
