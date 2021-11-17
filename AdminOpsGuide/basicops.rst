@@ -23,7 +23,13 @@
 YottaDB Environment Setup
 ------------------------------
 
-Several environment variables control the operation of YottaDB. Some of them must be set up for normal operation, whereas for others, YottaDB assumes a default value if they are not set.
+Several environment variables control the operation of YottaDB. Some of them are required for normal operation, whereas for others, YottaDB assumes a default value if they are not set. The three most important ones are:
+
+* **ydb_dist**: Points to the directory where YottaDB is installed. If it is not set, the :code:`yottadb` program sets it to the directory from which it is executed, and child processes inherit it.
+
+* **ydb_gbldir**: Points to a global directory file. A global directory file maps global variables (the hierarchical key-value relationships of the YottaDB database) to database files in the filesystem. This is not required by processes that do not access any global variables. There is no default.
+
+* **ydb_routines**: Tells a process where to find application code written in M. It is not required by applications that do not invoke M code. If it is not set, the :code:`yottadb` program sets it to :code:`$ydb_dist/libyottadbutil.so` where YottaDB's own utility routines (such as GDE) are available.
 
 Your YottaDB distribution comes with many scripts that set up a default YottaDB environment for the shell of your choice. These scripts are as follows:
 
