@@ -508,8 +508,8 @@ Go BufferT DumpToWriter()
 
 For debugging purposes, dump on :code:`writer`:
 
-- :code:`cbuft` as a hexadecimal address;
-- for the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`:
+- :code:`buft` as a hexadecimal address;
+- for the :code:`C.ydb_buffer_t` structure referenced by :code:`buft`:
 
   - :code:`buf_addr` as a hexadecimal address, and
   - :code:`len_alloc` and :code:`len_used` as integers; and
@@ -588,7 +588,7 @@ Go BufferT SetValStr()
         func (buft *BufferT) SetValStr(tptoken uint64, errstr *BufferT, value string) error
 
 - If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
-- If the length of :code:`value` is greater than the :code:`len_alloc` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`, make no changes and return INVSTRLEN.
+- If the length of :code:`value` is greater than the :code:`len_alloc` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`buft`, make no changes and return INVSTRLEN.
 - Otherwise, copy the bytes of :code:`value` to the referenced buffer and set the :code:`len_used` field to the length of :code:`value`.
 
 ++++++++++++++++++++++++
@@ -652,7 +652,7 @@ Go BufferTArray Alloc()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray) Alloc(numBufs, nBytes uint32)
+        func (buftary *BufferTArray) Alloc(numSubs, bufSiz uint32)
 
 Allocate an array of :code:`numSubs` buffers in YottaDB heap space, each of of size :code:`bufSiz`, referenced by the :code:`BufferTArray` structure.
 
@@ -830,13 +830,13 @@ Go BufferTArray TpST()
 
 .. code-block:: go
 
-        func (buftary *BufferTArray) TpST(tptoken uint64, errstr *BufferT, tpfn func(uint64, *BufferT) int, transid string) error
+        func (buftary *BufferTArray) TpST(tptoken uint64, errstr *BufferT, tpfn func(uint64, *BufferT) int32, transid string) error
 
 :code:`TpST()` wraps :ref:`ydb-tp-s-st-fn` to implement :ref:`txn-proc`. :code:`tpfn` is a  function with two parameters, the first of which is a :code:`tptoken` and the second is an :code:`errstr`.
 
 As an alternative to parameters for :code:`tpfn`, create closures.
 
-A function implementing logic for a transaction should return :code:`int` with one of the following:
+A function implementing logic for a transaction should return :code:`int32` with one of the following:
 
 - A normal return (:code:`YDB_OK`) to indicate that per application logic, the transaction can be committed. The YottaDB database engine will commit the transaction if it is able to, as discussed in :ref:`txn-proc`, and if not, will call the function again.
 - :code:`YDB_TP_RESTART` to indicate that the transaction should restart, either because application logic has so determined or because a YottaDB function called by the function has returned TPRESTART.
@@ -848,7 +848,8 @@ A case-insensitive value of "BA" or "BATCH" for :code:`transid` indicates to Yot
 
 Please see both the description of :ref:`ydb-tp-s-st-fn` and the sections on :ref:`txn-proc` and :ref:`threads-txn-proc` for details.
 
-.. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function or method that it calls, it *must* return that value to the calling :code:`TpE()` or :code:`TpST()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
+.. note::
+   If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function or method that it calls, it *must* return that value to the calling :code:`TpE()` or :code:`TpST()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
 
 +++++++++++++++++++++++++++
 Go BufferTArray ValBAry()
