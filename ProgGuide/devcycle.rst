@@ -145,10 +145,10 @@ Example:
 
 .. code-block:: bash
 
-   $ ydb_dist=/usr/local/lib/yottadb/r128
+   $ ydb_dist=/usr/local/lib/yottadb/r132
    $ export ydb_dist
 
-This identifies :code:`/usr/local/lib/yottadb/r128` as the location of the installed YottaDB files.
+This identifies :code:`/usr/local/lib/yottadb/r132` as the location of the installed YottaDB files.
 
 Add ydb_dist to your PATH environment variable to have UNIX search the YottaDB installation directory (when processing a command to activate or run an image). This allows you to activate YottaDB and the utilities without explicitly specifying a path.
 
@@ -272,10 +272,10 @@ This example defines ydb_gbldir without a full pathname. The environment variabl
 
 .. code-block:: bash
 
-   $ /usr/local/lib/yottadb/r128/ydb
+   $ /usr/local/lib/yottadb/r132/ydb
    YDB>do ^GDE
    %GDE-I-LOADGD, Loading Global Directory file
-           /home/jdoe/.yottadb/r1.28_x86_64/g/payroll.gld
+           /home/jdoe/.yottadb/r1.32_x86_64/g/payroll.gld
    %GDE-I-VERIFY, Verification OK
    GDE>
 
@@ -357,7 +357,7 @@ The GDE CHANGE command sets the database file name to payroll.dat, and specifies
 
    GDE>exit
    %GDE-I-VERIFY, Verification OK
-   %GDE-I-GDCREATE, Creating Global Directory file /usr/lib/yottadb/r128/payroll.gld
+   %GDE-I-GDCREATE, Creating Global Directory file /usr/lib/yottadb/r132/payroll.gld
    %GDE-I-GDEIS, Global Directory
 
 The GDE EXIT command terminates GDE. The Global Directory Editor creates a default Global Directory and displays a confirmation message.

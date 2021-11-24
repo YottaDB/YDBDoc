@@ -1204,10 +1204,10 @@ The show-option-list includes (these are not case-sensitive):
    -----------------------------------------------------------------------------
    SHOW output for journal file /home/jdoe/.yottadb/r1.28_x86_64/g/yottadb.mjl
    -----------------------------------------------------------------------------
-   Journal file name       /home/jdoe/.yottadb/r128/g/yottadb.mjl
+   Journal file name       /home/jdoe/.yottadb/r132/g/yottadb.mjl
    Journal file label      YDBJNL44
-   Database file name      /home/jdoe/.yottadb/r128/g/yottadb.dat
-   Prev journal file name /home/jdoe/.yottadb/r128/g/yottadb.mjl_2018310190106
+   Database file name      /home/jdoe/.yottadb/r132/g/yottadb.dat
+   Prev journal file name /home/jdoe/.yottadb/r132/g/yottadb.mjl_2018310190106
    Next journal file name
    Before-image journal                      ENABLED
    Journal file header size                    65536 [0x00010000]
@@ -1252,7 +1252,7 @@ The show-option-list includes (these are not case-sensitive):
   .. code-block:: bash
 
      -------------------------------------------------------------------------------
-     SHOW output for journal file /home/jdoe/.yottadb/r128/g/yottadb.mjl
+     SHOW output for journal file /home/jdoe/.yottadb/r132/g/yottadb.mjl
      -------------------------------------------------------------------------------
      Record type    Count
      ----------------------

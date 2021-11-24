@@ -2197,7 +2197,7 @@ After the backup is completed, you can terminate the application processes updat
    yottadbuser@paris:~/jnlex$ kill %3
    yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
-   [3]+  Exit 241                /usr/local/lib/yottadb/r128/yottadb -run xyzTransM
+   [3]+  Exit 241                /usr/local/lib/yottadb/r132/yottadb -run xyzTransM
    yottadbuser@paris:~/jnlex$ kill %4
    yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
