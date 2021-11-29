@@ -1408,6 +1408,13 @@ The format of the READ command is:
 * To provide a concise means of issuing prompts, YottaDB sends string literal and format control character (!,?intexpr,#) arguments of a READ to the current device as if they were arguments of a WRITE.
 * An indirection operator and an expression atom evaluating to a list of one or more READ arguments form a legal argument for a READ.
 * In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it generates a run-time error. The READ command recognizes all Unicode® line terminators for non-FIXED devices.
+* To ensure that existing applications which perform their own cursor management continue working unchanged after YottaDB upgrades, YottaDB defaults to not enabling READ line editing capabilities. To enable at process startup, use the environment variable :code:`ydb_principal_editing`. For example:
+
+  .. code:: bash
+
+     ydb_principal_editing=EDITING:EMPTERM:INSERT yottadb -run yourprogram
+
+ Refer `ydb_principal_editing <../AdminOpsGuide/basicops.html#ydb-principal-editing-env-var>`_ for more information.
 
 For more information on READ, devices, input, output and format control characters, refer to `Chapter 9: “Input/Output Processing” <./ioproc.html>`_.
 

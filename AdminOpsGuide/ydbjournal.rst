@@ -250,7 +250,7 @@ A system crash can, and often will, damage a database file, leaving it structura
    If the magnetic media of the database and/or the journal file is damaged (e.g., a head crash on a disk that is not mirrored), automatic repair is problematic. For this reason, it is strongly recommended that organizations use hardware mirroring for magnetic media.
 
 .. note::
-   Misuse of UNIX commands, such as kill-9 and ipcrm, by processes running as root can cause database damage.
+   Misuse of UNIX commands, such as kill -9 and ipcrm, by processes running as root can cause database damage.
 
 Considering the high level at which replication operates, the logical dual-site nature of YottaDB database replication makes it virtually impossible for related database damage to occur on both originating and replicating instances.
 

@@ -725,6 +725,8 @@ ydb_principal
 ++++++++++++++++
 **ydb_principal (gtm_principal)** specifies the value for $PRINCIPAL, which designates an alternative name (synonym) for the principal $IO device.
 
+.. _ydb-principal-editing-env-var:
+
 ++++++++++++++++++++++++
 ydb_principal_editing
 ++++++++++++++++++++++++
