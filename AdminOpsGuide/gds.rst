@@ -311,9 +311,8 @@ The interpreted form of the local bitmap is like the following:
 
 If bitmaps are marked as "?", they denote that they are corrupted (not currently in a legal combination) bitmaps. The consequences of corrupted bitmaps are:
 
-Possible loss of data when YottaDB overwrites a block that is incorrectly marked as free (malignant).
-
-Reduction in the effective size of the database by the number of blocks incorrectly marked as busy (benign).
+ * Possible loss of data when YottaDB overwrites a block that is incorrectly marked as free (malignant).
+ * Reduction in the effective size of the database by the number of blocks incorrectly marked as busy (benign).
 
 ---------------------------
 Master Bitmap
@@ -323,7 +322,10 @@ Using bitmaps, YottaDB efficiently locates free space in the database. A master 
 
 There is only one Master Bitmap per database. You can neither see the contents of the master bitmap directly nor change the size of the master bitmap. The maximum size of a single YottaDB database file is 992 Mi blocks. A logical database consists of an arbitrarily large number of database files.
 
-The size of the master bitmap constrains the size of the database. The size of the master map reflects current expectations for the maximum operational size of a single database file. Note: In addition to the limit imposed by the size of the master map, YottaDB currently limits a tree to a maximum number of 7 levels. This means that if a database holds only one global, depending on the density and size of the data, it might reach the level limit before the master map limit.
+The size of the master bitmap constrains the size of the database. The size of the master map reflects current expectations for the maximum operational size of a single database file.
+
+.. note::
+   In addition to the limit imposed by the size of the master map, YottaDB currently limits a tree to a maximum number of 7 levels. This means that if a database holds only one global, depending on the density and size of the data, it might reach the level limit before the master map limit.
 
 ------------------------
 Database Structure
@@ -392,7 +394,7 @@ The data portion of a record in any index block consists of a four-byte block po
 Using GDS records to hold spanning nodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A global variable node spans across multiple blocks if the size of its value exceeds one database block. Such a global variable node is called a "spanning node". For example, if ^a holds a value that exceeds one database block, YottaDB internally spans the value of ^a in records with keys ^a(#SPAN1), ^a(#SPAN2), ^a(#SPAN3), ^a(#SPAN4), and so on. Note that #SPAN1, #SPAN2, #SPAN3, #SPAN4, and so on are special subscripts that are visible to the database but invisible at the M application level. YottaDGB uses these special subscripts to determine the sequence of the spanning nodes.
+A global variable node spans across multiple blocks if the size of its value exceeds one database block. Such a global variable node is called a "spanning node". For example, if ^a holds a value that exceeds one database block, YottaDB internally spans the value of ^a in records with keys ^a(#SPAN1), ^a(#SPAN2), ^a(#SPAN3), ^a(#SPAN4), and so on. Note that #SPAN1, #SPAN2, #SPAN3, #SPAN4, and so on are special subscripts that are visible to the database but invisible at the M application level. YottaDB uses these special subscripts to determine the sequence of the spanning nodes.
 
 The first special subscript #SPAN1 is called a "special index". A special index contains the details about the size of the spanning node's value and the number of additional records that are necessary to hold its value. #SPAN2 and the rest of the records hold chunks of the value of the spanning node. During the load of a binary extract, YottaDB uses these chunks to reconstitute the value of a global. This allows globals to be re-spanned if the block size of the source database is different from the block size of the destination database.
 
@@ -523,11 +525,11 @@ Numeric Subscripts have the format:
 
 The sign bit and biased exponent together form the first byte of the numeric subscript. Bit seven (7) is the sign bit. Bits <6:0> comprise the exponent. The remaining bytes preceding the subscript terminator of one null (ASCII 0) byte represent the variable length mantissa. The following description shows a way of understanding how YottaDB converts each numeric subscript type to its internal format:
 
-Zero (0) subscript (special case)
+**Zero (0) subscript (special case)**
 
 * Represents zero as a single byte with the hexadecimal value 80 and requires no other conversion.
 
-Mantissa
+**Mantissa**
 
 * Normalizes by adjusting the exponent.
 
@@ -537,7 +539,7 @@ Mantissa
 
 * Adds one (1) to each byte in the mantissa.
 
-Exponent
+**Exponent**
 
 * Stores exponent in first byte of subscript.
 
@@ -545,7 +547,7 @@ Exponent
 
 The resulting exponent falls in the hexadecimal range 3F to 7D if positive, and zero (0) to 3E if negative.
 
-Sign
+**Sign**
 
 * Sets exponent sign bit <7> in preparation for sign handling.
 

@@ -26,7 +26,7 @@ Operating in DSE
 
 The Database Structure Editor, DSE, is primarily a tool for authorized YottaDB consultants to examine and, under unusual circumstances, repair YottaDB Database Structure (GDS) databases. With DSE, it is possible to see and change most of the attributes of a YottaDB database.
 
-DSE gives all possible control over a database and therefore, it may cause irreparable damage when used without knowing the consequences. Therefore, you unless you have extensive experience, you should always get guidance from YottaDB or an equivalently knowledgeable support resource before running any DSE command that changes any attribute of any production database or other database you value. However, you can use those DSE commands that let you see the attributes of your database for collecting database metrics and monitoring status.
+DSE gives all possible control over a database and therefore, it may cause irreparable damage when used without knowing the consequences. Therefore, unless you have extensive experience, you should always get guidance from YottaDB or an equivalently knowledgeable support resource before running any DSE command that changes any attribute of any production database or other database you value. However, you can use those DSE commands that let you see the attributes of your database for collecting database metrics and monitoring status.
 
 The YottaDB installation procedure places the DSE utility program in a directory specified by the environment variable ydb_dist.
 
@@ -69,7 +69,7 @@ The list of Change commands is as follows:
 
    AD[D]
    AL[L]
-   B[UFFER _FLUSH]
+   B[UFFER_FLUSH]
    CH[ANGE]
    CR[ITICAL]
    REM[OVE]
@@ -338,7 +338,7 @@ Incompatible with: -RENEW, -RELEASE, -SIEZE
    Never use CRITINIT while concurrent updates are in progress as doing so may damage the database.
 
 ^^^^^^^
--[D]UMP
+-D[UMP]
 ^^^^^^^
 
 Displays fileheader information.
@@ -447,7 +447,7 @@ Example:
    DSE> ALL -FREEZE
    DSE> SPAWN "yottadb -dir"
 
-The first command freezes all regions of the current global directory. The second command creates an child (shell) process and executes the "yottadb -dir" command. Then type S ^A=1 at the prompt. Notice that the command hangs because of the DSE FREEZE in place.
+The first command freezes all regions of the current global directory. The second command creates a child (shell) process and executes the "yottadb -dir" command. Then type S ^A=1 at the prompt. Notice that the command hangs because of the DSE FREEZE in place.
 
 Example:
 

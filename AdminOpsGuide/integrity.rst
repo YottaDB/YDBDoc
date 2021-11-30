@@ -191,19 +191,19 @@ Locating Structures with DSE
 
 DSE provides the FIND command and the RANGE command for locating information.
 
-FIND -REGION= redirects DSE actions to a specified region.
+**FIND -REGION=** redirects DSE actions to a specified region.
 
-FIND -BLOCK= locates a block by using the key in the first record of the block to try to look up that block through the B-tree index. If the block is not part of the tree, or the indexing of the block is damaged, DSE reports that the search failed.
+**FIND -BLOCK=** locates a block by using the key in the first record of the block to try to look up that block through the B-tree index. If the block is not part of the tree, or the indexing of the block is damaged, DSE reports that the search failed.
 
-FIND -SIBLING -BLOCK= operates like FIND -BLOCK; however it reports the numbers of the blocks that logically fall before and after the specified block on the same level.
+**FIND -SIBLING -BLOCK=** operates like FIND -BLOCK; however it reports the numbers of the blocks that logically fall before and after the specified block on the same level.
 
-FIND -EXHAUSTIVE -BLOCK= locates a block by looking through the B-tree index for any pointer to the block. This should find the block in the case where the block is connected to the tree but the first key in the block does not match the index path. FIND -EXHAUSTIVE is useful in locating all paths to a "doubly allocated" block.
+**FIND -EXHAUSTIVE -BLOCK=** locates a block by looking through the B-tree index for any pointer to the block. This should find the block in the case where the block is connected to the tree but the first key in the block does not match the index path. FIND -EXHAUSTIVE is useful in locating all paths to a "doubly allocated" block.
 
-FIND -KEY= uses the index to locate the level zero (0) block , or data block, containing the key. If the key does not exist, it uses the index to locate the block in which it would reside. Note that FIND only works with the index as currently composed. In other words, it cannot FIND the "right" place, only the place pointed to by the index at the time the command is issued. These two locations should be, and may well be, the same; however, remind yourself to search for and take into account all information describing the failure.
+**FIND -KEY=** uses the index to locate the level zero (0) block , or data block, containing the key. If the key does not exist, it uses the index to locate the block in which it would reside. Note that FIND only works with the index as currently composed. In other words, it cannot FIND the "right" place, only the place pointed to by the index at the time the command is issued. These two locations should be, and may well be, the same; however, remind yourself to search for and take into account all information describing the failure.
 
-FIND -FREE -HINT locates the "closest" free block to the hint. This provides a tool for locating blocks to add to the B-tree, or to hold block copies created with SAVE that would otherwise be lost when DSE exits. FIND -FREE relies on the bitmaps to locate its target, so be sure to fix any blocks incorrectly marked "FREE" before using this command.
+**FIND -FREE -HINT** locates the "closest" free block to the hint. This provides a tool for locating blocks to add to the B-tree, or to hold block copies created with SAVE that would otherwise be lost when DSE exits. **FIND -FREE** relies on the bitmaps to locate its target, so be sure to fix any blocks incorrectly marked "FREE" before using this command.
 
-The RANGE command sifts through blocks looking for keys. RANGE checks blocks without regard to whether they are in the B-tree, and without regard to whether they are marked free or busy in the bitmaps. RANGE provides a brute force way to find a key if it exists and can be very time consuming in a large database. Note that RANGE may report blocks that were previously used and were legitimately removed from the tree by an M KILL command.
+The **RANGE** command sifts through blocks looking for keys. RANGE checks blocks without regard to whether they are in the B-tree, and without regard to whether they are marked free or busy in the bitmaps. RANGE provides a brute force way to find a key if it exists and can be very time consuming in a large database. Note that RANGE may report blocks that were previously used and were legitimately removed from the tree by an M KILL command.
 
 ++++++++++++++++++++++++++
 Safety in Repairs
@@ -268,9 +268,9 @@ In performing some types of repairs, you may have to stop one or more processes.
 
 * If the process' principal device is not available, or the process does not respond to pressing <CTRL-C>, use MUPIP STOP. This allows YottaDB to disengage the process from all shared resources, such as I/O devices and open database files.
 * The DSE command CRITICAL -INITIALIZE -RESET causes YottaDB to terminate all images that are actively accessing the target database. This DSE command has a similar effect on processes to that of MUPIP STOP , except that it simultaneously terminates all processes actively using a database.
-* Finally, if the process does not respond to MUPIP STOP, use KILL-9. This terminates the process abruptly and may leave database files improperly closed and require a MUPIP RUNDOWN. Since KILL-9 may cause database damage, it should be followed by a MUPIP INTEG.
+* Finally, if the process does not respond to MUPIP STOP, use KILL -9. This terminates the process abruptly and may leave database files improperly closed and require a MUPIP RUNDOWN. Since KILL -9 may cause database damage, it should be followed by a MUPIP INTEG.
 
-When processes have stopped or terminated abnormally, YottaDB recommends shutting down all YottaDB processes, checking the integrity of the database, then restarting the processes. First, use ps -af to determine the process IDs. Then use MUPIP STOP or KILL-15 to terminate all the YottaDB processes. Repeat the ps -af command to assure that all processes have terminated. If they have not, use KILL-9 instead of KILL-15.
+When processes have stopped or terminated abnormally, YottaDB recommends shutting down all YottaDB processes, checking the integrity of the database, then restarting the processes. First, use ps -af to determine the process IDs. Then use MUPIP STOP or KILL -15 to terminate all the YottaDB processes. Repeat the ps -af command to assure that all processes have terminated. If they have not, use KILL -9 instead of KILL -15.
 
 When you have terminated all processes, do a MUPIP RUNDOWN on all database files:
 
@@ -307,7 +307,7 @@ Check the integrity of the database:
 
 To preserve database integrity, always verify that all YottaDB images have terminated and all GDS databases are RUNDOWN before shutting down your system.
 
-Terminating YottaDB abnormally with KILL-9 can leave the terminal parameters improperly adjusted, making them unsuited for interactive use. If you terminate YottaDB with KILL-9 without terminating the job, logout to reset the terminal characteristics.
+Terminating YottaDB abnormally with KILL -9 can leave the terminal parameters improperly adjusted, making them unsuited for interactive use. If you terminate YottaDB with KILL -9 without terminating the job, logout to reset the terminal characteristics.
 
 ++++++++++++++++++++++++++++++++++++++++++++
 Recovering Data from Damaged Binary Extracts
