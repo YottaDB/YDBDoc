@@ -1667,6 +1667,8 @@ The maximum file name length is 255 characters.
 
 By default, GDE uses a file-name of "yottadb" followed by the default extension, which is .dat. You can specify any filename and extension of your choice for a database file as long as it is valid on your operating system.
 
+The file name specified can also be a remote file name. Refer to :ref:`gt-cm-client` section for details on remote file name syntax.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -G[LOBAL_BUFFER_COUNT]=size
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
