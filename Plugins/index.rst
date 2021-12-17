@@ -22,6 +22,7 @@ Welcome to Plugins's documentation!
    :maxdepth: 2
 
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation/>
+   ydbaim
    ydbposix
    ydbzlib
    LICENSE
