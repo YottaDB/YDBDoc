@@ -380,7 +380,7 @@ The formatting codes are:
 * , : Inserts commas every third position to the left of the decimal within the number.
 * . : inserts periods (".") every third position to the left of the decimal within the number, and uses a comma (",") as the decimal separator.
 * T : Represents the number with a trailing, rather than a leading sign; positive numbers have a trailing space unless the expression includes a plus sign (+).
-* P : Represents negative values in parentheses, positive values with a space on either side; combining with any other code except a comma (,) causes a run-time error.
+* P : Represents negative values in parentheses, positive values with a space on either side; combining with any other code except a comma (,) or a period (.) causes a run-time error.
 
 +++++++++++++++++++++++
 Examples of $FNUMBER()
