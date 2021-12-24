@@ -3378,6 +3378,10 @@ There are four possible return values from $ZSIGPROC():
 
 In release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ $ZSIGPROC() was enhanced to allow signals to be specified by name.
 
+.. note::
+
+   $ZSIGPROC() is implemented using `kill(2) <https://man7.org/linux/man-pages/man2/kill.2.html>`_. If the pid of the process is zero or negative, $ZSIGPROC() may behave unexpectedly.
+
 ++++++++++++++++++++++++++
 Examples of $ZSIGPROC()
 ++++++++++++++++++++++++++
