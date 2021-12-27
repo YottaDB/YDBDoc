@@ -83,11 +83,7 @@ The called routines follow the C calling conventions. They must be compiled as p
 Creating a Shareable Library
 ----------------------------------
 
-The method of creating a shareable library varies by the operating system.
-
-On Linux x86:
-
-Example:
+Use the following commands to create a shareable library:
 
 .. code-block:: none
 
@@ -315,7 +311,7 @@ Example:
    /user/joe/mathpak.xc
    % echo lib /usr/
    % cat mathpak.xc
-   $lib/mathpak.sl
+   $lib/mathpak.so
    exp: ydb_status_t xexp(I:ydb_float_t*, O:ydb_float_t*)
    % cat exp.c
    ...
@@ -338,7 +334,7 @@ Example : For preallocation:
    % echo $ydb_xc_extcall
    /usr/joe/extcall.xc
    % cat extcall.xc
-   /usr/lib/extcall.sl
+   /usr/lib/extcall.so
    prealloc: void ydb_pre_alloc_a(O:ydb_char_t *[12])
    % cat extcall.c
    #include <stdio.h>
@@ -357,7 +353,7 @@ Example : for call-back mechanism
    % echo $ydb_xc
    /usr/joe/callback.xc
    % cat /usr/joe/callback.xc
-   $MYLIB/callback.sl
+   $MYLIB/callback.so
    init:     void   init_callbacks()
    tstslp:  void   tst_sleep(I:ydb_long_t)
    strtmr: void   start_timer(I:ydb_long_t, I:ydb_long_t)
@@ -437,7 +433,7 @@ Example:ydb_malloc/ydb_free callbacks using ydb_pointertofunc_t
    % echo $ydb_xc
    /usr/joe/callback.xc
    % cat /usr/joe/callback.xc
-   /usr/lib/callback.sl
+   /usr/lib/callback.so
    init: void init_callbacks(I:ydb_pointertofunc_t, I:ydb_pointertofunc_t)
    % ydb
    YDB> do &.init(4,5)
