@@ -1530,10 +1530,10 @@ Example:
 
 .. code-block:: bash
 
-   YDB>FOR p="1U.20A1"",""1U.20A",5N IF x?@p QUIT
+   YDB>FOR p="1U.20A1"",""1U.20A","5N" IF x?@p QUIT
    YDB>ELSE WRITE !,"Incorrect format" QUIT
 
-This example uses pattern code indirection to test x for either a name or a number.
+This example uses pattern code indirection to test x for either a five-digit number, or a name consisting of two comma separated pieces, each starting with an upper case letter and followed by up to twenty alphabetic characters.
 
 ++++++++++++++++++++++++
 Name Indirection
