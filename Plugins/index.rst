@@ -5,7 +5,7 @@
 
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -15,7 +15,7 @@
 .. #                                                             #
 .. ###############################################################
 
-Welcome to Plugins's documentation!
+Welcome to Plugins documentation!
 ===================================
 
 .. toctree::
