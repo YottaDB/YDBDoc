@@ -1,3 +1,15 @@
+/* ###############################################################
+   #                                                             #
+   # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+   # All rights reserved.                                        #
+   #                                                             #
+   #     This source code contains the intellectual property     #
+   #     of its copyright holder(s), and is made available       #
+   #     under a license.  If you do not know the terms of       #
+   #     the license, please stop and do not read further.       #
+   #                                                             #
+   ###############################################################*/
+
 .wy-nav-content {
 	    max-width: 4000px;
 }
@@ -45,4 +57,30 @@ pre.literal-block {
 .wy-side-scroll {
   width: auto;
   overflow-y: auto;
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-Two.woff");
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-TwoItalic.woff");
+    font-weight: 200;
+    font-style: italic, oblique;
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-Regular.woff");
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-RegularItalic.woff");
+    font-weight: 600;
+    font-style: italic, oblique;
 }

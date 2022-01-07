@@ -1,6 +1,6 @@
 /* ###############################################################
    #                                                             #
-   # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+   # Copyright (c) 2020-2022 YottaDB LLC and/or its subsidiaries.#
    # All rights reserved.                                        #
    #                                                             #
    #     This source code contains the intellectual property     #
@@ -57,4 +57,35 @@ pre.literal-block {
 .wy-side-scroll {
   width: auto;
   overflow-y: auto;
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-Two.woff");
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-Two.woff");
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-TwoItalic.woff");
+    font-weight: 200;
+    font-style: italic, oblique;
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-Regular.woff");
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-RegularItalic.woff");
+    font-weight: 600;
+    font-style: italic, oblique;
 }
