@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -3118,18 +3118,19 @@ The format of the $ZPEEK() function is:
 
 mnemonic specifies the memory area $ZPEEK() is to access. Some mnemonics have arguments separated from the mnemonic by a colon (":"). The mnemonics are case independent. Possible mnemonics, their possible abbreviations and their arguments are:
 
-* CSA[REG] - returns a value from the sgmnt_addrs (process private) control block. Takes a case independent region name as an argument.
-* FH[REG] - returns a value from the sgmnt_data (shared file header) control block. Takes a case independent region name as an argument.
-* GDR[REG] - returns a value from the gd_region (process private) control block. Takes a case independent region name as an argument.
-* GLF[REPL] - returns a value from the jnlpool.gtmsrc_lcl_array[n] control block. Takes a numeric index (n) as an argument.
+* CSA[REG]:region - returns a value from the sgmnt_addrs (process private) control block. Takes a case independent region name as an argument.
+* FH[REG]:region - returns a value from the sgmnt_data (shared file header) control block. Takes a case independent region name as an argument.
+* GDR[REG]:region - returns a value from the gd_region (process private) control block. Takes a case independent region name as an argument.
+* GDS[SEG]:region - returns a value from the gd_segment (process private) control block. Takes a case independent region name as an argument.
+* GLF[REPL]:n - returns a value from the jnlpool.gtmsrc_lcl_array[n] control block. Takes a numeric index (n) as an argument.
 * GRL[REPL] - returns a value from the recvpool.gtmrecv_local control block. No argument allowed. Only available when run on a non-primary instance.
-* GSL[REPL] - returns a value from the jnlpool.gtmsource_local_array[n] control block. Takes a numeric index (n) as an argument.
-* JBF[REG]:region[ -obtains fields in shared jnl_buffer structure.
-* JNL[REG]:region[ - obtains fields in the jnl_private_control structure.
+* GSL[REPL]:n - returns a value from the jnlpool.gtmsource_local_array[n] control block. Takes a numeric index (n) as an argument.
+* JBF[REG]:region - obtains fields in shared jnl_buffer structure. Takes a case independent region name as an argument.
+* JNL[REG]:region - obtains fields in the jnl_private_control structure. Takes a case independent region name as an argument.
 * JPC[REPL] - returns a value from the jnlpool.jnlpool_ctl control block. No argument allowed.
-* NL[REG] - returns a value from the node_local (shared) control block. Takes a case independent region name as an argument.
+* NL[REG]:region - returns a value from the node_local (shared) control block. Takes a case independent region name as an argument.
 * NLREPL - returns a value from the node_local (shared) control block associated with replication. No argument allowed.
-* PEEK - returns a value based on the supplied argument. Argument is the base address of the value to obtain in 0xhhhhhhh format where the h's are hex digits.
+* PEEK:baseaddr - returns a value based on the supplied argument. Argument is the base address of the value to obtain in 0xhhhhhhh format where the h's are hex digits.
 * RIH[REPL] - returns a value from the jnlpool.repl_inst_filehdr control block. No argument allowed.
 * RPC[REPL] - returns a value from the recvpool.recvpool_ctl control block. No argument allowed. Only available when run on a non-primary instance.
 * UHC[REPL] - returns a value from the recvpool.upd_helper_ctl control block. No argument allowed. Only available when run on a non-primary instance.

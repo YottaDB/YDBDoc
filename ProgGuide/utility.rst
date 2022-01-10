@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -2702,6 +2702,9 @@ Calls to %PEEKBYNAME with the listed string as value of the first parameter, and
    YDB>for i=1:1:10000 set ^x($$^%RANDSTR(8))=$$^%RANDSTR(64)
    YDB>write $$^%PEEKBYNAME("node_local.wcs_active_lvl","DEFAULT") ; And now, how many of them are dirty
    377
+   YDB>write $ZPIECE($$^%PEEKBYNAME("gd_region.open","DEFAULT"),$ZCHAR(0),1) ; display if DEFAULT region is open (1) or not (0)
+   1
+   YDB>write $ZPIECE($$^%PEEKBYNAME("gd_segment.fname","AREG"),$ZCHAR(0),1) ; display database file name for AREG region
    YDB>
 
 When using the following, remember to write code that allows for values other than those listed, e.g., if writing code to check whether before image journaling is in use, make sure it can deal with values other than 0 and 1, because a future release of YottaDB can potentially introduce a new return value for a field.
@@ -2716,6 +2719,8 @@ When using the following, remember to write code that allows for values other th
 | Commit wait spin count       |  "sgmnt_data.wcs_phase2_commit_wait_spincnt"  | Integer Count                                                                                                               |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Current transaction          |  "sgmnt_data.trans_hist.curr_tn"              | Integer Count                                                                                                               |
++------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Database file name           |  "gd_segment.fname"                           | String of text. See example above for how to use.                                                                           |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Defer allocate               |  "sgmnt_data.defer_allocate"                  | Integer - 1 means DEFER_ALLOCATE, 0 means NODEFER_ALLOCATE                                                                  |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
@@ -2769,7 +2774,7 @@ When using the following, remember to write code that allows for values other th
 | Number of processes accessing|  "node_local.ref_cnt"                         | Integer count (always greater than zero, because the process running %PEEKBYNAME has the database open)                     |
 | the database                 |                                               |                                                                                                                             |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| Region open                  |  "gd_region.open"                             | Boolean                                                                                                                     |
+| Region open                  |  "gd_region.open"                             | Boolean. See example above for how to use.                                                                                  |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Region replication sequence  |  "sgmnt_data.reg_seqno"                       | Integer Count                                                                                                               |
 | number                       |                                               |                                                                                                                             |
