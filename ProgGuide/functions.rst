@@ -3138,11 +3138,16 @@ mnemonic specifies the memory area $ZPEEK() is to access. Some mnemonics have ar
 
 offset (first integer expression) is a numeric value that specifies the offset from the address supplied or implied by the the mnemonic and argument. Specifying a negative offset results in a BADZPEEKARG error. Specifying too large an offset such that unavailable memory is specified results in a BADZPEEKRANGE error.
 
-length (second integer expression) is a numeric value that specifies the length of the field to obtain. Specifying a negative length results in a BADZPEEKARG error. Specifying a length that exceeds the maximum string length results in a MAXSTRLEN error. Specifying too large a length such that unavailable memory is specified results in a BADZPEEKRANGE error.
+length (second integer expression) is a numeric value that specifies the length of the field to obtain.
+
+* Specifying a negative length results in a BADZPEEKARG error.
+* Specifying a length that exceeds the maximum string length (1048576) results in a MAXSTRLEN error.
+* All mnemonics except PEEK correspond to an underlying control block. Specifying a length that exceeds the maximum allowed size of the corresponding control block results in a BADZPEEKARG error. For example, the GDRREG mnemonic corresponds to the gd_region control block and so specifying the GDRREG mnemonic and a length exceeding the byte length of the gd_region control block results in a BADZPEEKARG error.
+* Specifying too large a length such that unavailable memory is specified results in a BADZPEEKRANGE error.
 
 format is an optional single case independent character formatting code for the retrieved data. The formatting codes are:
 
-* C : returns a character representations of the memory locations; this is the DEFAULT if the fourth argument is not specified.
+* C : returns a character representation of the memory locations; this is the DEFAULT if the fourth argument is not specified.
 * I : returns a signed integer value - negative values have a preceding minus sign (-); the length can be 1, 2, 4, or 8 bytes.
 * U : returns an unsigned integer value - all bits are part of the numeric value; the length can be 1, 2, 4, or 8 bytes.
 * S : returns a character representation of the memory locations and the first NULL character found terminates the returned string; that is: the specified length is a maximum.
