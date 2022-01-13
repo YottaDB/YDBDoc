@@ -85,7 +85,7 @@ pre.literal-block {
 
 @font-face {
     font-family: "FiraGO";
-    src: url("https://docs.yottadb.com/Fonts/FiraGO-RegularItalic.woff");
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-Italic.woff");
     font-weight: 600;
     font-style: italic, oblique;
 }
