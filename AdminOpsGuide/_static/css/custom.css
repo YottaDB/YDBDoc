@@ -61,26 +61,24 @@ pre.literal-block {
 
 @font-face {
     font-family: "FiraGO";
-    src: url("https://docs.yottadb.com/Fonts/FiraGO-Two.woff");
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-SemiBold.woff");
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-SemiBoldItalic.woff");
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: "FiraGO";
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-LightItalic.woff");
     font-weight: 200;
 }
 
 @font-face {
     font-family: "FiraGO";
-    src: url("https://docs.yottadb.com/Fonts/FiraGO-TwoItalic.woff");
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-Light.woff");
     font-weight: 200;
-    font-style: italic, oblique;
-}
-
-@font-face {
-    font-family: "FiraGO";
-    src: url("https://docs.yottadb.com/Fonts/FiraGO-Regular.woff");
-    font-weight: 600;
-}
-
-@font-face {
-    font-family: "FiraGO";
-    src: url("https://docs.yottadb.com/Fonts/FiraGO-Italic.woff");
-    font-weight: 600;
-    font-style: italic, oblique;
 }
