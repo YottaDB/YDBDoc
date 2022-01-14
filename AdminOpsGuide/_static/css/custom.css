@@ -61,13 +61,13 @@ pre.literal-block {
 
 @font-face {
     font-family: "FiraGO";
-    src: url("https://docs.yottadb.com/Fonts/FiraGO-SemiBold.woff");
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-SemiBoldItalic.woff");
     font-weight: 700;
 }
 
 @font-face {
     font-family: "FiraGO";
-    src: url("https://docs.yottadb.com/Fonts/FiraGO-SemiBoldItalic.woff");
+    src: url("https://docs.yottadb.com/Fonts/FiraGO-SemiBold.woff");
     font-weight: 700;
 }
 
