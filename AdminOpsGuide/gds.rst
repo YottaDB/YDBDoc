@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -154,7 +154,9 @@ The file header data elements are listed as follows in alphabetical order for ea
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal File                       | The name of the journal file. DSE only reports this field if journaling is ENABLED or ON.                                                                     |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Journal State                      | Indicates whether journaling is ON, OFF, or DISABLED (not allowed).                                                                                           |
+| Journal State                      | Indicates whether journaling is ON, OFF, or DISABLED (not allowed). If it reports that journaling is ON, you may also see [inactive] next to it. This means   |
+|                                    | that journaling is ON, but no process has opened the journal file yet in shared memory. For example, if processes just do reads of globals then the journal   |
+|                                    | file is not opened even though the database file is opened.                                                                                                   |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal Sync IO                    | Indicates whether WRITE operation to a journal file commits directly to disk. The default value is FALSE. DSE only reports this field if journaling is ENABLED|
 |                                    | (or ON).                                                                                                                                                      |
@@ -218,7 +220,7 @@ The file header data elements are listed as follows in alphabetical order for ea
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Region Seqno                       | The current replication relative time stamp for a region.                                                                                                     |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Replication State                  | Either On or OFF. [WAS ON] OFF means that replication is still working, but a problem with journaling has caused YottaDB to turn it off, so YottaDB           |
+| Replication State                  | Either On or OFF. [WAS_ON] OFF means that replication is still working, but a problem with journaling has caused YottaDB to turn it off, so YottaDB           |
 |                                    | is still replicating, but will turn replication OFF if it ever has to turn to the journal because the pool has lost data needed for replication.              |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Reserved Bytes                     | Number of bytes reserved in database blocks.                                                                                                                  |
