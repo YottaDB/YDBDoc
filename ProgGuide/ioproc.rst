@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -2362,6 +2362,37 @@ The erase character as set and shown by stty also terminates a READ command with
 The environment variable TERM must specify a terminfo entry that matches both what the terminal (or terminal emulator) sends and expects.
 
 ~~~~~
+FFLF
+~~~~~
+
+[NO]FFLF Applies to: SD
+
+The [NO]FFLF deviceparameter controls whether WRITE # produces only a form-feed (<FF>) or a form-feed and line-feed (<FF><LF>). Previously, YottaDB used <FF><LF> which deviated from the standard, but out of concern for existing practice the default remains <FF><LF>.
+
+Additionally, the :code:`ydb_nofflf(gtm_nofflf)` environment variable controls the default WRITE # behavior of YottaDB. If it is unset or set to 0, N[O] or F[ALSE], the default behavior is unchanged. If it is set to 1, Y[ES] or T[RUE], the default behavior of WRITE # is changed to produce only a form-feed (<FF>), though M programs can still control behavior by specifying the FFLF deviceparameter.
+
+Example:
+
+.. code-block:: bash
+
+   YDB>zprint ^fflf
+   fflf
+     set file="/tmp/myfile"
+     open file:(newversion:wrap:stream:nofflf)
+     use file
+     write #,"Hello"
+     close file
+     zsystem "od -tcd1 /tmp/myfile"
+     quit
+   YDB>do ^fflf
+   0000000   \f    H    e    l    l    o   \n
+	     12   72  101  108  108  111   10
+   0000007
+   YDB>halt
+
+This example opens the file :code:`myfile`, and sets the NOFFLF deviceparameter with OPEN. It will write the sequence :code:`<FF>Hello<LF>` to the file.
+
+~~~~~
 FIFO
 ~~~~~
 
@@ -3740,6 +3771,18 @@ Defines an error handler for an I/O device. The expression must contain a fragme
 
 For more information on error handling, refer to `Chapter 13: “Error Processing” <./errproc.html>`_.
 
+~~~~~~
+FFLF
+~~~~~~
+
+[NO]FFLF Applies to: SD
+
+The [NO]FFLF deviceparameter controls whether WRITE # produces only a form-feed (<FF>) or a form-feed and line-feed (<FF><LF>). Previously, YottaDB used <FF><LF> which deviated from the standard, but out of concern for existing practice the default remains <FF><LF>.
+
+Additionally, the :code:`ydb_nofflf(gtm_nofflf)` environment variable controls the default WRITE # behavior of YottaDB. If it is unset or set to 0, N[O] or F[ALSE], the default behavior is unchanged. If it is set to 1, Y[ES] or T[RUE], the default behavior of WRITE # is changed to produce only a form-feed (<FF>), though M programs can still control behavior by specifying the FFLF deviceparameter.
+
+For an example, refer to the description of FFLF deviceparameter of OPEN.
+
 .. _no-filter:
 
 ~~~~~~~
@@ -3787,6 +3830,16 @@ HOSTSYNC
 Enables or disables the use of XON/XOFF by the host to throttle input and prevent impending buffer overruns for a terminal. This deviceparameter provides a control mechanism for the host over asynchronous communication lines to help prevent data loss when hardware is slow and/or processing load is high.
 
 By default, HOSTSYNC is disabled.
+
+~~~~~~~~~~
+HUPENABLE
+~~~~~~~~~~
+
+[NO]HUPENABLE Applies to: TRM
+
+Enables or disables the recognition by the process of the loss ("hang up") of PRINCIPAL device terminal. When enabled the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has diconnected. If YottaDB is configured to ignore such a signal, a process may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the operator log.
+
+If defined, the :code:`ydb_hupenable` environment variable determines the initial process behavior, and if that is undefined YottaDB does not immediately report a terminal disconnect.
 
 ~~~~~
 IKEY

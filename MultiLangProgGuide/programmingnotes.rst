@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -152,7 +152,7 @@ Important Notes:
 
 .. _errstr:
 
-- Simple API functions use an :code:`*errstr` parameter to avoid a race condition and ensure they get the correct :ref:`zstatus-isv` when function has an error return. If an application calls :ref:`ydb-get-s-st-fn` for the value of :ref:`zstatus-isv` for the complete error text when a YottaDB function returns an :ref:`error return code <err-ret-codes>`, for a single-threaded application, :ref:`zstatus-isv` has correct and current information, since calls to YottaDB are entirely under the control of that single application thread. For a multi-threaded application, between the time a function returns with an :ref:`error retrun code <err-ret-codes>`, and a subsequent call to :ref:`ydb-get-s-st-fn` to get the value of :ref:`zstatus-isv`, another thread may call YottaDB, and the :ref:`zstatus-isv` returned will be from that subsequent call. A :code:`*errstr` parameter in functions for multi-threaded applications provides the :ref:`zstatus-isv` for that call to the caller.
+- Simple API functions use an :code:`*errstr` parameter to avoid a race condition and ensure they get the correct :ref:`zstatus-isv` when function has an error return. If an application calls :ref:`ydb-get-s-st-fn` for the value of :ref:`zstatus-isv` for the complete error text when a YottaDB function returns an :ref:`error return code <err-ret-codes>`, for a single-threaded application, :ref:`zstatus-isv` has correct and current information, since calls to YottaDB are entirely under the control of that single application thread. For a multi-threaded application, between the time a function returns with an :ref:`error return code <err-ret-codes>`, and a subsequent call to :ref:`ydb-get-s-st-fn` to get the value of :ref:`zstatus-isv`, another thread may call YottaDB, and the :ref:`zstatus-isv` returned will be from that subsequent call. A :code:`*errstr` parameter in functions for multi-threaded applications provides the :ref:`zstatus-isv` for that call to the caller.
 
   - An application that does not want the :ref:`zstatus-isv` string can pass a :code:`NULL` value for :code:`*errstr`.
 
@@ -162,6 +162,8 @@ Important Notes:
 
     - :code:`errstr->len_used` is always set to the length of :ref:`zstatus-isv`, whether or not it is truncated.
     - If :code:`errstr->len_used` is greater than :code:`errstr->len_alloc-1` it means :ref:`zstatus-isv` has been truncated.
+
+Note that effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_ :code:`errstr` is filled in appropriately if an error occurs in M code called from another language.
 
 - A multi-threaded application is permitted to use the YottaDB single-thread functions *as long as the application ensures that all YottaDB access is performed only by one thread.* A thread may use the :ref:`ydb-thread-is-main-fn` to determine whether it is the thread that is calling YottaDB. YottaDB strongly recommends against this application design pattern: this functionality only exists to provide backward compatibility to a specific existing application code base.
 

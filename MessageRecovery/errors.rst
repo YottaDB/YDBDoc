@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -9945,11 +9945,11 @@ Action: Verify that the specified resync or time qualifiers are as intended. If 
 NOPRINCIO
 --------------------
 
-NOPRINCIO, Unable to write to principal device
+NOPRINCIO, Unable to dddd principal device: DDDD at LLLL due to: SSSS
 
-Run Time Fatal: This indicates that YottaDB attempted to but could not READ from or WRITE to the principal device and therefore attempted to issue an appropriate error, for example, an IOEOF. However, if the error handling does not prevent any and all subsequent READs and WRITEs to the no longer available principal device, the next subsequent I/O error shuts down the process immediately with a NOPRINCIO to prevent mysteriously lost output, or worse, an indefinite loop.
+Run Time Fatal: This indicates that YottaDB attempted to but could not READ from or WRITE to (direction indicated by dddd), the PRINCIPAL device and therefore attempted to issue an appropriate error, for example, an IOEOF, TERMHANGUP, or TERMWRITE at location LLLL, with a status of SSSS. However, if the error handling does not prevent any and all subsequent READs and WRITEs to the no longer available PRINCIPAL device, the next subsequent I/O error shuts down the process immediately with a NOPRINCIO to prevent mysteriously lost output, or worse, an indefinite loop.
 
-Action: The NOPRINCIO error message is FATAL which does not drive device or trap handlers and terminates the process. This termination does not allow any application-level orderly shutdown and, depending on the application, may lead to out-of-design application states. Therefore, YottaDB recommends appropriate application-level error handling that recognizes the preceding error and performs an orderly shutdown without issuing any additional READs or WRITEs to the principal device. The most common causes for the principal device to cease to exist involve terminal sessions or socket connections (including those from processes started by inetd/xinetd). When the remote client terminates the connection, the underlying principal device becomes inaccessible, making any subsequent attempt to READ from or WRITE to it, hopeless. In the case of terminals, a user closing the window of a session without cleanly exiting from the YottaDB process sets up the case that can drive this error.
+Action: The NOPRINCIO error message is FATAL which does not drive device or trap handlers and terminates the process. This termination does not allow any application-level orderly shutdown and, depending on the application, may lead to out-of-design application states. Therefore, YottaDB recommends appropriate application-level error handling that recognizes the preceding error and performs an orderly shutdown without issuing any additional READs or WRITEs to the principal device. The most common causes for the principal device to cease to exist involve terminal sessions or socket connections (including those from processes started by inetd/xinetd). When the remote client terminates the connection, the underlying principal device becomes inaccessible, making any subsequent attempt to READ from or WRITE to it, hopeless. In the case of terminals, a user closing the window of a session without cleanly exiting from the YottaDB process sets up the case that can drive this error. YottaDB does not issue NOPRINCIO errors from Direct Mode, because it is a developer tool, or at the completion of a HEREDOC in a shell script. However, this means a HEREDOC must use ZHALT to return a specific status to the shell, and that a $ETRAP that bounces a process into Direct Mode terminates without evidence.
 
 --------------------
 NORECVPOOL
@@ -13695,6 +13695,18 @@ Run Time Error: This indicates that an OPEN command failed because it required a
 Action: Reduce the number of terminals in use by a single process or ask your system administrator about changing your AST quota.
 
 -------------------
+TERMHANGUP
+-------------------
+
+TERMHANGUP, Terminal has disconnected
+
+Run Time Error: This indicates that the terminal serving as the PRINCIPAL device has disconnected. By default, YottaDB ignores terminal "hang-ups", which can allow the terminal to reconnect at a later time to a process that does not need the terminal to continue work. You can enable recognition of principal device disconnects with USE $PRINCIPAL:HUPENABLE or by starting the process with the ydb_hupenable set to 1, TRUE or YES, or disable them with USE $PRINCIPAL:NOHUPENABLE.
+
+Action: When a process receives this error it must avoid any further READs from, or WRITEs to $PRINCIPAL, typically shutting down in a wholesome fashion. Failure to do so causes YottaDB to terminate the process with a NOPRINCIO message to the operator log.
+
+TERMHANGUP was added effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
+
+-------------------
 TERMWRITE
 -------------------
 
@@ -14085,7 +14097,7 @@ TRANS2BIG
 
 TRANS2BIG, Transaction exceeded available buffer space for region rrrr
 
-Run Time Error: This indicates that a transaction updated more blocks than the global buffer could hold for a particular region rrrr or accessed more than the single transaction limit of 64K blocks.
+Run Time Error: This indicates that a transaction updated more blocks than the global buffer could hold (half-2) for a particular region rrrr or accessed more than the single transaction limit of 64K blocks.
 
 Action: Look for missing TCOMMIT commands; modify the code to reduce the total content or change content of the transaction. If the transaction is as intended and the issue is the number of updates, increase the GLOBAL_BUFFERS for the region using MUPIP SET, or modify the Global Directory to redistribute the relevant globals to more regions.  If this occurs on a replicating instance it may indicate either a difference in configuration between the originating and replicating instances, which probably should be addressed, or a transaction that was borderline on the originating instance, but failed on the replicating instance because of difference in the database layout. In the later case, consider examining the application code to see if it's possible to reduce the size of the transaction, or alternatively increase the global buffers on both the instances.
 

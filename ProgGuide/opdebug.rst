@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -114,7 +114,7 @@ Example:
 
 This RECALLs the line number two (2).
 
-If the RE[CALL] command includes a text parameter, YottaDB displays the most recent command matching the text after the RE[CALL] command.
+If the REC[ALL] command includes a text parameter, YottaDB displays the most recent command matching the text after the REC[ALL] command.
 
 Example:
 
@@ -145,13 +145,13 @@ The Direct Mode line editing keys are as follows:
 
 * **Right-arrow**: Moves the cursor one character to the right
 
-* **<CTRL-A>**: Moves the cursor to the beginning of the line
+* **<CTRL-A>** / **HOME**: Moves the cursor to the beginning of the line
 
 * **<CTRL-B>**: Moves the cursor one character towards the beginning of the line
 
 * **<CTRL-D>**: On an empty line, terminates YottaDB and returns control to the shell.
 
-* **<CTRL-E>**: Moves the cursor to the end of the line
+* **<CTRL-E>** / **END** : Moves the cursor to the end of the line
 
 * **<CTRL-F>**: Moves the cursor one character towards the end of the line
 

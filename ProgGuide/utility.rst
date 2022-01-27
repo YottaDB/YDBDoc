@@ -2417,9 +2417,12 @@ CALL: Performs %RSEL without reinitializing %ZR.
 
 OBJ: Searches only object files.
 
+SILENT: Provides non-interactive (batch) access to the functionality of %RSEL. The syntax is SILENT^%RSEL(pattern,label) where pattern is a string that specifies the routine names to be searched, label can be "OBJ", "SRC" or "CALL". The default value of "SRC" corresponds to ^%RSEL if invoked interactively.
+
 SRC: Searches only source files (same as %RSEL).
 
-SILENT: Provides non-interactive (batch) access to the functionality of %RSEL. The syntax is SILENT^%RSEL(pattern,label) where pattern is a string that specifies the routine names to be searched. label can be "OBJ", "SRC" or "CALL". The default is "SRC" value corresponds to ^%RSEL if invoked interactively.
+SRCDIR: Returns a space separated list of directories in $ZROUTINES that can contain source code. The syntax is SRCDIR^%RSEL. Typically, the first source directory is the location where code generators should place generated source code. If there are no source directories, for example, if $ZROUTINES contains only shared libraries, SRCDIR^%RSEL returns an empty string (:code:`""`).
+
 
 **Input Variables**
 
@@ -2779,13 +2782,17 @@ When using the following, remember to write code that allows for values other th
 | Region replication sequence  |  "sgmnt_data.reg_seqno"                       | Integer Count                                                                                                               |
 | number                       |                                               |                                                                                                                             |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Report number of maximum     |  "node_local.max_procs"                       | Two comma separated integers. First is the integer count of the maximum number of processes that concurrently accessed that |
+| processes concurrently       |                                               | database region, and the second is the integer count of the number of seconds since January 1, 1970 00:00:00 UTC at which   |
+| accessing a database region  |                                               | that number of processes was recorded.
++------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Spanning nodes absent        |  "sgmnt_data.span_node_absent"                | Integer - 1 means that no global variable nodes span multiple database blocks, 0 means YottaDB does not know (in the        |
 |                              |                                               | past, at least one global variable node spanned multiple blocks, but it may since have been overwritten or KILL'd)          |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Write errors                 |  "sgmnt_data.wcs_wterror_invoked_cntr"        | Integer count of errors trying to write database blocks - barring problems with the storage subsystem, hitting an           |
 |                              |                                               | asynchronous write limit constitute the primary (probably only) cause                                                       |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| Writes in progress           |  "node_local.wcs_wip_lvl"                     | Integer count of of blocks for which YottaDB has issued writes that have not yet been recognized as complete                |
+| Writes in progress           |  "node_local.wcs_wip_lvl"                     | Integer count of blocks for which YottaDB has issued writes that have not yet been recognized as complete                   |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 
 **Replication Parameters**

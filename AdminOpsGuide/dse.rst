@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -1052,6 +1052,12 @@ Sets a field that tracks how many processes are accessing the database with read
 
 In an LMS environment, this sets the "Region Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_.
 
+^^^^^^^^^^^^^^^^^^^^
+-RESET_MAX_PROCS
+^^^^^^^^^^^^^^^^^^^^
+
+Sets the maximum number of concurrent processes to zero, and the time to the time that the DSE CHANGE FILEHEADER command was run.
+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 -RESYNC_S[EQNO]=sequence-number
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1579,25 +1585,25 @@ This command displays an output like the following:
 
 .. code-block:: bash
 
-   File    /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
+   File    /tmp/test/r1.34_x86_64/g/yottadb.dat
    Region  DEFAULT
-   File            /home/jdoe/.yottadb/r1.20_x86_64/g/yottadb.dat
+   File            /tmp/test/r1.34_x86_64/g/yottadb.dat
    Region          DEFAULT
-   Date/Time       27-JAN-2014 03:13:40 [$H = 63214,11620]
-     Access method                          MM  Global Buffers                1024
-     Reserved Bytes                          0  Block size (in bytes)         1024
-     Maximum record size                   256  Starting VBN                   513
-     Maximum key size                       64  Total blocks            0x00000065
-     Null subscripts                     NEVER  Free blocks             0x0000005E
-     Standard Null Collation             FALSE  Free space              0x00000000
-     Last Record Backup     0x0000000000000001  Extension Count                100
-     Last Database Backup   0x0000000000000001  Number of local maps             1
+   Date/Time       28-JAN-2022 10:08:27 [$H = 66137,36507]
+     Access method                          MM  Global Buffers              100000
+     Reserved Bytes                          0  Block size (in bytes)         4096
+     Maximum record size                  4080  Starting VBN                   513
+     Maximum key size                      255  Total blocks            0x003DEB89
+     Null subscripts                     NEVER  Free blocks             0x000004DA
+     Standard Null Collation              TRUE  Free space              0x00000000
+     Last Record Backup     0x0000000000000001  Extension Count              10000
+     Last Database Backup   0x0000000000000001  Number of local maps          7926
      Last Bytestream Backup 0x0000000000000001  Lock space              0x00000028
      In critical section            0x00000000  Timers pending                   0
      Cache freeze id                0x00000000  Flush timer            00:00:01:00
-     Freeze match                   0x00000000  Flush trigger                  960
+     Freeze match                   0x00000000  Flush trigger                93750
      Freeze online                       FALSE  Freeze online autorelease    FALSE
-     Current transaction    0x0000000000000006  No. of writes/flush              7
+     Current transaction    0x000000001CC9E6C5  No. of writes/flush              7
      Maximum TN             0xFFFFFFFF83FFFFFF  Certified for Upgrade to        V6
      Maximum TN Warn        0xFFFFFFFD93FFFFFF  Desired DB Format               V6
      Master Bitmap Size                    496  Blocks to Upgrade       0x00000000
@@ -1614,7 +1620,10 @@ This command displays an output like the following:
      Defer allocation                     TRUE  Spin sleep time mask    0x00000000
      Async IO                              OFF  WIP queue cache blocks           0
      DB is auto-created                  FALSE  DB shares gvstats             TRUE
-     LOCK shares DB critical section     FALSE
+     LOCK shares DB critical section     FALSE  Read Only                      OFF
+     Recover interrupted                 FALSE
+     Max conc proc time             1642870066  Max Concurrent processes       584
+     Reorg Sleep Nanoseconds                 0
 
 
 Note that certain fileheader elements appear depending on the current state of database. For example, if Journaling is not enabled in the database, DSE does not display Journal data element fields.

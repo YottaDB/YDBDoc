@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -503,7 +503,7 @@ ydb_db_startup_max_wait
 +++++++++++
 ydb_dist
 +++++++++++
-**ydb_dist (gtm_dist)** specifies the path to the directory containing the YottaDB system distribution. ydb_dist must be defined for each user. If you are not using the ydb script or sourcing ydb_env_set, consider defining ydb_dist in the login file or as part of the default system environment. In UTF-8 mode, the ydb_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r120, set ydb_dist to point to /usr/local/lib/yottadb/r120/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires ydb_dist to be set correctly. Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, at process initialization YottaDB ensures that gtm_dist is set to $ydb_dist.
+**ydb_dist (gtm_dist)** specifies the path to the directory containing the YottaDB system distribution. ydb_dist must be defined for each user. If you are not using the ydb script or sourcing ydb_env_set, consider defining ydb_dist in the login file or as part of the default system environment. In UTF-8 mode, the ydb_dist environment variable specifies the path to the directory containing the YottaDB system distribution for Unicode. The distribution for Unicode is located in subdirectory utf8 under the YottaDB distribution directory. For example, if the YottaDB distribution is in /usr/local/lib/yottadb/r120, set ydb_dist to point to /usr/local/lib/yottadb/r120/utf8 for UTF-8 mode. Correct operation of YottaDB executable programs requires ydb_dist to be set correctly. Effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, at process initialization YottaDB ensures that gtm_dist is set to $ydb_dist.
 
 +++++++++++++
 ydb_dmterm
@@ -554,12 +554,19 @@ ydb_gbldir
 +++++++++++++++++++++++
 ydb_gbldir_translate
 +++++++++++++++++++++++
-**ydb_gbldir_translate** provides the path to a shared library to allow a set of $ZGBLDIR to be transformed for application portability across platforms. This is similar to the the optional YottaDB environment translation facility provided by :ref:`ydb-env-translate-env-var` above. ydb_gbldir_translate was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+**ydb_gbldir_translate** provides the path to a shared library to allow a set of $ZGBLDIR to be transformed for application portability across platforms. This is similar to the the optional YottaDB environment translation facility provided by :ref:`ydb-env-translate-env-var` above. ydb_gbldir_translate was added effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ++++++++++++++
 ydb_gdscert
 ++++++++++++++
 **ydb_gdscert (gtm_gdscert)** specifies the initial setting that controls whether YottaDB processes should test updated database blocks for structural damage. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", YottaDB performs a block-level integrity check on every block as a process commits it. Within a running process, VIEW "GDSCERT":value controls this setting. By default, YottaDB does not check database blocks for structural damage, because the impact on performance is usually unwarranted.
+
++++++++++++++++
+ydb_hupenable
++++++++++++++++
+**ydb_hupenable (gtm_hupenable)** specifies the initial value that determines whether a YottaDB process should recognize a disconnect signal from a PRINCIPAL device that is a terminal. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has disconnected. Within a running process, USE $PRINCIPAL:[NO]HUP[ENABLE] controls this behavior. By default, YottaDB ignores such a signal, but a process that ignores the signal may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the operator log.
+
+ydb_hupenable was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
 
 ++++++++++++++++++
 ydb_icu_version
@@ -671,6 +678,13 @@ ydb_nocenable
 ++++++++++++++++
 **ydb_nocenable (gtm_nocenable)** specifies whether the $principal terminal device should ignore <CTRL-C> or use <CTRL-C> as a signal to place the process into direct mode; a USE command can modify this device characteristic. If ydb_nocenable is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", $principal ignores <CTRL-C>. If ydb_nocenable is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", <CTRL-C> on $principal places the process into direct mode at the next opportunity (usually at a point corresponding to the beginning of the next source line).
 
++++++++++++++
+ydb_nofflf
++++++++++++++
+**ydb_nofflf (gtm_nofflf)** specifies the default WRITE # behavior for STREAM and VARIABLE format sequential files. If it is set to 1, Y[ES] or T[RUE], WRITE # writes only a form-feed <FF> character in conformance to the M standard. If it is not defined or set to 0, N[O] or F[ALSE], WRITE # writes <FF><LF> characters. The [NO]FFLF deviceparameter for USE and OPEN commands takes precedence over any value of ydb_nofflf.
+
+ydb_nofflf was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
+
 ++++++++++++++++++++++++++++++++
 ydb_non_blocked_write_retries
 ++++++++++++++++++++++++++++++++
@@ -776,7 +790,7 @@ ydb_quiet_halt
 ++++++++++++++++++++++++++
 ydb_recompile_newer_src
 ++++++++++++++++++++++++++
-**ydb_recompile_newer_src** when set to 1, t[rue], or y[es], specifies that a ZLINK/DO/GOTO/ZBREAK/ZGOTO/ZPRINT/$TEXT should recompile the :code:`.m` file only if it has a newer modification time than the corresponding :code:`.o` file. The default behavior is for the :code:`.m` file to be recompiled if its modification time is later than OR equal to that of the corresponding :code:`.o` file. ydb_recompile_newer_src was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+**ydb_recompile_newer_src** when set to 1, t[rue], or y[es], specifies that a ZLINK/DO/GOTO/ZBREAK/ZGOTO/ZPRINT/$TEXT should recompile the :code:`.m` file only if it has a newer modification time than the corresponding :code:`.o` file. The default behavior is for the :code:`.m` file to be recompiled if its modification time is later than OR equal to that of the corresponding :code:`.o` file. ydb_recompile_newer_src was added effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ++++++++++
 ydb_rel
