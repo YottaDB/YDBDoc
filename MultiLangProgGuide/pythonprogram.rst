@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -91,7 +91,7 @@ To run the tests for the Python wrapper and validate it was built and installed 
         * Option 1: using venv: :code:`python -m pytest`
         * Option 2 or Option 3: using user or global installation: :code:`python3 -m pytest`
 
-    * Note that the :code:`wordfreq.go` program randomly uses local or global variables (see :ref:`lcl-gbl-var`).
+    * Note that the :code:`test_wordfreq.py` program randomly uses local or global variables (see :ref:`lcl-gbl-var`).
 
 There are a number of test programs in the :code:`YDBPython/tests` directory that you can look at for examples of how to use the Python wrapper.
 
@@ -360,7 +360,7 @@ The Python call-in to the :code:`HelloWorld3` routine:
         print(e)
 
 
-The HelloWorld3 program in the example returns a string containing the three parameters, :code:`"1"`, :code:`"24"`, and :code:`"3"` concatenated together in reverse order: :code:`"3241"`. Note that :code:`has_retval` is set to :code:`True` to signal that a return value is expected.
+The HelloWorld3 program in the example returns a string containing the three parameters, :code:`"1"`, :code:`"17"`, and :code:`"3"` concatenated together in reverse order: :code:`"3171"`. Note that :code:`has_retval` is set to :code:`True` to signal that a return value is expected.
 
 Note that a call-in table is required when calling from Python into M. Additionally, any M routines that the call-in uses must be in a path referenced by the :code:`ydb_routines` environment variable.
 

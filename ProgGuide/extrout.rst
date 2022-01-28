@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -709,7 +709,7 @@ Second argument (only to be supplied if <ret-type> is not void): ret_val, a pre-
 
 List of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. **Note that passing the same number of arguments as the number of arguments in the Call-in table can cause undefined behavior, as the remaining arguments are picked up from uninitialized memory locations in the C stack!** All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
-The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error string corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the :ref:`ydb-zstatus` section below.
+The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error string corresponding to the failure code can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the :ref:`ydb-zstatus` section below.
 
 .. _ydb-ci-t-intf:
 
@@ -775,7 +775,7 @@ Second argument (only to be supplied if <ret-type> is not void): ret_val, a pre-
 
 List of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. **Note that passing the same number of arguments as the number of arguments in the Call-in table can cause undefined behavior, as the remaining arguments are picked up from uninitialized memory locations in the C stack!** All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
-The status value returned by ydb_cip() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error message corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus().
+The status value returned by ydb_cip() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error message corresponding to the failure code can be read into a buffer by immediately calling ydb_zstatus().
 
 .. _ydb-cip-t-intf:
 
