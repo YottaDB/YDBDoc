@@ -44,7 +44,7 @@ This section assumes that YottaDB has already been installed. One way to install
 
     * Ubuntu/Debian: :code:`sudo apt install python3-dev python3-setuptools libffi-dev`
     * RHEL/CentOS: :code:`yum install gcc python3 python3-setuptools python3-devel libffi-devel`
-    * Arch Linux: :code:`sudo yay -Sy python-{virtualenv,setuptools,pip} libffi`
+    * Arch Linux: :code:`sudo pacman -Sy python-{virtualenv,setuptools,pip} libffi`
 
 #. Set YottaDB environment variables:
 
@@ -64,7 +64,7 @@ This section assumes that YottaDB has already been installed. One way to install
             #. Install the :code:`python3-venv` package:
                 * Ubuntu/Debian: :code:`sudo apt install python3-venv`
                 * RHEL/CentOS: :code:`sudo yum install python3-virtualenv`
-                * Arch Linux: :code:`sudo yay -Sy install python3-virtualenv`
+                * Arch Linux: :code:`sudo pacman -Sy python-virtualenv`
             #. Create venv: :code:`python3 -m venv .venv`
             #. Activate venv: :code:`source .venv/bin/activate`
             #. Install into venv: :code:`pip install yottadb`
@@ -88,7 +88,7 @@ This section assumes that YottaDB has already been installed. One way to install
 
                     * Ubuntu/Debian: :code:`sudo apt install python3-venv`
                     * RHEL/CentOS: :code:`sudo yum install python3-virtualenv`
-                    * Arch Linux: :code:`sudo yay -Sy install python3-virtualenv`
+                    * Arch Linux: :code:`sudo pacman -Sy python-virtualenv`
 
                 #. Create venv: :code:`python3 -m venv .venv`
                 #. Activate venv: :code:`source .venv/bin/activate`
@@ -113,7 +113,7 @@ When building the Python wrapper from source, you may validate that it was built
 
         * Ubuntu/Debian: :code:`sudo apt install python3-pip`
         * RHEL/CentOS: :code:`sudo yum install python3-pip`
-        * Arch Linux: :code:`sudo yay -Sy install python3-pip`
+        * Arch Linux: :code:`sudo pacman -Sy python-pip`
 
     #. Use :code:`pip` to install :code:`pytest`, :code:`pytest-order` and :code:`psutil`:
 
