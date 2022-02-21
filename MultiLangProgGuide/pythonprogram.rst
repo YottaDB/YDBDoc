@@ -40,58 +40,101 @@ The YDBPython wrapper requires a minimum YottaDB release of r1.30 and is tested 
 
 This section assumes that YottaDB has already been installed. One way to install YottaDB is described in the :ref:`mlpg-quick-start` section. After completing step 2 of that guide, *Installing YottaDB*, follow the instructions below to download, install, and test the Python wrapper:
 
-#. Install prerequisites: :code:`python3-dev` and :code:`libffi-dev` packages: :code:`sudo apt install python3-dev libffi-dev`
-#. Set YottaDB environment variables: :code:`source $(pkg-config --variable=prefix yottadb)/ydb_env_set`
-#. Enter code directory :code:`cd YDBPython/`
-#. Run :code:`setup.py` to install:
+#. Install prerequisites:
 
-    #. Setup environment:
+    * Ubuntu/Debian: :code:`sudo apt install python3-dev python3-setuptools libffi-dev`
+    * RHEL/CentOS: :code:`yum install gcc python3 python3-setuptools python3-devel libffi-devel`
+    * Arch Linux: :code:`sudo yay -Sy python-{virtualenv,setuptools,pip} libffi`
 
-        #. Set the :code:`$ydb_dist` environment variable: :code:`export ydb_dist=/path/to/my/ydb/installation`
-        #. Inform the linker of the location of YDB libraries: :code:`export LD_LIBRARY_PATH=$ydb_dist`
+#. Set YottaDB environment variables:
 
-    #. Install:
+    #. Set YottaDB environment variables: :code:`source $(pkg-config --variable=prefix yottadb)/ydb_env_set`
+    #. *Optional*: If YottaDB is built with Address Sanitization (ASAN) enabled, :code:`LD_PRELOAD` and :code:`ASAN_OPTIONS` must be set:
 
-        * Option 1: install in venv (preferred method)
+        * :code:`export ASAN_OPTIONS="detect_leaks=0:disable_coredump=0:unmap_shadow_on_exit=1:abort_on_error=1"`
+        * :code:`export LD_PRELOAD=$(gcc -print-file-name=libasan.so)`
 
-            #. Install the :code:`python3-venv` package: :code:`sudo apt install python3-venv`
+#. Install YDBPython:
+
+    * *Option 1*: From PyPI:
+
+        * *Option 1*: Install in :code:`venv`:
+
+            #. Enter directory where install is desired, e.g. :code:`cd my-python-project`
+            #. Install the :code:`python3-venv` package:
+                * Ubuntu/Debian: :code:`sudo apt install python3-venv`
+                * RHEL/CentOS: :code:`sudo yum install python3-virtualenv`
+                * Arch Linux: :code:`sudo yay -Sy install python3-virtualenv`
             #. Create venv: :code:`python3 -m venv .venv`
             #. Activate venv: :code:`source .venv/bin/activate`
-            #. Install into venv: :code:`python setup.py install`
+            #. Install into venv: :code:`pip install yottadb`
 
-        * Option 2: install to user
+        * *Option 2*: Install to user:
 
-            #. This method requires :code:`setuptools`: :code:`sudo apt install python3-setuptools`
-            #. Install for use by user: :code:`python3 setup.py install --user`
+            * :code:`pip3 install yottadb`
 
-        * Option 3: Install globally (not suggested)
+        * *Option 3*: Install globally (not suggested):
 
-            #. This method also requires setuptools: :code:`sudo apt install python3-setuptools`
-            #. Install package globally: :code:`sudo -E python3 setup.py install`
+            * :code:`sudo -E pip3 install yottadb`
+
+    * *Option 2*: From source:
+
+        #. Enter code directory :code:`cd YDBPython/`
+        #. Run :code:`setup.py` to install:
+
+            * *Option 1*: Install in :code:`venv`:
+
+                #. Install the :code:`python3-venv` package:
+
+                    * Ubuntu/Debian: :code:`sudo apt install python3-venv`
+                    * RHEL/CentOS: :code:`sudo yum install python3-virtualenv`
+                    * Arch Linux: :code:`sudo yay -Sy install python3-virtualenv`
+
+                #. Create venv: :code:`python3 -m venv .venv`
+                #. Activate venv: :code:`source .venv/bin/activate`
+                #. Install into venv: :code:`python setup.py install`
+
+            * *Option 2*: Install to user:
+
+                * :code:`python3 setup.py install --user`
+
+            * *Option 3*: Install globally (not suggested):
+
+                * :code:`sudo -E python3 setup.py install`
 
 In the above instructions, note that :code:`python3` command is used when using a global Python 3 installation, i.e. one installed for the current system using e.g. `apt-get install`. The :code:`python` command is used when operating within an active virtual environment ("venv") as described above. The reason for the discrepancy is that many systems map the :code:`python` command to Python 2, and use :code:`python3` to call a Python 3 installation. Within a virtual environment, Python binary paths are remapped to allow the :code:`python` command to reference Python 3. The same principle applies to the :code:`pip` command, with :code:`pip3` referencing the Python 3 version of the :code:`pip` command. :code:`pip` references the Python 2 implementation unless called within a virtual environment, where :code:`pip` is an alias for :code:`pip3`.
 
-To run the tests for the Python wrapper and validate it was built and installed correctly:
+When building the Python wrapper from source, you may validate that it was built and installed correctly by running its test suite:
 
-#. Install :code:`pytest` and :code:`psutil`
+#. Enter the directory containing the Python wrapper code repository, e.g. :code:`cd YDBPython/`
+#. Install :code:`pytest`, :code:`pytest-order` and :code:`psutil`:
 
-    #. If :code:`pip` for python3 is not installed do so: :code:`sudo apt install python3-pip`
-    #. Use :code:`pip` to install :code:`pytest` and :code:`psutil`
+    #. If :code:`pip` for python3 is not installed do so:
 
-        * Option 1: install into venv
+        * Ubuntu/Debian: :code:`sudo apt install python3-pip`
+        * RHEL/CentOS: :code:`sudo yum install python3-pip`
+        * Arch Linux: :code:`sudo yay -Sy install python3-pip`
 
-            #. Activate venv if it is not already: :code:`source .venv/bin/activate`
-            #. Install: :code:`pip install pytest psutil`
+    #. Use :code:`pip` to install :code:`pytest`, :code:`pytest-order` and :code:`psutil`:
 
-        * Option 2: install for user: :code:`pip3 install --user pytest`
-        * Option 3: install globally (not suggested): :code:`sudo pip3 install pytest`
+        * *Option 1*: Install into :code:`venv`:
+
+            #. Activate :code:`venv` if it is not already: :code:`source .venv/bin/activate`
+            #. Install: :code:`pip install pytest pytest-order psutil`
+
+        * *Option 2*: Install for user: :code:`pip3 install --user pytest pytest-order psutil`
+        * *Option 3*: Install globally (not suggested): :code:`sudo pip3 install pytest pytest-order psutil`
 
 #. Run the tests:
 
-        * Option 1: using venv: :code:`python -m pytest`
-        * Option 2 or Option 3: using user or global installation: :code:`python3 -m pytest`
-
+    * *Option 1*: in :code:`venv`: :code:`python -m pytest`
+    * *Option 2*: with user installation: :code:`python3 -m pytest`
+    * *Option 3*: with global installation (not suggested): :code:`python3 -m pytest`
     * Note that the :code:`test_wordfreq.py` program randomly uses local or global variables (see :ref:`lcl-gbl-var`).
+
+#. *Optional*: Cleanup between tests:
+
+    * When making changes to code between test runs, some cleanup may be needed to prevent new changes being ignored due to Python caching. To clean up these files: `for artifact in $(cat .gitignore); do rm -rf $artifact; done`. Note that this will delete all files listed in `.gitignore`, including core files. If these or any other such files need to be retained, move or rename them before running the aforementioned command.
 
 There are a number of test programs in the :code:`YDBPython/tests` directory that you can look at for examples of how to use the Python wrapper.
 
@@ -101,16 +144,15 @@ If you would like to import the :code:`yottadb` module in a location outside of 
 
 #. Import :code:`yottadb` from an arbitrary directory:
 
-        * Approach 1: using a local YDBPython repository, e.g. as built above:
+        * *Approach 1*: using a local YDBPython repository, e.g. as built above:
 
-            * Option 1: using venv: :code:`pip install --editable /path/to/YDBPython/directory`
-            * Option 2 or Option 3: using user or global installation: :code:`pip3 install --editable /path/to/YDBPython/directory`
+            * *Option 1*: using venv: :code:`pip install --editable /path/to/YDBPython/directory`
+            * *Option 2 or Option 3*: using user or global installation: :code:`pip3 install --editable /path/to/YDBPython/directory`
 
-        * Approach 2: using the PyPi package:
+        * *Approach 2*: using the PyPi package:
 
-            * Option 1: using venv: :code:`pip install yottadb`
-            * Option 2 or Option 3: using user or global installation: :code:`pip3 install yottadb`
-
+            * *Option 1*: using venv: :code:`pip install yottadb`
+            * *Option 2 or Option 3*: using user or global installation: :code:`pip3 install yottadb`
 
 Note that if using a virtual environment ("venv"), you will need to activate it with :code:`source .venv/bin/activate` before using YDBPython in each new terminal session, and not only at installation time.
 
