@@ -1,3 +1,3 @@
 sayhelloM
-	set ^hello("M")="Hola, universe!"
+	set ^hello("M")="Привіт Світ"
 	quit

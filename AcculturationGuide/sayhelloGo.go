@@ -7,5 +7,5 @@ import (
 func main() {
 
 	defer yottadb.Exit()
-	_ = yottadb.SetValE(yottadb.NOTTP, nil, "Aloha, galaxy!", "^hello", []string{"Go"})
+	_ = yottadb.SetValE(yottadb.NOTTP, nil, "สวัสดีชาวโลก", "^hello", []string{"Go"})
 }

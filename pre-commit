@@ -2,7 +2,7 @@
 #
 #################################################################
 #                                                               #
-# Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.       #
+# Copyright (c) 2021-2022 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -40,7 +40,7 @@ foreach file ($filelist)
 	endif
 	if (0 == $skip) then
 		# Below is a list of specific files that do not have a copyright so ignore them
-		set skiplist = "COPYING README.md"
+		set skiplist = "COPYING README.md AcculturationGuide/sayhello*"
 		foreach skipfile ($skiplist)
 			if ($file == $skipfile) then
 				set skip = 1
