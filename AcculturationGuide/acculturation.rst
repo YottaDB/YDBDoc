@@ -19,7 +19,7 @@ Acculturation Workshop
 
 Welcome to the YottaDB Acculturation Workshop!
 
-Copyright © 2017-2021 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
+Copyright © 2017-2022 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
 
 Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsidiaries. All Rights Reserved.
 
@@ -340,7 +340,7 @@ YottaDB includes a complete language implementation for M. Download the `sayhell
     26-AUG-2020  15:12:49 ZWR
     ^hello("C")="Hello, world!"
     ^hello("Go")="สวัสดีชาวโลก"
-    ^hello("M")="Приветствую, мир!"
+    ^hello("M")="Привіт Світ"
     %YDB-I-RECORDSTAT, ^hello:        Key cnt: 3  max subsc len: 11  max rec len: 36  max node len: 44
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 3  max subsc len: 11  max rec len: 36  max node len: 44
     yottadbuser@yottadbworkshop:~/.yottadb$
@@ -402,7 +402,7 @@ Download the `sayhelloPerl.pl <./sayhelloPerl.pl>`_ program into the :code:`yott
    26-AUG-2020  15:24:21 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
-   ^hello("M")="Приветствую, мир!"
+   ^hello("M")="Привіт Світ"
    ^hello("Perl")="Grüẞ Gott Welt"
    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 4  max subsc len: 13  max rec len: 36  max node len: 44
    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 4  max subsc len: 13  max rec len: 36  max node len: 44
@@ -412,24 +412,27 @@ Download the `sayhelloPerl.pl <./sayhelloPerl.pl>`_ program into the :code:`yott
 Access from Rust
 ++++++++++++++++++
 
-YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_. Run the `say_hello_rust <https://gitlab.com/YottaDB/Lang/YDBRust/-/raw/master/examples/say_hello_rust.rs>`_ example, which will add another node in the database:
+YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_. Download the `sayhello_rust <./sayhello_rust.rs>`_ example, which will add another node in the database:
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~$ git clone --quiet https://gitlab.com/YottaDB/Lang/YDBRust/ # Do this only once for the Acculturation Guide
-   yottadbuser@yottadbworkshop:~$ cd YDBRust
-   yottadbuser@yottadbworkshop:~/YDBRust$ cargo run --quiet --example say_hello_rust # May take some time the first time
-   yottadbuser@yottadbworkshop:~/YDBRust$ mupip extract -format=zwr -select=hello -stdout
+   yottadbuser@yottadbworkshop:~$ cargo new sayhello_rust
+   yottadbuser@yottadbworkshop:~$ cd sayhello_rust
+   yottadbuser@yottadbworkshop:~/sayhello_rust$ echo 'yottadb = "2.0.0"' >> Cargo.toml
+   yottadbuser@yottadbworkshop:~/sayhello_rust$ # Place the downloaded sayhello_rust.rs program as src/main.rs
+   yottadbuser@yottadbworkshop:~/sayhello_rust$ cargo run
+   ...
+   yottadbuser@yottadbworkshop:~/sayhello_rust$ mupip extract -format=zwr -select=hello -stdout
    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r130/mupip extract -format=zwr -select=hello -stdout UTF-8
    28-AUG-2020  15:34:04 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
-   ^hello("M")="Приветствую, мир!"
+   ^hello("M")="Привіт Світ"
    ^hello("Perl")="Grüẞ Gott Welt"
-   ^hello("Rust")="こんにちは"
+   ^hello("Rust")="ハローワールド"
    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 5  max subsc len: 13  max rec len: 36  max node len: 44
    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 5  max subsc len: 13  max rec len: 36  max node len: 44
-   yottadbuser@yottadbworkshop:~/YDBRust$
+   yottadbuser@yottadbworkshop:~/sayhello_rust$
 
 ----------
 Journaling
