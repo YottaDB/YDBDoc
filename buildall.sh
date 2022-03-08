@@ -1,7 +1,7 @@
 #!/bin/bash
  ###############################################################
  #                                                             #
- # Copyright (c) 2019-2021 YottaDB LLC and/or its subsidiaries.#
+ # Copyright (c) 2019-2022 YottaDB LLC and/or its subsidiaries.#
  # All rights reserved.                                        #
  #                                                             #
  #     This source code contains the intellectual property     #
@@ -60,7 +60,8 @@ for directory in "${DIRECTORIES[@]}"; do
 	pushd $directory
 	output="$target/${directory%?}"
 	rsync _build/html/ "$output/"
-	rsync *.c *.m *.go *.pl "$output/"
+	# Update the following line as additional languages are supported
+	rsync *.c *.m *.go *.pl *.py *.rs "$output/"
 	popd
 done
 cp index.html "$target"
