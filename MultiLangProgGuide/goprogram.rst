@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2021 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -99,6 +99,67 @@ In the documentation:
 
 - Error codes specific to each function are noted. However, common errors can also be returned. For example, while the `Go BufferT ValStr()`_ method can return INVSTRLEN, it can also return errors from the YottaDB engine.
 - An error name such as INVSTRLEN refers to the underlying error, whether application code references the numeric value or the string.
+
+.. _go-err-ret-codes:
+
+~~~~~~~~~~~~~~~~~~~~~
+Go Error Return Codes
+~~~~~~~~~~~~~~~~~~~~~
+
+In addition to the errors discussed in the :ref:`C Error Return Codes <err-ret-codes>` the Go wrapper has additional errors unique to it.
+
+^^^^^^^^^^^^^
+DBRNDWNBYPASS
+^^^^^^^^^^^^^
+
+The `DBRNDWNBYPASS <../MessageRecovery/errors.html#dbrndwnbypass>`_ message is sent to the syslog.
+
+.. _invlknmpairlist:
+
+^^^^^^^^^^^^^^^
+INVLKNMPAIRLIST
+^^^^^^^^^^^^^^^
+
+INVLKNMPAIRLIST, Invalid lockname/subscript pair list (uneven number of lockname/subscript parameters)
+
+Compile Time Error: The :code:`namesnsubs` parameter of :ref:`go-locke` is not a series of alternating :code:`string` and :code:`[]string` parameters.
+
+Action: This is an application syntax bug. Fix the application code.
+
+^^^^^^^^^^^^^
+SIGACKTIMEOUT
+^^^^^^^^^^^^^
+
+The `SIGACKTIMEOUT <../MessageRecovery/errors.html#sigacktimeout>`_ message is sent to the syslog.
+
+^^^^^^^^^^^^^^^
+SIGGORTNTIMEOUT
+^^^^^^^^^^^^^^^
+
+The `SIGGORTNTIMEOUT <../MessageRecovery/errors.html#siggortntimeout>`_ message is sent to the syslog.
+
+.. _structunallocd:
+
+^^^^^^^^^^^^^^
+STRUCTUNALLOCD
+^^^^^^^^^^^^^^
+
+STRUCTUNALLOCD, Structure not previously called with Alloc() method
+
+Run Time Error: The corresponding :code:`Alloc()` method has not been executed for a structure, e.g., a :code:`BufferT`, passed to a method.
+
+Action: This is an application logic bug. Fix the application code.
+
+------------
+Go Constants
+------------
+
+The file :code:`yottadb.go` in the Go wrapper defines a number of constants used to initialize variables that control signal handling.
+
+- :code:`DefaultMaximumNormalExitWait` is initial value of :code:`MaximumNormalExitWait`, with a default of 60 seconds.
+- :code:`DefaultMaximumPanicExitWait` is the initial value of :code:`MaximumPanicExitWait`, with a default of 3 seconds.
+- :code:`DefaultMaximumSigShutDownWait` is initial value of :code:`MaximumSigShutDownWait`, with a default of 5 seconds.
+- :code:`DefaultMaximumSigAckWait` is initial value of :code:`MaximumSigAckWait`, with a default if 10 seconds.
 
 -----------------------
 Go Symbolic Constants
@@ -271,6 +332,16 @@ Matching `Go KeyT IncrST()`_, :code:`IncrE()` wraps :ref:`ydb-incr-s-st-fn` to a
 
 With a :code:`nil` value for :code:`incr`, the default increment is 1. Note that the value of the empty string coerced to an integer is zero, but 1 is a more useful default value for an omitted parameter in this case.
 
+++++++++++++
+Go Init()
+++++++++++++
+
+.. code-block:: go
+
+        func Init()
+
+The first invocation of any EasyAPI and SimpleAPI function or method automatically initializes the YottaDB runtime system. Applications that need to initialize YottaDB prior to that, can call :code:`Init()`. Calling :code:`Init()` when the YottaDB runtime system is already initialized is a no-op.
+
 +++++++++++++++++++++
 Go IsLittleEndian()
 +++++++++++++++++++++
@@ -291,6 +362,8 @@ Go LockDecrE()
 
 Matching `Go KeyT LockDecrST()`_ :code:`LockDecrE()` wraps :ref:`ydb-lock-decr-s-st-fn` to decrement the count of the lock name referenced, releasing it if the count goes to zero or ignoring the invocation if the process does not hold the lock.
 
+.. _go-locke:
+
 ++++++++++++
 Go LockE()
 ++++++++++++
@@ -307,7 +380,7 @@ If lock resources are specified, upon return, the process will have acquired all
 
 - If :code:`timeoutNsec` exceeds :code:`yottadb.YDB_MAX_TIME_NSEC`, the function returns with an error return of TIME2LONG.
 - If the lock resource names exceeds the maximum number supported (currently 11), the function returns a PARMOFLOW error.
-- If :code:`namesnsubs` is not a series of alternating :code:`string` and :code:`[]string` parameters, the function returns the INVLNPAIRLIST error.
+- If :code:`namesnsubs` is not a series of alternating :code:`string` and :code:`[]string` parameters, the function returns the :ref:`invlknmpairlist` error.
 - If it is able to aquire the lock resource(s) within :code:`timeoutNsec` nanoseconds, the function returns holding the lock resource(s); otherwise it returns LOCKTIMEOUT. If :code:`timeoutNsec` is zero, the function makes exactly one attempt to acquire the lock resource(s).
 
 ++++++++++++++++
@@ -389,6 +462,18 @@ Matching `Go KeyT NodePrevST()`_, :code:`NodePrevE()` wraps :ref:`ydb-node-previ
 - If there is a previous node, it returns the subscripts of that previous node; an empty string array if that previous node is the root.
 - If there is no node preceding the specified node, the function returns the NODEEND error.
 
++++++++++++++++++++++++++++
+Go RegisterSignalNotify()
++++++++++++++++++++++++++++
+
+.. code-block:: go
+
+        func RegisterSignalNotify(sig syscall.Signal, notifyChan, ackChan chan bool, notifyWhen YDBHandlerFlag) error
+
+Requests that when the wrapper receives the notification that a given signal (:code:`sig`) has occurred, then if a registration has been done with this function for that signal, we also notify a user channel that the signal has occurred. How and when that notification is sent (relative to YottaDB's own handling of the signal) is controlled by the :code:`YDBHandlerFlag` setting. The flag descriptions are described in the :ref:`go-using-signals` subsection of the Go Programming Notes.
+
+Both :code:`notifyChan` and :code:`ackChan` are channels passed in by the caller. The :code:`notifyChan` is the channel the caller wishes to be notified on when the specified signal occurs. The :code:`ackChan` is the channel that, once the notified routine is done doing whatever they were going to do, the notify routine should post something (any bool) on this channel to notify the wrapper they are done. Signal processing then proceeds depending on when the user notification occurred. Note that before the dispatcher notifies the :code:`notifyChan` user channel, the :code:`ackChan` channel is drained.
+
 +++++++++++++++
 Go ReleaseT()
 +++++++++++++++
@@ -454,6 +539,16 @@ Go TpE()
 Matching `Go BufferTArray TpST()`_, :code:`TpE()` wraps :code:`ydb-tp-s-st-fn` to implement :ref:`txn-proc`.
 
 Refer to `Go BufferTArray TpST()`_ for a more detailed discussion of YottaDB Go transaction processing.
+
++++++++++++++++++++++++++++++
+Go UnRegisterSignalNotify()
++++++++++++++++++++++++++++++
+
+.. code-block:: go
+
+        func UnRegisterSignalNotify(sig syscall.Signal) error
+
+Requests a halt to signal notifications for the specified signal. If the signal is a signal that YottaDB does not allow, currently, the wrapper raises a panic (like it does for all other wrapper errors) though this is likely to change in a subsequent release. If the signal is a valid signal but is not being monitored, no error results. In that case, the call is a no-op.
 
 +++++++++++
 Go ValE()
@@ -536,7 +631,7 @@ Go BufferT LenAlloc()
 
         func (buft *BufferT) LenAlloc(tptoken uint64, errstr *BufferT) (uint32, error)
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - Otherwise, return the :code:`len_alloc` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`buft`.
 
 ++++++++++++++++++++++
@@ -547,7 +642,7 @@ Go BufferT LenUsed()
 
         func (buft *BufferT) LenUsed(tptoken uint64, errstr *BufferT) (uint32, error)
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure is greater than its :code:`len_alloc` field (owing to a prior INVSTRLEN error), return an INVSTRLEN error and the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`buft`.
 - Otherwise, return the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`buft`.
 
@@ -561,7 +656,7 @@ Go BufferT SetLenUsed()
 
 Use this method to change the length of a used substring of the contents of the buffer referenced by the :code:`buf_addr` field of the referenced :code:`C.ydb_buffer_t`.
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`newLen` is greater than the :code:`len_alloc` field of the referenced :code:`C.ydb_buffer_t`, make no changes and return with an error return of INVSTRLEN.
 - Otherwise, set the :code:`len_used` field of the referenced :code:`C.ydb_buffer_t` to :code:`newLen`.
 
@@ -575,7 +670,7 @@ Go BufferT SetValBAry()
 
         func (buft *BufferT) SetValBAry(tptoken uint64, errstr *BufferT, value []byte) error
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If the length of :code:`value` is greater than the :code:`len_alloc` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`buft`, make no changes and return INVSTRLEN.
 - Otherwise, copy the bytes of :code:`value` to the referenced buffer and set the :code:`len_used` field to the length of :code:`value`.
 
@@ -587,7 +682,7 @@ Go BufferT SetValStr()
 
         func (buft *BufferT) SetValStr(tptoken uint64, errstr *BufferT, value string) error
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If the length of :code:`value` is greater than the :code:`len_alloc` field of the :code:`C.ydb_buffer_t` structure referenced by :code:`buft`, make no changes and return INVSTRLEN.
 - Otherwise, copy the bytes of :code:`value` to the referenced buffer and set the :code:`len_used` field to the length of :code:`value`.
 
@@ -601,7 +696,7 @@ Go BufferT Str2ZwrST()
 
 The method wraps :ref:`ydb-str2zwr-s-st-fn` to provide the string in :ref:`zwrite-format`.
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`len_alloc` is not large enough, set :code:`len_used` to the required length, and return an INVSTRLEN error. In this case, :code:`len_used` will be greater than :code:`len_alloc` until corrected by application code, and the value referenced by :code:`zwr` is unspecified.
 - Otherwise, set the buffer referenced by :code:`buf_addr` to the :ref:`zwrite-format` string, and set :code:`len_used` to the length.
 
@@ -615,7 +710,7 @@ Go BufferT ValBAry()
 
         func (buft *BufferT) ValBAry(tptoken uint64, errstr *BufferT) ([]byte, error)
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure is greater than its :code:`len_alloc` field (owing to a prior INVSTRLEN error), return an INVSTRLEN error and :code:`len_alloc` bytes as a byte array.
 - Otherwise, return :code:`len_used` bytes of the buffer as a byte array.
 
@@ -627,7 +722,7 @@ Go BufferT ValStr()
 
         func (buft *BufferT) ValStr(tptoken uint64, errstr *BufferT) (string, error)
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure is greater than its :code:`len_alloc` field (owing to a prior INVSTRLEN error), return an INVSTRLEN error and :code:`len_alloc` bytes as a string.
 - Otherwise, return :code:`len_used` bytes of the buffer as a string.
 
@@ -641,7 +736,7 @@ Go BufferT Zwr2StrST()
 
 This method wraps :ref:`ydb-zwr2str-s-st-fn` and is the inverse of `Go BufferT Str2ZwrST()`_.
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`len_alloc` is not large enough, set :code:`len_used` to the required length, and return an INVSTRLEN error. In this case, :code:`len_used` will be greater than :code:`len_alloc` until corrected by application code.
 - If :code:`str` has errors and is not in valid :ref:`zwrite-format`, set :code:`len_used` to zero, and return the error code returned by :ref:`ydb-zwr2str-s-st-fn` e.g., INVZWRITECHAR.
 - Otherwise, set the buffer referenced by :code:`buf_addr` to the unencoded string, set :code:`len_used` to the length.
@@ -718,7 +813,7 @@ Go BufferTArray ElemAlloc()
 
         func (buftary *BufferTArray) ElemAlloc() uint32
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - Otherwise, return the number of allocated buffers.
 
 ++++++++++++++++++++++++++++++++
@@ -729,7 +824,7 @@ Go BufferTArray ElemLenAlloc()
 
         func (buftary *BufferTArray) ElemLenAlloc(tptoken uint64) uint32
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - Otherwise, return the :code:`len_alloc` from the :code:`C.ydb_buffer_t` structures referenced by :code:`buftary`, all of which have the same value.
 
 +++++++++++++++++++++++++++++++
@@ -740,7 +835,7 @@ Go BufferTArray ElemLenUsed()
 
         func (buftary *BufferTArray) ElemLenUsed(tptoken uint64, errstr *BufferT, idx uint32) (uint32, error)
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`idx` is greater than or equal to the :code:`elemsAlloc` of the :code:`BufferTArray` structure, return with an error return of INSUFFSUBS.
 - Otherwise, return the :code:`len_used` field of the array element specifed by :code:`idx` of the :code:`C.ydb_buffer_t` array referenced by :code:`buftary`.
 
@@ -752,7 +847,7 @@ Go BufferTArray ElemUsed()
 
         func (buftary *BufferTArray) ElemUsed() uint32
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - Otherwise, return the value of the :code:`elemsUsed` field.
 
 ++++++++++++++++++++++++
@@ -775,7 +870,7 @@ Go BufferTArray SetElemLenUsed()
 
 Use this method to set the number of bytes in :code:`C.ydb_buffer_t` structure referenced by :code:`buft` of the array element specified by :code:`idx`, for example to change the length of a used substring of the contents of the buffer referenced by the :code:`buf_addr` field of the referenced :code:`C.ydb_buffer_t`.
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc`, make no changes and return an INSUFFSUBS error.
 - If :code:`newLen` is greater than the :code:`len_alloc` field of the referenced :code:`C.ydb_buffer_t`, make no changes and return an INVSTRLEN error.
 - Otherwise, set the :code:`len_used` field of the referenced :code:`C.ydb_buffer_t` to :code:`newLen`.
@@ -792,7 +887,7 @@ Go BufferTArray SetElemUsed()
 
 Use this method to set the current number of valid strings (subscripts or variable names) in the :code:`BufferTArray`.
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`newUsed` is greater than :code:`elemsAlloc`, make no changes and return with an error return of INSUFFSUBS.
 - Otherwise, set :code:`elemsUsed` to :code:`newUsed`.
 
@@ -806,7 +901,7 @@ Go BufferTArray SetValBAry()
 
         func (buftary *BufferTArray) SetValBAry(tptoken uint64, errstr *BufferT, idx uint32, value []byte) error
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc` make no changes and return with an error return of INSUFFSUBS.
 - If the length of :code:`value` is greater than the :code:`len_alloc` field of the array element specified by :code:`idx`, make no changes, and return INVSTRLEN.
 - Otherwise, copy the bytes of :code:`value` to the referenced buffer and set the :code:`len_used` field to the length of :code:`value`.
@@ -819,7 +914,7 @@ Go BufferTArray SetValStr()
 
         func (buftary *BufferTArray) SetValStr(tptoken uint64, errstr *BufferT, idx uint32, value string) error
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc` make no changes and return with an error return of INSUFFSUBS.
 - If the length of :code:`value` is greater than the :code:`len_alloc` field of the array element specified by :code:`idx`, make no changes, and return INVSTRLEN.
 - Otherwise, copy the bytes of :code:`value` to the referenced buffer and set the :code:`len_used` field to the length of :code:`value`.
@@ -849,7 +944,7 @@ A case-insensitive value of "BA" or "BATCH" for :code:`transid` indicates to Yot
 Please see both the description of :ref:`ydb-tp-s-st-fn` and the sections on :ref:`txn-proc` and :ref:`threads-txn-proc` for details.
 
 .. note::
-   If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function or method that it calls, it *must* return that value to the calling :code:`TpE()` or :code:`TpST()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
+	If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function or method that it calls, it *must* return that value to the calling :code:`TpE()` or :code:`TpST()`. Failure to do so could result in application level data inconsistencies and hard to debug application code.
 
 +++++++++++++++++++++++++++
 Go BufferTArray ValBAry()
@@ -859,7 +954,7 @@ Go BufferTArray ValBAry()
 
         func (buftary *BufferTArray) ValBAry(tptoken uint64, errstr *BufferT, idx uint32) ([]byte, error)
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc`, return a zero length byte array and an error return of INSUFFSUBS.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure specified by :code:`idx` is greater than its :code:`len_alloc` field (owing to a previous INVSTRLEN error), return a byte array containing the :code:`len_alloc` bytes at :code:`buf_addr` and an INVSTRLEN error.
 - Otherwise, return a byte array containing the :code:`len_used` bytes at :code:`buf_addr`.
@@ -872,7 +967,7 @@ Go BufferTArray ValStr()
 
         func (buftary *BufferTArray) ValStr(tptoken uint64, errstr *BufferT, idx uint32) (string, error)
 
-- If the underlying structures have not yet been allocated, return the STRUCTNOTALLOCD error.
+- If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`idx` is greater than or equal to :code:`elemsAlloc`, return a zero length string and an error return of INSUFFSUBS.
 - If the :code:`len_used` field of the :code:`C.ydb_buffer_t` structure specified by :code:`idx` is greater than its :code:`len_alloc` field (owing to a previous INVSTRLEN error), return a string containing the :code:`len_alloc` bytes at :code:`buf_addr` and the INVSTRLEN error.
 - Otherwise, return a string containing the :code:`len_used` bytes at :code:`buf_addr`.
@@ -1160,3 +1255,71 @@ In order to avoid restricting Go applications to calling the single-threaded Yot
 Directly calling YottaDB C API functions bypasses this protection, and may result in unpredictable results (Murphy says that unpredictable results will occur when you least expect them). Therefore, Go application code should only call the YottaDB API exposed in this `Programming in Go`_ section.
 
 Goroutines in a process are dynamically mapped by the Go implementation to run on threads within that process. Since YottaDB resources are held by the process rather than by the thread or the Goroutine, refer to the :ref:`threads` discussion about the need for applications to avoid race conditions when accessing YottaDB resources.
+
+.. _go-using-signals:
+
+++++++++++++++++
+Go Using Signals
+++++++++++++++++
+
+As discussed in :ref:`Signals <signals>`, the YottaDB runtime system uses signals. When the Go wrapper is in use, the YottaDB runtime system receives signals from the Go runtime system through the Go wrapper, instead of directly from the operating system. The signals for which the wrapper registers handlers with the Go runtime system are the following (fatal signals marked with '*'):
+
+- syscall.SIGABRT *
+- syscall.SIGALRM
+- syscall.SIGBUS *
+- syscall.SIGCONT
+- syscall.SIGFPE *
+- syscall.SIGHUP
+- syscall.SIGILL *
+- syscall.SIGINT *
+- syscall.SIGQUIT *
+- syscall.SIGSEGV *
+- syscall.SIGTERM *
+- syscall.SIGTRAP *
+- syscall.SIGTSTP
+- syscall.SIGTTIN
+- syscall.SIGTTOU
+- syscall.SIGURG
+- syscall.SIGUSR1
+
+In addition, the following two signals have the same signal numbers as other handled signals:
+
+- syscall.SIGIO is a duplicate of syscall.SIGURG.
+- syscall.SIGIOT is a duplicate of syscall.SIGABRT.
+
+We recommend against use of :code:`signal.Notify()` by applications that need to be notified of signal receipt especially for fatal signals. If application logic uses :code:`signal.Notify()` to be so notified, both it and YottaDB are notified concurrently about the signal. The YottaDB signal handler will cleanly shut the YottaDB engine and terminate the process with a :code:`panic()`, potentially before the application signal handling logic finishes. Conversely, if the application signal handler finishes its logic and terminates the process with a :code:`panic()` that may leave the YottaDB database in an unclean state, potentially with damage to its internal structures.
+
+Instead, the YottaDB Go wrapper provides a notification facility (:code:`yottadb.RegisterSignalNotify()`) for coordination between the YottaDB signal handler and that of the application code. An application can control both when, and whether, the YottaDB signal handler executes, in relation to the application signal handler. There are two functions:
+
+.. code-block:: go
+
+        func RegisterSignalNotify(sig syscall.Signal, notifyChan, ackChan chan bool, notifyWhen YDBHandlerFlag) error
+        func UnRegisterSignalNotify(sig syscall.Signal) error
+
+The parameters are:
+
+- :code:`sig` - the signal being registered or unregistered.
+
+- :code:`notifyChan` - the channel to which YottaDB posts, to notify application code of receipt of the signal.
+
+- :code:`ackChan` - the channel to which the application code posts, to notify YottaDB that it has completed its work.
+
+- :code:`notifyWhen` - specifies when or if the YottaDB signal hander runs, with respect to the application signal handler. Choices are:
+
+  - :code:`yottadb.NotifyBeforeYDBSigHandler` - YottaDB notifies the application handler BEFORE the YottaDB signal handler runs. YottaDB expects the application to post to :code:`ackChan` when it completes, after which the YottaDB signal handler runs.
+  - :code:`yottadb.NotifyAfterYDBSigHandler` - YottaDB notifies the application handler AFTER the YottaDB signal handler runs. When it completes, YottaDB posts to :code:`notifyChan`, and waits for the application to post to :code:`ackChan`, indicating that YottaDB can continue. Note since YDB processing for fatal signals issues a :code:`panic()`, :code:`yottadb.NotifyAfterYDBSigHandler` is unsuitable for fatal signals.
+  - :code:`yottadb.NotifyAsyncYDBSigHandler` - YottaDB notifies the application signal handler and runs its signal handler concurrently. For practical purposes, this is equivalent to application code using :code:`signal.Notify()`. :code:`ackChan` is ignored in this case.
+  - :code:`yottadb.NotifyInsteadOfYDBSigHandler` - The application handler is notified but the YottaDB handler is not run. This parameter value should *never* be used for SIGALRM since YottaDB requires that signal internally for correct database operation. For other signals, we recommend against use of this parameter value unless you either (a) know what you are doing, or (b) are following a recommendation made by YottaDB for your specific situtation.
+
+Note that input/output flow control signals (SIGTSTP, SIGTTIN, SIGTTOU) are excluded from this support as the YottaDB runtime performs no terminal IO. Applications that include logic coded in multiple languages (e.g., Go and C) require careful design of IO flow control signal handling whether or not the YottaDB runtime is active.
+
+YottaDB has a strong need to carefully shutdown databases at process end making sure its buffers are all flushed out, releasing held M locks, etc. To satisfy this requirement, use the following safe programming practices:
+
+#. Always put a :code:`defer yottadb.Exit()` in the main program before invoking YottaDB, which allows YottaDB to shutdown correctly. This takes care of the normal exit case where goroutines terminate and control reverts to the main program, which eventually terminates when it exits.
+#. Avoid application exits that use "out-of-band" exits (e.g. :code:`os.Exit()`). This bypasses orderly rundown of all goroutines which we have found to be important for a clean shutdown.
+#. Ensure that all goroutines that have called YottaDB have completed and shutdown terminating the application process. Failure to do so may cause YottaDB rundown procedures to be cut short or bypassed, resulting in potential database damage.
+#. Do not use :code:`signal.Notify()` for any fatal signal. Instead use :code:`yottadb.RegisterSignalNotify()`.
+#. Do not use SIGUSR2 which YottaDB uses internally, and will replace any application handler for SIGUSR2 with its own.
+
+.. note::
+	This discussion applies *only* to *asynchronous* signals as defined by Go, i.e., signals that are sent to the process by itself, e.g., with :code:`syscall.Kill()`. It does *not* apply to *synchronous* signals that are signals that are raised by the hardware itself or by the OS as a consequence of executing code, i.e., SIGBUS, SIGFPE, SIGILL and SIGSEGV. A process that receives a synchronous signal will terminate without shutting down the database properly. Should such an event occur, you should verify database integrity when convenient (see `MUPIP INTEG <../AdminOpsGuide/dbmgmt.html#integ>`_), and take appropriate action if damage is encountered (see `MUPIP JOURNAL RECOVER BACKWARD <../AdminOpsGuide/ydbjournal.html#backward-recovery>`_ / `MUPIP JOURNAL ROLLBACK BACKWARD <../AdminOpsGuide/ydbjournal.html#rollback-on-line-noo-nline>`_).

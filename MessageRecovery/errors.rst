@@ -3076,6 +3076,18 @@ Run Time Error: This indicates that a process encountered a problem attempting t
 
 Action: Refer to the associated messages for more information.
 
+.. _dbrndwnbypass:
+
+--------------
+DBRNDWNBYPASS
+--------------
+
+DBRNDWNBYPASS, YottaDB database rundown may have been bypassed due to timeout - run MUPIP JOURNAL ROLLBACK BACKWARD / MUPIP JOURNAL RECOVER BACKWARD / MUPIP RUNDOWN
+
+Run Time Warning (Go wrapper specific): When the database rundown invoked by :code:`yottadb.Exit()` takes longer than :code:`MaximumNormalExitWait` (for normal exits) / :code:`MaximumPanicExitWait` (for fatal signal exits) seconds, the process terminates without waiting for the rundown to complete. See `Go Using Signals <../MultiLangProgGuide/goprogram.html#go-using-signals>`_ for more information.
+
+Action: If the exiting process was not the last process accessing any file in the database, no action is needed. If the exiting process was the last, verify and restore database structural integrity. In either case, investigate why the database rundown took a long time. It could be caused by system load, or IO issues.
+
 --------------
 DBRNDWNWRN
 --------------
@@ -12695,6 +12707,18 @@ Run Time Error: This message is an auxiliary message and is preceded by a primar
 
 Action: Refer to the accompanying message(s) and take appropriate action. Refer to the user documentation. If necessary, report the entire incident context to your YottaDB support channel for further analysis.
 
+.. _sigacktimeout:
+
+----------------------
+SIGACKTIMEOUT
+----------------------
+
+SIGACKTIMEOUT, Signal completion acknowledgement timeout: xxxx
+
+Run Time Error (Go wrapper specific): When YottaDB waits more than :code:`MaximumSigAckWait` seconds for an application signal handler to notify the YottaDB Go wrapper on :code:`ackChan` that it has completed its work, the process exits without waiting for the handler to complete. See `Go Using Signals <../MultiLangProgGuide/goprogram.html#go-using-signals>`_ for more information.
+
+Action: If the exiting process was not the last process accessing any file in the database, no action is needed. If the exiting process was the last, verify and restore database structural integrity. In either case, investigate why the signal handler took a long time.
+
 ----------------------
 SIGADRALN
 ----------------------
@@ -12784,6 +12808,18 @@ SIGFLTUND, Signal was caused by a floating point underflow
 Run Time Error: This message is an auxiliary message and is preceded by a primary KILLBYSIGxxx message.
 
 Action: Refer to the accompanying message(s) and take appropriate action. Refer to the user documentation. If necessary, report the entire incident context to your YottaDB support channel for further analysis.
+
+.. _siggortntimeout:
+
+------------------
+SIGGORTNTIMEOUT
+------------------
+
+SIGGORTNTIMEOUT, Shutdown of signal goroutines timed out
+
+Run Time Warning (Go wrapper specific): When YottaDB waits more than :code:`MaximumSigShutDownWait` seconds for goroutines to terminate, the process exits without waiting for the goroutines to complete. See `Go Using Signals <../MultiLangProgGuide/goprogram.html#go-using-signals>`_ for more information.
+
+Action: If the exiting process was not the last process accessing any file in the database, no action is needed. If the exiting process was the last, verify and restore database structural integrity. In either case, investigate why the goroutines took a long time to shut terminate.
 
 ------------------
 SIGILLADR
