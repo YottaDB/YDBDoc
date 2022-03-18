@@ -1881,7 +1881,7 @@ Key.__repr__()
 
     def __repr__(self) -> str
 
-The :code:`Key.__repr__()` magic method returns a Python-readable representation of the :code:`Key` object. Specifically, :code`Key.__repr__()` produces a representation of the :code:`Key` object that can be passed to the built-in :code:`eval()` function to produce a new instance of the object.
+The :code:`Key.__repr__()` magic method returns a Python-readable representation of the :code:`Key` object. Specifically, :code:`Key.__repr__()` produces a representation of the :code:`Key` object that can be passed to the built-in :code:`eval()` function to produce a new instance of the object.
 
 Note, however, that this cannot be done with perfect reliability, as successful object reproduction will depend on how the :code:`yottadb` module is imported. To provide flexibility, :code:`Key.__repr__()` produces a representation as if the :code:`Key` class is imported directly, i.e. `from yottadb import Key`. This allows for :code:`eval()` to be used to reproduce a :code:`Key` object, provided that the :code:`str` passed to it includes any module import prefixes qualifying the :code:`Key` name. For example:
 

@@ -16,8 +16,9 @@
 # Pre-commit hook that
 #	1) Enforces YottaDB Copyright in changed modules
 #
-set nocopyright_extensions = "png gif svg css"	# List of extensions that cannot have copyrights.
-						# .png, .gif and .svg are image format files
+set nocopyright_extensions = "png gif svg css c m go pl py rs"	# List of extensions that should not have copyrights.
+						                # .png, .gif and .svg are image format files
+						                # .c, .m, .go, .pl, .py and .rs are example program files
 
 set filelist = `git diff --name-only HEAD`
 set fixlist = ""
@@ -40,7 +41,7 @@ foreach file ($filelist)
 	endif
 	if (0 == $skip) then
 		# Below is a list of specific files that do not have a copyright so ignore them
-		set skiplist = "COPYING README.md AcculturationGuide/sayhello*"
+		set skiplist = "COPYING README.md AcculturationGuide/sayhello* AcculturationGuide/xyz*"
 		foreach skipfile ($skiplist)
 			if ($file == $skipfile) then
 				set skip = 1

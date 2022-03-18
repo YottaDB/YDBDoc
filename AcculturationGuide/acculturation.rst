@@ -70,7 +70,7 @@ YottaDB provides:
 - Throughput that scales to the needs of the largest applications
 - Unique functionality for creating logical multi-site configurations for mission critical applications that must always be available - including availability during upgrades that involve changes to the database schema.
 
-At the time of writing of this edition of the Acculturation Workshop, the latest YottaDB release is r1.30, on which the text and exercises are based. If there is a newer version of YottaDB when you go through the exercises, the same commands will work, but the output messages you see may vary.
+At the time of writing of this edition of the Acculturation Workshop, the latest YottaDB release is r1.34, on which the text and exercises are based. If there is a newer version of YottaDB when you go through the exercises, the same commands will work, but the output messages you see may vary.
 
 .. note::
 
@@ -169,12 +169,12 @@ Even when running with a console, we recommend that you boot and minimize the vi
 Quick Start
 -----------
 
-With a terminal emulator, initiate an ssh connection to port 2222 on localhost and login with userid :code:`yottadbuser` and password :code:`YottaDB Rocks!` (including a space and an exclamation point). For example, on Linux, you can use the command: :code:`ssh -p 2222 yottadbuser@localhost` to connect as user yottadbuser to port 2222 on the host which is forwarded to port 22 on the guest.
+With a terminal emulator, initiate an ssh connection to port 2222 on localhost and login with userid :code:`ydbuser` and password :code:`YottaDB Rocks!` (including a space and an exclamation point). For example, on Linux, you can use the command: :code:`ssh -p 2222 ydbuser@localhost` to connect as user :code:`ydbuser` to port 2222 on the host which is forwarded to port 22 on the guest.
 
 .. code-block:: bash
 
-    $ ssh -p 2222 yottadbuser@localhost
-    Linux yottadbworkshop 4.19.0-6-amd64 #1 SMP Debian 4.19.67-2+deb10u1 (2019-09-20) x86_64
+    $ ssh -p 2222 ydbuser@localhost
+    Linux ydbdev 5.10.0-13-amd64 #1 SMP Debian 5.10.106-1 (2022-03-17) x86_64
 
     The programs included with the Debian GNU/Linux system are free software;
     the exact distribution terms for each program are described in the
@@ -182,16 +182,16 @@ With a terminal emulator, initiate an ssh connection to port 2222 on localhost a
 
     Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
     permitted by applicable law.
-    Last login: Wed Oct 30 15:07:27 2019 from 10.0.2.2
-    yottadbuser@yottadbworkshop:~$
+    Last login: Mon Apr 11 17:17:04 2022 from 10.0.2.2
+    ydbuser@ydbdev:~$
 
 As newer versions of packages are likely to have been released after the Acculturation Workshop virtual machine was released, run the following command once before using the virtual machine, to update to current versions of packages, remove old versions, and reboot to use the new packages.
 
 .. code-block:: bash
 
-    yottadbuser@yottadbworkshop:~$ sudo apt update && sudo apt -y upgrade && sudo apt -y autoremove && sudo reboot now
+    ydbuser@ydbdev:~$ sudo apt update && sudo apt -y upgrade && sudo apt -y autoremove && sudo reboot now
 
-You will likely be prompted for the yottadbuser password one or more times. As the command reboots the virtual machine, you will need to reconnect your ssh session.
+You will likely be prompted for the :code:`ydbuser` password one or more times. As the command reboots the virtual machine, you will need to reconnect your ssh session.
 
 +++++++++++++++
 Install YottaDB
@@ -207,11 +207,11 @@ Install YottaDB
   .. code-block:: bash
 
      $ yottadb -version
-     YottaDB release:         r1.30
-     Upstream base version:   GT.M V6.3-008
+     YottaDB release:         r1.34
+     Upstream base version:   GT.M V6.3-011
      Platform:                Linux x86_64
-     Build date/time:         2020-08-11 20:55
-     Build commit SHA:        177eb8e48098204dafe564cac2bcb84312b2853a
+     Build date/time:         2022-02-23 20:57
+     Build commit SHA:        f2f77cc184d9fe2e272d7b1d39b64434e9769804
      $
 
 +++++++++++
@@ -226,10 +226,10 @@ As YottaDB needs a working environment and several environment variables to be s
 
 .. code-block:: bash
 
- yottadbuser@yottadbworkshop:~$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
- yottadbuser@yottadbworkshop:~$ yottadb -run %xcmd 'write $zyrelease,!'
- YottaDB r1.30 Linux x86_64
- yottadbuser@yottadbworkshop:~$
+ ydbuser@ydbdev:~$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
+ ydbuser@ydbdev:~$ yottadb -run %xcmd 'write $zyrelease,!'
+ YottaDB r1.34 Linux x86_64
+ ydbuser@ydbdev:~$
 
 When you set up environments in YottaDB, you will set up your own scripting, but the default is a good place to start.
 
@@ -237,21 +237,23 @@ The :code:`tree` program shows the environment sourcing :code:`ydb_env_set` crea
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~$ tree .yottadb/
-    .yottadb
-    |-- V6.3-008_x86_64 -> r1.30_x86_64
-    |-- r
-    `-- r1.30_x86_64
-	|-- g
-	|   |-- yottadb.dat
-	|   |-- yottadb.gld
-	|   `-- yottadb.mjl
-	|-- o
-	|   `-- utf8
-	`-- r
+   ydbuser@ydbdev:~$ tree .yottadb/
+    .yottadb/
+    ├── V6.3-011_x86_64 -> r1.34_x86_64
+    ├── r
+    └── r1.34_x86_64
+	├── g
+	│   ├── %ydbocto.dat
+	│   ├── %ydbocto.mjl
+	│   ├── yottadb.dat
+	│   ├── yottadb.gld
+	│   └── yottadb.mjl
+	├── o
+	│   └── utf8
+	└── r
 
-    7 directories, 3 files
-    yottadbuser@yottadbworkshop:~$
+    7 directories, 5 files
+    ydbuser@ydbdev:~$
 
 We will explore the environment in more detail below.
 
@@ -263,37 +265,37 @@ Now that YottaDB is installed and configured, change to the :code:`$ydb_dir` dir
 
 .. code-block:: bash
 
-    yottadbuser@yottadbworkshop:~$ cd $ydb_dir
-    yottadbuser@yottadbworkshop:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
+    ydbuser@ydbdev:~$ cd $ydb_dir
+    ydbuser@ydbdev:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
     %YDB-W-NOSELECT, None of the selected variables exist -- halting
-    yottadbuser@yottadbworkshop:~/.yottadb$
+    ydbuser@ydbdev:~/.yottadb$
 
 ~~~~~~~~~~~~~
 Access from C
 ~~~~~~~~~~~~~
 
-YottaDB comes with a `C API <../MultiLangProgGuide/cprogram.html>`_ and all you need to use it is the :code:`gcc` compiler, which is included in the virtual machine. Download the `sayhelloC.c <./sayhelloC.c>`_ program into the :code:`yottadbuser` directory, compile it and run it. Notice that it has set a node in the database (the MUPIP EXTRACT command prints database contents):
+YottaDB comes with a `C API <../MultiLangProgGuide/cprogram.html>`_ and all you need to use it is the :code:`gcc` compiler, which is included in the virtual machine. Download the `sayhelloC.c <./sayhelloC.c>`_ program into the :code:`ydbuser` directory, compile it and run it. Notice that it has set a node in the database (the MUPIP EXTRACT command prints database contents):
 
 .. code-block:: bash
 
-    yottadbuser@yottadbworkshop:~$ ls -l
-    total 52
-    -rw-r--r-- 1 root        root            262 Jan 17  2020 sayhelloC.c
-    -rwxr-xr-x 1 yottadbuser yottadbuser   47020 Aug 26 14:00 ydbinstall.sh
-    yottadbuser@yottadbworkshop:~$ gcc $(pkg-config --libs --cflags yottadb) -o sayhelloC sayhelloC.c -lyottadb
-    yottadbuser@yottadbworkshop:~$ ls -l
-    total 72
-    -rwxr-xr-x 1 yottadbuser yottadbuser   16600 Aug 26 14:41 sayhelloC
-    -rw-r--r-- 1 root        root            262 Jan 17  2020 sayhelloC.c
-    -rwxr-xr-x 1 yottadbuser yottadbuser   47020 Aug 26 14:00 ydbinstall.sh
-    yottadbuser@yottadbworkshop:~$ ./sayhelloC
-    yottadbuser@yottadbworkshop:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
+    ydbuser@ydbdev:~$ ls -l
+    total 68
+    -rw-r--r-- 1 ydbuser ydbuser   262 Apr  1 02:37 sayhelloC.c
+    -rwxr-xr-x 1 ydbuser ydbuser 61644 Apr 12 10:27 ydbinstall.sh
+    ydbuser@ydbdev:~$ gcc $(pkg-config --libs --cflags yottadb) -o sayhelloC sayhelloC.c -lyottadb
+    ydbuser@ydbdev:~$ ls -l
+    total 88
+    -rwxr-xr-x 1 ydbuser ydbuser 16608 Apr 12 10:33 sayhelloC
+    -rw-r--r-- 1 ydbuser ydbuser   262 Apr  1 02:37 sayhelloC.c
+    -rwxr-xr-x 1 ydbuser ydbuser 61644 Apr 12 10:27 ydbinstall.sh
+    ydbuser@ydbdev:~$ ./sayhelloC
+    ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
     Hello label UTF-8
-    26-AUG-2020  15:00:13 ZWR
+    12-APR-2022  10:34:37 ZWR
     ^hello("C")="Hello, world!"
     %YDB-I-RECORDSTAT, ^hello:        Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
-    yottadbuser@yottadbworkshop:~$
+    ydbuser@ydbdev:~$
 
 ~~~~~~~~~~~~~~
 Access from Go
@@ -303,25 +305,27 @@ Access from Go
 
 .. code-block:: bash
 
-    yottadbuser@yottadbworkshop:~$ go get -t lang.yottadb.com/go/yottadb
-    yottadbuser@yottadbworkshop:~$ go test lang.yottadb.com/go/yottadb
+    ydbuser@ydbdev:~$ go get lang.yottadb.com/go/yottadb
+    ydbuser@ydbdev:~$ go build lang.yottadb.com/go/yottadb
+    ydbuser@ydbdev:~$ go get -t lang.yottadb.com/go/yottadb
+    ydbuser@ydbdev:~$ go test lang.yottadb.com/go/yottadb
     ok      lang.yottadb.com/go/yottadb     5.259s
-    yottadbuser@yottadbworkshop:~$
+    ydbuser@ydbdev:~$
 
-Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the :code:`yottadbuser` directory, compile it and run it. Notice that it too has set a node in the database:
+Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the :code:`ydbuser` directory, compile it and run it. Notice that it too has set a node in the database:
 
 .. code-block:: bash
 
-    yottadbuser@yottadbworkshop:~$ go build sayhelloGo.go
-    yottadbuser@yottadbworkshop:~$ ./sayhelloGo
-    yottadbuser@yottadbworkshop:~$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
-    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r130/mupip extract -format=zwr -select=hello -stdout UTF-8
-    26-AUG-2020  15:08:23 ZWR
+    ydbuser@ydbdev:~$ go build sayhelloGo.go
+    ydbuser@ydbdev:~$ ./sayhelloGo
+    ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
+    Hello UTF-8
+    12-APR-2022  10:45:07 ZWR
     ^hello("C")="Hello, world!"
     ^hello("Go")="สวัสดีชาวโลก"
     %YDB-I-RECORDSTAT, ^hello:        Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
-    yottadbuser@yottadbworkshop:~$
+    ydbuser@ydbdev:~$
 
 ~~~~~~~~~~~~~
 Access from M
@@ -331,45 +335,47 @@ YottaDB includes a complete language implementation for M. Download the `sayhell
 
 .. code-block:: bash
 
-    yottadbuser@yottadbworkshop:~/.yottadb$ ls -l r
+    ydbuser@ydbdev:~/.yottadb$ ls -l r
     total 4
-    -rw-r--r-- 1 yottadbuser yottadbuser 67 Jan 17  2020 sayhelloM.m
-    yottadbuser@yottadbworkshop:~/.yottadb$ yottadb -run sayhelloM
-    yottadbuser@yottadbworkshop:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
-    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r130/mupip extract -format=zwr -select=hello -stdout UTF-8
-    26-AUG-2020  15:12:49 ZWR
+    -rw-r--r-- 1 ydbuser ydbuser 57 Apr  1 02:37 sayhelloM.m
+    ydbuser@ydbdev:~/.yottadb$ yottadb -run sayhelloM
+    ydbuser@ydbdev:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
+    Hello UTF-8
+    12-APR-2022  10:46:56 ZWR
     ^hello("C")="Hello, world!"
     ^hello("Go")="สวัสดีชาวโลก"
     ^hello("M")="Привіт Світ"
     %YDB-I-RECORDSTAT, ^hello:        Key cnt: 3  max subsc len: 11  max rec len: 36  max node len: 44
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 3  max subsc len: 11  max rec len: 36  max node len: 44
-    yottadbuser@yottadbworkshop:~/.yottadb$
+    ydbuser@ydbdev:~/.yottadb$
 
 Notice that after running it, YottaDB has automatically compiled the source code (:code:`sayhelloM.m`) and created a file with object code (:code:`sayhelloM.o`) which it dynamically links and runs.
 
 .. code-block:: bash
 
-    yottadbuser@yottadbworkshop:~/.yottadb$ tree
+    ydbuser@ydbdev:~/.yottadb$ tree
     .
-    ├── V6.3-008_x86_64 -> r1.30_x86_64
+    ├── V6.3-011_x86_64 -> r1.34_x86_64
     ├── r
     │   └── sayhelloM.m
-    └── r1.30_x86_64
+    └── r1.34_x86_64
 	├── g
-        │   ├── yottadb.dat
-        │   ├── yottadb.gld
-        │   └── yottadb.mjl
-        ├── o
-        │   └── utf8
-        │       └── sayhelloM.o
-        └── r
+	│   ├── %ydbocto.dat
+	│   ├── %ydbocto.mjl
+	│   ├── yottadb.dat
+	│   ├── yottadb.gld
+	│   └── yottadb.mjl
+	├── o
+	│   └── utf8
+	│       └── sayhelloM.o
+	└── r
 
-    7 directories, 5 files
-    yottadbuser@yottadbworkshop:~/.yottadb$
+    7 directories, 7 files
+    ydbuser@ydbdev:~/.yottadb$
 
-++++++++++++++++++
+~~~~~~~~~~~~~~~~~~
 Access from Perl
-++++++++++++++++++
+~~~~~~~~~~~~~~~~~~
 
 YottaDB can also be accessed from Perl, which requires the Perl :code:`yottadb` package to be downloaded and installed, to provide a YottaDB Perl "wrapper".
 
@@ -382,49 +388,50 @@ YottaDB can also be accessed from Perl, which requires the Perl :code:`yottadb` 
    $ make test TEST_DB=1 # optional, accesses database
    $ sudo make install
 
-Download the `sayhelloPerl.pl <./sayhelloPerl.pl>`_ program into the :code:`yottadbuser` directory, change its access permissions to make it executable and run it.
+Download the `sayhelloPerl.pl <./sayhelloPerl.pl>`_ program into the :code:`ydbuser` directory, change its access permissions to make it executable and run it.
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~$ ls -l
-   total 3176
-   drwxr-xr-x 4 yottadbuser yottadbuser    4096 Aug 26 14:42 go
-   -rwxr-xr-x 1 yottadbuser yottadbuser   16600 Aug 26 14:41 sayhelloC
-   -rw-r--r-- 1 root        root            262 Jan 17  2020 sayhelloC.c
-   -rwxr-xr-x 1 yottadbuser yottadbuser 3164920 Aug 26 14:44 sayhelloGo
-   -rw-r--r-- 1 yottadbuser yottadbuser     203 Jan 17  2020 sayhelloGo.go
-   -rw-r--r-- 1 yottadbuser yottadbuser      86 Aug 26 15:21 sayhelloPerl.pl
-   -rwxr-xr-x 1 yottadbuser yottadbuser   47020 Aug 26 14:00 ydbinstall.sh
-   yottadbuser@yottadbworkshop:~$ chmod +x sayhelloPerl.pl
-   yottadbuser@yottadbworkshop:~$ ./sayhelloPerl.pl.
-   yottadbuser@yottadbworkshop:~$ mupip extract -format=zwr -select=hello -stdout
-   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r130/mupip extract -format=zwr -select=hello -stdout UTF-8
-   26-AUG-2020  15:24:21 ZWR
+   ydbuser@ydbdev:~$ ls -l
+   total 2772
+   drwxr-xr-x 4 ydbuser ydbuser    4096 Apr 12 10:43 go
+   -rwxr-xr-x 1 ydbuser ydbuser   16608 Apr 12 10:33 sayhelloC
+   -rw-r--r-- 1 ydbuser ydbuser     262 Apr  1 02:37 sayhelloC.c
+   -rwxr-xr-x 1 ydbuser ydbuser 2730192 Apr 12 10:44 sayhelloGo
+   -rw-r--r-- 1 ydbuser ydbuser     203 Apr  1 02:37 sayhelloGo.go
+   -rw-r--r-- 1 ydbuser ydbuser      86 Apr  1 02:37 sayhelloPerl.pl
+   -rwxr-xr-x 1 ydbuser ydbuser   61644 Apr 12 10:27 ydbinstall.sh
+   drwxr-xr-x 7 ydbuser ydbuser    4096 Apr 12 10:50 yottadb-perl
+   ydbuser@ydbdev:~$ chmod +x sayhelloPerl.pl
+   ydbuser@ydbdev:~$ ./sayhelloPerl.pl
+   ydbuser@ydbdev:~$ mupip extract -format=zwr -select=hello -stdout
+   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
+   12-APR-2022  10:53:08 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("M")="Привіт Світ"
    ^hello("Perl")="Grüẞ Gott Welt"
    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 4  max subsc len: 13  max rec len: 36  max node len: 44
    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 4  max subsc len: 13  max rec len: 36  max node len: 44
-   yottadbuser@yottadbworkshop:~$
+   ydbuser@ydbdev:~$
 
-++++++++++++++++++
+~~~~~~~~~~~~~~~~~~
 Access from Rust
-++++++++++++++++++
+~~~~~~~~~~~~~~~~~~
 
-YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_. Download the `sayhello_rust <./sayhello_rust.rs>`_ example, which will add another node in the database:
+YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_. Download the `sayhello_rust.rs <./sayhello_rust.rs>`_ example, which will add another node in the database:
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~$ cargo new sayhello_rust
-   yottadbuser@yottadbworkshop:~$ cd sayhello_rust
-   yottadbuser@yottadbworkshop:~/sayhello_rust$ echo 'yottadb = "2.0.0"' >> Cargo.toml
-   yottadbuser@yottadbworkshop:~/sayhello_rust$ # Place the downloaded sayhello_rust.rs program as src/main.rs
-   yottadbuser@yottadbworkshop:~/sayhello_rust$ cargo run
+   ydbuser@ydbdev:~$ cargo new sayhello_rust
+   ydbuser@ydbdev:~$ cd sayhello_rust
+   ydbuser@ydbdev:~/sayhello_rust$ echo 'yottadb = "2.0.0"' >> Cargo.toml
+   ydbuser@ydbdev:~/sayhello_rust$ # Place the downloaded sayhello_rust.rs program as src/main.rs
+   ydbuser@ydbdev:~/sayhello_rust$ cargo run
    ...
-   yottadbuser@yottadbworkshop:~/sayhello_rust$ mupip extract -format=zwr -select=hello -stdout
-   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r130/mupip extract -format=zwr -select=hello -stdout UTF-8
-   28-AUG-2020  15:34:04 ZWR
+   ydbuser@ydbdev:~/sayhello_rust$ mupip extract -format=zwr -select=hello -stdout
+   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
+   12-APR-2022  11:23:18 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("M")="Привіт Світ"
@@ -432,7 +439,48 @@ YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBR
    ^hello("Rust")="ハローワールド"
    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 5  max subsc len: 13  max rec len: 36  max node len: 44
    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 5  max subsc len: 13  max rec len: 36  max node len: 44
-   yottadbuser@yottadbworkshop:~/sayhello_rust$
+   ydbuser@ydbdev:~/sayhello_rust$
+
+
+~~~~~~~~~~~~~~~~~~~
+Access from Python
+~~~~~~~~~~~~~~~~~~~
+
+YottaDB can be accessed from Python, by downloading and installing the YottaDB wrapper for Python `YDBPython <https://gitlab.com/YottaDB/Lang/YDBPython>`_ from PyPI.
+
+.. code-block:: bash
+
+   ydbuser@ydbdev:~$ pip3 install yottadb --user
+
+Download the `sayhelloPython.py <./sayhelloPython.py>`_ program into the :code:`ydbuser` directory and run it.
+
+.. code-block:: bash
+
+   ydbuser@ydbdev:~$ ls -l
+   total 2780
+   drwxr-xr-x 4 ydbuser ydbuser    4096 Apr 12 10:43 go
+   -rwxr-xr-x 1 ydbuser ydbuser   16608 Apr 12 10:33 sayhelloC
+   -rw-r--r-- 1 ydbuser ydbuser     262 Apr  1 02:37 sayhelloC.c
+   -rwxr-xr-x 1 ydbuser ydbuser 2730192 Apr 12 10:44 sayhelloGo
+   -rw-r--r-- 1 ydbuser ydbuser     203 Apr  1 02:37 sayhelloGo.go
+   -rwxr-xr-x 1 ydbuser ydbuser      86 Apr  1 02:37 sayhelloPerl.pl
+   -rw-r--r-- 1 ydbuser ydbuser     127 Mar  8 15:06 sayhelloPython.py
+   drwxr-xr-x 5 ydbuser ydbuser    4096 Apr 12 11:08 sayhello_rust
+   -rwxr-xr-x 1 ydbuser ydbuser   61644 Apr 12 10:27 ydbinstall.sh
+   drwxr-xr-x 7 ydbuser ydbuser    4096 Apr 12 10:50 yottadb-perl
+   ydbuser@ydbdev:~$ python3 sayhelloPython.py
+   ydbuser@ydbdev:~$ mupip extract -format=zwr -select=hello -stdout
+   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
+   12-APR-2022  11:44:09 ZWR
+   ^hello("C")="Hello, world!"
+   ^hello("Go")="สวัสดีชาวโลก"
+   ^hello("M")="Привіт Світ"
+   ^hello("Perl")="Grüẞ Gott Welt"
+   ^hello("Python")="नमस्ते दुनिया"
+   ^hello("Rust")="ハローワールド"
+   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 6  max subsc len: 15  max rec len: 37  max node len: 48
+   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 6  max subsc len: 15  max rec len: 37  max node len: 48
+   ydbuser@ydbdev:~$
 
 ----------
 Journaling
@@ -456,36 +504,36 @@ Create a directory with a name like :code:`jnlex` (for journaling exercises) or 
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ cat jnlex_env
+   ydbuser@ydbdev:~/jnlex$ cat jnlex_env
    export ydb_dist=$(pkg-config --variable=prefix yottadb)
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
    alias mupip=$ydb_dist/mupip
    export ydb_dir=$HOME/jnlex
    export ydb_gbldir=$ydb_dir/ydb.gld
-   yottadbuser@yottadbworkshop:~/jnlex$ source jnlex_env
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$ source jnlex_env
+   ydbuser@ydbdev:~/jnlex$
 
 Create a global directory with the Global Directory Editor (GDE) utility (see :ref:`gbl-dir-gbl-var` below), and a database file. Turn on journaling for the database file.
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -run GDE
+   ydbuser@ydbdev:~/jnlex$ yottadb -run GDE
    %GDE-I-GDUSEDEFS, Using defaults for Global Directory
-	   /home/yottadbuser/jnlex/ydb.gld
+	   /home/ydbuser/jnlex/ydb.gld
 
    GDE> change -segment DEFAULT -file=$ydb_dir/ydb.dat
    GDE> exit
    %GDE-I-VERIFY, Verification OK
 
    %GDE-I-GDCREATE, Creating Global Directory file
-	   /home/yottadbuser/jnlex/ydb.gld
-   yottadbuser@yottadbworkshop:~/jnlex$ mupip create
-   %YDB-I-DBFILECREATED, Database file /home/yottadbuser/jnlex/ydb.dat created
-   yottadbuser@yottadbworkshop:~/jnlex$ mupip set -journal=enable,on,before -region DEFAULT
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/jnlex/ydb.mjl created for region DEFAULT with BEFORE_IMAGES
+	   /home/ydbuser/jnlex/ydb.gld
+   ydbuser@ydbdev:~/jnlex$ mupip create
+   %YDB-I-DBFILECREATED, Database file /home/ydbuser/jnlex/ydb.dat created
+   ydbuser@ydbdev:~/jnlex$ mupip set -journal=enable,on,before -region DEFAULT
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/ydb.mjl created for region DEFAULT with BEFORE_IMAGES
    %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$
 
 ~~~~~~~~~~~~~~~~~~~~~
 Crashing and Recovery
@@ -499,20 +547,22 @@ Start by cleaning out old journal files. Verify that there are no shared memory 
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ rm -f *.mjl_*
-   yottadbuser@yottadbworkshop:~/jnlex$ ls -l
-   total 356
-   -rw-r--r-- 1 yottadbuser yottadbuser    226 Nov 12 16:39 jnlex_env
-   -rw-rw-rw- 1 yottadbuser yottadbuser 679936 Nov 12 17:36 ydb.dat
-   -rw-r--r-- 1 yottadbuser yottadbuser   2560 Nov 12 16:41 ydb.gld
-   -rw-rw-rw- 1 yottadbuser yottadbuser  69632 Nov 12 17:36 ydb.mjl
-   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -dir
+   ydbuser@ydbdev:~/jnlex$ rm -f *.mjl_*
+   ydbuser@ydbdev:~/jnlex$ ls -l
+   total 348
+   -rw-r--r-- 1 ydbuser ydbuser    229 Apr 12 12:00 jnlex_env
+   -rw-rw-rw- 1 ydbuser ydbuser 679936 Apr 12 12:05 ydb.dat
+   -rw-r--r-- 1 ydbuser ydbuser   2560 Apr 12 12:05 ydb.gld
+   -rw-rw-rw- 1 ydbuser ydbuser  69632 Apr 12 12:05 ydb.mjl
+   ydbuser@ydbdev:~/jnlex$ yottadb -dir
 
    YDB>zsystem "ipcs -m" ; No shared memory segments because YottaDB does not open database files until the first access
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
-
+   0x00000000 7          ydbuser    666        6336512    0
+   0x00000000 8          ydbuser    666        4640768    0
+   0x00000000 11         ydbuser    777        1048576    0
 
    YDB>set ^X=$zdate($horolog,"MON DD, YEAR") ; opens database file and creates a shared memory segment
 
@@ -523,7 +573,10 @@ Start by cleaning out old journal files. Verify that there are no shared memory 
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
-   0x00000000 65536      yottadbuse 666        7630848    1
+   0x00000000 7          ydbuser    666        6336512    0
+   0x00000000 8          ydbuser    666        4640768    0
+   0x00000000 11         ydbuser    777        1048576    0
+   0x00000000 26         ydbuser    666        7725056    1
 
 
    YDB>
@@ -534,33 +587,33 @@ Reboot the virtual machine, change to the :code:`jnlex` directory, source the :c
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~$ cd jnlex/
-   yottadbuser@yottadbworkshop:~/jnlex$ source jnlex_env
-   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -run %XCMD 'zwrite ^X'
-   %YDB-E-REQRECOV, Error accessing database /home/yottadbuser/jnlex/ydb.dat.  Must be recovered on cluster node yottadbworkshop.
+   ydbuser@ydbdev:~$ cd jnlex/
+   ydbuser@ydbdev:~/jnlex$ source jnlex_env
+   ydbuser@ydbdev:~/jnlex$ yottadb -run %XCMD 'zwrite ^X'
+   %YDB-E-REQRECOV, Error accessing database /home/ydbuser/jnlex/ydb.dat.  Must be recovered on cluster node ydbdev.
    %YDB-I-TEXT, Error with database control shmctl
    %SYSTEM-E-ENO22, Invalid argument
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$
 
 Now recover the database, and note that the database update you made is in the database.
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ mupip journal -recover -backward "*"
-   %YDB-I-MUJNLSTAT, Initial processing started at Wed Nov 13 10:21:50 2019
-   %YDB-I-MUJNLSTAT, Backward processing started at Wed Nov 13 10:21:50 2019
-   %YDB-I-MUJNLSTAT, Before image applying started at Wed Nov 13 10:21:50 2019
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019317102151
-   %YDB-I-MUJNLSTAT, Forward processing started at Wed Nov 13 10:21:51 2019
+   ydbuser@ydbdev:~/jnlex$ mupip journal -recover -backward "*"
+   %YDB-I-MUJNLSTAT, Initial processing started at Tue Apr 12 12:20:09 2022
+   %YDB-I-MUJNLSTAT, Backward processing started at Tue Apr 12 12:20:09 2022
+   %YDB-I-MUJNLSTAT, Before image applying started at Tue Apr 12 12:20:09 2022
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022102122009
+   %YDB-I-MUJNLSTAT, Forward processing started at Tue Apr 12 12:20:09 2022
    %YDB-S-JNLSUCCESS, Show successful
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Recover successful
-   %YDB-I-MUJNLSTAT, End processing at Wed Nov 13 10:21:51 2019
-   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -run %XCMD 'zwrite ^X'
-   ^X="NOV 13, 2019"
-   yottadbuser@yottadbworkshop:~/jnlex$
+   %YDB-I-MUJNLSTAT, End processing at Tue Apr 12 12:20:09 2022
+   ydbuser@ydbdev:~/jnlex$ yottadb -run %XCMD 'zwrite ^X'
+   ^X="APR 12, 2022"
+   ydbuser@ydbdev:~/jnlex$
 
-Notice that the recovery renamed the previous journal file (from :code:`ydb.mjl` to :code:`ydb.mjl_2019317102151` - :code:`2019317102151` is a timestamp representing 10:21:51 on the 317\ :sup:`th`\  day of 2019), and created a new journal file :code:`ydb.mjl`.
+Notice that the recovery renamed the previous journal file (from :code:`ydb.mjl` to :code:`ydb.mjl_2022102122009` - :code:`2022102122009` is a timestamp representing 12:20:09 on the 102\ :sup:`nd`\  day of 2022), and created a new journal file :code:`ydb.mjl`.
 
 Practice crashing the virtual machine with an open database several times till you get the hang of recovery after a crash.
 
@@ -604,15 +657,15 @@ The intrinsic special variable :code:`$zgbldir` points a YottaDB process to the 
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -run %XCMD 'write $zgbldir,!'
-   /home/yottadbuser/jnlex/ydb.gld
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$ yottadb -run %XCMD 'write $zgbldir,!'
+   /home/ydbuser/jnlex/ydb.gld
+   ydbuser@ydbdev:~/jnlex$
 
 GDE, the Global Directory Editor, is a program used to manipulate global directories. Before using it, add an extra line to the :code:`jnlex_env` file to allow you to  recall the last line typed, in case you make a mistake and want to recall and edit the previous line:
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ cat jnlex_env
+   ydbuser@ydbdev:~/jnlex$ cat jnlex_env
    export ydb_dist=$(pkg-config --variable=prefix yottadb)
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
@@ -620,10 +673,10 @@ GDE, the Global Directory Editor, is a program used to manipulate global directo
    export ydb_dir=$HOME/jnlex
    export ydb_gbldir=$ydb_dir/ydb.gld
    export ydb_principal_editing=EDITING
-   yottadbuser@yottadbworkshop:~/jnlex$ source jnlex_env
-   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -run GDE
+   ydbuser@ydbdev:~/jnlex$ source jnlex_env
+   ydbuser@ydbdev:~/jnlex$ yottadb -run GDE
    %GDE-I-LOADGD, Loading Global Directory file
-	   /home/yottadbuser/jnlex/ydb.gld
+	   /home/ydbuser/jnlex/ydb.gld
    %GDE-I-VERIFY, Verification OK
 
 
@@ -665,12 +718,12 @@ Notice the region parameters – review them in the `Region Qualfiers section of
     Segment                         File (def ext: .dat)Acc Typ Block      Alloc Exten Options
     -------------------------------------------------------------------------------------------
     DEFAULT                         $ydb_dir/ydb.dat    BG  DYN  4096        100   100 GLOB=1024
-										       LOCK=  40
+										       LOCK= 220
 										       RES =   0
 										       ENCR= OFF
 										       MSLT=1024
 										       DALL= YES
-										       AIO = OFF
+         									       AIO = OFF
     GDE>
 
 Notice how the database file is defined using the environment variable :code:`ydb_dir`. Using environment variables allows multiple processes to share a global directory, with different processes referring to different database files, depending on environment variable values.
@@ -727,14 +780,14 @@ While not essential, it may be conceptually helpful to build the global director
     -------------------------------------------------------------------------------------------
     CRUSTACEANS                     $ydb_dir/brunnich.dat
 							BG  DYN  4096        100   100 GLOB=1024
-										       LOCK=  40
+										       LOCK= 220
 										       RES =   0
 										       ENCR= OFF
 										       MSLT=1024
 										       DALL= YES
 										       AIO = OFF
     DEFAULT                         $ydb_dir/ydb.dat    BG  DYN  4096        100   100 GLOB=1024
-										       LOCK=  40
+										       LOCK= 220
 										       RES =   0
 										       ENCR= OFF
 										       MSLT=1024
@@ -742,7 +795,7 @@ While not essential, it may be conceptually helpful to build the global director
 										       AIO = OFF
     MAMMALS                         $ydb_dir/linnaeus.dat
 							BG  DYN  4096        100   100 GLOB=1024
-										       LOCK=  40
+										       LOCK= 220
 										       RES =   0
 										       ENCR= OFF
 										       MSLT=1024
@@ -754,8 +807,8 @@ Then we can map the regions to the segments. Notice that even though the segment
 
 .. code-block:: bash
 
-   GDE> add -region MAMMALS -dynamic=MAMMALS
-   GDE> add -region CRUSTACEANS -dynamic=CRUSTACEANS
+   GDE> add -region MAMMALS -dynamic=mammals
+   GDE> add -region CRUSTACEANS -dynamic=crustaceans
    GDE> show -region
 
 				   *** REGIONS ***
@@ -843,25 +896,25 @@ Exiting GDE creates the global directory. You can then use a MUPIP CREATE comman
    %GDE-I-VERIFY, Verification OK
 
    %GDE-I-GDUPDATE, Updating Global Directory file
-	   /home/yottadbuser/jnlex/ydb.gld
-   yottadbuser@yottadbworkshop:~/jnlex$
+	   /home/ydbuser/jnlex/ydb.gld
+   ydbuser@ydbdev:~/jnlex$
 
 Now create database files using :code:`mupip create` (notice that it creates two new database files, and tells you that one file already exists), and turn on journaling for the newly created database files
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ mupip create
+   ydbuser@ydbdev:~/jnlex$ mupip create
    %YDB-I-DBFILECREATED, Database file $ydb_dir/brunnich.dat created
-   %YDB-E-DBOPNERR, Error opening database file /home/yottadbuser/jnlex/ydb.dat
+   %YDB-E-DBOPNERR, Error opening database file /home/ydbuser/jnlex/ydb.dat
    %SYSTEM-E-ENO17, File exists
-   %YDB-I-DBFILECREATED, Database file /home/yottadbuser/jnlex/linnaeus.dat created
+   %YDB-I-DBFILECREATED, Database file /home/ydbuser/jnlex/linnaeus.dat created
    %YDB-F-DBNOCRE, Not all specified database files, or their associated journal files were created
-   yottadbuser@yottadbworkshop:~/jnlex$ mupip set -journal=enable,on,before -region CRUSTACEANS,MAMMALS
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/jnlex/brunnich.mjl created for region CRUSTACEANS with BEFORE_IMAGES
+   ydbuser@ydbdev:~/jnlex$ mupip set -journal=enable,on,before -region CRUSTACEANS,MAMMALS
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/brunnich.mjl created for region CRUSTACEANS with BEFORE_IMAGES
    %YDB-I-JNLSTATE, Journaling state for region CRUSTACEANS is now ON
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/jnlex/linnaeus.mjl created for region MAMMALS with BEFORE_IMAGES
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/linnaeus.mjl created for region MAMMALS with BEFORE_IMAGES
    %YDB-I-JNLSTATE, Journaling state for region MAMMALS is now ON
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$
 
 For production environments, we suggest that you put your GDE commands in a text file and invoke them with a heredoc or using GDE's @ command. Put the text file under version control.
 
@@ -874,7 +927,7 @@ Recovering a multi-region database after a crash is no different than recovering
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -dir
+   ydbuser@ydbdev:~/jnlex$ yottadb -dir
 
    YDB>zsystem "ipcs -m" ; ensure no shared memory segments, i.e., no open database regions
 
@@ -885,13 +938,13 @@ Recovering a multi-region database after a crash is no different than recovering
    YDB>set ^X=$zdate($horolog,"MON DD, YEAR") ; open the first database region
 
    YDB>zwrite ^X
-   ^X="NOV 14, 2019"
+   ^X="NOV 12, 2022"
 
    YDB>zsystem "ipcs -m" ; one shared memory segment for one open database region
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
-   0x00000000 98304      yottadbuse 666        7630848    1
+   0x00000000 2          ydbuser    666        7725056    1
 
 
    YDB>set ^Horse(^X)="Shetland" ; open a second database region
@@ -900,8 +953,8 @@ Recovering a multi-region database after a crash is no different than recovering
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
-   0x00000000 98304      yottadbuse 666        7630848    1
-   0x00000000 131073     yottadbuse 666        7630848    1
+   0x00000000 2          ydbuser    666        7725056    1
+   0x00000000 3          ydbuser    666        7725056    1
 
 
    YDB>set ^Crab(^X)="Horseshoe" ; open last database region
@@ -910,15 +963,16 @@ Recovering a multi-region database after a crash is no different than recovering
 
    ------ Shared Memory Segments --------
    key        shmid      owner      perms      bytes      nattch     status
-   0x00000000 98304      yottadbuse 666        7630848    1
-   0x00000000 131073     yottadbuse 666        7630848    1
-   0x00000000 163842     yottadbuse 666        7630848    1
+   0x00000000 2          ydbuser    666        7725056    1
+   0x00000000 3          ydbuser    666        7725056    1
+   0x00000000 4          ydbuser    666        7725056    1
 
 
    YDB>zwrite ^Crab,^Horse,^X ; show data in database
-   ^Crab("NOV 14, 2019")="Horseshoe"
-   ^Horse("NOV 14, 2019")="Shetland"
-   ^X="NOV 14, 2019"
+   ^Crab("APR 12, 2022")="Horseshoe"
+   ^Horse("APR 12, 2022")="Shetland"
+   ^X="APR 12, 2022"
+
 
    YDB>
 
@@ -926,55 +980,55 @@ Now crash and reboot the virtual machine and again note the inability to open an
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -dir
+   ydbuser@ydbdev:~/jnlex$ yottadb -dir
 
    YDB>zwrite ^Crab
-   %YDB-E-REQRECOV, Error accessing database /home/yottadbuser/jnlex/brunnich.dat.  Must be recovered on cluster node yottadbworkshop.
+   %YDB-E-REQRECOV, Error accessing database /home/ydbuser/jnlex/brunnich.dat.  Must be recovered on cluster node ydbdev.
    %YDB-I-TEXT, Error with database control shmctl
    %SYSTEM-E-ENO22, Invalid argument
 
    YDB>zwrite ^Horse
-   %YDB-E-REQRECOV, Error accessing database /home/yottadbuser/jnlex/linnaeus.dat.  Must be recovered on cluster node yottadbworkshop.
+   %YDB-E-REQRECOV, Error accessing database /home/ydbuser/jnlex/linnaeus.dat.  Must be recovered on cluster node ydbdev.
    %YDB-I-TEXT, Error with database control shmctl
    %SYSTEM-E-ENO22, Invalid argument
 
    YDB>zwrite ^X
-   %YDB-E-REQRECOV, Error accessing database /home/yottadbuser/jnlex/ydb.dat.  Must be recovered on cluster node yottadbworkshop.
+   %YDB-E-REQRECOV, Error accessing database /home/ydbuser/jnlex/ydb.dat.  Must be recovered on cluster node ydbdev.
    %YDB-I-TEXT, Error with database control shmctl
    %SYSTEM-E-ENO22, Invalid argument
 
    YDB>halt
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$
 
 Recover the database using exactly the same command as before, and note that it recovers three regions, and you are now able to access all three regions of the database file
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ mupip journal -recover -backward "*"
-   %YDB-I-MUJNLSTAT, Initial processing started at Thu Nov 14 15:40:47 2019
-   %YDB-I-MUJNLSTAT, Backward processing started at Thu Nov 14 15:40:47 2019
-   %YDB-I-MUJNLSTAT, Before image applying started at Thu Nov 14 15:40:47 2019
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019318154047
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/linnaeus.mjl is renamed to /home/yottadbuser/jnlex/linnaeus.mjl_2019318154047
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019318154047
-   %YDB-I-MUJNLSTAT, Forward processing started at Thu Nov 14 15:40:47 2019
+   ydbuser@ydbdev:~/jnlex$ mupip journal -recover -backward "*"
+   %YDB-I-MUJNLSTAT, Initial processing started at Tue Apr 12 13:10:45 2022
+   %YDB-I-MUJNLSTAT, Backward processing started at Tue Apr 12 13:10:45 2022
+   %YDB-I-MUJNLSTAT, Before image applying started at Tue Apr 12 13:10:45 2022
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022102131045
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022102131045
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022102131045
+   %YDB-I-MUJNLSTAT, Forward processing started at Tue Apr 12 13:10:45 2022
    %YDB-S-JNLSUCCESS, Show successful
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Recover successful
-   %YDB-I-MUJNLSTAT, End processing at Thu Nov 14 15:40:47 2019
-   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -dir
+   %YDB-I-MUJNLSTAT, End processing at Tue Apr 12 13:10:45 2022
+   ydbuser@ydbdev:~/jnlex$ yottadb -dir
 
    YDB>zwrite ^Crab
-   ^Crab("NOV 14, 2019")="Horseshoe"
+   ^Crab("APR 12, 2022")="Horseshoe"
 
    YDB>zwrite ^Horse
-   ^Horse("NOV 14, 2019")="Shetland"
+   ^Horse("APR 12, 2022")="Shetland"
 
    YDB>zwrite ^X
-   ^X="NOV 14, 2019"
+   ^X="APR 12, 2022"
 
    YDB>halt
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$
 
 --------------------------
 No Daemon to Start or Stop
@@ -1016,27 +1070,29 @@ The file :code:`ydb_env_set` that is supplied with YottaDB, and which must be so
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~$ env | grep ^ydb
-   yottadbuser@yottadbworkshop:~$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
-   yottadbuser@yottadbworkshop:~$ env | grep ^ydb
-   ydb_dist=/usr/local/lib/yottadb/r130
-   ydb_sav_512_PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
-   ydb_log=/tmp/yottadb/r1.30_x86_64
-   ydb_repl_instance=/home/yottadbuser/.yottadb/r1.30_x86_64/g/yottadb.repl
-   ydb_rel=r1.30_x86_64
-   ydb_routines=/home/yottadbuser/.yottadb/r1.30_x86_64/o*(/home/yottadbuser/.yottadb/r1.30_x86_64/r /home/yottadbuser/.yottadb/r) /usr/local/lib/yottadb/r130/libyottadbutil.so
-   ydb_procstuckexec=/usr/local/lib/yottadb/r130/yottadb -run %YDBPROCSTUCKEXEC
-   ydb_unset_512=ydb_dir gtmdir ydb_rel gtmver ydb_dist gtm_dist ydb_repl_instance gtm_repl_instance ydb_retention gtm_retention ydb_gbldir gtmgbldir ydb_routines gtmroutines ydb_log gtm_log ydb_tmp gtm_tmp ydb_etrap gtm_etrap ydb_procstuckexec gtm_procstuckexec LD_LIBRARY_PATH ydb_sav_512_PATH
-   ydb_tmp=/tmp/yottadb/r1.30_x86_64
-   ydb_gbldir=/home/yottadbuser/.yottadb/r1.30_x86_64/g/yottadb.gld
+   ydbuser@ydbdev:~$ env | grep ^ydb
+   ydbuser@ydbdev:~$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
+   ydbuser@ydbdev:~$ env | grep ^ydb
+   ydb_dist=/usr/local/lib/yottadb/r134
+   ydb_log=/tmp/yottadb/r1.34_x86_64
+   ydb_repl_instance=/home/ydbuser/.yottadb/r1.34_x86_64/g/yottadb.repl
+   ydb_rel=r1.34_x86_64
+   ydb_routines=/home/ydbuser/.yottadb/r1.34_x86_64/o/utf8*(/home/ydbuser/.yottadb/r1.34_x86_64/r /home/ydbuser/.yottadb/r) /usr/local/lib/yottadb/r134/utf8/libyottadbutil.so
+   ydb_unset_822=ydb_dir gtmdir ydb_rel gtmver ydb_chset gtm_chset LC_ALL ydb_icu_version gtm_icu_version ydb_dist gtm_dist ydb_repl_instance gtm_repl_instance ydb_retention gtm_retention ydb_gbldir gtmgbldir ydb_routines gtmroutines ydb_log gtm_log ydb_tmp gtm_tmp ydb_etrap gtm_etrap ydb_procstuckexec gtm_procstuckexec LD_LIBRARY_PATH ydb_sav_822_PATH
+   ydb_sav_822_PATH=/home/ydbuser/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+   ydb_chset=UTF-8
+   ydb_procstuckexec=/usr/local/lib/yottadb/r134/yottadb -run %YDBPROCSTUCKEXEC
+   ydb_tmp=/tmp/yottadb/r1.34_x86_64
+   ydb_gbldir=/home/ydbuser/.yottadb/r1.34_x86_64/g/yottadb.gld
    ydb_etrap=Write:(0=$STACK) "Error occurred: ",$ZStatus,!
+   ydb_icu_version=67.1
    ydb_retention=42
-   ydb_dir=/home/yottadbuser/.yottadb
-   yottadbuser@yottadbworkshop:~$
+   ydb_dir=/home/ydbuser/.yottadb
+   ydbuser@ydbdev:~$
 
 .. note::
 
-   :code:`ydb_unset_512` and :code:`ydb_sav_512_PATH` above are used when sourcing the :code:`ydb_env_unset` file to restore environment variables set by sourcing :code:`ydb_env_set`; the 512 is the pid of the shell.
+   :code:`ydb_unset_822` and :code:`ydb_sav_822_PATH` above are used when sourcing the :code:`ydb_env_unset` file to restore environment variables set by sourcing :code:`ydb_env_set`; the 822 is the pid of the shell.
 
 While :code:`ydb_env_set` is a good resource when you initially start with YottaDB, once you get to a certain level of expertise, you may prefer to create your own scripting.
 
@@ -1062,58 +1118,61 @@ In the following, Linux file permissions are used to allow the owner to read and
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ ls -l *.dat
-   -rw-rw-rw- 1 yottadbuser yottadbuser 679936 Nov 15 12:58 brunnich.dat
-   -rw-rw-rw- 1 yottadbuser yottadbuser 679936 Nov 15 12:58 linnaeus.dat
-   -rw-rw-rw- 1 yottadbuser yottadbuser 679936 Nov 15 12:58 ydb.dat
-   yottadbuser@yottadbworkshop:~/jnlex$ chmod go-rw brunnich.dat ; chmod go-w linnaeus.dat
-   yottadbuser@yottadbworkshop:~/jnlex$ ls -l *.dat
-   -rw------- 1 yottadbuser yottadbuser 679936 Nov 15 12:58 brunnich.dat
-   -rw-r--r-- 1 yottadbuser yottadbuser 679936 Nov 15 12:58 linnaeus.dat
-   -rw-rw-rw- 1 yottadbuser yottadbuser 679936 Nov 15 12:58 ydb.dat
-   yottadbuser@yottadbworkshop:~/jnlex$ yottadb -dir
+   ydbuser@ydbdev:~/jnlex$ ls -l *.dat
+   -rw-rw-rw- 1 ydbuser ydbuser 20785152 Apr 12 13:13 %ydbocto.dat
+   -rw-rw-rw- 1 ydbuser ydbuser   679936 Apr 12 13:13 brunnich.dat
+   -rw-rw-rw- 1 ydbuser ydbuser   679936 Apr 12 13:13 linnaeus.dat
+   -rw-rw-rw- 1 ydbuser ydbuser   679936 Apr 12 13:13 ydb.dat
+   ydbuser@ydbdev:~/jnlex$ chmod go-rw brunnich.dat ; chmod go-w linnaeus.dat
+   ydbuser@ydbdev:~/jnlex$ ls -l *.dat
+   -rw-rw-rw- 1 ydbuser ydbuser 20785152 Apr 12 13:13 %ydbocto.dat
+   -rw------- 1 ydbuser ydbuser   679936 Apr 12 13:13 brunnich.dat
+   -rw-r--r-- 1 ydbuser ydbuser   679936 Apr 12 13:13 linnaeus.dat
+   -rw-rw-rw- 1 ydbuser ydbuser   679936 Apr 12 13:13 ydb.dat
+   ydbuser@ydbdev:~/jnlex$ yottadb -dir
 
    YDB>set ^X=$zdate($horolog,"MON DD, YEAR"),^Horse(^X)="Clydesdale",^Crab(^X)="Coconut"
 
    YDB>set var="^%" for  set var=$order(@var) quit:""=var  zwrite @var
-   ^Crab("NOV 14, 2019")="Horseshoe"
-   ^Crab("NOV 15, 2019")="Coconut"
-   ^Horse("NOV 14, 2019")="Shetland"
-   ^Horse("NOV 15, 2019")="Clydesdale"
-   ^X="NOV 15, 2019"
+   ^Crab("APR 12, 2022")="Horseshoe"
+   ^Crab("APR 13, 2022")="Coconut"
+   ^Horse("APR 12, 2022")="Shetland"
+   ^Horse("APR 13, 2022")="Clydesdale"
+   ^X="APR 13, 2022"
 
    YDB>halt
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$
 
-Create another user who is also a member of the yottadbuser group, and note that a process of that user can update :code:`ydb.dat` (the database file for the DEFAULT region), can read but not update :code:`linneaus.dat` (the database file for MAMMALS region), and not even read :code:`brunnich.dat` (the database file for the CRUSTACEANS region).
+Create another user who is also a member of the :code:`ydbuser` group, and note that a process of that user can update :code:`ydb.dat` (the database file for the DEFAULT region), can read but not update :code:`linneaus.dat` (the database file for MAMMALS region), and not even read :code:`brunnich.dat` (the database file for the CRUSTACEANS region).
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ sudo useradd -g yottadbuser -s /bin/bash -m staffuser
-   yottadbuser@yottadbworkshop:~/jnlex$ sudo -E su staffuser
-   staffuser@yottadbworkshop:/home/yottadbuser/jnlex$ $ydb_dist/yottadb -dir # must specify $ydb_dist because alias for yottadb is not inherited
+   ydbuser@ydbdev:~/jnlex$ sudo useradd -g ydbuser -s /bin/bash -m staffuser
+   ydbuser@ydbdev:~/jnlex$ sudo -E su staffuser
+   staffuser@ydbdev:/home/ydbuser/jnlex$ $ydb_dist/yottadb -dir # must specify $ydb_dist because alias for yottadb is not inherited
 
    YDB>zwrite ^X ; reading ydb.dat works
-   ^X="NOV 15, 2019"
+   ^X="APR 13, 2022"
 
    YDB>zwrite ^Horse ; reading linnaeus.dat works
-   ^Horse("NOV 14, 2019")="Shetland"
-   ^Horse("NOV 15, 2019")="Clydesdale"
+   ^Horse("APR 12, 2022")="Shetland"
+   ^Horse("APR 13, 2022")="Clydesdale"
 
    YDB>zwrite ^Crab ; reading brunnich.dat fails
-   %YDB-E-DBFILERR, Error with database file /home/yottadbuser/jnlex/brunnich.dat
+   %YDB-E-DBFILERR, Error with database file /home/ydbuser/jnlex/brunnich.dat
    %SYSTEM-E-ENO13, Permission denied
 
    YDB>set ^Horse(^X)="Appaloosa" ; updating linnaeus.dat fails
-   %YDB-E-DBPRIVERR, No privilege for attempted update operation for file: /home/yottadbuser/jnlex/linnaeus.dat
+   %YDB-E-DBPRIVERR, No privilege for attempted update operation for file: /home/ydbuser/jnlex/linnaeus.dat
 
    YDB>set ^X=$zdate($horolog,"MON DD, YEAR") ; updating ydb.dat works
 
    YDB>halt
-   staffuser@yottadbworkshop:/home/yottadbuser/jnlex$ exit
-   yottadbuser@yottadbworkshop:~/jnlex$ sudo userdel -r staffuser
+   staffuser@ydbdev:/home/ydbuser/jnlex$ exit
+   exit
+   ydbuser@ydbdev:~/jnlex$ sudo userdel -r staffuser
    userdel: staffuser mail spool (/var/mail/staffuser) not found
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$
 
 There is an installation option to restrict access to YottaDB to a group. If you use this option, only those in the specified group will be able to use YottaDB.
 
@@ -1137,7 +1196,7 @@ Because replication builds on journaling, use the :code:`jnlex` directory create
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ cat jnlex_env
+   ydbuser@ydbdev:~/jnlex$ cat jnlex_env
    export ydb_dist=$(pkg-config --variable=prefix yottadb)
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
@@ -1147,7 +1206,7 @@ Because replication builds on journaling, use the :code:`jnlex` directory create
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$ydb_dir/ydb.repl
    export ydb_repl_instname=dummy
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$
 
 After sourcing :code:`jnlex_env` to set the environment variables first, turn on replication. This will create a new set of journal files without a link to the prior journal files, as the journal formats differ for replicated vs. unreplicated database regions.
 
@@ -1155,63 +1214,74 @@ Processes in replicated instances write updates to a shared memory segment calle
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ mupip set -replication=on -region "*"
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019319150241
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/jnlex/brunnich.mjl created for region CRUSTACEANS with BEFORE_IMAGES
-   %YDB-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/yottadbuser/jnlex/brunnich.mjl created for database file /home/yottadbuser/jnlex/brunnich.dat
+   ydbuser@ydbdev:~/jnlex$ mupip set -replication=on -region DEFAULT,CRUSTACEANS,MAMMALS,YDBOCTO
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022102171003
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/brunnich.mjl created for region CRUSTACEANS with BEFORE_IMAGES
+   %YDB-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/ydbuser/jnlex/brunnich.mjl created for database file /home/ydbuser/jnlex/brunnich.dat
    %YDB-I-JNLSTATE, Journaling state for region CRUSTACEANS is now ON
    %YDB-I-REPLSTATE, Replication state for region CRUSTACEANS is now ON
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/linnaeus.mjl is renamed to /home/yottadbuser/jnlex/linnaeus.mjl_2019319150241
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/jnlex/linnaeus.mjl created for region MAMMALS with BEFORE_IMAGES
-   %YDB-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/yottadbuser/jnlex/linnaeus.mjl created for database file /home/yottadbuser/jnlex/linnaeus.dat
-   %YDB-I-JNLSTATE, Journaling state for region MAMMALS is now ON
-   %YDB-I-REPLSTATE, Replication state for region MAMMALS is now ON
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019319150241
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/jnlex/ydb.mjl created for region DEFAULT with BEFORE_IMAGES
-   %YDB-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/yottadbuser/jnlex/ydb.mjl created for database file /home/yottadbuser/jnlex/ydb.dat
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022102171003
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/ydb.mjl created for region DEFAULT with BEFORE_IMAGES
+   %YDB-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/ydbuser/jnlex/ydb.mjl created for database file /home/ydbuser/jnlex/ydb.dat
    %YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
    %YDB-I-REPLSTATE, Replication state for region DEFAULT is now ON
-   yottadbuser@yottadbworkshop:~/jnlex$
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022102171003
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/linnaeus.mjl created for region MAMMALS with BEFORE_IMAGES
+   %YDB-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/ydbuser/jnlex/linnaeus.mjl created for database file /home/ydbuser/jnlex/linnaeus.dat
+   %YDB-I-JNLSTATE, Journaling state for region MAMMALS is now ON
+   %YDB-I-REPLSTATE, Replication state for region MAMMALS is now ON
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022102171003
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/%ydbocto.mjl created for region YDBOCTO with BEFORE_IMAGES
+   %YDB-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file /home/ydbuser/jnlex/%ydbocto.mjl created for database file /home/ydbuser/jnlex/%ydbocto.dat
+   %YDB-I-JNLSTATE, Journaling state for region YDBOCTO is now ON
+   %YDB-I-REPLSTATE, Replication state for region YDBOCTO is now ON
+   ydbuser@ydbdev:~/jnlex$
 
 Create new shell scripts to avoid retyping commands:
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ cat originating_stop
+   ydbuser@ydbdev:~/jnlex$ cat originating_stop
    #!/bin/sh
    $ydb_dist/mupip replicate -source -shutdown -timeout=0
    $ydb_dist/mupip rundown -region "*"
-   yottadbuser@yottadbworkshop:~/jnlex$ cat replicating_start
+   ydbuser@ydbdev:~/jnlex$ cat replicating_start
    #!/bin/sh
    $ydb_dist/mupip replicate -source -start -passive -instsecondary=dummy -buffsize=1048576 -log=$ydb_dir/source_dummy.log
    $ydb_dist/mupip replicate -receive -start -listenport=3000 -buffsize=1048576 -log=$ydb_dir/receive_`date +%Y%m%d:%H:%M:%S`.log
-   yottadbuser@yottadbworkshop:~/jnlex$ cat replicating_stop
+   ydbuser@ydbdev:~/jnlex$ cat replicating_stop
    #!/bin/sh
    $ydb_dist/mupip replicate -receive -shutdown -timeout=0
    $ydb_dist/mupip replicate -source -shutdown -timeout=0
    $ydb_dist/mupip rundown -region "*"
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$
 
 Delete the prior generation journal files, to keep the directory clean, and make the newly created shell scripts executable.
 
 .. code-block:: bash
 
-   yottadbuser@yottadbworkshop:~/jnlex$ chmod +x originating_stop replicating_st*
-   yottadbuser@yottadbworkshop:~/jnlex$ rm *.mjl_*
-   yottadbuser@yottadbworkshop:~/jnlex$ ls -l
-   total 1068
-   -rw------- 1 yottadbuser yottadbuser 679936 Nov 15 15:02 brunnich.dat
-   -rw------- 1 yottadbuser yottadbuser  69632 Nov 15 15:02 brunnich.mjl
-   -rw-r--r-- 1 yottadbuser yottadbuser    337 Nov 15 14:59 jnlex_env
-   -rw-r--r-- 1 yottadbuser yottadbuser 679936 Nov 15 15:02 linnaeus.dat
-   -rw-r--r-- 1 yottadbuser yottadbuser  69632 Nov 15 15:02 linnaeus.mjl
-   -rwxr-xr-x 1 yottadbuser yottadbuser    102 Nov 15 15:05 originating_stop
-   -rwxr-xr-x 1 yottadbuser yottadbuser    213 Nov 15 15:09 replicating_start
-   -rwxr-xr-x 1 yottadbuser yottadbuser    127 Nov 15 15:10 replicating_stop
-   -rw-rw-rw- 1 yottadbuser yottadbuser 679936 Nov 15 15:02 ydb.dat
-   -rw-r--r-- 1 yottadbuser yottadbuser   6144 Nov 15 12:53 ydb.gld
-   -rw-rw-rw- 1 yottadbuser yottadbuser  69632 Nov 15 15:02 ydb.mjl
-   yottadbuser@yottadbworkshop:~/jnlex$
+   ydbuser@ydbdev:~/jnlex$ chmod +x originating_stop replicating_st*
+   ydbuser@ydbdev:~/jnlex$ rm *.mjl_*
+   ydbuser@ydbdev:~/jnlex$ ls -l
+   total 1852
+   -rw-rw-rw- 1 ydbuser ydbuser 20785152 Apr 12 17:10 %ydbaim.dat
+   -rw-rw-rw- 1 ydbuser ydbuser 20785152 Apr 12 17:10 %ydbocto.dat
+   -rw-rw-rw- 1 ydbuser ydbuser    69632 Apr 12 17:10 %ydbocto.mjl
+   lrwxrwxrwx 1 ydbuser ydbuser       12 Apr 12 13:13 V6.3-011_x86_64 -> r1.34_x86_64
+   -rw------- 1 ydbuser ydbuser   679936 Apr 12 17:10 brunnich.dat
+   -rw------- 1 ydbuser ydbuser    69632 Apr 12 17:10 brunnich.mjl
+   -rw-r--r-- 1 ydbuser ydbuser      340 Apr 12 17:09 jnlex_env
+   -rw-r--r-- 1 ydbuser ydbuser   679936 Apr 12 17:10 linnaeus.dat
+   -rw-r--r-- 1 ydbuser ydbuser    69632 Apr 12 17:10 linnaeus.mjl
+   -rwxr-xr-x 1 ydbuser ydbuser      101 Apr 12 17:13 originating_stop
+   drwxr-xr-x 2 ydbuser ydbuser     4096 Apr 12 13:13 r
+   drwxr-xr-x 5 ydbuser ydbuser     4096 Apr 12 13:13 r1.34_x86_64
+   -rwxr-xr-x 1 ydbuser ydbuser      256 Apr 12 17:14 replicating_start
+   -rwxr-xr-x 1 ydbuser ydbuser      156 Apr 12 17:15 replicating_stop
+   -rw-rw-rw- 1 ydbuser ydbuser   679936 Apr 12 17:10 ydb.dat
+   -rw-r--r-- 1 ydbuser ydbuser    11264 Apr 12 13:13 ydb.gld
+   -rw-rw-rw- 1 ydbuser ydbuser    69632 Apr 12 17:10 ydb.mjl
+   ydbuser@ydbdev:~/jnlex$
 
 
 Shut down the Acculturation Workshop virtual machine cleanly and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original Debian-11_yottadbworkshop.vmdk file.
@@ -1227,10 +1297,10 @@ If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a
    $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-11_yottadbworkshop.vmdk Santiago.vmdk
    Formatting 'Santiago.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-11_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
    $ ls -l *.vmdk
-   -rw-r--r-- 1 bhaskar gtc 5136187392 Nov 15 15:22 Debian-11_yottadbworkshop.vmdk
-   -rw-r--r-- 1 bhaskar gtc   13172736 Nov 15 15:24 Melbourne.vmdk
-   -rw-r--r-- 1 bhaskar gtc   13172736 Nov 15 15:24 Paris.vmdk
-   -rw-r--r-- 1 bhaskar gtc   13172736 Nov 15 15:24 Santiago.vmdk
+   -rw-r--r-- 1 bhaskar gtc 9320071168 Apr 12 17:22 Debian-11_yottadbworkshop.vmdk
+   -rw-r--r-- 1 bhaskar gtc   13172736 Apr 12 17:24 Melbourne.vmdk
+   -rw-r--r-- 1 bhaskar gtc   13172736 Apr 12 17:24 Paris.vmdk
+   -rw-r--r-- 1 bhaskar gtc   13172736 Apr 12 17:24 Santiago.vmdk
    $
 
 Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Santiago, 2222 & 5000 for Paris, and 2223 & 6000 for Melbourne. The commands given here use kvm on Linux – use the commands appropriate to virtualization on your host).
@@ -1241,21 +1311,21 @@ Now boot the three virtual machines. Each virtual machine will need two ports to
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::5000-:3000 -hda Paris.vmdk &
    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2223-:22,hostfwd=tcp::6000-:3000 -hda Melbourne.vmdk &
 
-To avoid confusion when you are working with multiple machines, change the name of each machine from yottadbworkshop to its location. The examples here are from the Santiago machine. You should do likewise with Paris and Melbourne. To effect a name change will need to (as root) edit the files :code:`/etc/hosts` and :code:`/etc/hostname` to change yottadbworkshop to santiago and then reboot.
+To avoid confusion when you are working with multiple machines, change the name of each machine from :code:`ydbdev` to its location. The examples here are from the Santiago machine. You should do likewise with Paris and Melbourne. To effect a name change you will need to (as root) edit the files :code:`/etc/hosts` and :code:`/etc/hostname` to change :code:`ydbdev` to :code:`santiago` and then reboot.
 
 .. code-block:: bash
 
-   yottadbuser@santiago:~$ cat /etc/hostname
+   ydbuser@santiago:~$ cat /etc/hostname
    santiago
-   yottadbuser@santiago:~$ cat /etc/hosts
+   ydbuser@santiago:~$ cat /etc/hosts
    127.0.0.1       localhost
-   127.0.1.1       santiago
+   127.0.1.1       santiago.yottadb.com    santiago
 
    # The following lines are desirable for IPv6 capable hosts
    ::1     localhost ip6-localhost ip6-loopback
    ff02::1 ip6-allnodes
    ff02::2 ip6-allrouters
-   yottadbuser@santiago:~$
+   ydbuser@santiago:~$
 
 You may also want to change the window/tab labels on your terminal emulator on the host to show which machine each session is connected to.
 
@@ -1265,7 +1335,7 @@ On each machine, edit :code:`jnlex_env` in each instance and change the line :co
 
 .. code-block:: bash
 
-   yottadbuser@santiago:~/jnlex$ cat jnlex_env
+   ydbuser@santiago:~/jnlex$ cat jnlex_env
    export ydb_dist=$(pkg-config --variable=prefix yottadb)
    export ydb_routines=$ydb_dist/libyottadbutil.so
    alias yottadb=$ydb_dist/yottadb
@@ -1275,19 +1345,19 @@ On each machine, edit :code:`jnlex_env` in each instance and change the line :co
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$ydb_dir/santiago.repl
    export ydb_repl_instname=santiago
-   yottadbuser@santiago:~/jnlex$
+   ydbuser@santiago:~/jnlex$
 
 Then on each instance, create a replication instance file. From Santiago, for example:
 
 .. code-block:: bash
 
-   yottadbuser@santiago:~/jnlex$ source jnlex_env
-   yottadbuser@santiago:~/jnlex$ ls -l *.repl
+   ydbuser@santiago:~/jnlex$ source jnlex_env
+   ydbuser@santiago:~/jnlex$ ls -l *.repl
    ls: cannot access '*.repl': No such file or directory
-   yottadbuser@santiago:~/jnlex$ mupip replicate -instance_create
-   yottadbuser@santiago:~/jnlex$ ls -l *.repl
-   -rw-r--r-- 1 yottadbuser yottadbuser 2048 Nov 15 19:10 santiago.repl
-   yottadbuser@santiago:~/jnlex$
+   ydbuser@santiago:~/jnlex$ mupip replicate -instance_create
+   ydbuser@santiago:~/jnlex$ ls -l *.repl
+   -rw-r--r-- 1 ydbuser ydbuser 2048 Apr 13 11:57 santiago.repl
+   ydbuser@santiago:~/jnlex$
 
 Start the configuration with Paris as the originating primary instance, and Santiago and Melbourne in replicating secondary roles. The following commands, on the three instances can be executed in any order.
 
@@ -1295,33 +1365,33 @@ Start Santiago as a replicating instance.
 
 .. code-block:: bash
 
-   yottadbuser@santiago:~/jnlex$ ./replicating_start
-   Mon Nov 18 16:15:29 2019 : Initiating START of source server for secondary instance [dummy]
-   yottadbuser@santiago:~/jnlex$
+   ydbuser@santiago:~/jnlex$ ./replicating_start
+   Wed Apr 13 15:49:46 2022 : Initiating START of source server for secondary instance [dummy]
+   ydbuser@santiago:~/jnlex$
 
 Start Melbourne as a replicating instance.
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ ./replicating_start
-   Tue Nov 19 06:16:05 2019 : Initiating START of source server for secondary instance [dummy]
-   yottadbuser@melbourne:~/jnlex$
+   ydbuser@melbourne:~/jnlex$ ./replicating_start
+   Thu Apr 14 05:49:51 2022 : Initiating START of source server for secondary instance [dummy]
+   ydbuser@melbourne:~/jnlex$
 
 Start Paris as an originating instance replicating to Santiago and Melbourne (notice the use of ports on the host to reach the different replicating instances in the virtual machines).
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/santiago_`date +%Y%m%d:%H:%M:%S`.log
-   Mon Nov 18 20:20:47 2019 : Initiating START of source server for secondary instance [santiago]
-   yottadbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/melbourne_`date +%Y%m%d:%H:%M:%S`.log
-   Mon Nov 18 20:21:06 2019 : Initiating START of source server for secondary instance [melbourne]
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/ydbuser/jnlex/santiago_`date +%Y%m%d:%H:%M:%S`.log
+   Wed Apr 13 21:50:06 2022 : Initiating START of source server for secondary instance [santiago]
+   ydbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/ydbuser/jnlex/melbourne_`date +%Y%m%d:%H:%M:%S`.log
+   Wed Apr 13 21:50:22 2022 : Initiating START of source server for secondary instance [melbourne]
+   ydbuser@paris:~/jnlex$
 
 Start a YottaDB process in Paris and perform some database updates:
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ yottadb -dir
+   ydbuser@paris:~/jnlex$ yottadb -dir
 
    YDB>set ^Weather("Paris",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Rainy"
 
@@ -1331,10 +1401,10 @@ Verify that the data is replicated at Santiago and Melbourne. Execute the follow
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ yottadb -dir
+   ydbuser@melbourne:~/jnlex$ yottadb -dir
 
    YDB>zwrite ^Weather
-   ^Weather("Paris",65335,73603)="Rainy"
+   ^Weather("Paris",66212,78729)="Rainy"
 
    YDB>
 
@@ -1342,20 +1412,22 @@ Bring down Melbourne (simulating system maintenance, or a network outage), but l
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ ./replicating_stop
-   Tue Nov 19 06:31:28 2019 : Forcing immediate shutdown
-   Tue Nov 19 06:31:28 2019 : Initiating shut down
-   Tue Nov 19 06:31:29 2019 : Receive pool shared memory removed
-   Tue Nov 19 06:31:29 2019 : Receive pool semaphore removed
-   Tue Nov 19 06:31:29 2019 : Forcing immediate shutdown
-   Tue Nov 19 06:31:29 2019 : Initiating SHUTDOWN operation on source server pid [598] for secondary instance [dummy]
-   Tue Nov 19 06:31:29 2019 : Waiting for upto [270] seconds for the source server to shutdown
-   Tue Nov 19 06:31:30 2019 : Journal pool shared memory removed
-   Tue Nov 19 06:31:30 2019 : Journal pool semaphore removed
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/brunnich.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/linnaeus.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/ydb.dat successfully rundown
-   yottadbuser@melbourne:~/jnlex$
+   ydbuser@melbourne:~/jnlex$ ./replicating_stop
+   Thu Apr 14 05:52:38 2022 : Forcing immediate shutdown
+   Thu Apr 14 05:52:38 2022 : Initiating shut down
+   Thu Apr 14 05:52:39 2022 : Receive pool shared memory removed
+   Thu Apr 14 05:52:39 2022 : Receive pool semaphore removed
+   Thu Apr 14 05:52:39 2022 : Forcing immediate shutdown
+   Thu Apr 14 05:52:39 2022 : Initiating SHUTDOWN operation on source server pid [783] for secondary instance [dummy]
+   Thu Apr 14 05:52:39 2022 : Waiting for upto [450] seconds for the source server to shutdown
+   Thu Apr 14 05:52:40 2022 : Journal pool shared memory removed
+   Thu Apr 14 05:52:40 2022 : Journal pool semaphore removed
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/brunnich.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/ydb.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/linnaeus.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbaim.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbocto.dat successfully rundown
+   ydbuser@melbourne:~/jnlex$
 
 Create another update in Paris.
 
@@ -1368,8 +1440,8 @@ Verify that this is updated in Santiago.
 .. code-block:: bash
 
    YDB>zwrite ^Weather
-   ^Weather("Paris",65335,73603)="Rainy"
-   ^Weather("Paris",65335,73936)="Sunny"
+   ^Weather("Paris",66212,78729)="Rainy"
+   ^Weather("Paris",66212,78795)="Sunny"
 
    YDB>
 
@@ -1377,25 +1449,25 @@ But it is not replicated in Melbourne.
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ yottadb -dir
+   ydbuser@melbourne:~/jnlex$ yottadb -dir
 
    YDB>zwrite ^Weather
-   ^Weather("Paris",65335,73603)="Rainy"
+   ^Weather("Paris",66212,78729)="Rainy"
 
    YDB>halt
-   yottadbuser@melbourne:~/jnlex$
+   ydbuser@melbourne:~/jnlex$
 
 Restart Melbourne as a replicating instance and notice that it catches up with updates at the originating instance when replication was not active in Melbourne.
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ ./replicating_start
-   Thu Nov 10 07:33:47 2011 : Initiating START of source server for secondary instance [dummy]
-   yottadbuser@melbourne:~/jnlex$ yottadb -dir
+   ydbuser@melbourne:~/jnlex$ ./replicating_start
+   Thu Apr 14 05:53:38 2022 : Initiating START of source server for secondary instance [dummy]
+   ydbuser@melbourne:~/jnlex$ yottadb -dir
 
    YDB>zwrite ^Weather
-   ^Weather("Paris",63523,51308)="Rainy"
-   ^Weather("Paris",63523,51921)="Sunny"
+   ^Weather("Paris",66212,78729)="Rainy"
+   ^Weather("Paris",66212,78795)="Sunny"
 
    YDB>
 
@@ -1409,78 +1481,81 @@ Bring down Melbourne as a replicating instance and bring it up as the originatin
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ ./replicating_stop
-   Tue Nov 19 07:24:08 2019 : Forcing immediate shutdown
-   Tue Nov 19 07:24:08 2019 : Initiating shut down
-   Tue Nov 19 07:24:09 2019 : Receive pool shared memory removed
-   Tue Nov 19 07:24:09 2019 : Receive pool semaphore removed
-   Tue Nov 19 07:24:09 2019 : Forcing immediate shutdown
-   Tue Nov 19 07:24:09 2019 : Initiating SHUTDOWN operation on source server pid [631] for secondary instance [dummy]
-   Tue Nov 19 07:24:09 2019 : Waiting for upto [270] seconds for the source server to shutdown
-   Tue Nov 19 07:24:10 2019 : Journal pool shared memory removed
-   Tue Nov 19 07:24:10 2019 : Journal pool semaphore removed
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/brunnich.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/linnaeus.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/ydb.dat successfully rundown
-   yottadbuser@melbourne:~/jnlex$ mupip replicate -source -start -instsecondary=santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/source_santiago_`date +%Y%m%d:%H:%M:%S`.log
-   Tue Nov 19 07:25:51 2019 : Initiating START of source server for secondary instance [santiago]
-   yottadbuser@melbourne:~/jnlex$ mupip replicate -source -start -instsecondary=paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/source_paris_`date +%Y%m%d:%H:%M:%S`.log
-   Tue Nov 19 07:27:20 2019 : Initiating START of source server for secondary instance [paris]
-   yottadbuser@melbourne:~/jnlex$
+   ydbuser@melbourne:~/jnlex$ ./replicating_stop
+   Thu Apr 14 05:54:26 2022 : Forcing immediate shutdown
+   Thu Apr 14 05:54:26 2022 : Initiating shut down
+   Thu Apr 14 05:54:27 2022 : Receive pool shared memory removed
+   Thu Apr 14 05:54:27 2022 : Receive pool semaphore removed
+   Thu Apr 14 05:54:27 2022 : Forcing immediate shutdown
+   Thu Apr 14 05:54:27 2022 : Initiating SHUTDOWN operation on source server pid [864] for secondary instance [dummy]
+   Thu Apr 14 05:54:27 2022 : Waiting for upto [450] seconds for the source server to shutdown
+   Thu Apr 14 05:54:28 2022 : Journal pool shared memory removed
+   Thu Apr 14 05:54:28 2022 : Journal pool semaphore removed
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/brunnich.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/ydb.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/linnaeus.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbaim.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbocto.dat successfully rundown
+   ydbuser@melbourne:~/jnlex$ mupip replicate -source -start -instsecondary=santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/ydbuser/jnlex/source_santiago_`date +%Y%m%d:%H:%M:%S`.log
+   Thu Apr 14 05:54:50 2022 : Initiating START of source server for secondary instance [santiago]
+   ydbuser@melbourne:~/jnlex$ mupip replicate -source -start -instsecondary=paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/ydbuser/jnlex/source_paris_`date +%Y%m%d:%H:%M:%S`.log
+   Thu Apr 14 05:55:05 2022 : Initiating START of source server for secondary instance [paris]
+   ydbuser@melbourne:~/jnlex$
 
 Both Santiago and Paris should perform a rollback fetchresync before they become secondary instances to Melbourne. First Santiago (since Paris has crashed and is down; notice that the times look very different because they show times in their local timezones).
 
 .. code-block:: bash
 
-   yottadbuser@santiago:~/jnlex$ ./replicating_stop
-   Mon Nov 18 17:30:58 2019 : Forcing immediate shutdown
-   Mon Nov 18 17:30:58 2019 : Initiating shut down
-   Mon Nov 18 17:30:59 2019 : Receive pool shared memory removed
-   Mon Nov 18 17:30:59 2019 : Receive pool semaphore removed
-   Mon Nov 18 17:30:59 2019 : Forcing immediate shutdown
-   Mon Nov 18 17:30:59 2019 : Initiating SHUTDOWN operation on source server pid [630] for secondary instance [dummy]
-   Mon Nov 18 17:30:59 2019 : Waiting for upto [270] seconds for the source server to shutdown
-   Mon Nov 18 17:31:00 2019 : Journal pool shared memory removed
-   Mon Nov 18 17:31:00 2019 : Journal pool semaphore removed
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/brunnich.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/linnaeus.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/ydb.dat successfully rundown
-   yottadbuser@santiago:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %YDB-I-MUJNLSTAT, Initial processing started at Mon Nov 18 17:31:20 2019
-   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Mon Nov 18 17:31:20 2019
-   Mon Nov 18 17:31:20 2019 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Mon Nov 18 17:31:20 2019 : Waiting for a connection...
-   Mon Nov 18 17:31:21 2019 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Mon Nov 18 17:31:21 2019 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:59552
-   Mon Nov 18 17:31:21 2019 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
-   Mon Nov 18 17:31:21 2019 : Source and Receiver sides have same endianness
-   Mon Nov 18 17:31:21 2019 : Remote side source log file path is /home/yottadbuser/jnlex/source_santiago_20191119:07:25:51.log; Source Server PID = 703
-   Mon Nov 18 17:31:21 2019 : Received REPL_NEED_INSTINFO message from primary instance [melbourne]
-   Mon Nov 18 17:31:21 2019 : Sending REPL_INSTINFO message
-   Mon Nov 18 17:31:21 2019 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
-   Mon Nov 18 17:31:21 2019 : Sending REPL_HISTINFO message with seqno 1 [0x1]
-   Mon Nov 18 17:31:21 2019 : History sent : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [paris] : Cycle = [1] : Creator pid = 545 : Created time = 1574104847 [0x5dd2ef0f] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
-   Mon Nov 18 17:31:21 2019 : Received REPL_RESYNC_SEQNO message
-   Mon Nov 18 17:31:21 2019 : Received RESYNC SEQNO is 3 [0x3]
-   %YDB-I-MUJNLSTAT, Backward processing started at Mon Nov 18 17:31:21 2019
+   ydbuser@santiago:~/jnlex$ ./replicating_stop
+   Wed Apr 13 15:55:12 2022 : Forcing immediate shutdown
+   Wed Apr 13 15:55:12 2022 : Initiating shut down
+   Wed Apr 13 15:55:13 2022 : Receive pool shared memory removed
+   Wed Apr 13 15:55:13 2022 : Receive pool semaphore removed
+   Wed Apr 13 15:55:13 2022 : Forcing immediate shutdown
+   Wed Apr 13 15:55:13 2022 : Initiating SHUTDOWN operation on source server pid [757] for secondary instance [dummy]
+   Wed Apr 13 15:55:13 2022 : Waiting for upto [450] seconds for the source server to shutdown
+   Wed Apr 13 15:55:14 2022 : Journal pool shared memory removed
+   Wed Apr 13 15:55:14 2022 : Journal pool semaphore removed
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/brunnich.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/ydb.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/linnaeus.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbaim.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbocto.dat successfully rundown
+   ydbuser@santiago:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/ydbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %YDB-I-MUJNLSTAT, Initial processing started at Wed Apr 13 15:55:26 2022
+   %YDB-W-NOTALLREPLON, Replication off for one or more regions
+   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Apr 13 15:55:26 2022
+   Wed Apr 13 15:55:26 2022 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Wed Apr 13 15:55:26 2022 : Waiting for a connection...
+   Wed Apr 13 15:55:27 2022 : Connection established, using TCP send buffer size 87040 receive buffer size 131072
+   Wed Apr 13 15:55:27 2022 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:63888
+   Wed Apr 13 15:55:27 2022 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
+   Wed Apr 13 15:55:27 2022 : Source and Receiver sides have same endianness
+   Wed Apr 13 15:55:27 2022 : Remote side source log file path is /home/ydbuser/jnlex/source_santiago_20220414:05:54:50.log; Source Server PID = 876
+   Wed Apr 13 15:55:27 2022 : Received REPL_NEED_INSTINFO message from primary instance [melbourne]
+   Wed Apr 13 15:55:27 2022 : Sending REPL_INSTINFO message
+   Wed Apr 13 15:55:27 2022 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
+   Wed Apr 13 15:55:27 2022 : Sending REPL_HISTINFO message with seqno 1 [0x1]
+   Wed Apr 13 15:55:27 2022 : History sent : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [paris] : Cycle = [1] : Creator pid = 784 : Created time = 1649879406 [0x6257296e] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
+   Wed Apr 13 15:55:27 2022 : Received REPL_RESYNC_SEQNO message
+   Wed Apr 13 15:55:27 2022 : Received RESYNC SEQNO is 3 [0x3]
+   %YDB-I-MUJNLSTAT, Backward processing started at Wed Apr 13 15:55:27 2022
    %YDB-I-RESOLVESEQNO, Resolving until sequence number 3 [0x0000000000000003]
-   %YDB-I-MUJNLSTAT, Before image applying started at Mon Nov 18 17:31:21 2019
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019322
-   173121
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/linnaeus.mjl is renamed to /home/yottadbuser/jnlex/linnaeus.mjl_2019322
-   173121
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019322173121
-   %YDB-I-MUJNLSTAT, Forward processing started at Mon Nov 18 17:31:21 2019
+   %YDB-I-MUJNLSTAT, Before image applying started at Wed Apr 13 15:55:27 2022
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022103155527
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022103155527
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022103155527
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022103155527
+   %YDB-I-MUJNLSTAT, Forward processing started at Wed Apr 13 15:55:27 2022
    %YDB-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 3 [0x0000000000000003]
-   %YDB-I-FILENOTCREATE, Lost transactions extract file /home/yottadbuser/jnlex/Unreplic_Trans_Report_20191118173120.txt n
-   ot created
+   %YDB-I-FILENOTCREATE, Lost transactions extract file /home/ydbuser/jnlex/Unreplic_Trans_Report_20220413155526.txt not created
    %YDB-S-JNLSUCCESS, Show successful
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Rollback successful
-   %YDB-I-MUJNLSTAT, End processing at Mon Nov 18 17:31:21 2019
-   yottadbuser@santiago:~/jnlex$ ./replicating_start
-   Mon Nov 18 17:32:48 2019 : Initiating START of source server for secondary instance [dummy]
-   yottadbuser@santiago:~/jnlex$
+   %YDB-I-MUJNLSTAT, End processing at Wed Apr 13 15:55:27 2022
+   ydbuser@santiago:~/jnlex$ ./replicating_start
+   Wed Apr 13 15:55:58 2022 : Initiating START of source server for secondary instance [dummy]
+   ydbuser@santiago:~/jnlex$
 
 The purpose of the MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC operation is for Santiago to roll its database state back to a common state shared with Melbourne, so that when Santiago starts to operate in a secondary role to Melbourne in a primary role, and it catches up to Melbourne, the two instances are logically in the same state. Any transactions rolled off are called “lost” transactions (see :ref:`repl-bcklogs`). In this case,  no lost (unreplicated) transaction file was created as no transactions (updates) had to be rolled off to synchronize the instances.
 
@@ -1488,38 +1563,38 @@ Now reboot Paris to simulate its recovery. When the system comes up (before perf
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %YDB-I-MUJNLSTAT, Initial processing started at Tue Jan  23 14:35:55 2018
-   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Tue Jan  23 14:35:55 2018
-   Tue Jan  23 14:35:55 2018 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Tue Jan  23 14:35:55 2018 : Waiting for a connection...
-   Tue Jan  23 14:35:56 2018 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Tue Jan  23 14:35:56 2018 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:49353
-   Tue Jan  23 14:35:56 2018 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
-   Tue Jan  23 14:35:56 2018 : Source and Receiver sides have same endianness
-   Tue Jan  23 14:35:56 2018 : Remote side source log file path is /home/yottadbuser/jnlex/source_Paris.log; Source Server PID = 1037
-   Tue Jan  23 14:35:56 2018 : Received REPL_NEED_INSTINFO message from primary instance [Melbourne]
-   Tue Jan  23 14:35:56 2018 : Sending REPL_INSTINFO message
-   Tue Jan  23 14:35:56 2018 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
-   Tue Jan  23 14:35:56 2018 : Sending REPL_HISTINFO message with seqno 1 [0x1]
-   Tue Jan  23 14:35:56 2018 : History sent : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [Paris] : Cycle = [1] : Creator pid = 1007 : Created time = 1417547545 [0x547e0f19] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
-   Tue Jan  23 14:35:56 2018 : Received REPL_RESYNC_SEQNO message
-   Tue Jan  23 14:35:56 2018 : Received RESYNC SEQNO is 3 [0x3]
-   %YDB-I-MUJNLSTAT, Backward processing started at Tue Jan  23 14:35:56 2018
+   ydbuser@paris:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/ydbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %YDB-I-MUJNLSTAT, Initial processing started at Wed Apr 13 21:56:41 2022
+   %YDB-W-NOTALLREPLON, Replication off for one or more regions
+   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Apr 13 21:56:41 2022
+   Wed Apr 13 21:56:41 2022 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Wed Apr 13 21:56:41 2022 : Waiting for a connection...
+   Wed Apr 13 21:56:41 2022 : Connection established, using TCP send buffer size 87040 receive buffer size 131072
+   Wed Apr 13 21:56:41 2022 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:60760
+   Wed Apr 13 21:56:41 2022 : Sending REPL_FETCH_RESYNC message with seqno 3 [0x3]
+   Wed Apr 13 21:56:41 2022 : Source and Receiver sides have same endianness
+   Wed Apr 13 21:56:41 2022 : Remote side source log file path is /home/ydbuser/jnlex/source_paris_20220414:05:55:05.log; Source Server PID = 879
+   Wed Apr 13 21:56:41 2022 : Received REPL_NEED_INSTINFO message from primary instance [melbourne]
+   Wed Apr 13 21:56:41 2022 : Sending REPL_INSTINFO message
+   Wed Apr 13 21:56:41 2022 : Received REPL_NEED_HISTINFO message for Seqno 3 [0x3]
+   Wed Apr 13 21:56:41 2022 : Sending REPL_HISTINFO message with seqno 1 [0x1]
+   Wed Apr 13 21:56:41 2022 : History sent : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [paris] : Cycle = [1] : Creator pid = 784 : Created time = 1649879406 [0x6257296e] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
+   Wed Apr 13 21:56:41 2022 : Received REPL_RESYNC_SEQNO message
+   Wed Apr 13 21:56:41 2022 : Received RESYNC SEQNO is 3 [0x3]
+   %YDB-I-MUJNLSTAT, Backward processing started at Wed Apr 13 21:56:41 2022
    %YDB-I-RESOLVESEQNO, Resolving until sequence number 3 [0x0000000000000003]
-   %YDB-I-MUJNLSTAT, Before image applying started at Tue Jan  23 14:35:56 2018
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/aA.mjl is renamed to /home/yottadbuser/jnlex/aA.mjl_2018336143556
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/others.mjl is renamed to /home/yottadbuser/jnlex/others.mjl_2018336143556
-   %YDB-I-MUJNLSTAT, Forward processing started at Tue Jan  23 14:35:56 2018
-   %YDB-I-FILECREATE, Lost transactions extract file /home/yottadbuser/jnlex/Unreplic_Trans_Report_20181202143555.txt created
+   %YDB-I-MUJNLSTAT, Before image applying started at Wed Apr 13 21:56:41 2022
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022103215641
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022103215641
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022103215641
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022103215641
+   %YDB-I-MUJNLSTAT, Forward processing started at Wed Apr 13 21:56:41 2022
    %YDB-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 3 [0x0000000000000003]
+   %YDB-I-FILENOTCREATE, Lost transactions extract file /home/ydbuser/jnlex/Unreplic_Trans_Report_20220413215641.txt not created
    %YDB-S-JNLSUCCESS, Show successful
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Rollback successful
-   %YDB-I-MUJNLSTAT, End processing at Tue Jan  23 14:35:57 2018
-   yottadbuser@santiago:~/jnlex$ ./replicating_start
-   Mon Nov 18 17:32:48 2019 : Initiating START of source server for secondary instance [dummy]
-   yottadbuser@santiago:~/jnlex$
+   %YDB-I-MUJNLSTAT, End processing at Wed Apr 13 21:56:41 2022
 
 Now, create a database update in Melbourne.
 
@@ -1532,9 +1607,9 @@ And confirm that it is replicated to Santiago.
 .. code-block:: bash
 
    YDB>zwrite ^Weather
-   ^Weather("Melbourne",65336,27791)="Stormy"
-   ^Weather("Paris",65335,73603)="Rainy"
-   ^Weather("Paris",65335,73936)="Sunny"
+   ^Weather("Melbourne",66212,21528)="Stormy"
+   ^Weather("Paris",66212,78729)="Rainy"
+   ^Weather("Paris",66212,78795)="Sunny"
 
    YDB>
 
@@ -1543,14 +1618,14 @@ After performing a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC in Paris, start i
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ ./replicating_start
-   Mon Nov 18 21:47:33 2019 : Initiating START of source server for secondary instance [dummy]
-   yottadbuser@paris:~/jnlex$ yottadb -dir
+   ydbuser@paris:~/jnlex$ ./replicating_start
+   Wed Apr 13 21:59:18 2022 : Initiating START of source server for secondary instance [dummy]
+   ydbuser@paris:~/jnlex$ yottadb -dir
 
    YDB>zwrite ^Weather
-   ^Weather("Melbourne",65336,27791)="Stormy"
-   ^Weather("Paris",65335,73603)="Rainy"
-   ^Weather("Paris",65335,73936)="Sunny"
+   ^Weather("Melbourne",66212,21528)="Stormy"
+   ^Weather("Paris",66212,78729)="Rainy"
+   ^Weather("Paris",66212,78795)="Sunny"
 
    YDB>
 
@@ -1558,36 +1633,40 @@ Shut down all three instances cleanly to end the exercise. Run the :code:`origin
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ ./originating_stop
-   Tue Nov 19 07:50:30 2019 : Forcing immediate shutdown
-   Tue Nov 19 07:50:30 2019 : Initiating SHUTDOWN operation on source server pid [703] for secondary instance [santiago]
-   Tue Nov 19 07:50:30 2019 : Initiating SHUTDOWN operation on source server pid [710] for secondary instance [paris]
-   Tue Nov 19 07:50:30 2019 : Waiting for upto [270] seconds for the source server to shutdown
-   Tue Nov 19 07:50:31 2019 : Journal pool shared memory removed
-   Tue Nov 19 07:50:31 2019 : Journal pool semaphore removed
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/brunnich.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/linnaeus.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/ydb.dat successfully rundown
-   yottadbuser@melbourne:~/jnlex$
+   ydbuser@melbourne:~/jnlex$ ./originating_stop
+   Thu Apr 14 06:00:06 2022 : Forcing immediate shutdown
+   Thu Apr 14 06:00:06 2022 : Initiating SHUTDOWN operation on source server pid [876] for secondary instance [santiago]
+   Thu Apr 14 06:00:06 2022 : Initiating SHUTDOWN operation on source server pid [879] for secondary instance [paris]
+   Thu Apr 14 06:00:06 2022 : Waiting for upto [450] seconds for the source server to shutdown
+   Thu Apr 14 06:00:07 2022 : Journal pool shared memory removed
+   Thu Apr 14 06:00:07 2022 : Journal pool semaphore removed
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/brunnich.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/ydb.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/linnaeus.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbaim.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbocto.dat successfully rundown
+   ydbuser@melbourne:~/jnlex$
 
 and the :code:`replicating_stop` script in Paris and Santiago (only Paris is shown here; Santiago will be identical except for the times).
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ ./replicating_stop
-   Mon Nov 18 21:52:13 2019 : Forcing immediate shutdown
-   Mon Nov 18 21:52:13 2019 : Initiating shut down
-   Mon Nov 18 21:52:14 2019 : Receive pool shared memory removed
-   Mon Nov 18 21:52:14 2019 : Receive pool semaphore removed
-   Mon Nov 18 21:52:14 2019 : Forcing immediate shutdown
-   Mon Nov 18 21:52:14 2019 : Initiating SHUTDOWN operation on source server pid [444] for secondary instance [dummy]
-   Mon Nov 18 21:52:14 2019 : Waiting for upto [270] seconds for the source server to shutdown
-   Mon Nov 18 21:52:15 2019 : Journal pool shared memory removed
-   Mon Nov 18 21:52:15 2019 : Journal pool semaphore removed
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/brunnich.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/linnaeus.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/ydb.dat successfully rundown
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$ ./replicating_stop
+   Wed Apr 13 22:00:00 2022 : Forcing immediate shutdown
+   Wed Apr 13 22:00:00 2022 : Initiating shut down
+   Wed Apr 13 22:00:01 2022 : Receive pool shared memory removed
+   Wed Apr 13 22:00:01 2022 : Receive pool semaphore removed
+   Wed Apr 13 22:00:01 2022 : Forcing immediate shutdown
+   Wed Apr 13 22:00:01 2022 : Initiating SHUTDOWN operation on source server pid [823] for secondary instance [dummy]
+   Wed Apr 13 22:00:01 2022 : Waiting for upto [450] seconds for the source server to shutdown
+   Wed Apr 13 22:00:02 2022 : Journal pool shared memory removed
+   Wed Apr 13 22:00:02 2022 : Journal pool semaphore removed
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/brunnich.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/ydb.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/linnaeus.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbaim.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbocto.dat successfully rundown
+   ydbuser@paris:~/jnlex$
 
 .. _repl-bcklogs:
 
@@ -1637,79 +1716,78 @@ Start Santiago as the originating instance:
 
 .. code-block:: bash
 
-   yottadbuser@santiago:~/jnlex$ mupip replicate -source -start -instsecondary=paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/source_paris_`date +%Y%m%d%H%M%S`.log
-   Mon Nov 18 18:57:59 2019 : Initiating START of source server for secondary instance [paris]
-   yottadbuser@santiago:~/jnlex$ mupip replicate -source -start -instsecondary=melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/source_melbourne_`date +%Y%m%d%H%M%S`.log
-   Mon Nov 18 18:58:08 2019 : Initiating START of source server for secondary instance [melbourne]
-   yottadbuser@santiago:~/jnlex$
+   ydbuser@santiago:~/jnlex$ mupip replicate -source -start -instsecondary=paris -secondary=10.0.2.2:5000 -buffsize=1048576 -log=/home/ydbuser/jnlex/source_paris_`date +%Y%m%d%H%M%S`.log
+   Wed Apr 13 16:24:21 2022 : Initiating START of source server for secondary instance [paris]
+   ydbuser@santiago:~/jnlex$ mupip replicate -source -start -instsecondary=melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/ydbuser/jnlex/source_melbourne_`date +%Y%m%d%H%M%S`.log
+   Wed Apr 13 16:24:46 2022 : Initiating START of source server for secondary instance [melbourne]
+   ydbuser@santiago:~/jnlex$
 
 At Paris (and also in Melbourne) perform the FETCHRESYNC operation and then start replication. You can ask YottaDB to tell you the health of replication and also the replication backlog. The following shows the interaction in Paris; do the same in Melbourne.
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %YDB-I-MUJNLSTAT, Initial processing started at Mon Nov 18 22:59:06 2019
-   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Mon Nov 18 22:59:06 2019
-   Mon Nov 18 22:59:06 2019 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Mon Nov 18 22:59:06 2019 : Waiting for a connection...
-   Mon Nov 18 22:59:07 2019 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Mon Nov 18 22:59:07 2019 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:35942
-   Mon Nov 18 22:59:07 2019 : Sending REPL_FETCH_RESYNC message with seqno 4 [0x4]
-   Mon Nov 18 22:59:07 2019 : Source and Receiver sides have same endianness
-   Mon Nov 18 22:59:07 2019 : Remote side source log file path is /home/yottadbuser/jnlex/source_paris_20191118185759.log; Source Server PID = 748
-   Mon Nov 18 22:59:07 2019 : Received REPL_NEED_INSTINFO message from primary instance [santiago]
-   Mon Nov 18 22:59:07 2019 : Sending REPL_INSTINFO message
-   Mon Nov 18 22:59:07 2019 : Received REPL_NEED_HISTINFO message for Seqno 4 [0x4]
-   Mon Nov 18 22:59:07 2019 : Sending REPL_HISTINFO message with seqno 3 [0x3]
-   Mon Nov 18 22:59:07 2019 : History sent : Start Seqno = 3 [0x3] : Stream Seqno = 0 [0x0] : Root Primary = [melbourne] : Cycle = [1] : Creator pid = 703 : Created time = 1574108751 [0x5dd2fe4f] : History number = 1 : Prev History number = 0 : Stream # = 0 : History type = 1
-   Mon Nov 18 22:59:07 2019 : Received REPL_RESYNC_SEQNO message
-   Mon Nov 18 22:59:07 2019 : Received RESYNC SEQNO is 4 [0x4]
-   %YDB-I-MUJNLSTAT, Backward processing started at Mon Nov 18 22:59:07 2019
+   ydbuser@paris:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/ydbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %YDB-I-MUJNLSTAT, Initial processing started at Wed Apr 13 22:25:04 2022
+   %YDB-W-NOTALLREPLON, Replication off for one or more regions
+   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Apr 13 22:25:05 2022
+   Wed Apr 13 22:25:05 2022 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Wed Apr 13 22:25:05 2022 : Waiting for a connection...
+   Wed Apr 13 22:25:05 2022 : Connection established, using TCP send buffer size 87040 receive buffer size 131072
+   Wed Apr 13 22:25:05 2022 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:61056
+   Wed Apr 13 22:25:05 2022 : Sending REPL_FETCH_RESYNC message with seqno 4 [0x4]
+   Wed Apr 13 22:25:05 2022 : Source and Receiver sides have same endianness
+   Wed Apr 13 22:25:05 2022 : Remote side source log file path is /home/ydbuser/jnlex/source_paris_20220413162421.log; Source Server PID = 869
+   Wed Apr 13 22:25:05 2022 : Received REPL_NEED_INSTINFO message from primary instance [santiago]
+   Wed Apr 13 22:25:05 2022 : Sending REPL_INSTINFO message
+   Wed Apr 13 22:25:05 2022 : Received REPL_NEED_HISTINFO message for Seqno 4 [0x4]
+   Wed Apr 13 22:25:05 2022 : Sending REPL_HISTINFO message with seqno 3 [0x3]
+   Wed Apr 13 22:25:05 2022 : History sent : Start Seqno = 3 [0x3] : Stream Seqno = 0 [0x0] : Root Primary = [melbourne] : Cycle = [1] : Creator pid = 876 : Created time = 1649879690 [0x62572a8a] : History number = 1 : Prev History number = 0 : Stream # = 0 : History type = 1
+   Wed Apr 13 22:25:05 2022 : Received REPL_RESYNC_SEQNO message
+   Wed Apr 13 22:25:05 2022 : Received RESYNC SEQNO is 4 [0x4]
+   %YDB-I-MUJNLSTAT, Backward processing started at Wed Apr 13 22:25:05 2022
    %YDB-I-RESOLVESEQNO, Resolving until sequence number 4 [0x0000000000000004]
-   %YDB-I-MUJNLSTAT, Before image applying started at Mon Nov 18 22:59:07 2019
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019322
-   225907
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/linnaeus.mjl is renamed to /home/yottadbuser/jnlex/linnaeus.mjl_2019322
-   225907
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019322225907
-   %YDB-I-MUJNLSTAT, Forward processing started at Mon Nov 18 22:59:07 2019
+   %YDB-I-MUJNLSTAT, Before image applying started at Wed Apr 13 22:25:05 2022
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022103222505
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022103222505
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022103222505
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022103222505
+   %YDB-I-MUJNLSTAT, Forward processing started at Wed Apr 13 22:25:05 2022
    %YDB-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 4 [0x0000000000000004]
-   %YDB-I-FILENOTCREATE, Lost transactions extract file /home/yottadbuser/jnlex/Unreplic_Trans_Report_20191118225906.txt n
-   ot created
+   %YDB-I-FILENOTCREATE, Lost transactions extract file /home/ydbuser/jnlex/Unreplic_Trans_Report_20220413222504.txt not created
    %YDB-S-JNLSUCCESS, Show successful
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Rollback successful
-   %YDB-I-MUJNLSTAT, End processing at Mon Nov 18 22:59:07 2019
-   yottadbuser@paris:~/jnlex$ ./replicating_start
-   Mon Nov 18 22:59:29 2019 : Initiating START of source server for secondary instance [dummy]
-   yottadbuser@paris:~/jnlex$ mupip replicate -receiver -checkhealth
-   PID 477 Receiver server is alive
-   PID 478 Update process is alive
-   yottadbuser@paris:~/jnlex$ mupip replicate -receiver -showbacklog
+   %YDB-I-MUJNLSTAT, End processing at Wed Apr 13 22:25:05 2022
+   ydbuser@paris:~/jnlex$ ./replicating_start
+   Wed Apr 13 22:25:28 2022 : Initiating START of source server for secondary instance [dummy]
+   ydbuser@paris:~/jnlex$ mupip replicate -receiver -checkhealth
+   PID 889 Receiver server is alive
+   PID 890 Update process is alive
+   ydbuser@paris:~/jnlex$ mupip replicate -receiver -showbacklog
    0 : number of backlog transactions received by receiver server and yet to be processed by update process
    3 : sequence number of last transaction received from Source Server and written to receive pool
    3 : sequence number of last transaction processed by update process
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$
 
 You can also check replication health and the backlog on the originating instance, Santiago. Notice that if you do not specify which replication connection you want details for, you get information on all of them.
 
 .. code-block:: bash
 
-   yottadbuser@santiago:~/jnlex$ mupip replicate -source -checkhealth
-   Mon Nov 18 19:03:17 2019 : Initiating CHECKHEALTH operation on source server pid [748] for secondary instance name [paris]
-   PID 748 Source server is alive in ACTIVE mode
-   Mon Nov 18 19:03:17 2019 : Initiating CHECKHEALTH operation on source server pid [751] for secondary instance name [melbourne]
-   PID 751 Source server is alive in ACTIVE mode
-   yottadbuser@santiago:~/jnlex$ mupip replicate -source -showbacklog
-   Mon Nov 18 19:03:23 2019 : Initiating SHOWBACKLOG operation on source server pid [748] for secondary instance [paris]
+   ydbuser@santiago:~/jnlex$ mupip replicate -source -checkhealth
+   Wed Apr 13 16:26:50 2022 : Initiating CHECKHEALTH operation on source server pid [869] for secondary instance name [paris]
+   PID 869 Source server is alive in ACTIVE mode
+   Wed Apr 13 16:26:50 2022 : Initiating CHECKHEALTH operation on source server pid [873] for secondary instance name [melbourne]
+   PID 873 Source server is alive in ACTIVE mode
+   ydbuser@santiago:~/jnlex$ mupip replicate -source -showbacklog
+   Wed Apr 13 16:27:04 2022 : Initiating SHOWBACKLOG operation on source server pid [869] for secondary instance [paris]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    3 : sequence number of last transaction written to journal pool
    3 : sequence number of last transaction sent by source server
-   Mon Nov 18 19:03:23 2019 : Initiating SHOWBACKLOG operation on source server pid [751] for secondary instance [melbourne]
+   Wed Apr 13 16:27:04 2022 : Initiating SHOWBACKLOG operation on source server pid [873] for secondary instance [melbourne]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    3 : sequence number of last transaction written to journal pool
    3 : sequence number of last transaction sent by source server
-   yottadbuser@santiago:~/jnlex$
+   ydbuser@santiago:~/jnlex$
 
 .. note::
 
@@ -1726,10 +1804,10 @@ Verify that it is replicated in Paris and Melbourne.
 .. code-block:: bash
 
    YDB>zwrite ^Weather
-   ^Weather("Melbourne",65336,27791)="Stormy"
-   ^Weather("Paris",65335,73603)="Rainy"
-   ^Weather("Paris",65335,73936)="Sunny"
-   ^Weather("Santiago",65335,69208)="Snowing"
+   ^Weather("Melbourne",66213,21528)="Stormy"
+   ^Weather("Paris",66212,78729)="Rainy"
+   ^Weather("Paris",66212,78795)="Sunny"
+   ^Weather("Santiago",66212,59306)="Snowing"
 
    YDB>
 
@@ -1737,20 +1815,22 @@ To simulate a failure with a backlog first shut down replication in Melbourne, a
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ ./replicating_stop
-   Tue Nov 19 09:15:24 2019 : Forcing immediate shutdown
-   Tue Nov 19 09:15:24 2019 : Initiating shut down
-   Tue Nov 19 09:15:25 2019 : Receive pool shared memory removed
-   Tue Nov 19 09:15:25 2019 : Receive pool semaphore removed
-   Tue Nov 19 09:15:25 2019 : Forcing immediate shutdown
-   Tue Nov 19 09:15:25 2019 : Initiating SHUTDOWN operation on source server pid [760] for secondary instance [dummy]
-   Tue Nov 19 09:15:25 2019 : Waiting for upto [270] seconds for the source server to shutdown
-   Tue Nov 19 09:15:26 2019 : Journal pool shared memory removed
-   Tue Nov 19 09:15:26 2019 : Journal pool semaphore removed
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/brunnich.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/linnaeus.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/ydb.dat successfully rundown
-   yottadbuser@melbourne:~/jnlex$
+   ydbuser@melbourne:~/jnlex$ ./replicating_stop
+   Thu Apr 14 06:29:05 2022 : Forcing immediate shutdown
+   Thu Apr 14 06:29:05 2022 : Initiating shut down
+   Thu Apr 14 06:29:06 2022 : Receive pool shared memory removed
+   Thu Apr 14 06:29:06 2022 : Receive pool semaphore removed
+   Thu Apr 14 06:29:06 2022 : Forcing immediate shutdown
+   Thu Apr 14 06:29:06 2022 : Initiating SHUTDOWN operation on source server pid [1095] for secondary instance [dummy]
+   Thu Apr 14 06:29:06 2022 : Waiting for upto [450] seconds for the source server to shutdown
+   Thu Apr 14 06:29:07 2022 : Journal pool shared memory removed
+   Thu Apr 14 06:29:07 2022 : Journal pool semaphore removed
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/brunnich.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/ydb.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/linnaeus.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbaim.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbocto.dat successfully rundown
+   ydbuser@melbourne:~/jnlex$
 
 In Santiago:
 
@@ -1759,11 +1839,11 @@ In Santiago:
    YDB>set ^Weather("Santiago",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Blizzards"
 
    YDB>zsystem "$ydb_dist/mupip replicate -source -showbacklog"
-   Mon Nov 18 19:16:26 2019 : Initiating SHOWBACKLOG operation on source server pid [748] for secondary instance [paris]
+   Wed Apr 13 16:29:54 2022 : Initiating SHOWBACKLOG operation on source server pid [869] for secondary instance [paris]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    5 : sequence number of last transaction written to journal pool
    5 : sequence number of last transaction sent by source server
-   Mon Nov 18 19:16:26 2019 : Initiating SHOWBACKLOG operation on source server pid [751] for secondary instance [melbourne]
+   Wed Apr 13 16:29:54 2022 : Initiating SHOWBACKLOG operation on source server pid [873] for secondary instance [melbourne]
    1 : backlog number of transactions written to journal pool and yet to be sent by the source server
    5 : sequence number of last transaction written to journal pool
    4 : sequence number of last transaction sent by source server
@@ -1776,20 +1856,22 @@ In Paris:
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ ./replicating_stop
-   Mon Nov 18 23:17:26 2019 : Forcing immediate shutdown
-   Mon Nov 18 23:17:26 2019 : Initiating shut down
-   Mon Nov 18 23:17:27 2019 : Receive pool shared memory removed
-   Mon Nov 18 23:17:27 2019 : Receive pool semaphore removed
-   Mon Nov 18 23:17:27 2019 : Forcing immediate shutdown
-   Mon Nov 18 23:17:27 2019 : Initiating SHUTDOWN operation on source server pid [475] for secondary instance [dummy]
-   Mon Nov 18 23:17:27 2019 : Waiting for upto [270] seconds for the source server to shutdown
-   Mon Nov 18 23:17:28 2019 : Journal pool shared memory removed
-   Mon Nov 18 23:17:28 2019 : Journal pool semaphore removed
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/brunnich.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/linnaeus.dat successfully rundown
-   %YDB-I-MUFILRNDWNSUC, File /home/yottadbuser/jnlex/ydb.dat successfully rundown
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$ ./replicating_stop
+   Wed Apr 13 22:30:17 2022 : Forcing immediate shutdown
+   Wed Apr 13 22:30:17 2022 : Initiating shut down
+   Wed Apr 13 22:30:18 2022 : Receive pool shared memory removed
+   Wed Apr 13 22:30:18 2022 : Receive pool semaphore removed
+   Wed Apr 13 22:30:18 2022 : Forcing immediate shutdown
+   Wed Apr 13 22:30:18 2022 : Initiating SHUTDOWN operation on source server pid [886] for secondary instance [dummy]
+   Wed Apr 13 22:30:18 2022 : Waiting for upto [450] seconds for the source server to shutdown
+   Wed Apr 13 22:30:19 2022 : Journal pool shared memory removed
+   Wed Apr 13 22:30:19 2022 : Journal pool semaphore removed
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/brunnich.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/ydb.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/linnaeus.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbaim.dat successfully rundown
+   %YDB-I-MUFILRNDWNSUC, File /home/ydbuser/jnlex/%ydbocto.dat successfully rundown
+   ydbuser@paris:~/jnlex$
 
 In Santiago:
 
@@ -1798,14 +1880,14 @@ In Santiago:
    YDB>set ^Weather("Santiago",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Cloudy"
 
    YDB>zsystem "$ydb_dist/mupip replicate -source -showbacklog"
-   Mon Nov 18 19:20:09 2019 : Initiating SHOWBACKLOG operation on source server pid [748] for secondary instance [paris]
-   1 : backlog number of transactions written to journal pool and yet to be sent by the source server
-   6 : sequence number of last transaction written to journal pool
-   5 : sequence number of last transaction sent by source server
-   Mon Nov 18 19:20:09 2019 : Initiating SHOWBACKLOG operation on source server pid [751] for secondary instance [melbourne]
-   2 : backlog number of transactions written to journal pool and yet to be sent by the source server
-   6 : sequence number of last transaction written to journal pool
-   4 : sequence number of last transaction sent by source server
+  Wed Apr 13 16:31:15 2022 : Initiating SHOWBACKLOG operation on source server pid [869] for secondary instance [paris]
+  1 : backlog number of transactions written to journal pool and yet to be sent by the source server
+  6 : sequence number of last transaction written to journal pool
+  5 : sequence number of last transaction sent by source server
+  Wed Apr 13 16:31:15 2022 : Initiating SHOWBACKLOG operation on source server pid [873] for secondary instance [melbourne]
+  2 : backlog number of transactions written to journal pool and yet to be sent by the source server
+  6 : sequence number of last transaction written to journal pool
+  4 : sequence number of last transaction sent by source server
 
    YDB>
 
@@ -1815,87 +1897,90 @@ In Paris:
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ $ydb_dist/dse all -dump 2>&1 | grep "Region Seqno"
+   ydbuser@paris:~/jnlex$ $ydb_dist/dse all -dump 2>&1 | grep "Region Seqno"
      Replication State                      ON  Region Seqno    0x0000000000000004
      Replication State                      ON  Region Seqno    0x0000000000000006
      Replication State                      ON  Region Seqno    0x0000000000000004
-   yottadbuser@paris:~/jnlex$
+     Replication State                     OFF  Region Seqno    0x0000000000000001
+     Replication State                      ON  Region Seqno    0x0000000000000004
+   ydbuser@paris:~/jnlex$
 
 and in Melbourne:
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ $ydb_dist/dse all -dump 2>&1 | grep "Region Seqno"
+   ydbuser@melbourne:~/jnlex$ $ydb_dist/dse all -dump 2>&1 | grep "Region Seqno"
      Replication State                      ON  Region Seqno    0x0000000000000004
      Replication State                      ON  Region Seqno    0x0000000000000005
      Replication State                      ON  Region Seqno    0x0000000000000004
-   yottadbuser@melbourne:~/jnlex$
+     Replication State                     OFF  Region Seqno    0x0000000000000001
+     Replication State                      ON  Region Seqno    0x0000000000000004
+   ydbuser@melbourne:~/jnlex$
 
 Since the largest Region Seqno is 0x6 (region DEFAULT in Paris), that is the preferred new originating primary instance. So, make Paris the new originating primary and Santiago the new secondary to which Paris replicates.
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/source_melbourne_`date +%Y%m%d%H%M%S`.log
-   Wed Nov 20 22:19:28 2019 : Initiating START of source server for secondary instance [melbourne]
-   yottadbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/source_santiago_`date +%Y%m%d%H%M%S`.log
-   Wed Nov 20 22:20:03 2019 : Initiating START of source server for secondary instance [santiago]
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/ydbuser/jnlex/source_melbourne_`date +%Y%m%d%H%M%S`.log
+   Wed Apr 13 22:38:08 2022 : Initiating START of source server for secondary instance [melbourne]
+   ydbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/ydbuser/jnlex/source_santiago_`date +%Y%m%d%H%M%S`.log
+   Wed Apr 13 22:38:27 2022 : Initiating START of source server for secondary instance [santiago]
+   ydbuser@paris:~/jnlex$
 
 On Melbourne, perform the :code:`mupip journal -rollback -fetchresync` operation and start operation as a replicating instance.
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %YDB-I-MUJNLSTAT, Initial processing started at Thu Nov 21 08:21:39 2019
-   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Thu Nov 21 08:21:39 2019
-   Thu Nov 21 08:21:39 2019 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Thu Nov 21 08:21:39 2019 : Waiting for a connection...
-   Thu Nov 21 08:21:40 2019 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Thu Nov 21 08:21:40 2019 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:49712
-   Thu Nov 21 08:21:40 2019 : Sending REPL_FETCH_RESYNC message with seqno 5 [0x5]
-   Thu Nov 21 08:21:40 2019 : Source and Receiver sides have same endianness
-   Thu Nov 21 08:21:40 2019 : Remote side source log file path is /home/yottadbuser/jnlex/source_melbourne_20191120221928.log; Source Server PID = 1038
-   Thu Nov 21 08:21:40 2019 : Received REPL_NEED_INSTINFO message from primary instance [paris]
-   Thu Nov 21 08:21:40 2019 : Sending REPL_INSTINFO message
-   Thu Nov 21 08:21:40 2019 : Received REPL_NEED_HISTINFO message for Seqno 5 [0x5]
-   Thu Nov 21 08:21:40 2019 : Sending REPL_HISTINFO message with seqno 4 [0x4]
-   Thu Nov 21 08:21:40 2019 : History sent : Start Seqno = 4 [0x4] : Stream Seqno = 0 [0x0] : Root Primary = [santiago] : Cycle = [1] : Creator pid = 748 : Created time = 1574114279 [0x5dd313e7] : History number = 2 : Prev History number = 1 : Stream # = 0 : History type = 1
-   Thu Nov 21 08:21:40 2019 : Received REPL_RESYNC_SEQNO message
-   Thu Nov 21 08:21:40 2019 : Received RESYNC SEQNO is 5 [0x5]
-   %YDB-I-MUJNLSTAT, Backward processing started at Thu Nov 21 08:21:40 2019
+   ydbuser@melbourne:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/ydbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %YDB-I-MUJNLSTAT, Initial processing started at Thu Apr 14 06:38:44 2022
+   %YDB-W-NOTALLREPLON, Replication off for one or more regions
+   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Thu Apr 14 06:38:44 2022
+   Thu Apr 14 06:38:44 2022 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Thu Apr 14 06:38:44 2022 : Waiting for a connection...
+   Thu Apr 14 06:38:45 2022 : Connection established, using TCP send buffer size 87040 receive buffer size 131072
+   Thu Apr 14 06:38:45 2022 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:65336
+   Thu Apr 14 06:38:45 2022 : Sending REPL_FETCH_RESYNC message with seqno 5 [0x5]
+   Thu Apr 14 06:38:45 2022 : Source and Receiver sides have same endianness
+   Thu Apr 14 06:38:45 2022 : Remote side source log file path is /home/ydbuser/jnlex/source_melbourne_20220413223808.log; Source Server PID = 913
+   Thu Apr 14 06:38:45 2022 : Received REPL_NEED_INSTINFO message from primary instance [paris]
+   Thu Apr 14 06:38:45 2022 : Sending REPL_INSTINFO message
+   Thu Apr 14 06:38:45 2022 : Received REPL_NEED_HISTINFO message for Seqno 5 [0x5]
+   Thu Apr 14 06:38:45 2022 : Sending REPL_HISTINFO message with seqno 4 [0x4]
+   Thu Apr 14 06:38:45 2022 : History sent : Start Seqno = 4 [0x4] : Stream Seqno = 0 [0x0] : Root Primary = [santiago] : Cycle = [1] : Creator pid = 869 : Created time = 1649881461 [0x62573175] : History number = 2 : Prev History number = 1 : Stream # = 0 : History type = 1
+   Thu Apr 14 06:38:45 2022 : Received REPL_RESYNC_SEQNO message
+   Thu Apr 14 06:38:45 2022 : Received RESYNC SEQNO is 5 [0x5]
+   %YDB-I-MUJNLSTAT, Backward processing started at Thu Apr 14 06:38:45 2022
    %YDB-I-RESOLVESEQNO, Resolving until sequence number 5 [0x0000000000000005]
-   %YDB-I-MUJNLSTAT, Before image applying started at Thu Nov 21 08:21:40 2019
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019325
-   082140
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/linnaeus.mjl is renamed to /home/yottadbuser/jnlex/linnaeus.mjl_2019325
-   082140
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019325082140
-   %YDB-I-MUJNLSTAT, Forward processing started at Thu Nov 21 08:21:40 2019
+   %YDB-I-MUJNLSTAT, Before image applying started at Thu Apr 14 06:38:45 2022
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022104063845
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022104063845
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022104063845
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022104063845
+   %YDB-I-MUJNLSTAT, Forward processing started at Thu Apr 14 06:38:45 2022
    %YDB-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 5 [0x0000000000000005]
-   %YDB-I-FILENOTCREATE, Lost transactions extract file /home/yottadbuser/jnlex/Unreplic_Trans_Report_20191121082139.txt n
-   ot created
+   %YDB-I-FILENOTCREATE, Lost transactions extract file /home/ydbuser/jnlex/Unreplic_Trans_Report_20220414063844.txt not created
    %YDB-S-JNLSUCCESS, Show successful
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Rollback successful
-   %YDB-I-MUJNLSTAT, End processing at Thu Nov 21 08:21:40 2019
-   yottadbuser@melbourne:~/jnlex$ ./replicating_start
-   Thu Nov 21 08:21:53 2019 : Initiating START of source server for secondary instance [dummy]
-   yottadbuser@melbourne:~/jnlex$
+   %YDB-I-MUJNLSTAT, End processing at Thu Apr 14 06:38:45 2022
+   ydbuser@melbourne:~/jnlex$ ./replicating_start
+   Thu Apr 14 06:39:02 2022 : Initiating START of source server for secondary instance [dummy]
+   ydbuser@melbourne:~/jnlex$
 
 Perform an update in Paris and verify that there is a backlog to Santiago (the actual number may not be correct because Santiago was not recently a replicating instance to Paris, but it shows a non-zero value), but there is no backlog to Melbourne.
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ yottadb -dir
+   ydbuser@paris:~/jnlex$ yottadb -dir
 
    YDB>set ^Weather("Paris",$Piece($Horolog,",",1),$Piece($Horolog,",",2))="Heat Wave"
 
    YDB>zsystem "$ydb_dist/mupip replicate -source -showbacklog"
-   Wed Nov 20 22:23:47 2019 : Initiating SHOWBACKLOG operation on source server pid [1041] for secondary instance [santiago]
+   Wed Apr 13 22:40:33 2022 : Initiating SHOWBACKLOG operation on source server pid [916] for secondary instance [santiago]
    4 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
    2 : sequence number of last transaction sent by source server
-   Wed Nov 20 22:23:47 2019 : Initiating SHOWBACKLOG operation on source server pid [1038] for secondary instance [melbourne]
+   Wed Apr 13 22:40:33 2022 : Initiating SHOWBACKLOG operation on source server pid [913] for secondary instance [melbourne]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    6 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
@@ -1906,19 +1991,19 @@ Notice that Paris reports a zero backlog to Melbourne. Verify that Melbourne has
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ yottadb -dir
+   ydbuser@melbourne:~/jnlex$ yottadb -dir
 
    YDB>zwrite ^Weather
-   ^Weather("Melbourne",65336,27791)="Stormy"
-   ^Weather("Paris",65335,73603)="Rainy"
-   ^Weather("Paris",65335,73936)="Sunny"
-   ^Weather("Paris",65337,80609)="Heat Wave"
-   ^Weather("Santiago",65335,69208)="Snowing"
-   ^Weather("Santiago",65335,69368)="Blizzards"
+   ^Weather("Melbourne",66213,21528)="Stormy"
+   ^Weather("Paris",66212,78729)="Rainy"
+   ^Weather("Paris",66212,78795)="Sunny"
+   ^Weather("Paris",66212,81609)="Heat Wave"
+   ^Weather("Santiago",66212,59306)="Snowing"
+   ^Weather("Santiago",66212,59367)="Blizzards"
 
    YDB>
 
-Now boot the Santiago virtual machine, simulating it coming up after repairs, and perform a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC. Note that the unreplicated transaction file :code:`Unreplic_Trans_Report_20191120183907.txt` has data in it, the update that had not been replicated to Paris when Santiago crashed.
+Now boot the Santiago virtual machine, simulating it coming up after repairs, and perform a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC. Note that the unreplicated transaction file :code:`Unreplic_Trans_Report_20220413164446.txt` has data in it, the update that had not been replicated to Paris when Santiago crashed.
 
 .. note::
 
@@ -1926,59 +2011,58 @@ Now boot the Santiago virtual machine, simulating it coming up after repairs, an
 
 .. code-block:: bash
 
-   yottadbuser@santiago:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %YDB-I-MUJNLSTAT, Initial processing started at Wed Nov 20 18:39:07 2019
-   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Nov 20 18:39:07 2019
-   Wed Nov 20 18:39:07 2019 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Wed Nov 20 18:39:07 2019 : Waiting for a connection...
-   Wed Nov 20 18:39:08 2019 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Wed Nov 20 18:39:08 2019 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:49372
-   Wed Nov 20 18:39:08 2019 : Sending REPL_FETCH_RESYNC message with seqno 7 [0x7]
-   Wed Nov 20 18:39:08 2019 : Source and Receiver sides have same endianness
-   Wed Nov 20 18:39:08 2019 : Remote side source log file path is /home/yottadbuser/jnlex/source_santiago_20191120222003.log; Source Server PID = 1041
-   Wed Nov 20 18:39:08 2019 : Received REPL_NEED_INSTINFO message from primary instance [paris]
-   Wed Nov 20 18:39:08 2019 : Sending REPL_INSTINFO message
-   Wed Nov 20 18:39:08 2019 : Received REPL_NEED_HISTINFO message for Seqno 7 [0x7]
-   Wed Nov 20 18:39:08 2019 : Sending REPL_HISTINFO message with seqno 4 [0x4]
-   Wed Nov 20 18:39:08 2019 : History sent : Start Seqno = 4 [0x4] : Stream Seqno = 0 [0x0] : Root Primary = [santiago] : Cycle = [1] : Creator pid = 748 : Created time = 1574114279 [0x5dd313e7] : History number = 2 : Prev History number = 1 : Stream # = 0 : History type = 1
-   Wed Nov 20 18:39:08 2019 : Received REPL_RESYNC_SEQNO message
-   Wed Nov 20 18:39:08 2019 : Received RESYNC SEQNO is 6 [0x6]
-   %YDB-I-MUJNLSTAT, Backward processing started at Wed Nov 20 18:39:08 2019
+   ydbuser@santiago:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/ydbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %YDB-I-MUJNLSTAT, Initial processing started at Wed Apr 13 16:44:46 2022
+   %YDB-W-NOTALLREPLON, Replication off for one or more regions
+   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Wed Apr 13 16:44:46 2022
+   Wed Apr 13 16:44:46 2022 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Wed Apr 13 16:44:46 2022 : Waiting for a connection...
+   Wed Apr 13 16:44:47 2022 : Connection established, using TCP send buffer size 87040 receive buffer size 131072
+   Wed Apr 13 16:44:47 2022 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:64232
+   Wed Apr 13 16:44:47 2022 : Sending REPL_FETCH_RESYNC message with seqno 7 [0x7]
+   Wed Apr 13 16:44:47 2022 : Source and Receiver sides have same endianness
+   Wed Apr 13 16:44:47 2022 : Remote side source log file path is /home/ydbuser/jnlex/source_santiago_20220413223827.log; Source Server PID = 916
+   Wed Apr 13 16:44:47 2022 : Received REPL_NEED_INSTINFO message from primary instance [paris]
+   Wed Apr 13 16:44:47 2022 : Sending REPL_INSTINFO message
+   Wed Apr 13 16:44:47 2022 : Received REPL_NEED_HISTINFO message for Seqno 7 [0x7]
+   Wed Apr 13 16:44:47 2022 : Sending REPL_HISTINFO message with seqno 4 [0x4]
+   Wed Apr 13 16:44:47 2022 : History sent : Start Seqno = 4 [0x4] : Stream Seqno = 0 [0x0] : Root Primary = [santiago] : Cycle = [1] : Creator pid = 869 : Created time = 1649881461 [0x62573175] : History number = 2 : Prev History number = 1 : Stream # = 0 : History type = 1
+   Wed Apr 13 16:44:47 2022 : Received REPL_RESYNC_SEQNO message
+   Wed Apr 13 16:44:47 2022 : Received RESYNC SEQNO is 6 [0x6]
+   %YDB-I-MUJNLSTAT, Backward processing started at Wed Apr 13 16:44:47 2022
    %YDB-I-RESOLVESEQNO, Resolving until sequence number 6 [0x0000000000000006]
-   %YDB-I-MUJNLSTAT, Before image applying started at Wed Nov 20 18:39:08 2019
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019324
-   183908
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/linnaeus.mjl is renamed to /home/yottadbuser/jnlex/linnaeus.mjl_2019324
-   183908
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019324183908
-   %YDB-I-MUJNLSTAT, Forward processing started at Wed Nov 20 18:39:08 2019
-   %YDB-I-FILECREATE, Lost transactions extract file /home/yottadbuser/jnlex/Unreplic_Trans_Report_20191120183907.txt crea
-   ted
+   %YDB-I-MUJNLSTAT, Before image applying started at Wed Apr 13 16:44:47 2022
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022103164447
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022103164447
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022103164447
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022103164447
+   %YDB-I-MUJNLSTAT, Forward processing started at Wed Apr 13 16:44:47 2022
+   %YDB-I-FILECREATE, Lost transactions extract file /home/ydbuser/jnlex/Unreplic_Trans_Report_20220413164446.txt created
    %YDB-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 6 [0x0000000000000006]
    %YDB-S-JNLSUCCESS, Show successful
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Rollback successful
-   %YDB-I-MUJNLSTAT, End processing at Wed Nov 20 18:39:08 2019
-   yottadbuser@santiago:~/jnlex$ cat Unreplic_Trans_Report_20191120183907.txt
+   %YDB-I-MUJNLSTAT, End processing at Wed Apr 13 16:44:47 2022
+   ydbuser@santiago:~/jnlex$ cat Unreplic_Trans_Report_20191120183907.txt
    YDBJEX08 ROLLBACK PRIMARY santiago
-   05\65335,69608\11\761\0\6\0\0\0\0\^Weather("Santiago",65335,69608)="Cloudy"
-   yottadbuser@santiago:~/jnlex$
+   05\66212,59433\10\878\0\6\0\0\0\0\^Weather("Santiago",66212,59433)="Cloudy"
+   ydbuser@santiago:~/jnlex$
 
 Santiago can now start as a replicating instance and notice that its database now includes the heat wave reported by Paris.
 
 .. code-block:: bash
 
-   yottadbuser@santiago:~/jnlex$ ./replicating_start
-   Wed Nov 20 18:47:42 2019 : Initiating START of source server for secondary instance [dummy]
-   yottadbuser@santiago:~/jnlex$ yottadb -dir
+   ydbuser@santiago:~/jnlex$ ./replicating_start
+   Wed Apr 13 16:45:51 2022 : Initiating START of source server for secondary instance [dummy]
+   ydbuser@santiago:~/jnlex$ yottadb -dir
 
    YDB>zwrite ^Weather
-   ^Weather("Melbourne",65336,27791)="Stormy"
-   ^Weather("Paris",65335,73603)="Rainy"
-   ^Weather("Paris",65335,73936)="Sunny"
-   ^Weather("Paris",65337,80609)="Heat Wave"
-   ^Weather("Santiago",65335,69208)="Snowing"
-   ^Weather("Santiago",65335,69368)="Blizzards"
+   ^Weather("Melbourne",66213,21528)="Stormy"
+   ^Weather("Paris",66212,78729)="Rainy"
+   ^Weather("Paris",66212,78795)="Sunny"
+   ^Weather("Paris",66212,81609)="Heat Wave"
+   ^Weather("Santiago",66212,59306)="Snowing"
+   ^Weather("Santiago",66212,59367)="Blizzards"
 
    YDB>
 
@@ -2035,15 +2119,15 @@ ACID properties require the above to be satisfied for any transaction-consistent
 
 Work with whichever instance was your last originating instance; if you followed the replication exercise above, this is the Paris instance. This is mostly a matter of convenience - as you know from the replication exercises, any instance can be switched to a primary role, and other instances can be swiched to secondary roles following a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC command with the primary instance.
 
-Prepare for backups by creating a :code:`jnlex/backup` subdirectory where you can put your backups. In that directory, copy the :code:`jnlex_env` and :code:`ydb.gld` files from the :code:`jnlex` directory, naming the former to :code:`jnlex_bak_env`. Edit :code:`jnlex_bak_env` to  set the :code:`ydb_dir` environment variable to point to the :code:`backup` subdirectory. Note that since the file names in each segent of the global directory point to the corresponding files in the :code:`$ydb_dir` directory, changing the value of :code:`ydb_dir` suffices to have the global directory point to the database files in the subdirectory, and no change to the global directory is required,
+Prepare for backups by creating a :code:`jnlex/backup` subdirectory where you can put your backups. In that directory, copy the :code:`jnlex_env` and :code:`ydb.gld` files from the :code:`jnlex` directory, naming the former to :code:`jnlex_bak_env`. Edit :code:`jnlex_bak_env` to  set the :code:`ydb_dir` environment variable to point to the :code:`backup` subdirectory. Note that since the file names in each segment of the global directory point to the corresponding files in the :code:`$ydb_dir` directory, changing the value of :code:`ydb_dir` suffices to have the global directory point to the database files in the subdirectory, and no change to the global directory is required.
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ mkdir backup ; cd backup
-   yottadbuser@paris:~/jnlex/backup$ cp ../jnlex_env jnlex_bak_env
-   yottadbuser@paris:~/jnlex/backup$ cp ../ydb.gld ./
-   yottadbuser@paris:~/jnlex/backup$ nano jnlex_bak_env
-   yottadbuser@paris:~/jnlex/backup$ cat jnlex_bak_env
+   ydbuser@paris:~/jnlex$ mkdir backup ; cd backup
+   ydbuser@paris:~/jnlex/backup$ cp ../jnlex_env jnlex_bak_env
+   ydbuser@paris:~/jnlex/backup$ cp ../ydb.gld ./
+   ydbuser@paris:~/jnlex/backup$ nano jnlex_bak_env
+   ydbuser@paris:~/jnlex/backup$ cat jnlex_bak_env
    export ydb_dist=$(pkg-config --variable=prefix yottadb)
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
@@ -2053,7 +2137,7 @@ Prepare for backups by creating a :code:`jnlex/backup` subdirectory where you ca
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$ydb_dir/paris.repl
    export ydb_repl_instname=paris
-   yottadbuser@paris:~/jnlex/backup$
+   ydbuser@paris:~/jnlex/backup$
 
 
 Revert to the :code:`jnlex` directory. Remember to source the :code:`jnlex_env` file if you have not already.
@@ -2063,174 +2147,202 @@ Revert to the :code:`jnlex` directory. Remember to source the :code:`jnlex_env` 
 
 .. code-block:: bash
 
-  yottadbuser@paris:~/jnlex$ mupip journal -rollback -backward "*"
-   %YDB-I-MUJNLSTAT, Initial processing started at Sun Dec 15 19:55:08 2019
-   %YDB-I-MUJNLSTAT, Backward processing started at Sun Dec 15 19:55:08 2019
-   %YDB-I-MUJNLSTAT, Before image applying started at Sun Dec 15 19:55:08 2019
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019349195508
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/linnaeus.mjl is renamed to /home/yottadbuser/jnlex/linnaeus.mjl_2019349195508
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019349195508
-   %YDB-I-MUJNLSTAT, Forward processing started at Sun Dec 15 19:55:08 2019
+  ydbuser@paris:~/jnlex$ mupip journal -rollback -backward "*"
+   %YDB-I-MUJNLSTAT, Initial processing started at Thu Apr 14 18:35:32 2022
+   %YDB-I-MUJNLSTAT, Backward processing started at Thu Apr 14 18:35:32 2022
+   %YDB-I-MUJNLSTAT, Before image applying started at Thu Apr 14 18:35:32 2022
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022104183532
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2019104183532
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022104183532
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022104183532
+   %YDB-I-MUJNLSTAT, Forward processing started at Thu Apr 14 18:35:32 2022
    %YDB-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 7 [0x0000000000000007]
    %YDB-S-JNLSUCCESS, Show successful
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Rollback successful
-   %YDB-I-MUJNLSTAT, End processing at Sun Dec 15 19:55:08 2019
-   yottadbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/source_melbourne_`date +%Y%m%d%H%M%S`.log
-   Sun Dec 15 20:01:18 2019 : Initiating START of source server for secondary instance [melbourne]
-   yottadbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/yottadbuser/jnlex/source_santiago_`date +%Y%m%d%H%M%S`.log
-   Sun Dec 15 20:01:29 2019 : Initiating START of source server for secondary instance [santiago]
-   yottadbuser@paris:~/jnlex$
+   %YDB-I-MUJNLSTAT, End processing at Thu Apr 14 18:37:41 2022
+   ydbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=melbourne -secondary=10.0.2.2:6000 -buffsize=1048576 -log=/home/ydbuser/jnlex/source_melbourne_`date +%Y%m%d%H%M%S`.log
+   Thu Apr 14 18:59:20 2022 : Initiating START of source server for secondary instance [melbourne]
+   ydbuser@paris:~/jnlex$ mupip replicate -source -start -instsecondary=santiago -secondary=10.0.2.2:4000 -buffsize=1048576 -log=/home/ydbuser/jnlex/source_santiago_`date +%Y%m%d%H%M%S`.log
+   Thu Apr 14 18:59:34 2022 : Initiating START of source server for secondary instance [santiago]
+   ydbuser@paris:~/jnlex$
 
-Download an initialization program in any of the languages, C, Go, M, Perl, or Rust. You only need one.
+Download an initialization program in any of the languages, C, Go, M, Perl, Python or Rust. **You only need one.**
 
 To use the C initialization program, download `xyzInitC.c <./xyzInitC.c>`_, compile and run it:
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ gcc $(pkg-config --libs --cflags yottadb) -o xyzInitC xyzInitC.c -lyottadb
-   yottadbuser@paris:~/jnlex$ ./xyzInitC
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$ gcc $(pkg-config --libs --cflags yottadb) -o xyzInitC xyzInitC.c -lyottadb
+   ydbuser@paris:~/jnlex$ ./xyzInitC
+   ydbuser@paris:~/jnlex$
 
 To use the Go initialization, download `xyzInitGo.go <./xyzInitGo.go>`_, compile and run it:
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ go build xyzInitGo.go
-   yottadbuser@paris:~/jnlex$ ./xyzInitGo
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$ go build xyzInitGo.go
+   ydbuser@paris:~/jnlex$ ./xyzInitGo
+   ydbuser@paris:~/jnlex$
 
 To use the M initialization program, download `xyzInitM.m <./xyzInitM.m>`_ and run it:
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ yottadb -run xyzInitM
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$ yottadb -run xyzInitM
+   ydbuser@paris:~/jnlex$
 
 To use the Perl initialization program, download `xyzInitPerl.pl <./xyzInitPerl.pl>`_, make it executable and run it:
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ chmod +x xyzInitPerl.pl
-   yottadbuser@paris:~/jnlex$ ./xyzInitPerl.pl
+   ydbuser@paris:~/jnlex$ chmod +x xyzInitPerl.pl
+   ydbuser@paris:~/jnlex$ ./xyzInitPerl.pl
+
+To use the Python initialization program, download `xyzInitPython.py <xyzInitPython.py>`_ and run it:
+
+.. code-block:: bash
+
+   ydbuser@paris:~/jnlex$ python3 xyzInitPython.py
+   ydbuser@paris:~/jnlex$
 
 To use the Rust initialization program, if you have not done so already, clone the `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_ repository and run `xyzInitRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzInitRust.rs>`_:
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ export LD_LIBRARY_PATH=$ydb_dist
-   yottadbuser@paris:~/jnlex$ git clone https://gitlab.com/YottaDB/Lang/YDBRust.git && cd YDBRust
-   yottadbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzInitRust
+   ydbuser@paris:~/jnlex$ export LD_LIBRARY_PATH=$ydb_dist
+   ydbuser@paris:~/jnlex$ git clone https://gitlab.com/YottaDB/Lang/YDBRust.git && cd YDBRust
+   ydbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzInitRust
 
-As a workload, download four simulated application processes, in C (`xyzTransC.c <./xyzTransC.c>`_), Go (`xyzTransGo.go <./xyzTransGo.go>`_), M (`xyzTransM.m <./xyzTransM.m>`_) and Perl (`xyzTransPerl.pl <./xyzTransPerl.pl>`_). Compile the C and Go programs. Run all four in the background to create a simulated, multi-process, multi-language, workload. Run the `xyzTransRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzTransRust.rs>`_ program from the YDBRust directory:
-
-.. code-block:: bash
-
-   yottadbuser@paris:~/jnlex$ gcc $(pkg-config --libs --cflags yottadb) -o xyzTransC xyzTransC.c -lyottadb
-   yottadbuser@paris:~/jnlex$ ./xyzTransC &
-   [1] 797
-   yottadbuser@paris:~/jnlex$ go build xyzTransGo.go
-   yottadbuser@paris:~/jnlex$ ./xyzTransGo &
-   [2] 798
-   yottadbuser@paris:~/jnlex$ yottadb -run xyzTransM &
-   [3] 803
-   yottadbuser@paris:~/jnlex$ chmod +x xyzTransPerl.pl
-   yottadbuser@paris:~/jnlex$ ./xyzTransPerl.pl &
-   [4] 804
-   yottadbuser@paris:~/jnlex/YDBRust$ cd YDBRust
-   yottadbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzTransRust &
-   [5] 817
-   yottadbuser@paris:~/jnlex$
-
-Note that the journal files are growing, indicating an application actively updating the database:
+As a workload, download five simulated application processes, in C (`xyzTransC.c <./xyzTransC.c>`_), Go (`xyzTransGo.go <./xyzTransGo.go>`_), M (`xyzTransM.m <./xyzTransM.m>`_), Perl (`xyzTransPerl.pl <./xyzTransPerl.pl>`_) and Python(`xyzTransPython.py <xyzTransPython.py>`_). Compile the C and Go programs. Run all five in the background to create a simulated, multi-process, multi-language, workload. Run the `xyzTransRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzTransRust.rs>`_ program from the YDBRust directory:
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ ls -l *.mjl
-   -rw------- 1 yottadbuser yottadbuser 131072 Dec 15 20:10 brunnich.mjl
-   -rw-r--r-- 1 yottadbuser yottadbuser 131072 Dec 15 20:10 linnaeus.mjl
-   -rw-rw-rw- 1 yottadbuser yottadbuser 122880 Dec 15 20:10 ydb.mjl
-   yottadbuser@paris:~/jnlex$ ls -l *.mjl
-   -rw------- 1 yottadbuser yottadbuser 135168 Dec 15 20:10 brunnich.mjl
-   -rw-r--r-- 1 yottadbuser yottadbuser 131072 Dec 15 20:10 linnaeus.mjl
-   -rw-rw-rw- 1 yottadbuser yottadbuser 126976 Dec 15 20:10 ydb.mjl
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$ gcc $(pkg-config --libs --cflags yottadb) -o xyzTransC xyzTransC.c -lyottadb
+   ydbuser@paris:~/jnlex$ ./xyzTransC &
+   [1] 1196
+   ydbuser@paris:~/jnlex$ go build xyzTransGo.go
+   ydbuser@paris:~/jnlex$ ./xyzTransGo &
+   [2] 1198
+   ydbuser@paris:~/jnlex$ yottadb -run xyzTransM &
+   [3] 1207
+   ydbuser@paris:~/jnlex$ chmod +x xyzTransPerl.pl
+   ydbuser@paris:~/jnlex$ ./xyzTransPerl.pl &
+   [4] 1208
+   ydbuser@paris:~/jnlex$ python3 xyzTransPython.py &
+   [5] 1211
+   ydbuser@paris:~/jnlex/YDBRust$ cd YDBRust
+   ydbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzTransRust &
+   [6] 1214
+   ydbuser@paris:~/jnlex$
+
+Note that the journal files (:code:`brunnich.mjl`, :code:`linnaeus.mjl`, and :code:`ydb.mjl`) are growing, indicating an application actively updating the database:
+
+.. code-block:: bash
+
+   ydbuser@paris:~/jnlex$ ls -l *.mjl
+   -rw-rw-rw- 1 ydbuser ydbuser  69632 Apr 14 18:35 %ydbocto.mjl
+   -rw------- 1 ydbuser ydbuser 131072 Apr 14 19:16 brunnich.mjl
+   -rw-r--r-- 1 ydbuser ydbuser 131072 Apr 14 19:16 linnaeus.mjl
+   -rw-rw-rw- 1 ydbuser ydbuser 122880 Apr 14 19:16 ydb.mjl
+   ydbuser@paris:~/jnlex$ ls -l *.mjl
+   -rw-rw-rw- 1 ydbuser ydbuser  69632 Apr 14 18:35 %ydbocto.mjl
+   -rw------- 1 ydbuser ydbuser 135168 Apr 14 19:16 brunnich.mjl
+   -rw-r--r-- 1 ydbuser ydbuser 131072 Apr 14 19:16 linnaeus.mjl
+   -rw-rw-rw- 1 ydbuser ydbuser 126976 Apr 14 19:16 ydb.mjl
+   ydbuser@paris:~/jnlex$
 
 Take a backup of the database
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ mupip backup -nojournal -replinstance=backup/paris.repl "*" backup/
-   Replication Instance file /home/yottadbuser/jnlex/paris.repl backed up in file backup/paris.repl
-   Journal Seqnos up to 0x0000000000000888 are backed up.
+   ydbuser@paris:~/jnlex$ mupip backup -nojournal -replinstance=backup/paris.repl "*" backup/
+   Replication Instance file /home/ydbuser/jnlex/paris.repl backed up in file backup/paris.repl
+   Journal Seqnos up to 0x000000000000020F are backed up.
 
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019349201221
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/jnlex/brunnich.mjl created for region CRUSTACEANS with BEFORE_IMAGES
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/linnaeus.mjl is renamed to /home/yottadbuser/jnlex/linnaeus.mjl_2019349201221
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/jnlex/linnaeus.mjl created for region MAMMALS with BEFORE_IMAGES
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019349201221
-   %YDB-I-JNLCREATE, Journal file /home/yottadbuser/jnlex/ydb.mjl created for region DEFAULT with BEFORE_IMAGES
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022104191654
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/brunnich.mjl created for region CRUSTACEANS with BEFORE_IMAGES
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022104191654
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/ydb.mjl created for region DEFAULT with BEFORE_IMAGES
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022104191654
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/linnaeus.mjl created for region MAMMALS with BEFORE_IMAGES
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022104191654
+   %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/%ydbocto.mjl created for region YDBOCTO with BEFORE_IMAGES
    %YDB-I-JNLSTATE, Journaling state for database file backup//brunnich.dat is now DISABLED
-   %YDB-I-JNLSTATE, Journaling state for database file backup//linnaeus.dat is now DISABLED
    %YDB-I-JNLSTATE, Journaling state for database file backup//ydb.dat is now DISABLED
-   DB file /home/yottadbuser/jnlex/brunnich.dat backed up in file backup//brunnich.dat
-   Transactions up to 0x0000000000000881 are backed up.
-   DB file /home/yottadbuser/jnlex/linnaeus.dat backed up in file backup//linnaeus.dat
-   Transactions up to 0x0000000000000881 are backed up.
-   DB file /home/yottadbuser/jnlex/ydb.dat backed up in file backup//ydb.dat
-   Transactions up to 0x0000000000000881 are backed up.
+   %YDB-I-JNLSTATE, Journaling state for database file backup//linnaeus.dat is now DISABLED
+   %YDB-I-JNLSTATE, Journaling state for database file backup//%ydbaim.dat is now DISABLED
+   %YDB-I-JNLSTATE, Journaling state for database file backup//%ydbocto.dat is now DISABLED
+   DB file /home/ydbuser/jnlex/brunnich.dat backed up in file backup//brunnich.dat
+   Transactions up to 0x000000000000020A are backed up.
+   DB file /home/ydbuser/jnlex/ydb.dat backed up in file backup//ydb.dat
+   Transactions up to 0x000000000000020F are backed up.
+   DB file /home/ydbuser/jnlex/linnaeus.dat backed up in file backup//linnaeus.dat
+   Transactions up to 0x000000000000020A are backed up.
+   DB file /home/ydbuser/jnlex/%ydbaim.dat backed up in file backup//%ydbaim.dat
+   Transactions up to 0x0000000000000001 are backed up.
+   DB file /home/ydbuser/jnlex/%ydbocto.dat backed up in file backup//%ydbocto.dat
+   Transactions up to 0x0000000000000001 are backed up.
 
 
    BACKUP COMPLETED.
 
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$
 
 After the backup is completed, you can terminate the application processes updating the database; they have done their part for the exercise.
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ kill %1
-   yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+   ydbuser@paris:~/jnlex$ kill %1
+   ydbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
    [1]   Exit 241                ./xyzTransC
-   yottadbuser@paris:~/jnlex$ kill %2
-   yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+   ydbuser@paris:~/jnlex$ kill %2
+   ydbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
-   [2]-  Terminated              ./xyzTransGo
-   yottadbuser@paris:~/jnlex$ kill %3
-   yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+   [2]   Exit 2                  ./xyzTransGo
+   ydbuser@paris:~/jnlex$ kill %3
+   ydbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
-   [3]+  Exit 241                /usr/local/lib/yottadb/r132/yottadb -run xyzTransM
-   yottadbuser@paris:~/jnlex$ kill %4
-   yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+   [3]   Exit 241                /usr/local/lib/yottadb/r134/yottadb -run xyzTransM
+   ydbuser@paris:~/jnlex$ kill %4
+   ydbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
-   [4]+  Exit 241                ./xyzTransPerl.pl
-   yottadbuser@paris:~/jnlex$ kill %5
-   yottadbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+   [4]   Exit 241                ./xyzTransPerl.pl
+   ydbuser@paris:~/jnlex$ kill %5
+   ydbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
-   [5]-  Exit 241                cargo run --quiet --example xyzTransRust  (wd: ~/jnlex/YDBRust)
+   [5]-  Exit 241                python3 xyzTransPython.py
+   ydbuser@paris:~/jnlex$ kill %6
+   ydbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+
+   [6]+  Exit 1                  cargo run --quiet --example xyzTransRust  (wd: ~/jnlex/YDBRust)
    (wd now: ~/jnlex)
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$
 
 Now change to the backup directory and :code:`source jnlex_bak_env` to set the environment variables. Notice that the MUPIP BACKUP operation has created three database files and a replication instance file. If you want to create a new instance, e.g., Beijing, you can use these backed up database and replication instance files.
 
-Download a program to verify that ACID properties are preserved in the backed up database, your choice of programs in C (`xyzVerifyC.c <./xyzVerifyC.c>`_), Go (`xyzVerifyGo.go <./xyzVerifyGo.go>`_), M (`xyzVerifyM.m <./xyzVerifyM.m>`_), Perl (`xyzVerifyPerl.pl <./xyzVerifyPerl.pl>`_), or Rust( `xyzVerifyRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzVerifyRust.rs>`_). As with previous Rust programs, run xyzVerifyRust.rs from the YDBRust directory. Although all five are shown here, as with initialization, you only need one.
+Download a program to verify that ACID properties are preserved in the backed up database, your choice of programs in C (`xyzVerifyC.c <./xyzVerifyC.c>`_), Go (`xyzVerifyGo.go <./xyzVerifyGo.go>`_), M (`xyzVerifyM.m <./xyzVerifyM.m>`_), Perl (`xyzVerifyPerl.pl <./xyzVerifyPerl.pl>`_), Python (`xyzverifyPython.py <xyzVerifyPython.py>`_) or Rust( `xyzVerifyRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzVerifyRust.rs>`_). As with previous Rust programs, run :code:`xyzVerifyRust.rs` from the YDBRust directory.
+
+Although all six are shown here, as with initialization, you only need one.
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex/backup$ gcc $(pkg-config --libs --cflags yottadb) -o xyzVerifyC xyzVerifyC.c -lyottadb
-   yottadbuser@paris:~/jnlex/backup$ ./xyzVerifyC
+   ydbuser@paris:~/jnlex/backup$ gcc $(pkg-config --libs --cflags yottadb) -o xyzVerifyC xyzVerifyC.c -lyottadb
+   ydbuser@paris:~/jnlex/backup$ ./xyzVerifyC
    ACID test pass
-   yottadbuser@paris:~/jnlex/backup$ go build xyzVerifyGo.go
-   yottadbuser@paris:~/jnlex/backup$ ./xyzVerifyGo
+   ydbuser@paris:~/jnlex/backup$ go build xyzVerifyGo.go
+   ydbuser@paris:~/jnlex/backup$ ./xyzVerifyGo
    ACID test pass
-   yottadbuser@paris:~/jnlex/backup$ yottadb -run xyzVerifyM
+   ydbuser@paris:~/jnlex/backup$ yottadb -run xyzVerifyM
    ACID test pass
-   yottadbuser@paris:~/jnlex/backup$ chmod +x xyzVerifyPerl.pl
-   yottadbuser@paris:~/jnlex/backup$ ./xyzVerifyPerl.pl
+   ydbuser@paris:~/jnlex/backup$ chmod +x xyzVerifyPerl.pl
+   ydbuser@paris:~/jnlex/backup$ ./xyzVerifyPerl.pl
    ACID test pass
-   yottadbuser@paris:~/jnlex/backup$ cd ../YDBRust
-   yottadbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzVerifyRust
+   ydbuser@paris:~/jnlex/backup$ python3 xyzVerifyPython.py
+   ACID test pass
+   ydbuser@paris:~/jnlex/backup$ cd ../YDBRust
+   ydbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzVerifyRust
    ACID test pass
 
 ++++++++++++++++++++++++++++++++++++++++
@@ -2241,81 +2353,75 @@ During the backup exercise, the application has not been replicating to Melbourn
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ source jnlex_env
-   yottadbuser@paris:~/jnlex$ mupip replicate -source -showbacklog
-   Sun Dec 15 21:15:56 2019 : Initiating SHOWBACKLOG operation on source server pid [737] for secondary instance [santiago]
+   ydbuser@paris:~/jnlex$ source jnlex_env
+   ydbuser@paris:~/jnlex$ mupip replicate -source -showbacklog
+   Thu Apr 14 19:19:12 2022 : Initiating SHOWBACKLOG operation on source server pid [919] for secondary instance [santiago]
    2900 : backlog number of transactions written to journal pool and yet to be sent by the source server
    2906 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
-   Sun Dec 15 21:15:56 2019 : Initiating SHOWBACKLOG operation on source server pid [734] for secondary instance [melbourne]
+   Thu Apr 14 19:19:12 2022 : Initiating SHOWBACKLOG operation on source server pid [916] for secondary instance [melbourne]
    2900 : backlog number of transactions written to journal pool and yet to be sent by the source server
    2906 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$
 
 
 Boot Melbourne. If it was not shut down cleanly, perform a MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC command to recover the database and resynchronize replication with Paris. As with MUPIP JOURNAL ROLLBACK BACKWARD (without the RESYNC), this is a safe operation even if Melbourne was shut down cleanly.
 
-.. code-block:: bash
-
-   yottadbuser@melbourne:~/jnlex$ source ydbenv
-   yottadbuser@melbourne:~/jnlex$ yottadb -run %XCMD 'set x=$order(^a(""),-1) write x," ",^a(x)," ",^b(x)," ",^a(x)+^b(x),!'
-   %YDB-E-NULSUBSC, Null subscripts are not allowed for region: A
-   %YDB-I-GVIS,            Global variable: ^a("")
-   yottadbuser@melbourne:~/jnlex$
-
-Then execute the exDir/replicating_start script and notice that Melbourne catches up.
+Then execute the :code:`./replicating_start` script and notice that Melbourne catches up.
 
 .. code-block:: bash
 
-   yottadbuser@melbourne:~/jnlex$ source jnlex_env
-   yottadbuser@melbourne:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/yottadbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
-   %YDB-I-MUJNLSTAT, Initial processing started at Mon Dec 16 07:22:14 2019
-   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Mon Dec 16 07:22:14 2019
-   Mon Dec 16 07:22:14 2019 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
-   Mon Dec 16 07:22:14 2019 : Waiting for a connection...
-   Mon Dec 16 07:22:14 2019 : Connection established, using TCP send buffer size 87040 receive buffer size 374400
-   Mon Dec 16 07:22:14 2019 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:40240
-   Mon Dec 16 07:22:14 2019 : Sending REPL_FETCH_RESYNC message with seqno 7 [0x7]
-   Mon Dec 16 07:22:14 2019 : Source and Receiver sides have same endianness
-   Mon Dec 16 07:22:14 2019 : Remote side source log file path is /home/yottadbuser/jnlex/source_melbourne_20191215200118.log; Source Server PID = 734
-   Mon Dec 16 07:22:14 2019 : Received REPL_NEED_INSTINFO message from primary instance [paris]
-   Mon Dec 16 07:22:14 2019 : Sending REPL_INSTINFO message
-   Mon Dec 16 07:22:14 2019 : Received REPL_NEED_HISTINFO message for Seqno 7 [0x7]
-   Mon Dec 16 07:22:14 2019 : Sending REPL_HISTINFO message with seqno 6 [0x6]
-   Mon Dec 16 07:22:14 2019 : History sent : Start Seqno = 6 [0x6] : Stream Seqno = 0 [0x0] : Root Primary = [paris] : Cycle = [2] : Creator pid = 1038 : Created time = 1574284768 [0x5dd5ade0] : History number = 3 : Prev History number = 2 : Stream # = 0 : History type = 1
-   Mon Dec 16 07:22:14 2019 : Received REPL_RESYNC_SEQNO message
-   Mon Dec 16 07:22:14 2019 : Received RESYNC SEQNO is 7 [0x7]
-   %YDB-I-MUJNLSTAT, Backward processing started at Mon Dec 16 07:22:14 2019
+   ydbuser@melbourne:~/jnlex$ source jnlex_env
+   ydbuser@melbourne:~/jnlex$ mupip journal -rollback -backward -fetchresync=3000 -losttrans=/home/ydbuser/jnlex/Unreplic_Trans_Report_`date +%Y%m%d%H%M%S`.txt "*"
+   %YDB-I-MUJNLSTAT, Initial processing started at Fri Apr 15 03:26:51 2022
+   %YDB-W-NOTALLREPLON, Replication off for one or more regions
+   %YDB-I-MUJNLSTAT, FETCHRESYNC processing started at Fri Apr 15 03:26:51 2022
+   Fri Apr 15 03:26:51 2022 : Assuming primary supports multisite functionality. Connecting using multisite communication protocol.
+   Fri Apr 15 03:26:51 2022 : Waiting for a connection...
+   Fri Apr 15 03:26:51 2022 : Connection established, using TCP send buffer size 87040 receive buffer size 131072
+   Fri Apr 15 03:26:51 2022 : Connection information:: Local: ::ffff:10.0.2.15:3000 Remote: ::ffff:10.0.2.2:57132
+   Fri Apr 15 03:26:51 2022 : Sending REPL_FETCH_RESYNC message with seqno 7 [0x7]
+   Fri Apr 15 03:26:51 2022 : Source and Receiver sides have same endianness
+   Fri Apr 15 03:26:51 2022 : Remote side source log file path is /home/ydbuser/jnlex/source_melbourne_20220414185919.log; Source Server PID = 916
+   Fri Apr 15 03:26:51 2022 : Received REPL_NEED_INSTINFO message from primary instance [paris]
+   Fri Apr 15 03:26:51 2022 : Sending REPL_INSTINFO message
+   Fri Apr 15 03:26:51 2022 : Received REPL_NEED_HISTINFO message for Seqno 7 [0x7]
+   Fri Apr 15 03:26:51 2022 : Sending REPL_HISTINFO message with seqno 1 [0x1]
+   Fri Apr 15 03:26:51 2022 : History sent : Start Seqno = 1 [0x1] : Stream Seqno = 0 [0x0] : Root Primary = [paris] : Cycle = [1] : Creator pid = 800 : Created time = 1649953194 [0x625849aa] : History number = 0 : Prev History number = -1 : Stream # = 0 : History type = 1
+   Fri Apr 15 03:26:51 2022 : Received REPL_RESYNC_SEQNO message
+   Fri Apr 15 03:26:51 2022 : Received RESYNC SEQNO is 7 [0x7]
+   %YDB-I-MUJNLSTAT, Backward processing started at Fri Apr 15 03:26:51 2022
    %YDB-I-RESOLVESEQNO, Resolving until sequence number 7 [0x0000000000000007]
-   %YDB-I-MUJNLSTAT, Before image applying started at Mon Dec 16 07:22:14 2019
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/brunnich.mjl is renamed to /home/yottadbuser/jnlex/brunnich.mjl_2019350072214
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/linnaeus.mjl is renamed to /home/yottadbuser/jnlex/linnaeus.mjl_2019350072214
-   %YDB-I-FILERENAME, File /home/yottadbuser/jnlex/ydb.mjl is renamed to /home/yottadbuser/jnlex/ydb.mjl_2019350072214
-   %YDB-I-MUJNLSTAT, Forward processing started at Mon Dec 16 07:22:15 2019
+   %YDB-I-MUJNLSTAT, Before image applying started at Fri Apr 15 03:26:51 2022
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022105032651
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022105032651
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022105032651
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022105032651
+   %YDB-I-MUJNLSTAT, Forward processing started at Fri Apr 15 03:26:51 2022
    %YDB-I-RLBKJNSEQ, Journal seqno of the instance after rollback is 7 [0x0000000000000007]
-   %YDB-I-FILENOTCREATE, Lost transactions extract file /home/yottadbuser/jnlex/Unreplic_Trans_Report_20191216072213.txt not created
+   %YDB-I-FILENOTCREATE, Lost transactions extract file /home/ydbuser/jnlex/Unreplic_Trans_Report_20220415032651.txt not created
    %YDB-S-JNLSUCCESS, Show successful
    %YDB-S-JNLSUCCESS, Verify successful
    %YDB-S-JNLSUCCESS, Rollback successful
-   %YDB-I-MUJNLSTAT, End processing at Mon Dec 16 07:22:15 2019
-   yottadbuser@melbourne:~/jnlex$ ./replicating_start
-   Mon Dec 16 07:22:30 2019 : Initiating START of source server for secondary instance [dummy]
-   yottadbuser@melbourne:~/jnlex$
+   %YDB-I-MUJNLSTAT, End processing at Fri Apr 15 03:26:51 2022
+   ydbuser@melbourne:~/jnlex$ ./replicating_start
+   Fri Apr 15 03:27:21 2022 : Initiating START of source server for secondary instance [dummy]
+   ydbuser@melbourne:~/jnlex$
 
 Notice that Paris now shows a zero backlog for Melbourne, but still has a large backlog for Santiago.
 
 .. code-block:: bash
 
-   yottadbuser@paris:~/jnlex$ mupip replicate -source -showbacklog
-   Sun Dec 15 21:23:30 2019 : Initiating SHOWBACKLOG operation on source server pid [737] for secondary instance [santiago]
+   ydbuser@paris:~/jnlex$ mupip replicate -source -showbacklog
+   Thu Apr 14 19:27:30 2022 : Initiating SHOWBACKLOG operation on source server pid [919] for secondary instance [santiago]
    2900 : backlog number of transactions written to journal pool and yet to be sent by the source server
    2906 : sequence number of last transaction written to journal pool
    6 : sequence number of last transaction sent by source server
-   Sun Dec 15 21:23:30 2019 : Initiating SHOWBACKLOG operation on source server pid [734] for secondary instance [melbourne]
+   Thu Apr 14 19:27:30 2022 : Initiating SHOWBACKLOG operation on source server pid [916] for secondary instance [melbourne]
    0 : backlog number of transactions written to journal pool and yet to be sent by the source server
    2906 : sequence number of last transaction written to journal pool
    2906 : sequence number of last transaction sent by source server
-   yottadbuser@paris:~/jnlex$
+   ydbuser@paris:~/jnlex$
 
 If you like, you can similarly boot Santiago and show that it also clears the backlog automatically. Shut down the instances when you are done.
