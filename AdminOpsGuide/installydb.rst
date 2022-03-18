@@ -138,7 +138,7 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-encplugin                                           | \† | Download and install the `YottaDB encryption plugin <./encryption.html>`_                                              |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-from-source reponame                                 |    | Clone the repository specified by reponame in current directory and change to YDB/ subdirectory                        |
+| \-\-from-source reponame                                |    | Clone the repository specified by reponame in current directory and change to YDB/ subdirectory                        |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-group group                                         |    | Group that should own the YottaDB installation                                                                         |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+

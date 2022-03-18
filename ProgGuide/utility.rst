@@ -2784,7 +2784,7 @@ When using the following, remember to write code that allows for values other th
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Report number of maximum     |  "node_local.max_procs"                       | Two comma separated integers. First is the integer count of the maximum number of processes that concurrently accessed that |
 | processes concurrently       |                                               | database region, and the second is the integer count of the number of seconds since January 1, 1970 00:00:00 UTC at which   |
-| accessing a database region  |                                               | that number of processes was recorded.
+| accessing a database region  |                                               | that number of processes was recorded.                                                                                      |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Spanning nodes absent        |  "sgmnt_data.span_node_absent"                | Integer - 1 means that no global variable nodes span multiple database blocks, 0 means YottaDB does not know (in the        |
 |                              |                                               | past, at least one global variable node spanned multiple blocks, but it may since have been overwritten or KILL'd)          |
