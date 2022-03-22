@@ -373,6 +373,32 @@ Notice that after running it, YottaDB has automatically compiled the source code
     7 directories, 7 files
     ydbuser@ydbdev:~/.yottadb$
 
+~~~~~~~~~~~~~~~~~~~~
+Access from Node.js
+~~~~~~~~~~~~~~~~~~~~
+
+YottaDB can be accessed from Node.js using `Nodem <https://github.com/dlwicksell/nodem>`_.
+
+.. code-block:: bash
+
+   ydbuser@ydbdev:~$ npm install nodem
+
+Download the `sayhelloNode.js <./sayhelloNode.js>`_ example into the :code:`ydbuser` directory and run it. It will add another node in the database.
+
+.. code-block:: bash
+
+   ydbuser@ydbdev:~$ node sayhelloNode.js
+   ydbuser@ydbdev:~$ mupip extract -format=zwr -select=hello -stdout
+   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
+   18-MAR-2022  15:07:07 ZWR
+   ^hello("C")="Hello, world!"
+   ^hello("Go")="สวัสดีชาวโลก"
+   ^hello("M")="Привіт Світ"
+   ^hello("Node.js")="مرحبا بالعالم"
+   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 4  max subsc len: 16  max rec len: 36  max node len: 44
+   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 4  max subsc len: 16  max rec len: 36  max node len: 44
+   ydbuser@ydbdev:~$
+
 ~~~~~~~~~~~~~~~~~~
 Access from Perl
 ~~~~~~~~~~~~~~~~~~
@@ -410,37 +436,11 @@ Download the `sayhelloPerl.pl <./sayhelloPerl.pl>`_ program into the :code:`ydbu
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("M")="Привіт Світ"
+   ^hello("Node.js")="مرحبا بالعالم"
    ^hello("Perl")="Grüẞ Gott Welt"
-   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 4  max subsc len: 13  max rec len: 36  max node len: 44
-   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 4  max subsc len: 13  max rec len: 36  max node len: 44
+   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 5  max subsc len: 16  max rec len: 36  max node len: 44
+   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 5  max subsc len: 16  max rec len: 36  max node len: 44
    ydbuser@ydbdev:~$
-
-~~~~~~~~~~~~~~~~~~
-Access from Rust
-~~~~~~~~~~~~~~~~~~
-
-YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_. Download the `sayhello_rust.rs <./sayhello_rust.rs>`_ example, which will add another node in the database:
-
-.. code-block:: bash
-
-   ydbuser@ydbdev:~$ cargo new sayhello_rust
-   ydbuser@ydbdev:~$ cd sayhello_rust
-   ydbuser@ydbdev:~/sayhello_rust$ echo 'yottadb = "2.0.0"' >> Cargo.toml
-   ydbuser@ydbdev:~/sayhello_rust$ # Place the downloaded sayhello_rust.rs program as src/main.rs
-   ydbuser@ydbdev:~/sayhello_rust$ cargo run
-   ...
-   ydbuser@ydbdev:~/sayhello_rust$ mupip extract -format=zwr -select=hello -stdout
-   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
-   12-APR-2022  11:23:18 ZWR
-   ^hello("C")="Hello, world!"
-   ^hello("Go")="สวัสดีชาวโลก"
-   ^hello("M")="Привіт Світ"
-   ^hello("Perl")="Grüẞ Gott Welt"
-   ^hello("Rust")="ハローワールド"
-   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 5  max subsc len: 13  max rec len: 36  max node len: 44
-   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 5  max subsc len: 13  max rec len: 36  max node len: 44
-   ydbuser@ydbdev:~/sayhello_rust$
-
 
 ~~~~~~~~~~~~~~~~~~~
 Access from Python
@@ -475,12 +475,41 @@ Download the `sayhelloPython.py <./sayhelloPython.py>`_ program into the :code:`
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("M")="Привіт Світ"
+   ^hello("Node.js")="مرحبا بالعالم"
+   ^hello("Perl")="Grüẞ Gott Welt"
+   ^hello("Python")="नमस्ते दुनिया"
+   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 6  max subsc len: 16  max rec len: 37  max node len: 48
+   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 6  max subsc len: 16  max rec len: 37  max node len: 48
+   ydbuser@ydbdev:~$
+
+~~~~~~~~~~~~~~~~~~
+Access from Rust
+~~~~~~~~~~~~~~~~~~
+
+YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_. Download the `sayhello_rust.rs <./sayhello_rust.rs>`_ example, which will add another node in the database:
+
+.. code-block:: bash
+
+   ydbuser@ydbdev:~$ cargo new sayhello_rust
+   ydbuser@ydbdev:~$ cd sayhello_rust
+   ydbuser@ydbdev:~/sayhello_rust$ echo 'yottadb = "2.0.0"' >> Cargo.toml
+   ydbuser@ydbdev:~/sayhello_rust$ # Place the downloaded sayhello_rust.rs program as src/main.rs
+   ydbuser@ydbdev:~/sayhello_rust$ export LD_LIBRARY_PATH=$ydb_dist
+   ydbuser@ydbdev:~/sayhello_rust$ cargo run
+   ...
+   ydbuser@ydbdev:~/sayhello_rust$ mupip extract -format=zwr -select=hello -stdout
+   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
+   12-APR-2022  11:23:18 ZWR
+   ^hello("C")="Hello, world!"
+   ^hello("Go")="สวัสดีชาวโลก"
+   ^hello("M")="Привіт Світ"
+   ^hello("Node.js")="مرحبا بالعالم"
    ^hello("Perl")="Grüẞ Gott Welt"
    ^hello("Python")="नमस्ते दुनिया"
    ^hello("Rust")="ハローワールド"
-   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 6  max subsc len: 15  max rec len: 37  max node len: 48
-   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 6  max subsc len: 15  max rec len: 37  max node len: 48
-   ydbuser@ydbdev:~$
+   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 7  max subsc len: 16  max rec len: 37  max node len: 48
+   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 7  max subsc len: 16  max rec len: 37  max node len: 48
+   ydbuser@ydbdev:~/sayhello_rust$
 
 ----------
 Journaling
@@ -511,6 +540,9 @@ Create a directory with a name like :code:`jnlex` (for journaling exercises) or 
    alias mupip=$ydb_dist/mupip
    export ydb_dir=$HOME/jnlex
    export ydb_gbldir=$ydb_dir/ydb.gld
+   export ydb_chset=utf-8
+   export LC_ALL=C.UTF-8
+   export ydb_icu_version=$(pkg-config --modversion icu-io)
    ydbuser@ydbdev:~/jnlex$ source jnlex_env
    ydbuser@ydbdev:~/jnlex$
 
@@ -672,6 +704,9 @@ GDE, the Global Directory Editor, is a program used to manipulate global directo
    alias mupip=$ydb_dist/mupip
    export ydb_dir=$HOME/jnlex
    export ydb_gbldir=$ydb_dir/ydb.gld
+   export ydb_chset=utf-8
+   export LC_ALL=C.UTF-8
+   export ydb_icu_version=$(pkg-config --modversion icu-io)
    export ydb_principal_editing=EDITING
    ydbuser@ydbdev:~/jnlex$ source jnlex_env
    ydbuser@ydbdev:~/jnlex$ yottadb -run GDE
@@ -1203,6 +1238,9 @@ Because replication builds on journaling, use the :code:`jnlex` directory create
    alias mupip=$ydb_dist/mupip
    export ydb_dir=$HOME/jnlex
    export ydb_gbldir=$ydb_dir/ydb.gld
+   export ydb_chset=utf-8
+   export LC_ALL=C.UTF-8
+   export ydb_icu_version=$(pkg-config --modversion icu-io)
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$ydb_dir/ydb.repl
    export ydb_repl_instname=dummy
@@ -1342,6 +1380,9 @@ On each machine, edit :code:`jnlex_env` in each instance and change the line :co
    alias mupip=$ydb_dist/mupip
    export ydb_dir=$HOME/jnlex
    export ydb_gbldir=$ydb_dir/ydb.gld
+   export ydb_chset=utf-8
+   export LC_ALL=C.UTF-8
+   export ydb_icu_version=$(pkg-config --modversion icu-io)
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$ydb_dir/santiago.repl
    export ydb_repl_instname=santiago
@@ -2134,6 +2175,9 @@ Prepare for backups by creating a :code:`jnlex/backup` subdirectory where you ca
    alias mupip=$ydb_dist/mupip
    export ydb_dir=$HOME/jnlex/backup
    export ydb_gbldir=$ydb_dir/ydb.gld
+   export ydb_chset=utf-8
+   export LC_ALL=C.UTF-8
+   export ydb_icu_version=$(pkg-config --modversion icu-io)
    export ydb_principal_editing=EDITING
    export ydb_repl_instance=$ydb_dir/paris.repl
    export ydb_repl_instname=paris
@@ -2192,6 +2236,13 @@ To use the M initialization program, download `xyzInitM.m <./xyzInitM.m>`_ and r
    ydbuser@paris:~/jnlex$ yottadb -run xyzInitM
    ydbuser@paris:~/jnlex$
 
+To use the Node.js initialization program, download `xyzInitNode.js <./xyzInitNode.js>`_ and run it.
+
+.. code-block:: bash
+
+   ydbuser@paris:~/jnlex$ node xyzInitNode.js
+   ydbuser@paris:~/jnlex$
+
 To use the Perl initialization program, download `xyzInitPerl.pl <./xyzInitPerl.pl>`_, make it executable and run it:
 
 .. code-block:: bash
@@ -2214,7 +2265,7 @@ To use the Rust initialization program, if you have not done so already, clone t
    ydbuser@paris:~/jnlex$ git clone https://gitlab.com/YottaDB/Lang/YDBRust.git && cd YDBRust
    ydbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzInitRust
 
-As a workload, download five simulated application processes, in C (`xyzTransC.c <./xyzTransC.c>`_), Go (`xyzTransGo.go <./xyzTransGo.go>`_), M (`xyzTransM.m <./xyzTransM.m>`_), Perl (`xyzTransPerl.pl <./xyzTransPerl.pl>`_) and Python(`xyzTransPython.py <xyzTransPython.py>`_). Compile the C and Go programs. Run all five in the background to create a simulated, multi-process, multi-language, workload. Run the `xyzTransRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzTransRust.rs>`_ program from the YDBRust directory:
+As a workload, download six simulated application processes, in C (`xyzTransC.c <./xyzTransC.c>`_), Go (`xyzTransGo.go <./xyzTransGo.go>`_), M (`xyzTransM.m <./xyzTransM.m>`_), Node.js (`xyzTransNode.js <./xyzTransNode.js>`_), Perl (`xyzTransPerl.pl <./xyzTransPerl.pl>`_) and Python(`xyzTransPython.py <xyzTransPython.py>`_). Compile the C and Go programs. Run all six in the background to create a simulated, multi-process, multi-language, workload. Run the `xyzTransRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzTransRust.rs>`_ program from the YDBRust directory:
 
 .. code-block:: bash
 
@@ -2226,14 +2277,16 @@ As a workload, download five simulated application processes, in C (`xyzTransC.c
    [2] 1198
    ydbuser@paris:~/jnlex$ yottadb -run xyzTransM &
    [3] 1207
+   ydbuser@paris:~/jnlex$ node xyzTransNode.js &
+   [4] 1208
    ydbuser@paris:~/jnlex$ chmod +x xyzTransPerl.pl
    ydbuser@paris:~/jnlex$ ./xyzTransPerl.pl &
-   [4] 1208
+   [5] 1209
    ydbuser@paris:~/jnlex$ python3 xyzTransPython.py &
-   [5] 1211
+   [6] 1211
    ydbuser@paris:~/jnlex/YDBRust$ cd YDBRust
    ydbuser@paris:~/jnlex/YDBRust$ cargo run --quiet --example xyzTransRust &
-   [6] 1214
+   [7] 1214
    ydbuser@paris:~/jnlex$
 
 Note that the journal files (:code:`brunnich.mjl`, :code:`linnaeus.mjl`, and :code:`ydb.mjl`) are growing, indicating an application actively updating the database:
@@ -2241,15 +2294,15 @@ Note that the journal files (:code:`brunnich.mjl`, :code:`linnaeus.mjl`, and :co
 .. code-block:: bash
 
    ydbuser@paris:~/jnlex$ ls -l *.mjl
-   -rw-rw-rw- 1 ydbuser ydbuser  69632 Apr 14 18:35 %ydbocto.mjl
-   -rw------- 1 ydbuser ydbuser 131072 Apr 14 19:16 brunnich.mjl
-   -rw-r--r-- 1 ydbuser ydbuser 131072 Apr 14 19:16 linnaeus.mjl
-   -rw-rw-rw- 1 ydbuser ydbuser 122880 Apr 14 19:16 ydb.mjl
+   -rw-rw-rw- 1 ydbuser ydbuser  69632 May  9 10:36 %ydbocto.mjl
+   -rw------- 1 ydbuser ydbuser 131072 May  9 10:36 brunnich.mjl
+   -rw-r--r-- 1 ydbuser ydbuser 131072 May  9 10:36 linnaeus.mjl
+   -rw-rw-rw- 1 ydbuser ydbuser 122880 May  9 10:36 ydb.mjl
    ydbuser@paris:~/jnlex$ ls -l *.mjl
-   -rw-rw-rw- 1 ydbuser ydbuser  69632 Apr 14 18:35 %ydbocto.mjl
-   -rw------- 1 ydbuser ydbuser 135168 Apr 14 19:16 brunnich.mjl
-   -rw-r--r-- 1 ydbuser ydbuser 131072 Apr 14 19:16 linnaeus.mjl
-   -rw-rw-rw- 1 ydbuser ydbuser 126976 Apr 14 19:16 ydb.mjl
+   -rw-rw-rw- 1 ydbuser ydbuser  69632 May  9 10:36 %ydbocto.mjl
+   -rw------- 1 ydbuser ydbuser 135168 May  9 10:36 brunnich.mjl
+   -rw-r--r-- 1 ydbuser ydbuser 131072 May  9 10:36 linnaeus.mjl
+   -rw-rw-rw- 1 ydbuser ydbuser 126976 May  9 10:36 ydb.mjl
    ydbuser@paris:~/jnlex$
 
 Take a backup of the database
@@ -2260,13 +2313,13 @@ Take a backup of the database
    Replication Instance file /home/ydbuser/jnlex/paris.repl backed up in file backup/paris.repl
    Journal Seqnos up to 0x000000000000020F are backed up.
 
-   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022104191654
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/brunnich.mjl is renamed to /home/ydbuser/jnlex/brunnich.mjl_2022129103715
    %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/brunnich.mjl created for region CRUSTACEANS with BEFORE_IMAGES
    %YDB-I-FILERENAME, File /home/ydbuser/jnlex/ydb.mjl is renamed to /home/ydbuser/jnlex/ydb.mjl_2022104191654
    %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/ydb.mjl created for region DEFAULT with BEFORE_IMAGES
-   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022104191654
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/linnaeus.mjl is renamed to /home/ydbuser/jnlex/linnaeus.mjl_2022129103715
    %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/linnaeus.mjl created for region MAMMALS with BEFORE_IMAGES
-   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022104191654
+   %YDB-I-FILERENAME, File /home/ydbuser/jnlex/%ydbocto.mjl is renamed to /home/ydbuser/jnlex/%ydbocto.mjl_2022129103715
    %YDB-I-JNLCREATE, Journal file /home/ydbuser/jnlex/%ydbocto.mjl created for region YDBOCTO with BEFORE_IMAGES
    %YDB-I-JNLSTATE, Journaling state for database file backup//brunnich.dat is now DISABLED
    %YDB-I-JNLSTATE, Journaling state for database file backup//ydb.dat is now DISABLED
@@ -2306,25 +2359,29 @@ After the backup is completed, you can terminate the application processes updat
 
    [3]   Exit 241                /usr/local/lib/yottadb/r134/yottadb -run xyzTransM
    ydbuser@paris:~/jnlex$ kill %4
-   ydbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+   ydbuser@paris:~/jnlex$
 
-   [4]   Exit 241                ./xyzTransPerl.pl
+   [4]+  Exit 1                  node xyzTransNode.js
    ydbuser@paris:~/jnlex$ kill %5
    ydbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
-   [5]-  Exit 241                python3 xyzTransPython.py
+   [5]   Exit 241                ./xyzTransPerl.pl
+   ydbuser@paris:~/jnlex$ kill %5
+   ydbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+
+   [6]-  Exit 241                python3 xyzTransPython.py
    ydbuser@paris:~/jnlex$ kill %6
    ydbuser@paris:~/jnlex$ %YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
 
-   [6]+  Exit 1                  cargo run --quiet --example xyzTransRust  (wd: ~/jnlex/YDBRust)
+   [7]+  Exit 1                  cargo run --quiet --example xyzTransRust  (wd: ~/jnlex/YDBRust)
    (wd now: ~/jnlex)
    ydbuser@paris:~/jnlex$
 
 Now change to the backup directory and :code:`source jnlex_bak_env` to set the environment variables. Notice that the MUPIP BACKUP operation has created three database files and a replication instance file. If you want to create a new instance, e.g., Beijing, you can use these backed up database and replication instance files.
 
-Download a program to verify that ACID properties are preserved in the backed up database, your choice of programs in C (`xyzVerifyC.c <./xyzVerifyC.c>`_), Go (`xyzVerifyGo.go <./xyzVerifyGo.go>`_), M (`xyzVerifyM.m <./xyzVerifyM.m>`_), Perl (`xyzVerifyPerl.pl <./xyzVerifyPerl.pl>`_), Python (`xyzverifyPython.py <xyzVerifyPython.py>`_) or Rust( `xyzVerifyRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzVerifyRust.rs>`_). As with previous Rust programs, run :code:`xyzVerifyRust.rs` from the YDBRust directory.
+Download a program to verify that ACID properties are preserved in the backed up database, your choice of programs in C (`xyzVerifyC.c <./xyzVerifyC.c>`_), Go (`xyzVerifyGo.go <./xyzVerifyGo.go>`_), M (`xyzVerifyM.m <./xyzVerifyM.m>`_), Node.js (`xyzVerifyNode.js <xyzVerifyNode.js>`_), Perl (`xyzVerifyPerl.pl <./xyzVerifyPerl.pl>`_), Python (`xyzverifyPython.py <xyzVerifyPython.py>`_) or Rust( `xyzVerifyRust.rs <https://gitlab.com/YottaDB/Lang/YDBRust/-/blob/master/examples/xyzVerifyRust.rs>`_). As with previous Rust programs, run :code:`xyzVerifyRust.rs` from the YDBRust directory.
 
-Although all six are shown here, as with initialization, you only need one.
+Although all seven are shown here, as with initialization, you only need one.
 
 .. code-block:: bash
 
@@ -2335,6 +2392,8 @@ Although all six are shown here, as with initialization, you only need one.
    ydbuser@paris:~/jnlex/backup$ ./xyzVerifyGo
    ACID test pass
    ydbuser@paris:~/jnlex/backup$ yottadb -run xyzVerifyM
+   ACID test pass
+   ydbuser@paris:~/jnlex/backup$ node xyzVerifyNode.js
    ACID test pass
    ydbuser@paris:~/jnlex/backup$ chmod +x xyzVerifyPerl.pl
    ydbuser@paris:~/jnlex/backup$ ./xyzVerifyPerl.pl
