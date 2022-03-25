@@ -29,6 +29,7 @@ Index
    MultiLangProgGuide
    cprogram
    goprogram
+   nodeprogram
    perlprogram
    pythonprogram
    rustprogram
