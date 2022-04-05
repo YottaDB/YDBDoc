@@ -464,7 +464,7 @@ Relevant Files for Call-Ins
 
 To facilitate Call-Ins to M routines, the YottaDB distribution directory ($ydb_dist) contains the following files:
 
-* libyottadb.so - A shared library that implements the YottaDB run-time system, including the Call-In API. If Call-Ins are used from a standalone C/C++ program, this library needs to be explicitly linked into the program. See “Building Standalone Programs”, which describes the necessary linker options on each supported platforms.
+* libyottadb.so - A shared library that implements the YottaDB run-time system, including the Call-In API. If Call-Ins are used from a standalone C/C++ program, this library needs to be explicitly linked into the program. See :ref:`building-standalone-programs`, which describes the necessary linker options on each supported platforms.
 * yottadb - The YottaDB startup program that dynamically links with libyottadb.so.
 * libyottadb.h - A C-header file containing the declarations of Call-In API.
 
@@ -872,6 +872,8 @@ This function returns the null-terminated $ZSTATUS message of the last failure v
 
 Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, ydb_zstatus() has an :code:`int` return value with a value of YDB_ERR_INVSTRLEN if the buffer supplied is not large enough to hold the message and YDB_OK otherwise. ydb_zstatus() copies what can be copied to the buffer (including a null terminator byte) if the length is non-zero.
 
+.. _building-standalone-programs:
+
 +++++++++++++++++++++++++++++
 Building Standalone Programs
 +++++++++++++++++++++++++++++
@@ -884,7 +886,7 @@ The following section describes compiler and linker options that must be used fo
 
 * Compiler: -I$ydb_dist
 * Linker: -L$ydb_dist -lyottadb -rpath $ydb_dist
-* YottaDB advises that the C/C++ compiler front-end be used as the Linker to avoid specifying the system startup routines on the ld command. The compile can pass linker options to ld using -W option (for example, cc -Wl, -R, $ydb_dist). For more details on these options, refer to the appropriate system's manual on the respective platforms.
+* YottaDB advises that the C/C++ compiler front-end be used as the Linker to avoid specifying the system startup routines on the ld command. The compile can pass linker options to ld using -W option (for example, cc -Wl, -R, $ydb_dist). For more details on these options, refer to manual page of the C compiler (`gcc <https://gcc.gnu.org>`_ or `clang <https://clang.llvm.org>`_).
 
 ++++++++++++++++++++++++++++++
 Nested Call-Ins
@@ -892,24 +894,26 @@ Nested Call-Ins
 
 Call-ins can be nested by making an external call function in-turn call back into YottaDB. Each ydb_ci() called from an External Call library creates a call-in base frame at $ZLEVEL 1 and executes the M routine at $ZLEVEL 2. The nested call-in stack unwinds automatically when the External Call function returns to YottaDB.
 
-YottaDB currently allows up to 10 levels of nesting, if TP is not used, and less than 10 if YottaDB supports call-ins from a transaction (see “Rules to Follow in Call-Ins”). YottaDB reports the error YDB-E-CIMAXLEVELS when the nesting reaches its limit.
+YottaDB currently allows up to 10 levels of nesting. YottaDB reports the error YDB-E-CIMAXLEVELS when the nesting reaches its limit.
 
 Following are the YottaDB commands, Intrinsic Special Variables, and functions whose behavior changes in the context of every new nested call-in environment.
 
 ZGOTO 0 (zero) returns to the processing of the invoking non-M routine as does ZGOTO 1 (one) with no entryref, while ZGOTO 1:entryref replaces the originally invoked M routine and continues M execution.
 
-$ZTRAP/$ETRAP NEW'd at level 1 (in GTM$CI frame).
+$ZTRAP/$ETRAP NEW'd at level 1.
 
-$ZLEVEL initializes to one (1) in GTM$CI frame, and increments for every new stack level.
+$ZLEVEL initializes to one (1), and increments for every new stack level.
 
-$STACK initializes to zero (0) in GTM$CI frame, and increments for every new stack level.
+$STACK initializes to zero (0), and increments for every new stack level.
 
-$ESTACK NEW'd at level one (1) in GTM$CI frame.
+$ESTACK NEW'd at level one (1).
 
-$ECODE/$STACK() initialized to null at level one (1) in GTM$CI frame.
+$ECODE/$STACK() initialized to null at level one (1).
 
 .. note::
    After a nested call-in environment exits and the external call C function returns to M, the above ISVs and Functions restore their old values.
+
+.. _rules-call-ins:
 
 ++++++++++++++++++++++++++++++++++++
 Rules to Follow in Call-Ins
@@ -917,7 +921,7 @@ Rules to Follow in Call-Ins
 
 1. External calls must not be fenced with TSTART/TCOMMIT if the external routine calls back into yottadb using the call-in mechanism.
 2. The external application should never call exit() unless it has called ydb_exit() previously. YottaDB internally installs an exit handler that should never be bypassed.
-3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see “$ZINTerrupt” for more information). An interface is provided by YottaDB for timers.
+3. The external application should never use any signals when YottaDB is active since YottaDB reserves them for its internal use. YottaDB provides the ability to handle SIGUSR1 within M (see :ref:`zinterrupt-isv` for more information). An interface is provided by YottaDB for timers.
 4. YottaDB recommends the use of ydb_malloc() and ydb_free() for memory management by C code that executes in a YottaDB process space for enhanced performance and improved debugging. Always use ydb_malloc() to allocate returns for pointer types to prevent memory leaks.
 5. YottaDB performs device input using the read() system service. UNIX documentation recommends against mixing this type of input with buffered input services in the fgets() family and ignoring this recommendation is likely to cause a loss of input that is difficult to diagnose and understand.
 
