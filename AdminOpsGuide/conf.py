@@ -11,7 +11,7 @@
 #################################################################
 # -*- coding: utf-8 -*-
 #
-# GTMAdminOps documentation build configuration file, created by
+# YDBAdminOps documentation build configuration file, created by
 # sphinx-quickstart on Mon Nov 27 09:22:04 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -160,7 +160,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "GTMAdminOps.tex", u"GTMAdminOps Documentation", u"Ranjani Hathaway", "manual"),
+    (master_doc, "YDBAdminOps.tex", u"YDBAdminOps Documentation", u"YottaDB Team", "manual"),
 ]
 
 
@@ -168,7 +168,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "gtmadminops", u"GTMAdminOps Documentation", [author], 1)]
+man_pages = [(master_doc, "ydbadminops", u"YDBAdminOps Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -179,11 +179,11 @@ man_pages = [(master_doc, "gtmadminops", u"GTMAdminOps Documentation", [author],
 texinfo_documents = [
     (
         master_doc,
-        "GTMAdminOps",
-        u"GTMAdminOps Documentation",
+        "YDBAdminOps",
+        u"YDBAdminOps Documentation",
         author,
-        "GTMAdminOps",
-        "One line description of project.",
+        "YDBAdminOps",
+        "YottaDB Administration and Operations Guide",
         "Miscellaneous",
     ),
 ]

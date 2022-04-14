@@ -64,7 +64,7 @@ master_doc = "index"
 
 # General information about the project.
 project = u"Release Notes"
-copyright = u"2017-2021, YottaDB LLC"
+copyright = u"2017-2022, YottaDB LLC"
 author = u"YottaDB Team"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -154,7 +154,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "Releases.tex", u"Releases Documentation", u"Ranjani Hathaway", "manual"),
+    (master_doc, "Releases.tex", u"Releases Documentation", u"YottaDB Team", "manual"),
 ]
 
 
@@ -171,5 +171,5 @@ man_pages = [(master_doc, "releases", u"Releases Documentation", [author], 1)]
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, "Releases", u"Releases Documentation", author, "Releases", "One line description of project.", "Miscellaneous"),
+    (master_doc, "Releases", u"Releases Documentation", author, "Releases", "YottaDB Release Notes", "Miscellaneous"),
 ]

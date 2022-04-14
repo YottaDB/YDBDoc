@@ -199,7 +199,7 @@ texinfo_documents = [
         u"YottaDBDoc Documentation",
         author,
         "YottaDBDoc",
-        "One line description of project.",
+        "YottaDB Acculturation Guide",
         "Miscellaneous",
     ),
 ]

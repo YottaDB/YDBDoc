@@ -166,7 +166,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "ProgrammersGuide.tex", u"the Programmer's Guide Documentation", u"Ranjani Hathaway", "manual"),
+    (master_doc, "ProgrammersGuide.tex", u"the Programmer's Guide Documentation", u"YottaDB Team", "manual"),
 ]
 
 
@@ -189,7 +189,7 @@ texinfo_documents = [
         u"Programmer's Guide Documentation",
         author,
         "ProgrammersGuide",
-        "One line description of project.",
+        "YottaDB M Programmer's Guide",
         "Miscellaneous",
     ),
 ]

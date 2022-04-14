@@ -160,7 +160,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "GTMMessageRecovery.tex", u"GTMMessageRecovery Documentation", u"Ranjani Hathaway", "manual"),
+    (master_doc, "YDBMessageRecovery.tex", u"YDBMessageRecovery Documentation", u"YottaDB Team", "manual"),
 ]
 
 
@@ -168,7 +168,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "gtmmessagerecovery", u"GTMMessageRecovery Documentation", [author], 1)]
+man_pages = [(master_doc, "ydbmessagerecovery", u"YDBMessageRecovery Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -179,11 +179,11 @@ man_pages = [(master_doc, "gtmmessagerecovery", u"GTMMessageRecovery Documentati
 texinfo_documents = [
     (
         master_doc,
-        "GTMMessageRecovery",
-        u"GTMMessageRecovery Documentation",
+        "YDBMessageRecovery",
+        u"YDBMessageRecovery Documentation",
         author,
-        "GTMMessageRecovery",
-        "One line description of project.",
+        "YDBMessageRecovery",
+        "YottaDB Messages and Recovery Procedures",
         "Miscellaneous",
     ),
 ]

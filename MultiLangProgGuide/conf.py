@@ -160,7 +160,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "YottaDBDoc.tex", u"Multi Language Programming Guide", u"Ranjani Hathaway", "manual"),
+    (master_doc, "YottaDBDoc.tex", u"Multi Language Programming Guide", u"YottaDB Team", "manual"),
 ]
 
 
