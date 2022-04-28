@@ -4384,9 +4384,9 @@ FMLLSTMISSING
 
 FMLLSTMISSING, The formal list is absent from a label called with an actual list: xxxx
 
-Compile Time/Run Time Error: This indicates that a DO attempted to transfer control with an actuallist to a label xxxx that has no formallist.
+Compile Time/Run Time Error: This indicates that a DO attempted to transfer control with an actuallist to a label xxxx that has no formallist or that an extrinsic function was called with an actuallist (even if the list is empty) that has no formallist.
 
-Action: Look at the interface between the DO and the subroutine. Modify the actuallist, formallist, and/or label as appropriate.
+Action: Look at the interface between the DO and the subroutine or look at the extrinsic function. Modify the actuallist, formallist, and/or label as appropriate.
 
 ------------------
 FNARGINC
