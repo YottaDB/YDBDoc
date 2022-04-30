@@ -692,7 +692,7 @@ Python node_next()
 
     def node_next(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> Tuple[bytes, ...]
 
-As a wrapper for the C function :ref:`ydb-node-next-s-st-fn`, :code:`node_next()` facilitates depth first traversal of a local or global variable tree.
+As a wrapper for the C function :ref:`ydb-node-next-s-st-fn`, :code:`node_next()` facilitates traversal of a local or global variable tree.
 
 - If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If there is a next node, it returns the subscripts of that next node as a tuple of Python :code:`bytes` objects.
@@ -723,7 +723,7 @@ Python node_previous()
 
     def node_previous(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> Tuple[bytes, ...]
 
-As a wrapper for the C function :ref:`ydb-node-previous-s-st-fn`, :code:`node_previous()` facilitates reverse depth first traversal of a local or global variable tree.
+As a wrapper for the C function :ref:`ydb-node-previous-s-st-fn`, :code:`node_previous()` facilitates reverse traversal of a local or global variable tree.
 
 - If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the variable name node should be referenced without any subscripts.
 - If there is a previous node, it returns the subscripts of that previous node as a tuple of Python :code:`bytes` objects, or an empty tuple if that previous node is the root.
@@ -755,7 +755,7 @@ Python nodes()
 
     def nodes(varname: bytes, subsarray: Tuple[bytes] = ()) -> NodesIter:
 
-The :code:`nodes()` function provides a convenient, Pythonic interface for iteratively performing depth-first traversals starting from the given YottaDB local or global variable node, as specified by the :code:`varname` and :code:`subscripts` arguments.
+The :code:`nodes()` function provides a convenient, Pythonic interface for iteratively performing traversals starting from the given YottaDB local or global variable node, as specified by the :code:`varname` and :code:`subscripts` arguments.
 
 Specifically, :code:`nodes()` returns a Python :code:`NodesIter` iterator object that yields a :code:`List` of subscripts representing the next node in the tree on each iteration, in accordance with the behavior for `Python node_next()`_.
 
@@ -893,7 +893,7 @@ Python subscript_next()
 
     def subscript_next(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> bytes
 
-As a wrapper for the C function :ref:`ydb-subscript-next-s-st-fn`, :code:`subscript_next()` facilitates breadth-first traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
+As a wrapper for the C function :ref:`ydb-subscript-next-s-st-fn`, :code:`subscript_next()` facilitates traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
 
 - If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the subscript level is zero, and variable names should be iterated over instead of subscripts.
 - If there is a next subscript with a node and/or a subtree, this function returns the subscript at the level of the last subscript in :code:`subsarray`
@@ -940,7 +940,7 @@ Python subscript_previous()
 
     def subscript_previous(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> bytes
 
-As a wrapper for the C function :ref:`ydb-subscript-previous-s-st-fn`, :code:`subscript_previous()` facilitates reverse breadth-first traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
+As a wrapper for the C function :ref:`ydb-subscript-previous-s-st-fn`, :code:`subscript_previous()` facilitates reverse traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
 
 - If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the subscript level is zero, and variable names should be iterated over instead of subscripts.
 - If there is a previous subscript with a node and/or a subtree, it returns the subscript at the level of the last subscript in :code:`subsarray`
@@ -973,7 +973,7 @@ Python subscripts()
 
     def subscripts(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> SubscriptsIter
 
-The :code:`subscripts()` function provides a convenient, Pythonic interface for iteratively performing breadth-first traversals at the specified subscript level, starting from the given YottaDB local or global variable node, as specified by the :code:`varname` and :code:`subscripts` arguments.
+The :code:`subscripts()` function provides a convenient, Pythonic interface for iteratively performing traversals at the specified subscript level, starting from the given YottaDB local or global variable node, as specified by the :code:`varname` and :code:`subscripts` arguments.
 
 Specifically, :code:`subscripts()` returns a Python :code:`SubscriptsIter` iterator object that yields a :code:`bytes` object representing the next subscript at the given subscript level on each iteration, in accordance with the behavior for `Python subscript_next()`_.
 
@@ -1576,7 +1576,7 @@ Key.node_next()
 
     def node_next(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> Tuple[bytes, ...]
 
-Matching `Python node_next()`_, :code:`Key.node_next()` wraps :ref:`ydb-node-next-s-st-fn` to facilitate depth first traversal of the local or global variable tree represented by the given :code:`Key` object.
+Matching `Python node_next()`_, :code:`Key.node_next()` wraps :ref:`ydb-node-next-s-st-fn` to facilitate traversal of the local or global variable tree represented by the given :code:`Key` object.
 
 - If there is a next node, it returns the subscripts of that next node as a tuple of Python :code:`bytes` objects.
 - If there is no node following the specified node, a :code:`yottadb.YDBNodeEnd` exception will be raised.
@@ -1609,7 +1609,7 @@ Key.subscript_next()
 
     def subscript_next(self, reset: bool = False) -> bytes
 
-Matching `Python subscript_next()`_, :code:`Key.subscript_next()` wraps :ref:`ydb-subscript-next-s-st-fn` to facilitate breadth-first traversal of the local or global variable sub-tree at the subscript level represented by the given :code:`Key` object. A node or subtree does not have to exist at the specified key. The :code:`reset` parameter may be used to instruct :code:`Key.subscript_next()` to begin traversal at the first subscript at the current subscript level, even if :code:`Key.subscript_next()` has already traversed over it.
+Matching `Python subscript_next()`_, :code:`Key.subscript_next()` wraps :ref:`ydb-subscript-next-s-st-fn` to facilitate traversal of the local or global variable sub-tree at the subscript level represented by the given :code:`Key` object. A node or subtree does not have to exist at the specified key. The :code:`reset` parameter may be used to instruct :code:`Key.subscript_next()` to begin traversal at the first subscript at the current subscript level, even if :code:`Key.subscript_next()` has already traversed over it.
 
 - If :code:`reset` is omitted, it is set to :code:`False` by default.
 - At the level of the last subscript, if there is a next subscript with a node and/or a subtree that subscript will be returned as a :code:`bytes` object.
@@ -1669,7 +1669,7 @@ Key.subscript_previous()
 
     def subscript_previous(self, reset: bool = False) -> bytes
 
-Matching `Python subscript_previous()`_, :code:`Key.subscript_previous()` wraps :ref:`ydb-subscript-previous-s-st-fn` to facilitate reverse breadth-first traversal of the local or global variable sub-tree at the subscript level represented by the given :code:`Key` object. A node or subtree does not have to exist at the specified key.
+Matching `Python subscript_previous()`_, :code:`Key.subscript_previous()` wraps :ref:`ydb-subscript-previous-s-st-fn` to facilitate reverse traversal of the local or global variable sub-tree at the subscript level represented by the given :code:`Key` object. A node or subtree does not have to exist at the specified key.
 
 - If :code:`reset` is omitted, it is set to :code:`False` by default.
 - At the level of the last subscript, if there is a previous subscript with a node and/or a subtree that subscript will be returned as a :code:`bytes` object.
@@ -1847,7 +1847,7 @@ Key.__iter__()
 
     def __iter__(self) -> Generator
 
-The :code:`Key.__iter__()` magic method allows for easy iteration over the subscripts at the subscript level of the given :code:`Key` object, beginning from the first subscript. Accordingly, this method is useful for breadth-first searches. For example,
+The :code:`Key.__iter__()` magic method allows for easy iteration over the subscripts at the subscript level of the given :code:`Key` object, beginning from the first subscript. For example,
 
 In the event of an error in an underlying :ref:`ydb-subscript-next-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
@@ -1910,7 +1910,7 @@ Key.__reversed__()
 
     def __reversed__(self) -> Generator
 
-The :code:`Key.__reversed__()` magic method allows for easy iteration over the subscripts at the subscript level of the given :code:`Key` object, beginning from the last subscript. Accordingly, this method is useful for breadth-first searches, in reverse order. For example,
+The :code:`Key.__reversed__()` magic method allows for easy iteration over the subscripts at the subscript level of the given :code:`Key` object, beginning from the last subscript. For example,
 
 In the event of an error in an underlying :ref:`ydb-subscript-previous-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 

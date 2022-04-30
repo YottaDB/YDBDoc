@@ -842,7 +842,7 @@ ydb_node_next_s() / ydb_node_next_st()
                 int *ret_subs_used,
                 ydb_buffer_t *ret_subsarray);
 
-:code:`ydb_node_next_s()` and :code:`ydb_node_next_st()` facilitate depth-first traversal of a local or global variable tree. As the number of subscripts can differ between the input node of the call and the output node reported by the call :code:`*ret_subs_used` is an input as well as an output parameter:
+:code:`ydb_node_next_s()` and :code:`ydb_node_next_st()` facilitate traversal of a local or global variable tree. As the number of subscripts can differ between the input node of the call and the output node reported by the call :code:`*ret_subs_used` is an input as well as an output parameter:
 
 - On input, :code:`*ret_subs_used` specifies the number of elements allocated for returning the subscripts of the next node.
 - On normal output (:code:`YDB_OK` return code), :code:`*ret_subs_used` contains the actual number of subscripts returned. See below for error return codes
@@ -880,7 +880,7 @@ ydb_node_previous_s() / ydb_node_previous_st()
                 int *ret_subs_used,
                 ydb_buffer_t *ret_subsarray);
 
-Analogous to :ref:`ydb-node-next-s-st-fn`, :code:`ydb_node_previous_s()` and :code:`ydb_node_previous_st()` facilitate reverse depth-first traversal of a local or global variable tree, except that :code:`ydb_node_previous_s()` and :code:`ydb_node_previous_st()` search for and report the predecessor node. Unlike :ref:`ydb-node-next-s-st-fn`, :code:`*ret_subs_used` can be zero if the previous node is the unsubscripted root.
+Analogous to :ref:`ydb-node-next-s-st-fn`, :code:`ydb_node_previous_s()` and :code:`ydb_node_previous_st()` facilitate reverse traversal of a local or global variable tree, except that :code:`ydb_node_previous_s()` and :code:`ydb_node_previous_st()` search for and report the predecessor node. Unlike :ref:`ydb-node-next-s-st-fn`, :code:`*ret_subs_used` can be zero if the previous node is the unsubscripted root.
 
 Return values of :code:`ydb_node_previous_s()` and :code:`ydb_node_previous_st()` are:
 
@@ -965,7 +965,7 @@ ydb_subscript_next_s() / ydb_subscript_next_st()
                 ydb_buffer_t *subsarray,
                 ydb_buffer_t *ret_value);
 
-:code:`ydb_subscript_next_s()` and :code:`ydb_subscript_next_st()` provide a primitive for implementing breadth-first traversal of a tree by searching for the next subscript at the level specified by :code:`subs_used`, i.e., the next subscript after the one referred to by :code:`subsarray[subs_used-1].buf_addr`. A node need not exist at the subscripted variable name provided as input to the function. If :code:`subsarray[subs_used-1].len_used` is zero, :code:`ret_value->buf_addr` points to first node at that level with a subscript that is not the empty string. :code:`ydb_subscript_next_s()` and :code:`ydb_subscript_next_st()` return:
+:code:`ydb_subscript_next_s()` and :code:`ydb_subscript_next_st()` provide a primitive for implementing traversal of a tree by searching for the next subscript at the level specified by :code:`subs_used`, i.e., the next subscript after the one referred to by :code:`subsarray[subs_used-1].buf_addr`. A node need not exist at the subscripted variable name provided as input to the function. If :code:`subsarray[subs_used-1].len_used` is zero, :code:`ret_value->buf_addr` points to first node at that level with a subscript that is not the empty string. :code:`ydb_subscript_next_s()` and :code:`ydb_subscript_next_st()` return:
 
 - :code:`YDB_OK`, in which case :code:`ret_value->buf_addr` points to the value of that next subscript;
 - :code:`YDB_ERR_NODEEND` when there are no more subscripts at that level, in which case :code:`*ret_value` is unchanged;
@@ -1001,7 +1001,7 @@ ydb_subscript_previous_s() / ydb_subscript_previous_st()
                 ydb_buffer_t *subsarray,
                 ydb_buffer_t *ret_value);
 
-:code:`ydb_subscript_previous_s()` and :code:`ydb_subscript_previous_st()` provide a primitive for implementing reverse breadth-first traversal of a tree by searching for the previous subscript at the level specified by :code:`subs_used`. i.e. the subscript preceding the one referred to by :code:`subsarray[subs_used-1].buf_addr`. A node need not exist at the subscripted variable name provided as input to the function. If :code:`subsarray[subs_used-1].len_used` is zero, :code:`ret_value->buf_addr` points to last node at that level with a subscript that is not the empty string. :code:`ydb_subscript_previous_s()` and :code:`ydb_subscript_previous_st()` return:
+:code:`ydb_subscript_previous_s()` and :code:`ydb_subscript_previous_st()` provide a primitive for implementing reverse traversal of a tree by searching for the previous subscript at the level specified by :code:`subs_used`. i.e. the subscript preceding the one referred to by :code:`subsarray[subs_used-1].buf_addr`. A node need not exist at the subscripted variable name provided as input to the function. If :code:`subsarray[subs_used-1].len_used` is zero, :code:`ret_value->buf_addr` points to last node at that level with a subscript that is not the empty string. :code:`ydb_subscript_previous_s()` and :code:`ydb_subscript_previous_st()` return:
 
 - :code:`YDB_OK`, in which case :code:`ret_value->buf_addr` points to the value of that previous subscript;
 - :code:`YDB_ERR_NODEEND` when there are no more subscripts at that level, in which case :code:`*ret_value` is unchanged;

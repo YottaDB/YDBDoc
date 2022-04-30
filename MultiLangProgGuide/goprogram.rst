@@ -444,7 +444,7 @@ Go NodeNextE()
 
         func NodeNextE(tptoken uint64, errstr *BufferT, varname string, subary []string) ([]string, error)
 
-Matching `Go KeyT NodeNextST()`_, :code:`NodeNextE()` wraps :ref:`ydb-node-next-s-st-fn` to facilitate depth first traversal of a local or global variable tree. A node or subtree does not have to exist at the specified key.
+Matching `Go KeyT NodeNextST()`_, :code:`NodeNextE()` wraps :ref:`ydb-node-next-s-st-fn` to facilitate traversal of a local or global variable tree. A node or subtree does not have to exist at the specified key.
 
 - If there is a next node, it returns the subscripts of that next node.
 - If there is no node following the specified node, the function returns the NODEEND error.
@@ -457,7 +457,7 @@ Go NodePrevE()
 
         func NodePrevE(tptoken uint64, errstr *BufferT, varname string, subary []string) ([]string, error)
 
-Matching `Go KeyT NodePrevST()`_, :code:`NodePrevE()` wraps :ref:`ydb-node-previous-s-st-fn` to facilitate reverse depth first traversal of a local or global variable tree. A node or subtree does not have to exist at the specified key.
+Matching `Go KeyT NodePrevST()`_, :code:`NodePrevE()` wraps :ref:`ydb-node-previous-s-st-fn` to facilitate reverse traversal of a local or global variable tree. A node or subtree does not have to exist at the specified key.
 
 - If there is a previous node, it returns the subscripts of that previous node; an empty string array if that previous node is the root.
 - If there is no node preceding the specified node, the function returns the NODEEND error.
@@ -506,7 +506,7 @@ Go SubNextE()
 
         func SubNextE(tptoken uint64, errstr *BufferT, varname string, subary []string) (string, error)
 
-Matching `Go KeyT SubNextST()`_, :code:`SubNextE()` wraps :ref:`ydb-subscript-next-s-st-fn` to facilitate breadth-first traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
+Matching `Go KeyT SubNextST()`_, :code:`SubNextE()` wraps :ref:`ydb-subscript-next-s-st-fn` to facilitate traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
 
 - At the level of the last subscript, if there is a next subscript with a node and/or a subtree, it returns that subscript.
 - If there is no next node or subtree at that level of the subtree, the function returns the NODEEND error.
@@ -521,7 +521,7 @@ Go SubPrevE()
 
         func SubPrevE(tptoken uint64, errstr *BufferT, varname string, subary []string) (string, error)
 
-Matching `Go KeyT SubPrevST()`_, :code:`SubPrevE()` wraps :ref:`ydb-subscript-previous-s-st-fn` to facilitate reverse breadth-first traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
+Matching `Go KeyT SubPrevST()`_, :code:`SubPrevE()` wraps :ref:`ydb-subscript-previous-s-st-fn` to facilitate reverse traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
 
 - At the level of the last subscript, if there is a previous subscript with a node and/or a subtree, it returns that subscript.
 - If there is no previous node or subtree at that level of the subtree, the function returns the NODEEND error.
@@ -1144,7 +1144,7 @@ Go KeyT NodeNextST()
 
         func (key *KeyT) NodeNextST(tptoken uint64, errstr *BufferT, next *BufferTArray) error
 
-Matching `Go NodeNextE()`_, :code:`NodeNextST()` wraps :ref:`ydb-node-next-s-st-fn` to facilitate depth first traversal of a local or global variable tree. A node or subtree does not have to exist at the specified key.
+Matching `Go NodeNextE()`_, :code:`NodeNextST()` wraps :ref:`ydb-node-next-s-st-fn` to facilitate traversal of a local or global variable tree. A node or subtree does not have to exist at the specified key.
 
 - If there is a subsequent node:
 
@@ -1162,7 +1162,7 @@ Go KeyT NodePrevST()
 
         func (key *KeyT) NodePrevST(tptoken uint64, errstr *BufferT, prev *BufferTArray) error
 
-Matching `Go NodePrevE()`_, :code:`NodePrevST()` wraps :ref:`ydb-node-previous-s-st-fn` to facilitate reverse depth first traversal of a local or global variable tree. A node or subtree does not have to exist at the specified key.
+Matching `Go NodePrevE()`_, :code:`NodePrevST()` wraps :ref:`ydb-node-previous-s-st-fn` to facilitate reverse traversal of a local or global variable tree. A node or subtree does not have to exist at the specified key.
 
 - If there is a previous node:
 
@@ -1190,7 +1190,7 @@ Go KeyT SubNextST()
 
         func (key *KeyT) SubNextST(tptoken uint64, errstr *BufferT, retval *BufferT) error
 
-Matching `Go SubNextE()`_, :code:`SubNextST()` wraps :ref:`ydb-subscript-next-s-st-fn` to facilitate breadth-first traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
+Matching `Go SubNextE()`_, :code:`SubNextST()` wraps :ref:`ydb-subscript-next-s-st-fn` to facilitate traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
 
 - At the level of the last subscript, if there is a next subscript with a node and/or a subtree:
 
@@ -1207,7 +1207,7 @@ Go KeyT SubPrevST()
 
         func (key *KeyT) SubPrevST(tptoken uint64, errstr *BufferT, retval *BufferT) error
 
-Matching `Go SubPrevE()`_, :code:`SubPrevST()` wraps :ref:`ydb-subscript-previous-s-st-fn` to facilitate reverse breadth-first traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
+Matching `Go SubPrevE()`_, :code:`SubPrevST()` wraps :ref:`ydb-subscript-previous-s-st-fn` to facilitate reverse traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
 
 - At the level of the last subscript, if there is a previous subscript with a node and/or a subtree:
 

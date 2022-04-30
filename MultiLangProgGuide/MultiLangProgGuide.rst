@@ -156,7 +156,7 @@ With this representation, the :code:`Population` tree can be represented as foll
     …
     Population("USA",20100401)=308745538
 
-YottaDB has functions for applications to traverse trees in both breadth-first and depth-first order.
+YottaDB has functions for applications to traverse trees.
 
 If the application designers now wish to enhance the application to add historical dates for capitals, the :code:`Capital("Thailand")` subtree might look like this (source: `The Four Capitals of Thailand <https://blogs.transparent.com/thai/the-four-capitals-of-thailand/>`_).
 
