@@ -943,8 +943,6 @@ For more information on troubleshooting locks with the Lock Utility (LKE), refer
 Using Locks within Transactions
 +++++++++++++++++++++++++++++++++
 
-Within transactions, LOCKs are used by YottaDB to ensure the ability to serialize. There is no guarantee, however, that attempts by other processes to examine LOCKs held within a transaction will produce the same results as when LOCKs are outside of a transaction. In other words, LOCKs within transactions should never be used as simple semaphores.
-
 The LOCK command locks a specified resource name that controls a tree structured name space. Outside of transactions, when one process in an environment acquires a LOCK or a ZALLOCATE on a named resource, no other YottaDB process in that environment can LOCK a resource with an "overlapping" name until the first process releases the LOCK that it holds.
 
 For information on the use of LOCKs within transactions, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
@@ -1624,7 +1622,7 @@ For an example of the use of the TROLLBACK command, see `Chapter 5: “General L
 TStart
 ------------------
 
-The TSTART command marks the beginning of a transaction or sub-transaction and increments $TLEVEL. When TSTART marks the beginning of a transaction ($TLEVEL=1), its arguments determine whether the transaction may RESTART and whether serializability is enforced. If a transaction may RESTART, the TSTART arguments determine which local variables are restored during a RESTART. Serializability is enforced by LOCK commands or, if the SERIAL keyword is specified, by YottaDB.
+The TSTART command marks the beginning of a transaction or sub-transaction and increments $TLEVEL. When TSTART marks the beginning of a transaction ($TLEVEL=1), its arguments determine whether the transaction may RESTART. If a transaction restarts, the TSTART arguments determine which local variables are restored during a RESTART. YottaDB always serializes transactions.
 
 The format of the TSTART command is:
 
@@ -1644,7 +1642,7 @@ The format of the TSTART command is:
 * An indirection operator and an expression atom evaluating to a TSTART argument form a legal argument for a TSTART.
 * Using TSTART in direct mode may not behave as expected because there is no code repository to support an appropriate transaction restart.
 
-A TSTART within a transaction starts a sub-transaction. The argument to such a TSTART has no effect on whether the existing transaction may RESTART or whether serializability of the transaction is enforced. This type of TSTART may add local variables to be restored in a transaction that has RESTART enabled.
+A TSTART within a transaction starts a sub-transaction. The argument to such a TSTART has no effect on whether the existing transaction may RESTART. This type of TSTART may add local variables to be restored in a transaction that has RESTART enabled.
 
 It is good coding practice to synchronize enabling of RESTART on TSTARTs at all levels of a transaction. A nested TSTART that does not permit RESTART where the transaction does, may indicate that the sub-transaction has not been coded to properly handle RESTART.
 
