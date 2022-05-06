@@ -39,8 +39,6 @@ import sphinx_rtd_theme
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 # needs_sphinx = '1.0'
-def setup(app):
-    app.add_css_file("custom.css")
 
 
 # Add any Sphinx extension module names here, as strings. They can be
