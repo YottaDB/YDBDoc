@@ -280,18 +280,18 @@ YottaDB comes with a `C API <../MultiLangProgGuide/cprogram.html>`_ and all you 
 
     ydbuser@ydbdev:~$ ls -l
     total 68
-    -rw-r--r-- 1 ydbuser ydbuser   262 Apr  1 02:37 sayhelloC.c
-    -rwxr-xr-x 1 ydbuser ydbuser 61644 Apr 12 10:27 ydbinstall.sh
+    -rw-r--r-- 1 ydbuser ydbuser   262 May  6 17:24 sayhelloC.c
+    -rwxr-xr-x 1 ydbuser ydbuser 61779 May 10 08:53 ydbinstall.sh
     ydbuser@ydbdev:~$ gcc $(pkg-config --libs --cflags yottadb) -o sayhelloC sayhelloC.c -lyottadb
     ydbuser@ydbdev:~$ ls -l
     total 88
-    -rwxr-xr-x 1 ydbuser ydbuser 16608 Apr 12 10:33 sayhelloC
-    -rw-r--r-- 1 ydbuser ydbuser   262 Apr  1 02:37 sayhelloC.c
-    -rwxr-xr-x 1 ydbuser ydbuser 61644 Apr 12 10:27 ydbinstall.sh
+    -rwxr-xr-x 1 ydbuser ydbuser 16608 May 10 08:59 sayhelloC
+    -rw-r--r-- 1 ydbuser ydbuser   262 May  6 17:24 sayhelloC.c
+    -rwxr-xr-x 1 ydbuser ydbuser 61779 May 10 08:53 ydbinstall.sh
     ydbuser@ydbdev:~$ ./sayhelloC
     ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
     Hello label UTF-8
-    12-APR-2022  10:34:37 ZWR
+    10-MAY-2022  09:00:05 ZWR
     ^hello("C")="Hello, world!"
     %YDB-I-RECORDSTAT, ^hello:        Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
     %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
@@ -320,7 +320,7 @@ Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the :code:`ydbuser`
     ydbuser@ydbdev:~$ ./sayhelloGo
     ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
     Hello UTF-8
-    12-APR-2022  10:45:07 ZWR
+    10-MAY-2022  09:03:06 ZWR
     ^hello("C")="Hello, world!"
     ^hello("Go")="สวัสดีชาวโลก"
     %YDB-I-RECORDSTAT, ^hello:        Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
@@ -337,7 +337,7 @@ YottaDB includes a complete language implementation for M. Download the `sayhell
 
     ydbuser@ydbdev:~/.yottadb$ ls -l r
     total 4
-    -rw-r--r-- 1 ydbuser ydbuser 57 Apr  1 02:37 sayhelloM.m
+    -rw-r--r-- 1 ydbuser ydbuser 57 May  6 17:24 sayhelloM.m
     ydbuser@ydbdev:~/.yottadb$ yottadb -run sayhelloM
     ydbuser@ydbdev:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
     Hello UTF-8
@@ -387,10 +387,23 @@ Download the `sayhelloNode.js <./sayhelloNode.js>`_ example into the :code:`ydbu
 
 .. code-block:: bash
 
+
+   ydbuser@ydbdev:~$ ls -l
+   total 3144
+   drwxr-xr-x 4 ydbuser ydbuser    4096 May 10 09:00 go
+   drwxr-xr-x 3 ydbuser ydbuser    4096 May 10 09:07 node_modules
+   -rw-r--r-- 1 ydbuser ydbuser     805 May 10 09:07 package-lock.json
+   -rw-r--r-- 1 ydbuser ydbuser      51 May 10 09:07 package.json
+   -rwxr-xr-x 1 ydbuser ydbuser   16608 May 10 08:59 sayhelloC
+   -rw-r--r-- 1 ydbuser ydbuser     262 May  6 17:24 sayhelloC.c
+   -rwxr-xr-x 1 ydbuser ydbuser 3100712 May 10 09:02 sayhelloGo
+   -rw-r--r-- 1 ydbuser ydbuser     203 May  6 17:24 sayhelloGo.go
+   -rw-r--r-- 1 ydbuser ydbuser     121 May 10 09:11 sayhelloNode.js
+   -rwxr-xr-x 1 ydbuser ydbuser   61779 May 10 08:53 ydbinstall.sh
    ydbuser@ydbdev:~$ node sayhelloNode.js
    ydbuser@ydbdev:~$ mupip extract -format=zwr -select=hello -stdout
    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
-   18-MAR-2022  15:07:07 ZWR
+   10-MAY-2022  09:12:04 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("M")="Привіт Світ"
@@ -419,20 +432,24 @@ Download the `sayhelloPerl.pl <./sayhelloPerl.pl>`_ program into the :code:`ydbu
 .. code-block:: bash
 
    ydbuser@ydbdev:~$ ls -l
-   total 2772
-   drwxr-xr-x 4 ydbuser ydbuser    4096 Apr 12 10:43 go
-   -rwxr-xr-x 1 ydbuser ydbuser   16608 Apr 12 10:33 sayhelloC
-   -rw-r--r-- 1 ydbuser ydbuser     262 Apr  1 02:37 sayhelloC.c
-   -rwxr-xr-x 1 ydbuser ydbuser 2730192 Apr 12 10:44 sayhelloGo
-   -rw-r--r-- 1 ydbuser ydbuser     203 Apr  1 02:37 sayhelloGo.go
-   -rw-r--r-- 1 ydbuser ydbuser      86 Apr  1 02:37 sayhelloPerl.pl
-   -rwxr-xr-x 1 ydbuser ydbuser   61644 Apr 12 10:27 ydbinstall.sh
-   drwxr-xr-x 7 ydbuser ydbuser    4096 Apr 12 10:50 yottadb-perl
+   total 3152
+   drwxr-xr-x 4 ydbuser ydbuser    4096 May 10 09:00 go
+   drwxr-xr-x 3 ydbuser ydbuser    4096 May 10 09:07 node_modules
+   -rw-r--r-- 1 ydbuser ydbuser     805 May 10 09:07 package-lock.json
+   -rw-r--r-- 1 ydbuser ydbuser      51 May 10 09:07 package.json
+   -rwxr-xr-x 1 ydbuser ydbuser   16608 May 10 08:59 sayhelloC
+   -rw-r--r-- 1 ydbuser ydbuser     262 May  6 17:24 sayhelloC.c
+   -rwxr-xr-x 1 ydbuser ydbuser 3100712 May 10 09:02 sayhelloGo
+   -rw-r--r-- 1 ydbuser ydbuser     203 May  6 17:24 sayhelloGo.go
+   -rw-r--r-- 1 ydbuser ydbuser     121 May 10 09:11 sayhelloNode.js
+   -rw-r--r-- 1 ydbuser ydbuser      86 May  6 17:24 sayhelloPerl.pl
+   -rwxr-xr-x 1 ydbuser ydbuser   61779 May 10 08:53 ydbinstall.sh
+   drwxr-xr-x 7 ydbuser ydbuser    4096 May 10 09:13 yottadb-perl
    ydbuser@ydbdev:~$ chmod +x sayhelloPerl.pl
    ydbuser@ydbdev:~$ ./sayhelloPerl.pl
    ydbuser@ydbdev:~$ mupip extract -format=zwr -select=hello -stdout
    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
-   12-APR-2022  10:53:08 ZWR
+   10-MAY-2022  09:15:53 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("M")="Привіт Світ"
@@ -457,21 +474,24 @@ Download the `sayhelloPython.py <./sayhelloPython.py>`_ program into the :code:`
 .. code-block:: bash
 
    ydbuser@ydbdev:~$ ls -l
-   total 2780
-   drwxr-xr-x 4 ydbuser ydbuser    4096 Apr 12 10:43 go
-   -rwxr-xr-x 1 ydbuser ydbuser   16608 Apr 12 10:33 sayhelloC
-   -rw-r--r-- 1 ydbuser ydbuser     262 Apr  1 02:37 sayhelloC.c
-   -rwxr-xr-x 1 ydbuser ydbuser 2730192 Apr 12 10:44 sayhelloGo
-   -rw-r--r-- 1 ydbuser ydbuser     203 Apr  1 02:37 sayhelloGo.go
-   -rwxr-xr-x 1 ydbuser ydbuser      86 Apr  1 02:37 sayhelloPerl.pl
-   -rw-r--r-- 1 ydbuser ydbuser     127 Mar  8 15:06 sayhelloPython.py
-   drwxr-xr-x 5 ydbuser ydbuser    4096 Apr 12 11:08 sayhello_rust
-   -rwxr-xr-x 1 ydbuser ydbuser   61644 Apr 12 10:27 ydbinstall.sh
-   drwxr-xr-x 7 ydbuser ydbuser    4096 Apr 12 10:50 yottadb-perl
+   total 3156
+   drwxr-xr-x 4 ydbuser ydbuser    4096 May 10 09:00 go
+   drwxr-xr-x 3 ydbuser ydbuser    4096 May 10 09:07 node_modules
+   -rw-r--r-- 1 ydbuser ydbuser     805 May 10 09:07 package-lock.json
+   -rw-r--r-- 1 ydbuser ydbuser      51 May 10 09:07 package.json
+   -rwxr-xr-x 1 ydbuser ydbuser   16608 May 10 08:59 sayhelloC
+   -rw-r--r-- 1 ydbuser ydbuser     262 May  6 17:24 sayhelloC.c
+   -rwxr-xr-x 1 ydbuser ydbuser 3100712 May 10 09:02 sayhelloGo
+   -rw-r--r-- 1 ydbuser ydbuser     203 May  6 17:24 sayhelloGo.go
+   -rw-r--r-- 1 ydbuser ydbuser     121 May 10 09:11 sayhelloNode.js
+   -rwxr-xr-x 1 ydbuser ydbuser      86 May  6 17:24 sayhelloPerl.pl
+   -rw-r--r-- 1 ydbuser ydbuser     128 May  6 17:24 sayhelloPython.py
+   -rwxr-xr-x 1 ydbuser ydbuser   61779 May 10 08:53 ydbinstall.sh
+   drwxr-xr-x 7 ydbuser ydbuser    4096 May 10 09:13 yottadb-perl
    ydbuser@ydbdev:~$ python3 sayhelloPython.py
    ydbuser@ydbdev:~$ mupip extract -format=zwr -select=hello -stdout
    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
-   12-APR-2022  11:44:09 ZWR
+   10-MAY-2022  09:19:41 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("M")="Привіт Світ"
@@ -499,7 +519,7 @@ YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBR
    ...
    ydbuser@ydbdev:~/sayhello_rust$ mupip extract -format=zwr -select=hello -stdout
    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
-   12-APR-2022  11:23:18 ZWR
+   10-MAY-2022  09:36:29 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("M")="Привіт Світ"
