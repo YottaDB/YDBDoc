@@ -3684,21 +3684,22 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  CAT           | Critical section Total Acquisitions successes                                                                                        |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  CFE           | Critical section Failed (blocked) acquisition total caused by Epochs                                                                 |
+|  CFE           | Critical section Failed (blocked) acquisition total caused by Epochs. It is incremented a single time for each observed              |
+|                | instance of contention.                                                                                                              |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  CFS           | Critical section Failed (blocked) acquisition sum of Squares                                                                         |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  CFT           | Critical section Failed (blocked) acquisition Total                                                                                  |
+|  CFT           | Critical section Failed (blocked) acquisition Total. It is incremented a single time for each observed instance of contention.       |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  CQS           | Critical section acquisition Queued sleeps sum of Squares                                                                            |
+|  CQS           | This mnemonic is not maintained and contains zeros.                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  CQT           | Critical section acquisition Queued sleeps Total                                                                                     |
+|  CQT           | This mnemonic is not maintained and contains zeros.                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  CTN           | Current Transaction Number of the database for the last committed read-write transaction (TP and non-TP)                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  CYS           | Critical section acquisition processor Yields sum of Squares                                                                         |
+|  CYS           | This mnemonic is not maintained and contains zeros.                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  CYT           | Critical section acquisition processor Yields Total                                                                                  |
+|  CYT           | This mnemonic is not maintained and contains zeros.                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  DEX           | # of Database file EXtentions                                                                                                        |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
