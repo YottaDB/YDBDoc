@@ -15,7 +15,7 @@ Programming in Node.js
 =========================
 
 .. contents::
-   :depth: 3
+   :depth: 5
 
 Programming YottaDB in `Node.js <https://nodejs.org/>`_ is provided by `Nodem <https://github.com/dlwicksell/nodem>`_ which is developed by `David Wicksell <https://github.com/dlwicksell>`_. We would like to acknowledge his contribution and thank him for the value it adds to the YottaDB community. It provides access to :ref:`global and local variables <lcl-gbl-var>` as well as the ability to call functions and procedures coded in M.
 
@@ -69,6 +69,7 @@ Before any of the API functions can be used, a YottaDB runtime instance needs to
 
 
 Arguments as objects and the objects returned (on success or failure) described below may have comments (lines staring with :code:`//`) that provide information about the arguments or type of value returned. For example:
+
 * If a comment consists of :code:`(optional)` then the property (argument or returned value) is optional.
 * If a comment consists of a value within :code:`<>` then it is the default value for that property.
 * Any other values present in the comment specifies the domain of values.
