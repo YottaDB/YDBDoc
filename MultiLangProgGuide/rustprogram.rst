@@ -51,10 +51,10 @@ Clone the YDBRust repository and run an example.
 
 There are two major APIs that are part of the Rust wrapper:
 
-* `craw <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/craw/index.html>`_, the FFI bindings generated directly by bindgen. *These are not recommended for normal use*, but are avaiable in case the Context API is missing functionality.
+* `craw <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/craw/index.html>`_, the FFI bindings generated directly by bindgen. *These are not recommended for normal use*, but are available in case functionality is needed beyond that provided by the Context API.
 * The main `Context API <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/struct.Context.html>`_, which is a safe wrapper around the C API which keeps track of the current tptoken and an error buffer. The reason this metadata is necessary is because this crate binds to the threaded version of YottaDB, which requires a :code:`tptoken` and :code:`err_buffer`. See :ref:`transaction processing <txn-proc>` for more details on :code:`tptoken` and transactions.
 
-Most operations are encapsulated in methods in the `KeyContext <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/struct.KeyContext.html>`_ struct. Iteration helpers are avaiable to iterate over values in the database in a variety of ways.
+Most operations are encapsulated in methods in the `KeyContext <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/struct.KeyContext.html>`_ struct. Iteration helpers are available to iterate over values in the database in a variety of ways.
 
 -----------------------------------------
 Comparison between Rust and Go wrappers

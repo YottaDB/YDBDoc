@@ -59,7 +59,7 @@ for directory in "${DIRECTORIES[@]}"; do
 	output="$target/${directory%?}"
 	rsync _build/html/ "$output/"
 	# Update the following line as additional languages are supported
-	rsync --exclude=conf.py *.c *.m *.go *.pl *.py *.rs *.js "$output/"
+	rsync --exclude=conf.py *.c *.m *.go *.pl *.py *.rs *.js *.lua "$output/"
 	popd
 done
 cp index.html "$target"
