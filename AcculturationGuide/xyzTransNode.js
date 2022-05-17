@@ -1,7 +1,9 @@
+// Update a multi-region database using ACID transactions
 const ydb=require('nodem').Ydb();
 
 ydb.open();
 
+// Infinite loop updating regions in a transaction every half second
 setInterval(() => {
     ydb.transaction(() => {
 	let time = Date.now();
