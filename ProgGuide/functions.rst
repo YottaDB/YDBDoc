@@ -2525,7 +2525,7 @@ The following table summarizes the usage of $ZDATE() when only first argument is
 +-------------------------------------------+---------------------------------------------------------------+
 
 ++++++++++++++++++++++++++++++++++++++++++
-$ZDATE() Format Specifification Elements
+$ZDATE() Format Specification Elements
 ++++++++++++++++++++++++++++++++++++++++++
 
 This section lists the $ZDATE format specification elements. $ZDATE() format specifications must appear in upper case. When any alphabetic characters in format specifications are in lower case, $ZDATE() generates a run-time error.
