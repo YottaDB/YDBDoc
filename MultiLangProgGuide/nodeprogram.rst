@@ -998,6 +998,86 @@ Example:
    10
    >
 
+~~~~~~~~~~~~~~~
+transaction()
+~~~~~~~~~~~~~~~
+
+As a wrapper for C function :ref:`ydb_tp_s() <ydb-tp-s-st-fn>`, it provides support for full ACID transactions.
+
+It requires, as the first argument, a JavaScript function that takes no arguments. This function can contain in itself, other Nodem calls, nested :code:`transaction()` calls, or any other JavaScript code. By default no local variables are reset during transaction restarts.
+
+.. note::
+
+   The JavaScript function is run synchronously within the transaction by YottaDB, and every Nodem API that is called within the transaction must also be run synchronously.
+
+An optional second argument, with one or two properties, can be passed to :code:`transaction()`.
+* The first property, :code:`variables`, is an array of local variables whose values are reset to their original values whenever the transaction is restarted. If :code:`variables` has :code:`*` as its only array item, then every local variable will be reset during a transaction restart.
+* The second property, :code:`type`, is a string which if set to :code:`Batch` (or :code:`batch` or :code:`BATCH`), will run the transaction in batch mode. Batch mode does not ensure Durability (but it always ensures Atomicity, Consistency, and Isolation).
+
+In order to restart a transaction pass the string :code:`Restart` (or :code:`restart` or :code:`RESTART`) as the argument to the return statement. Similarly, in order to rollback a transaction pass the string :code:`Rollback` (or :code:`rollback` or :code:`ROLLBACK`) as the argument to the return statement. Any other argument to the return statement will commit the transaction, including functions without a return statement.
+
+Returns the following on success:
+
+.. code-block:: javascript
+
+   {
+	ok:            boolean,  // true
+	statusCode:    number,
+	statusMessage: string
+   }
+
+Returns the following on failure:
+
+.. code-block:: javascript
+
+   {
+	ok:           boolean,  // false
+	errorCode:    number,
+	errorMessage: string
+   }
+
+Example:
+
+.. code-block:: javascript
+
+   const ydb=require('nodem').Ydb();
+   ydb.open();
+
+   console.log("Value of ^num before transaction: ", ydb.set({ global: 'num', data: 0 }));
+
+   const transResult = ydb.transaction(() => {
+       console.log("Starting transaction ... \n");
+       let incrementGlobal = ydb.increment({ global: 'num'});
+       if (incrementGlobal.errorCode === ydb.tpRestart) return 'Restart';
+       if (!incrementGlobal.ok) return 'Rollback';
+       console.log("Incrementing ^num: ", incrementGlobal);
+
+       const result = ydb.get({ global: 'num'});
+       if (result.errorCode === ydb.tpRestart) return 'Restart';
+       if (!result.ok) return 'Rollback';
+       console.log("^num: ", result);
+
+       return 'Commit';
+   }, { variables: ['*'] });
+
+   console.log("Transaction exited ... \n");
+   console.log("Transaction output: ", transResult);
+
+Output:
+
+.. code-block:: javascript
+
+   Value of ^num before transaction:  { ok: true, global: 'num', data: 0 }
+   Starting transaction ...
+
+   Incrementing ^num:  { ok: true, global: 'num', data: 1 }
+   ^num:  { ok: true, global: 'num', data: 1, defined: true }
+   Transaction exited ...
+
+   Transaction output:  { ok: true, statusCode: 0, statusMessage: 'Commit' }
+
+Even though the :code:`transaction()` API runs synchronously, it is fully compatible with the Worker Threads API. By creating a new worker thread and running the :code:`transaction()` API, and any other APIs it calls in it, an asynchronous pattern can be emulated. Running the transaction will not block the main thread or any of the other worker threads. The `transaction.js <https://github.com/glwicksell/nodem/blob/master/examples/transaction.js>`_ example shows how the :code:`transaction()` API can be used with the Worker Threads API. See :ref:`worker-threads-api` for more information.
+
 ~~~~~~~~~~
 unlock()
 ~~~~~~~~~~
@@ -1587,86 +1667,6 @@ Example:
    > ydb.get('^Z');
    175
    >
-
-~~~~~~~~~~~~~~~
-transaction()
-~~~~~~~~~~~~~~~
-
-Provides support for full ACID transactions.
-
-It requires, as the first argument, a JavaScript function that takes no arguments. This function can contain in itself, other Nodem calls, nested :code:`transaction()` calls, or any other JavaScript code. By default no local variables are reset during transaction restarts.
-
-.. note::
-
-   The JavaScript function is run synchronously within the transaction by YottaDB, and every Nodem API that is called within the transaction must also be run synchronously.
-
-An optional second argument, with one or two properties, can be passed to :code:`transaction()`.
-* The first property, :code:`variables`, is an array of local variables whose values are reset to their original values whenever the transaction is restarted. If :code:`variables` has :code:`*` as its only array item, then every local variable will be reset during a transaction restart.
-* The second property, :code:`type`, is a string which if set to :code:`Batch` (or :code:`batch` or :code:`BATCH`), will run the transaction in batch mode. Batch mode does not ensure Durability (but it always ensures Atomicity, Consistency, and Isolation).
-
-In order to restart a transaction pass the string :code:`Restart` (or :code:`restart` or :code:`RESTART`) as the argument to the return statement. Similarly, in order to rollback a transaction pass the string :code:`Rollback` (or :code:`rollback` or :code:`ROLLBACK`) as the argument to the return statement. Any other argument to the return statement will commit the transaction, including functions without a return statement.
-
-Returns the following on success:
-
-.. code-block:: javascript
-
-   {
-	ok:            boolean,  // true
-	statusCode:    number,
-	statusMessage: string
-   }
-
-Returns the following on failure:
-
-.. code-block:: javascript
-
-   {
-	ok:           boolean,  // false
-	errorCode:    number,
-	errorMessage: string
-   }
-
-Example:
-
-.. code-block:: javascript
-
-   const ydb=require('nodem').Ydb();
-   ydb.open();
-
-   console.log("Value of ^num before transaction: ", ydb.set({ global: 'num', data: 0 }));
-
-   const transResult = ydb.transaction(() => {
-       console.log("Starting transaction ... \n");
-       let incrementGlobal = ydb.increment({ global: 'num'});
-       if (incrementGlobal.errorCode === ydb.tpRestart) return 'Restart';
-       if (!incrementGlobal.ok) return 'Rollback';
-       console.log("Incrementing ^num: ", incrementGlobal);
-
-       const result = ydb.get({ global: 'num'});
-       if (result.errorCode === ydb.tpRestart) return 'Restart';
-       if (!result.ok) return 'Rollback';
-       console.log("^num: ", result);
-
-       return 'Commit';
-   }, { variables: ['*'] });
-
-   console.log("Transaction exited ... \n");
-   console.log("Transaction output: ", transResult);
-
-Output:
-
-.. code-block:: javascript
-
-   Value of ^num before transaction:  { ok: true, global: 'num', data: 0 }
-   Starting transaction ...
-
-   Incrementing ^num:  { ok: true, global: 'num', data: 1 }
-   ^num:  { ok: true, global: 'num', data: 1, defined: true }
-   Transaction exited ...
-
-   Transaction output:  { ok: true, statusCode: 0, statusMessage: 'Commit' }
-
-Even though the :code:`transaction()` API runs synchronously, it is fully compatible with the Worker Threads API. By creating a new worker thread and running the :code:`transaction()` API, and any other APIs it calls in it, an asynchronous pattern can be emulated. Running the transaction will not block the main thread or any of the other worker threads. The `transaction.js <https://github.com/glwicksell/nodem/blob/master/examples/transaction.js>`_ example shows how the :code:`transaction()` API can be used with the Worker Threads API. See :ref:`worker-threads-api` for more information.
 
 ~~~~~~~~~~~
 version()
