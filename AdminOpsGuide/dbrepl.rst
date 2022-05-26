@@ -3797,7 +3797,7 @@ For more information on Instance Freeze, refer to :ref:`instance-freeze`.
 
 Specifies the connection retry parameters. If the connection between the Source and Receiver Servers is broken or the Source Server fails to connect to the Receiver Server at startup, the Source Server applies these parameters to the reconnection attempts.
 
-First, the Source Server makes the number of reconnection attempts specified by the <hard tries> value every <hard tries period> milliseconds. Then, the Source Server attempts reconnection every <soft tries period> seconds and logs an alert message every <alert time> seconds. If the specified <alert time> value is less than <hard tries>*<hard tries period>/1000 + lt;soft tries period>, it is set to the larger value. The Source Server sends a heartbeat message to the Receiver Server every <heartbeat period> seconds and expects a response back from the Receiver Server within <max heartbeat wait> seconds.
+First, the Source Server makes the number of reconnection attempts specified by the <hard tries> value every <hard tries period> milliseconds. Then, the Source Server attempts reconnection every <soft tries period> seconds and logs an alert message every <alert time> seconds. If the specified <alert time> value is less than <soft tries period>, it is set to the larger value i.e., <soft tries period>. If the specified <max heartbeat wait> value is less than <heartbeat period>, it is set to the larger value i.e., <heartbeat period>. The Source Server sends a heartbeat message to the Receiver Server every <heartbeat period> seconds and expects a response back from the Receiver Server within <max heartbeat wait> seconds.
 
 ^^^^^^^^^^^^^^
 -instsecondary
