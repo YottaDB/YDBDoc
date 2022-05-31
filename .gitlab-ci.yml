@@ -1,6 +1,6 @@
 #################################################################
 #                                                               #
-# Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2020-2022 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -18,7 +18,6 @@ before_script:
     - apt-get update -qq && apt-get install -y -qq --no-install-recommends git make rsync tcsh sphinx-common python3-pip python3-setuptools python3-wheel jq wget
     - pip3 install sphinx_rtd_theme sphinxprettysearchresults
     - git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto ../YDBOcto
-    - git clone --depth 1 https://gitlab.com/YottaDB/Util/YDBPosix ../YDBPosix
 
 deadlinks:
   stage: build

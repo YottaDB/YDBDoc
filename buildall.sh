@@ -21,11 +21,10 @@ shopt -s nullglob
 
 target="$(realpath "${1:-target}")"
 octo="${2:-../YDBOcto}"
-posix="${3:-../YDBPosix}"
 mkdir -p "$target"
 
 usage() {
-	echo "usage: $0 [target [octo [posix]]]"
+	echo "usage: $0 [target [octo]]"
 	exit 1
 }
 
@@ -38,7 +37,6 @@ needs_clone() {
 }
 
 needs_clone "$octo" https://gitlab.com/YottaDB/DBMS/YDBOcto
-needs_clone "$posix" https://gitlab.com/YottaDB/Util/YDBPosix
 
 DIRECTORIES=(
 	AcculturationGuide/
@@ -70,11 +68,6 @@ cp index.html "$target"
 pushd "$octo"/doc
 make html
 rsync _build/html/ "$target/Octo"
-popd
-
-pushd "$posix"/doc
-make html
-rsync _build/html/ "$target/YDBPosix"
 popd
 
 # The source directory for the programmer's guide does not have the same name
