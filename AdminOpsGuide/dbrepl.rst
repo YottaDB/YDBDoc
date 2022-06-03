@@ -3791,11 +3791,22 @@ For more information on enabling a region to invoke an Instance Freeze on custom
 
 For more information on Instance Freeze, refer to :ref:`instance-freeze`.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--connectparams=<hard tries>,<hard tries period>, <soft tries period>,<alert time>,<heartbeat period><max heartbeat wait>
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-connectparams=<hard tries>,<hard tries period>,<soft tries period>,<alert time>,<heartbeat period>,<max heartbeat wait>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Specifies the connection retry parameters. If the connection between the Source and Receiver Servers is broken or the Source Server fails to connect to the Receiver Server at startup, the Source Server applies these parameters to the reconnection attempts.
+Specifies the connection retry parameters.
+
+All six values need to be specified to use this option. If one or more of the values are not specified it will result in an error. Following are the default values that should be used if any of the values are not being supplied:
+
+ * hard tries : 5
+ * hard tries period : 500 msec
+ * soft tries period : 5 sec
+ * alert time : 30 sec
+ * heartbeat period : 15 sec
+ * max heartbeat wait : 60 sec
+
+If the connection between the Source and Receiver Servers is broken or the Source Server fails to connect to the Receiver Server at startup, the Source Server applies these parameters to the reconnection attempts.
 
 First, the Source Server makes the number of reconnection attempts specified by the <hard tries> value every <hard tries period> milliseconds. Then, the Source Server attempts reconnection every <soft tries period> seconds and logs an alert message every <alert time> seconds. If the specified <alert time> value is less than <soft tries period>, it is set to the larger value i.e., <soft tries period>. If the specified <max heartbeat wait> value is less than <heartbeat period>, it is set to the larger value i.e., <heartbeat period>. The Source Server sends a heartbeat message to the Receiver Server every <heartbeat period> seconds and expects a response back from the Receiver Server within <max heartbeat wait> seconds.
 
@@ -3945,7 +3956,7 @@ Shuts down the Source Server.
 -timeout=<timeout in seconds>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Specifies the time (in seconds) that the shutdown command should wait before signaling the Source Server to shut down. If you do not specify -timeout, the default timeout period is 120 seconds. If you specify -timeout=0 , shutdown occurs immediately.
+Specifies the time (in seconds) that the shutdown command should wait before signaling the Source Server to shut down. If you do not specify -timeout, the default timeout period is 30 seconds. If you specify -timeout=0 , shutdown is signaled immediately.
 
 ^^^^^^^^^^^^
 -zerobacklog
