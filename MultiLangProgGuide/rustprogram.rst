@@ -49,15 +49,12 @@ Clone the YDBRust repository and run an example.
    cd YDBRust
    cargo run --example say_hello_rust
 
-There are three major APIs that are part of the Rust wrapper:
+There are two major APIs that are part of the Rust wrapper:
 
-* `craw <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/craw/index.html>`_, the FFI bindings generated directly by bindgen. Not recommended for normal use.
-* `simple_api <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/simple_api/index.html>`_, a wrapper around the :code:`craw` API which handles resizing buffers and various other recoverable errors.
-* `context_api <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/context_api/index.html>`_, which is wrapper around the :code:`simple_api` that stores the current tptoken and error buffer so you don't have to keep a track of them yourself.
+* `craw <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/craw/index.html>`_, the FFI bindings generated directly by bindgen. *These are not recommended for normal use*, but are avaiable in case the Context API is missing functionality.
+* The main `Context API <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/struct.Context.html>`_, which is a safe wrapper around the C API which keeps track of the current tptoken and an error buffer. The reason this metadata is necessary is because this crate binds to the threaded version of YottaDB, which requires a :code:`tptoken` and :code:`err_buffer`. See :ref:`transaction processing <txn-proc>` for more details on :code:`tptoken` and transactions.
 
-.. note::
-
-   The :code:`context_api` is recommended for normal use, but the others are available if your needs are more specialized.
+Most operations are encapsulated in methods in the `KeyContext <https://yottadb.gitlab.io/Lang/YDBRust/yottadb/struct.KeyContext.html>`_ struct. Iteration helpers are avaiable to iterate over values in the database in a variety of ways.
 
 -----------------------------------------
 Comparison between Rust and Go wrappers

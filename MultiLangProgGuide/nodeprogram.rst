@@ -43,8 +43,8 @@ Update to the latest version using the following command;
 
 The following steps need to be performed in order for YottaDB to find the Call-In table and the :code:`v4wNode.m` routine that it maps to:
 
-   * Copy :code:`v4wNode.m`, located in the :code:`/nodem/src` directory, into a directory that is specified in the :code:`$ydb_routines` path, or in the :code:`routinesPath` property in the call to the :code:`open()` API.
-   * Set :code:`$ydb_ci` environment variable, or set the :code:`callinTable` property in the call to the :code:`open()` API, pointing to the file :code:`nodem.ci` located in the :code:`/nodem/resources` directory.
+* Copy :code:`v4wNode.m`, located in the :code:`/nodem/src` directory, into a directory that is specified in the :code:`$ydb_routines` path, or in the :code:`routinesPath` property in the call to the :code:`open()` API.
+* Set :code:`$ydb_ci` environment variable, or set the :code:`callinTable` property in the call to the :code:`open()` API, pointing to the file :code:`nodem.ci` located in the :code:`/nodem/resources` directory.
 
 .. note::
    To build and install Nodem from scratch, use the instructions specified `here <https://github.com/dlwicksell/nodem#installation>`_.
@@ -1010,7 +1010,8 @@ It requires, as the first argument, a JavaScript function that takes no argument
 
    The JavaScript function is run synchronously within the transaction by YottaDB, and every Nodem API that is called within the transaction must also be run synchronously.
 
-An optional second argument, with one or two properties, can be passed to :code:`transaction()`.
+An optional second argument, with one or two properties, can be passed to :code:`transaction()`:
+
 * The first property, :code:`variables`, is an array of local variables whose values are reset to their original values whenever the transaction is restarted. If :code:`variables` has :code:`*` as its only array item, then every local variable will be reset during a transaction restart.
 * The second property, :code:`type`, is a string which if set to :code:`Batch` (or :code:`batch` or :code:`BATCH`), will run the transaction in batch mode. Batch mode does not ensure Durability (but it always ensures Atomicity, Consistency, and Isolation).
 
