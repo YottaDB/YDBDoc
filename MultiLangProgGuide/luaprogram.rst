@@ -26,7 +26,7 @@ Installation
 --------------
 The YottaDB Lua API requires a minimum YottaDB release of r1.32 and is tested with a minimum Lua version of 5.3.
 
-The *Makefile* assumes that the Lua headers are installed at :code:`/usr/include/lua5.3`. If the Lua headers are elsewhere, either modify the *Makefile* or pass :code:`CFLAGS=-I/path/to/lua` to :code:`make`.
+If a different version of Lua is being used make sure to either modify the *Makefile* or pass :code:`CFLAGS=-I/path/to/lua` to :code:`make`, since the *Makefile* assumes that the Lua headers are installed at :code:`/usr/include/lua5.3`.
 
 .. code-block:: bash
 
