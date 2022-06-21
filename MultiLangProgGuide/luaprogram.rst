@@ -34,6 +34,7 @@ If a different version of Lua is being used make sure to either modify the *Make
    $ apt install liblua5.4-dev
    $ git clone https://github.com/orbitalquark/lua-yottadb.git
    $ cd lua-yottadb
+   $ sed -i 's/5.3/5.4/g' Makefile
    $ sudo make install
    $ make test
    $
