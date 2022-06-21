@@ -30,14 +30,13 @@ The *Makefile* assumes that the Lua headers are installed at :code:`/usr/include
 
 .. code-block:: bash
 
-   $ apt install lua5.3
-   $ apt install liblua5.3-dev
+   $ apt install lua5.4
+   $ apt install liblua5.4-dev
    $ git clone https://github.com/orbitalquark/lua-yottadb.git
    $ cd lua-yottadb
-   $ make ydb_dist=$(pkg-config --variable=prefix yottadb)
+   $ sudo make install
+   $ make test
    $
-
-Copy the newly built :code:`_yottadb.so` and :code:`yottadb.lua` files to the path where Lua require() will be able to find it. Refer to the `Lua Modules documentation <https://www.lua.org/manual/5.4/manual.html#6.3>`_ for more information.
 
 ---------
 Lua API
