@@ -30,8 +30,8 @@ If a different version of Lua is being used make sure to either modify the *Make
 
 .. code-block:: bash
 
-   $ apt install lua5.4
-   $ apt install liblua5.4-dev
+   $ sudo apt install lua5.4
+   $ sudo apt install liblua5.4-dev
    $ git clone https://github.com/orbitalquark/lua-yottadb.git
    $ cd lua-yottadb
    $ sed -i 's/5.3/5.4/g' Makefile
