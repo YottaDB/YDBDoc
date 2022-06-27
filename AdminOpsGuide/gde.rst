@@ -593,8 +593,6 @@ The format of the ADD command is one of the following:
 
 The ADD command requires specification of an object-type and an object-name. GDE supplies default values from the templates for qualifiers not explicitly supplied in the command.
 
-namespace specifies a global name or a global name with subscript(s) or a global name with a subscript range in the form of global[[*]|[(from-subscript:[to-subscript])]].
-
 Name spaces and file-names are case-sensitive; other objects are not case-sensitive.
 
 ~~~~~~~
@@ -615,6 +613,10 @@ Maps a namespace to a region in the global directory. The format of the ADD -NAM
 * You can also use $CHAR() and $ZCHAR() to specify unprintable characters as subscripts. "" (an empty string) or no value (e.g. 20: or :20 or :) specify open-ended ranges, which span, on the left, from the first subscript ("") to on the right, the last possible string.
 
 * Regions that contain global variables sharing the same unsubscripted name that span regions must use standard null collation; attempting to use the deprecated `historical null collation <../ProgrammersGuide/langfeat.html#null-subs-colltn>`_ produces an error.
+
+* namespace specifies a global name or a global name with subscript(s) or a global name with a subscript range in the form of global[[*]|[(from-subscript:[to-subscript])]].
+
+* namespace is case-sensitive.
 
 Example:
 
@@ -708,6 +710,8 @@ Example:
    GDE> add -segment temp -file_name=scratch
 
 This command creates a segment-name TEMP and maps it to the file scratch.dat in the current working directory. However, if you were to specify scratch as the file-name, in other words an environment variable, each process uses the file using the translation of that environment variable at run-time.
+
+file-name is case-sensitive.
 
 ~~~~~~~~
 -Region
