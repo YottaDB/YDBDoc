@@ -614,9 +614,9 @@ Maps a namespace to a region in the global directory. The format of the ADD -NAM
 
 * Regions that contain global variables sharing the same unsubscripted name that span regions must use standard null collation; attempting to use the deprecated `historical null collation <../ProgrammersGuide/langfeat.html#null-subs-colltn>`_ produces an error.
 
-* namespace specifies a global name or a global name with subscript(s) or a global name with a subscript range in the form of global[[*]|[(from-subscript:[to-subscript])]].
+* Namespace specifies a global name or a global name with subscript(s) or a global name with a subscript range in the form of global[[*]|[(from-subscript:[to-subscript])]].
 
-* namespace is case-sensitive.
+* Namespace is case-sensitive.
 
 Example:
 
@@ -711,7 +711,7 @@ Example:
 
 This command creates a segment-name TEMP and maps it to the file scratch.dat in the current working directory. However, if you were to specify scratch as the file-name, in other words an environment variable, each process uses the file using the translation of that environment variable at run-time.
 
-file-name is case-sensitive.
+File-name is case-sensitive.
 
 ~~~~~~~~
 -Region
