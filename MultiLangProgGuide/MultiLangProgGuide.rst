@@ -266,6 +266,8 @@ In common usage, database files reside on the same computer system as that runni
 
 Furthermore, there are configurations that impliticly invoke transaction processing logic, such as distributing a global variable over multiple database regions, or a trigger invocation (see `Chapter 14 Triggers of the YottaDB M Programmers Guide <../ProgrammersGuide/triggers.html>`_). Operations that invoke implicit transaction processing are not supported for global variables that reside on remote database files.
 
+.. _isv-mlpg:
+
 ++++++++++++++++++++++++++++
 Intrinsic Special Variables
 ++++++++++++++++++++++++++++
@@ -279,6 +281,8 @@ $tlevel
 ~~~~~~~~
 
 Application code can read the intrinsic special variable :code:`$tlevel` to determine whether it is executing inside a transaction. :code:`$tlevel>0` means that it is inside a transaction, and :code:`$tlevel>1` means that it is inside a nested transaction. Note that a transaction can be started explicitly, e.g., by calling :ref:`ydb-tp-s-st-fn`,or implicitly by a trigger resulting from a :ref:`ydb-delete-s-st-fn`, :ref:`ydb-set-s-st-fn`.
+
+.. _trestart-isv:
 
 ~~~~~~~~~~
 $trestart

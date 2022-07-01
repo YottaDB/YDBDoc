@@ -8121,6 +8121,8 @@ Compile Time Error: This indicates that a DO or extrinsic function supplied an a
 
 Action: Modify the routine so that it passes fewer parameters explicitly.
 
+.. _maxargcnt-error:
+
 --------------
 MAXARGCNT
 --------------
