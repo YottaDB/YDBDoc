@@ -138,7 +138,7 @@ $I[O] contains the name of the current device specified by the last USE command.
 $JOB
 -----------
 
-$J[OB] the current process identifier.
+$J[OB] is the current process identifier.
 
 YottaDB uses the decimal representation of the current process identifier (PID) for the value of $JOB. $JOB is guaranteed to be unique for every concurrently operating process on a system. However, operating systems reuse PIDs over time. YottaDB does not permit the SET command to modify $JOB.
 
@@ -149,6 +149,10 @@ Example:
    LOOP0 for  set itm=$order(^tmp($J,itm)) quit:itm=""  do LOOP1
 
 This uses $J as the first subscript in a temporary global to insure that every process uses separate data space in the global ^tmp.
+
+.. note::
+
+   $KEY contains the UNIX process id of the created process shell which executes the command connected to the PIPE.
 
 ------------
 $KEY
@@ -913,6 +917,10 @@ $ZJ[OB] holds the pid of the process created by the last JOB command performed b
 YottaDB initializes $ZJOB to zero (0) at process startup. If the JOB command fails to spawn a new job, YottaDB sets $ZJOB to zero (0). Note that because of the left to right evaluation order of M, using $ZJOB in the jobparameter string results in using the value created by the last, rather than the current JOB command, which is not likely to match common coding practice.
 
 YottaDB does not permit the SET or NEW command to modify $ZJOB.
+
+.. note::
+
+   $KEY contains the UNIX process id of the created process shell which executes the command connected to the PIPE.
 
 -----------------
 $ZKEY
