@@ -665,9 +665,9 @@ Compiles routines to use library code in order to load literals instead of gener
 -noline_entry
 ~~~~~~~~~~~~~~~~~~~~
 
-YottaDB allows calls and transfer of control to label±offset^routine targets. If an application code uses only label^routine targets without offsets, compiling with -noline_entry produces more compact object code.
+As M allows calls and control transfers to label±offset^routine targets, YottaDB object code for each line starts with code to ensure that all local variables used in that line are accessible within that line. For application code that uses only label^routine targets, i.e., eschews ±offset forms, with the :code:`-noline_entry` option, instead of this additional code generated for each line, the YottaDB object code generated for each label includes code to ensure that all local variables in the block of code starting with the label are accessible within that block. This option makes the generated object code more compact. Whether this option makes application code execute faster depends on whether typical execution paths through the code block access many or all of the variables whose accessibility is ensured: if typical execution paths bypass accessing many of those local variables (e.g., because of conditional execution or premature exits), then code compiled with the :code:`-noline_entry` can execute slower. If your application does not use offsets for targets, we suggest benchmarking applications using real or simulated workloads to determine whether the option is beneficial.
 
-Any attempt to use a label±offset^routine entryref in code compiled with -noline_entry raises the `LABELONLY error <../MessageRecovery/errors.html#labelonly-error>`_. As the more compact object code produced by -noline_entry may or may not run faster than object code produced without using it, even if your application can use -noline_entry, you should benchmark to decide which is more performant.
+Any attempt to use a label±offset^routine entryref in code compiled with -noline_entry raises the `LABELONLY error <../MessageRecovery/errors.html#labelonly-error>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 -[no]o[bject][=filename]
