@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -196,7 +196,7 @@ For more information on specifying the EXTENSION_COUNT, refer to :ref:`segment-q
 -FLUSH_TIME
 ^^^^^^^^^^^^
 
-Specifies the amount of time between deferred writes of stale cache buffers. The default value is 1 second and the maximum value is 1 hour. FLUSH_TIME requires standalone access. The format of the FLUSH_TIME qualifier is:
+Specifies the amount of time between deferred writes of stale cache buffers. The default value is 1 second and the maximum value is 1 hour. The format of the FLUSH_TIME qualifier is:
 
 .. code-block:: none
 
