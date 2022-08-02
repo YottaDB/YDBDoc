@@ -1049,7 +1049,7 @@ A case-insensitive value of "BA" or "BATCH" for :code:`transid` indicates to Yot
 
 Please see both the description of :ref:`ydb-tp-s-st-fn` and the section on :ref:`txn-proc` for details.
 
-.. note:: If the transaction logic receives a :code:`YDB_TP_RESTART` or :code:`YDB_TP_ROLLBACK` from a YottaDB function or method that it calls, it *must* return that value to the calling :code:`tp()` function. Failure to do so could result in application level data inconsistencies and hard to debug application code.
+.. note:: If the transaction logic encounters a :code:`YDBTPRestart` or :code:`YDBTPRollback` exception from a YottaDB function or method that it calls, it *must* not handle that exception. It should let that be handled by the calling :code:`tp()` function. Failure to do so could result in application level data inconsistencies and hard to debug application code.
 
 The following example demonstrates a simple usage of :code:`tp()`. Specifically, a simple :code:`callback()` function is defined, then wrapped in a simple :code:`wrapper()` function that calls :code:`callback()` using :code:`tp()`, ensuring database integrity via transaction processing. Then, several processes executing the :code:`wrapper()` function are spawned, each of which attempts to increment the same global variable nodes at once. Each of these processes continues trying to increment the nodes until the incrementation is successful, i.e. :code:`YDBTPRestart` is not raised. Finally, these processes are gracefully terminated and the values of the global variable nodes are checked to ensure to success of the incrementation attempts of each :code:`wrapper()` process.
 
