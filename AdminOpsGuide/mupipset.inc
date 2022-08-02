@@ -16,7 +16,7 @@ The format of the SET command is:
 
 .. code-block:: none
 
-   SE[T] {-FI[LE] file-name|-JN[LFILE] journal-file-name|-REG[ION] region-list|-REP[LICATION]={ON|OFF}}
+   SE[T] {-FI[LE] file-name|-JN[LFILE] journal-file-name|-REG[ION] region-list}
     -AC[CESS_METHOD]={BG|MM}
     -[NO]AS[YNCIO]
     -[NO]DE[FER_TIME][=seconds]
@@ -27,7 +27,6 @@ The format of the SET command is:
     -G[LOBAL_BUFFERS]=integer
     -H[ARD_SPIN_COUNT]=integer
     -[NO]INST[_FREEZE_ON_ERROR]
-    -JN[LFILE]journal-file-name
     -K[EY_SIZE]=bytes
     -L[OCK_SPACE]=integer
     -M[UTEX_SLOTS]=integer
@@ -37,7 +36,6 @@ The format of the SET command is:
     -[NO]Q[DBRUNDOWN]
     -[NO]REA[D_ONLY]
     -REC[ORD_SIZE]=bytes
-    -REG[ION] region-list
     -REORG_SLEEP_NSEC=integer
     -REP[LICATION]={ON|OFF}
     -RES[ERVED_BYTES]=integer]
