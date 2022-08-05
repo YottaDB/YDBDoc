@@ -822,7 +822,7 @@ ydb_repl_instsecondary
 ++++++++++++++++
 ydb_retention
 ++++++++++++++++
-**ydb_retention (gtm_retention)** (not used by YottaDB directly) - used by the ydb script to delete old journal files and old temporary files it creates.
+**ydb_retention (gtm_retention)** (not used by YottaDB directly) - Journal files and temporary files older than the number of days specified by :code:`ydb_retention` (:code:`gtm_retention` if not specified; defaulting to 42 days), are deleted by sourcing the :code:`ydb_env_set` file, which can be invoked explicitly, or as part of executing the :code:`ydb` script.
 
 +++++++++++++++
 ydb_routines
