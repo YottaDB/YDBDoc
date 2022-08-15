@@ -473,31 +473,32 @@ Specifies the format of the output file. The format of the FORMAT qualifier is:
 
 The format code is any one of the following:
 
-1. B[INARY] - Binary format, used for database reorganization or short term backups. MUPIP EXTRACT FORMAT=BINARY works much faster than MUPIP EXTRACT FORMAT=GO and MUPIP EXTRACT FORMAT=ZWR. Note: There is no defined standard to transport binary data from one YottaDB implementation to another. Furthermore, YottaDB reserves the right to modify the binary format in new versions. The first record of a BINARY format data file contains the header label. The header label is 87 characters long. The following table illustrates the components of the header label.
+1. B[INARY] - Binary format, used for database reorganization or short term backups. MUPIP EXTRACT FORMAT=BINARY works much faster than MUPIP EXTRACT FORMAT=GO and MUPIP EXTRACT FORMAT=ZWR. Note: There is no defined standard to transport binary data from one YottaDB implementation to another. Furthermore, YottaDB reserves the right to modify the binary format in new versions. The first record of a BINARY format data file contains the header label. The header label is 102 characters long. The following table illustrates the components of the header label.
 
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
    | Characters                 | Explanation                                                                                                          |
    +============================+======================================================================================================================+
    | 1-2                        | Hexadecimal representation of the length of the label (by default 64 - decimal 100).                                 |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
-   | 3-28                       | Fixed-length ASCII text containing:                                                                                  |
-   |                            | * "GDS BINARY EXTRACT LEVEL 6": when no region is encrypted.                                                         |
-   |                            | * "GDS BINARY EXTRACT LEVEL 8": when one more regions are encrypted using null IVs.                                  |
-   |                            | * "GDS BINARY EXTRACT LEVEL 9": when one or regions are encrypted using non-null IVs.                                |
+   | 3-28                       | Fixed-length (26 bytes) ASCII text containing:                                                                       |
+   |                            |                                                                                                                      |
+   |                            |   * "GDS BINARY EXTRACT LEVEL 6": when no region is encrypted.                                                       |
+   |                            |   * "GDS BINARY EXTRACT LEVEL 8": when one more regions are encrypted using null IVs.                                |
+   |                            |   * "GDS BINARY EXTRACT LEVEL 9": when one or regions are encrypted using non-null IVs.                              |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
-   | 29-41                      | Fixed-length ASCII text: Date and time of extract in the $ZDATE() format: "YEARMMDD2460SS"                           |
+   | 29-42                      | Fixed-length (14 bytes) ASCII text: Date and time of extract in the $ZDATE() format: "YEARMMDD2460SS"                |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
-   | 42-48                      | Fixed-length ASCII text: Decimal maximum block size of the union of each region from which data was extracted        |
+   | 43-49                      | Fixed-length (7 bytes) ASCII text: Decimal maximum block size of each region from which data was extracted           |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
-   | 49-55                      | Fixed-length ASCII text: Decimal maximum record size of the union of each region from which data is extracted        |
+   | 50-56                      | Fixed-length (7 bytes) ASCII text: Decimal maximum record size of each region from which data is extracted           |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
-   | 56-62                      | Fixed-length ASCII text:Decimal maximum key size of the union of each region from which data is extracted            |
+   | 57-63                      | Fixed-length (7 bytes) ASCII text: Decimal maximum key size of each region from which data is extracted              |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
-   | 63-69                      | Fixed-length ASCII text:Boolean indicator of Standard NULL collation (1) or                                          |
+   | 64-70                      | Fixed-length (7 bytes) ASCII text:Boolean indicator of Standard NULL collation (1) or                                |
    |                            | `historical null collation <../ProgrammersGuide/langfeat.html#null-subs-colltn>`_ (0).                               |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
-   | 70-100                     | Fixed-length ASCII text: Space-padded label specified by the -LABEL qualifier; the default LABEL is "MUPIP EXTRACT"  |
-   |                            | For extracts in UTF-8 mode, YottaDB prefixes UTF-8 and a space to -LABEL.                                            |
+   | 71-102                     | Fixed-length (32 bytes) ASCII text: Space-padded label specified by the -LABEL qualifier; the default LABEL is       |
+   |                            | "MUPIP EXTRACT". For extracts in UTF-8 mode, YottaDB prefixes UTF-8 and a space to -LABEL.                           |
    +----------------------------+----------------------------------------------------------------------------------------------------------------------+
 
 2. GO - Global Output format, used for files to transport or archive. FORMAT=GO stores the data in record pairs. Each global node produces two records - the first contains the key and the second contains the value. GO format is only supported in M mode.
