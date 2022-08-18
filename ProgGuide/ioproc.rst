@@ -4582,6 +4582,8 @@ SOCKET=expr Applies to: SOC
 
 The socket specified in expr is closed. Specifying a socket that has not been previously OPENed generates an error. If no SOCKET deviceparameter is specified on a CLOSE for a socket device, the socket device and all sockets associated with it are closed.
 
+.. _ioproc-timeout:
+
 ~~~~~~~~
 TIMEOUT
 ~~~~~~~~

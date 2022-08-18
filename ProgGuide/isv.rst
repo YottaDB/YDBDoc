@@ -512,11 +512,11 @@ $ZCLOSE
 
 Provides termination status of the last PIPE CLOSE as follows:
 
-* -99 when the check times out
-* -98 for unanticipated problems with the check
-* the negative of the signal value if a signal terminated the co-process.
+* -99 when the timed (see :ref:`ioproc-timeout`) check on the termination status of the PIPE co-process (of a PIPE device that is not OPEN'd with the INDEPENDENT deviceparameter) times out
+* -98 for unanticipated problems with the timed check
+* the negative of the signal value if a signal terminated the PIPE co-process.
 
-If positive, $ZCLOSE contains the exit status returned by the last co-process.
+If positive, $ZCLOSE contains the exit status returned by the last PIPE co-process.
 
 ------------
 $ZCMDLINE
