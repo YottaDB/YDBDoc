@@ -141,24 +141,26 @@ On a primary instance that is the recipient of an SI replication stream, the jou
 
 Stream sequence numbers are 64-bit unsigned integers.
 
-+++++++++++++++++++++++++++++++++++++++++++++
-Using Multiple Instances in the same Process
-+++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++
+Instance Bound Global Directories
++++++++++++++++++++++++++++++++++++
 
-YottaDB allows the updating of globals belonging to a different source instance using extended global references or SET $ZGBLDIR. While the replication setup remains the same, these are the main considerations:
+GDE provides a mapping option (GDE CHANGE -INSTANCE -FILE_NAME=<replication_instance_file>) to bind a global directory with a replication instance file. With this mapping option, YottaDB processes give precedence to the <replication_instance_file> stored in GDE over any (or no) value of the gtm_repl_instance environment variable. This makes it possible for a YottaDB process to update globals in the replicated regions of a different replication instance than that defined by the gtm_repl_instance environment variable.
 
-* Use one of two ways to identify the current instance as specified by a replication instance file:
+Without this mapping option (that is, GDE CHANGE -INSTANCE -FILE_NAME= ""), an attempt to update a global bound to an instance other than the default replication instance file specified with the environment variable gtm_repl_instance produces the REPLINSTMISMTCH error:
 
-  * A global directory can define a mapping to a replication instance file as specified with a GDE CHANGE -INSTANCE -FILE_NAME=<replication_instance_file> command. When a global directory is use, if it has a mapping of an instance file, that mapping overrides any setting of the ydb_repl_instance environment variable. GDE CHANGE -INSTANCE -FILE_NAME="" removes any global directory mapping for an instance file.
-  * The ydb_repl_instance environment variable specifies a replication instance file for utilities and as the default, whenever a user processes relies on a global directory with no instance file specification.
+.. code-block:: bash
 
-* In order to use multiple instances, at least one global directory must have an instance mapping.
+   GTM>set ^|"/path/to/unbound/XXXX.gld"|replnamespace="Hello from same system instance YYYY"
+   %GTM-E-REPLINSTMISMTCH, Process has replication instance file YYYY.repl (jnlpool shmid = 9999) open but database XXXX.dat is bound to instance file XXXX.repl (jnlpool shmid = 8888)
 
-* A replication instance file cannot share any region with another instance file.
+The following restrictions apply for making updates to the replicated regions of an instance bound global directory:
 
-* The Source Servers of all the instances have properly set up Replication Journal Pools.
+#. A replication instance file cannot share any region with another instance file.
 
-* A TP transaction or a trigger, as it always executes within a TP transaction, must always restrict updates to globals in one replicating instance.
+#. Each instance has a Journal Pool set up by a Source Server process.
+
+#. A TP transaction or a trigger, as it always executes within a TP transaction, must always restrict updates to globals in one instance.
 
 ~~~~~
 Notes

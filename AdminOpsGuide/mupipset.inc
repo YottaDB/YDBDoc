@@ -24,6 +24,7 @@ The format of the SET command is:
     -EPOCHTAPER
     -E[XTENSION_COUNT]=integer(no of blocks)
     -F[LUSH_TIME]=integer
+    -FU[LLBLKWRT]={0|1|2}
     -G[LOBAL_BUFFERS]=integer
     -H[ARD_SPIN_COUNT]=integer
     -[NO]INST[_FREEZE_ON_ERROR]
@@ -199,6 +200,22 @@ Specifies the amount of time between deferred writes of stale cache buffers. The
 .. code-block:: none
 
    -F[LUSH_TIME]=[[[HOURS:]MINUTES:]SECONDS:]CENTISECONDS
+
+^^^^^^^^^^^
+FULLBLKWRT
+^^^^^^^^^^^
+
+Determines whether YottaDB writes bytes in the database or filesystem block past the last valid database record. Full block writes can be more efficient with some secondary storage because they avoid the potential read-before-write that can penalize partial block writes. The format of the FULLBLKWRT qualifier is:
+
+.. code-block:: none
+
+   -FU[LLBLKWRT]={0|1|2}
+
+* When FULLBLKWRT=2, when writing data to a newly allocated block, a process writes a full database block. For example, if the database block size is 8KiB, the filesystem block size is 4KiB, and there are 1587 bytes of database records, 8Ki bytes are written to the filesystem in an attempt to ensure that the database block occupies two contiguous blocks in the filesystem. If a subsequent write to that database block has 1259 bytes of database records, 1259 bytes are written to the filesystem.
+* When FULLBLKWRT=1, a process writes entire filesystem blocks, even when the database records occupy less than a full block. This may improve filesystem load and improve response time on filesystems where writing less than a full block involves a read-modify-write sequence, and writing a full filesystem block avoids the read.
+* When FULLBLKWRT=0, a process writes only the actual database records when writing to the filesystem. This is the default, and is appropriate for most situations. Evaluate all three values when you need to maximize throughput.
+
+YottaDB ignores FULLBLKWRT for MM databases. Since MM databases are mapped to virtual memory, YottaDB has no control over actual database writes.
 
 ^^^^^^^^^^^^^^^^
 -GLOBAL_BUFFERS

@@ -2362,6 +2362,15 @@ Run Time/MUPIP Information: This operator log message indicates that the specifi
 
 Action: -
 
+----------------
+DBFILNOFULLWRT
+----------------
+
+DBFILNOFULLWRT, Disabling fullblock writes. iiii tttt: bbbb
+
+MUPIP Warning: Indicates full block writes were not successfully enabled. iiii describes the issue, tttt describes the type and bbbb is a block size.
+
+Action: Consider planning to choose a blocksize better aligned with the file system blocksize at the next opportunity.
 
 ----------------------
 DBFILOPERR

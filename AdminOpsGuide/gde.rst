@@ -171,10 +171,12 @@ A Global Directory looks like this:
                                                                                 MSLT=1024
                                                                                 DALL=YES
                                                                                 AIO=OFF
+										FBWR=0
     <default>                            MM   DYN     4096       100      100   DEFER
                                                                                 LOCK=40
                                                                                 MSLT=1024
                                                                                 DALL=YES
+										FBWR=0
 
 
              *** NAMES ***
@@ -199,6 +201,7 @@ A Global Directory looks like this:
                                                                                       MSLT=1024
                                                                                       DALL=YES
                                                                                       AIO=OFF
+										      FBWR=0
 
                                         *** MAP ***
     ----------------------------- Names ---------------------------------------------
@@ -1053,10 +1056,12 @@ Example:
                                                                                    MSLT=1024
                                                                                    DALL=YES
                                                                                    AIO=OFF
+										   FBWR=0
   <default>                            MM      DYN    4096         100       100   DEFER
                                                                                    LOCK=40
                                                                                    MSLT=1024
                                                                                    DALL=YES
+										   FBWR=0
 
 This displays only the TEMPLATES section of the Global Directory.
 

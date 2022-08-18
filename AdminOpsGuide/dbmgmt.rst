@@ -2049,7 +2049,7 @@ Specifies the logical adjacency of data blocks that MUPIP SIZE should assume dur
 -SELECT
 ~~~~~~~~
 
-Specifies the global variables on which MUPIP SIZE runs. If SELECT is not specified, MUPIP SIZE selects all global variables.
+Specifies the global variables on which MUPIP SIZE runs. SELECT is incompatible with SUBSCRIPT. If neither SELECT nor SUBSCRIPT is specified, MUPIP SIZE selects all global variables in the specified region(s).
 
 The format of the SELECT qualifier is:
 
@@ -2585,6 +2585,7 @@ MUPIP Command Summary
 |                                      |                                             | * [NO]DEFER_ALLOCATE                                                                     |
 |                                      |                                             | * E[XTENSION_COUNT]=integer(no of blocks)                                                |
 |                                      |                                             | * F[LUSH_TIME]=integer                                                                   |
+|                                      |                                             | * F[ULLBLKWRT]={0|1|2}                                                                   |
 |                                      |                                             | * G[LOBAL_BUFFERS]=integer                                                               |
 |                                      |                                             | * [NO]INST[_FREEZE_ON_ERROR]                                                             |
 |                                      |                                             | * JN[LFILE]journal-file-name                                                             |

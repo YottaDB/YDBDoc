@@ -219,7 +219,8 @@ gtmcshrc
    :code:`gtmcshrc` is deprecated and no longer maintained or tested.
 
 .. note::
-Sets a default YottaDB environment for C type shell. It sets the $ydb_dist, $ydb_gbldir, $ydb_chset, $ydb_routines, and adds $ydb_dist to the system environment variable PATH.
+
+   Sets a default YottaDB environment for C type shell. It sets the $ydb_dist, $ydb_gbldir, $ydb_chset, $ydb_routines, and adds $ydb_dist to the system environment variable PATH.
 
 To source the gtmcshrc script, type:
 
@@ -1321,17 +1322,19 @@ Post installation, a system administrator can optionally add a restrict.txt file
 
 .. code-block:: none
 
+   APD_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
    BREAK[:<group-name>]
+   CENABLE[:<group-name>]
+   DIRECT_MODE[:<group-name>]
+   DSE[:<group-name>]
+   HALT[:<group-name>]
+   LOGDENIALS[:<group-name>]
+   PIPE_OPEN[:<group-name>]
+   TRIGGER_MOD[:<group-name>]
    ZBREAK[:<group-name>]
    ZCMDLINE[:<group-name>]
    ZEDIT[:<group-name>]
    ZSYSTEM[:<group-name>]
-   CENABLE[:<group-name>]
-   PIPE_OPEN[:<group-name>]
-   DIRECT_MODE[:<group-name>]
-   DSE[:<group-name>]
-   TRIGGER_MOD[:<group-name>]
-
 
 If the file $ydb_dist/restrict.txt does not exist, YottaDB does not restrict any facilities.
 
@@ -1353,7 +1356,20 @@ Restrictions apply as follows:
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | BREAK                                                   | YottaDB ignores any break command                                                                  |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
+| CENABLE                                                 | the process acts like $ydb_nocenable is TRUE and ignores any CENABLE deviceparameter               |
++---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
+| DIRECT_MODE                                             | yottadb -direct terminates immediately with a RESTRICTEDOP error                                   |
++---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
+| DSE                                                     | terminates immediately with a RESTRICTEDOP error                                                   |
++---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | HALT                                                    | any HALT produces a RESTRICTEDOP error                                                             |
++---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
+| LOGDENIALS                                              | restrict logging when YottaDB denies access to a process to the named groups                       |
+|                                                         |                                                                                                    |
+|                                                         | YottaDB supports logging a number of errors related to permissions and access using the syslog()   |
+|                                                         | facility. The YottaDB restriction LOGDENIALS provides a facility for disabling this logging on a   |
+|                                                         | Unix group basis. If this mechanism is not used, the logging takes place for all YottaDB processes |
+|                                                         | If the restriction is used, logging takes place for specified groups only.                         |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | ZBREAK                                                  | any ZBREAK produces a RESTRICTEDOP error                                                           |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
@@ -1365,13 +1381,7 @@ Restrictions apply as follows:
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | ZSYSTEM                                                 | any ZSYSTEM produces a RESTRICTEDOP error                                                          |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
-| CENABLE                                                 | the process acts like $ydb_nocenable is TRUE and ignores any CENABLE deviceparameter               |
-+---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | PIPE_OPEN                                               | any OPEN of a PIPE device produces a RESTRICTEDOP error                                            |
-+---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
-| DIRECT_MODE                                             | yottadb -direct terminates immediately with a RESTRICTEDOP error                                   |
-+---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
-| DSE                                                     | terminates immediately with a RESTRICTEDOP error                                                   |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | TRIGGER_MOD                                             | any $ZTRIGGER() or MUPIP TRIGGER that attempts a change or delete produces a RESTRICTEDOP error;   |
 |                                                         | in addition, while executing code within a trigger, ZBREAK results in a RESTRICTEDOP error, and    |

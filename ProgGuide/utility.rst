@@ -840,6 +840,67 @@ Example:
 
 This example invokes %HO as an extrinsic function with the FUNC label.
 
+.. _jswrite-util:
+
+++++++++++
+%JSWRITE
+++++++++++
+
+The ^%JSWRITE utility routine converts a glvn structure or a series of SET @ arguments to a string of JavaScript objects. The format of the ^%JSWRITE utility is:
+
+.. code-block:: none
+
+   ^%JSWRITE(glvnode,[expr1,expr2])
+
+* glvnode specifies the string containing the subscripted/unsubscripted global or local variable name. When glvnode evaluates to an empty string ("") or there are no arguments, %JSWRITE considers all subscripted local variables in scope for conversion.
+
+* If expr1 specifies "#", ^%JSWRITE displays JS objects of the entire tree starting from the glvnode till the end of the glvn.
+
+* If expr1 specifies "*", ^%JSWRITE displays JS objects for all nodes descending from the specified glvn node.
+
+* Specifying "*" and "#" together produces an ILLEGALEXPR2 error.
+
+* Specifying [expr1], that is, with a leading "[" and trailing "]", ^%JSWRITE displays the JSON objects in an array collection. Without [], you need to transform the object strings to the desired destination object format.
+
+* If expr2 specifies "noglvname", ^%JSWRITE excludes the first key containing the name of the glvn root from the JS object output.
+
+* The default $ETRAP for %JSWRITE is if (""=$etrap) new $etrap set $etrap="do errorobj"_"^"_$text(+0),$zstatus="". To override the default error handler, set $ETRAP to any non-empty value.
+
+* YottaDB is not a JavaScript runtime environment. Therefore, we recommend parsing all output of ^%JSWRITE either using a JSON parser such as JSON.parse() in an appropriate JavaScript run-time environment, a web server via setting its response header to 'Content-Type:application/json', or an application where JSON parsing is available.
+
+* When appropriate, enclose invocations of ^%JSWRITE in a TSTART/COMMIT boundary to prevent any blurred copy of data that is actively updated.
+
+* When appropriate, use YottaDB alias containers to put appropriate local variables temporarily out of scope and then run the argumentless form of ^%JSWRITE.
+
+
+**Utility Label**
+
+STDIN^%JSWRITE ([singlesub])
+
+With the STDIN, the %JSWRITE utility routine expects a valid SET @ argument (like the one from the ZWRITE command) as its standard input over a named/unnamed pipe device and returns an array of objects. This construct ensures that $ZUSEDSTOR remains consistently low even for processing large data for conversion. STDIN^%JSWRITE automatically terminates the process with a non-zero exit status when it does not receive a READ terminator for 120 seconds from standard input.
+
+When "singlesub" is specified as an argument, ^%JSWRITE expects ZWRITE lines for single subscript glvns. Here ^%JSWRITE implicitly removes the unsubscripted glvn name and returns an array collection of objects in the form of [{"key1":value,"key2":value,...},{"key1":value,"key2":value,...}] where:
+
+   * key1 is the subscript
+
+   * value is the right side of the =
+
+The subscript first received by STDIN^%JSWRITE singlesub denotes the start of the object. When ^%JSWRITE finds the same subscript, it ends the current object boundary and starts the boundary of a new object.
+
+**Example**
+
+.. code-block:: bash
+
+   $ $ydb_dist/mumps -r ^RTN
+   abc("firstname")="John"
+   abc("lastname")="Doe"
+   abc("firstname")="Jane"
+   abc("lastname")="Doe"
+
+   $ $ydb_dist/mumps -r ^RTN | $ydb_dist/mumps -r STDIN^%JSWRITE singlesub
+   [{"firstname":"John","lastname":"Doe"},
+   {"firstname":"Jane","lastname":"Doe"}]
+
 .. _lcase-util:
 
 +++++++++
@@ -2928,6 +2989,7 @@ The high level API implemented by $$STAT^%YGBLSTAT(expr1[,expr2[,expr3[,expr4]]]
   * If expr2 is a single statistic, for example, "LKF", the function returns the requested value as an integer
   * If expr2 is a series of comma-separated names of statistics, for example., "GET,DTA", the function returns a string with each requested statistic in ZSHOW "G" order, for example, "GET:3289,DTA:598...", rather than in the order in which they appear within the specifying argument.
   * If expr2 is omitted, or consists of the string "*", the return value reports all statistics formatted like the ZSHOW "G" statistics for a single region, for example, "SET:563,KIL:39,GET:3289,DTA:598...
+  * The ^%YGBLSTAT utility uses the local variable structure %YGS. Application code may hide %YGS with NEW but it must not modify nodes within it.
 
 * expr3 specifies a global directory file name (producing a ZGBLDIRACC error if such a global directory is not accessible); if unspecified, the utility defaults this value to $ZGBLDIR of the invoking process.
 
@@ -3102,6 +3164,8 @@ Utilities Summary Table
 | :ref:`hex2utf-util`               | Converts the given bytestream in hexadecimal notation to YottaDB encoded character string.               |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`ho-util`                    | Converts hexadecimal numbers to octal.                                                                   |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`jswrite-util`               | Converts a YottaDB glv structure to a string of JavaScript objects.                                      |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`lcase-util`                 | Converts a string to all lower case.                                                                     |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
