@@ -37,7 +37,7 @@ Your YottaDB distribution comes with many scripts that set up a default YottaDB 
 
 * **gtmcshrc**: sets up a default YottaDB environment for C-shell compatible shells. It sets up default values for ydb_dist, ydb_gbldir, ydb_chset and ydb_routines. It also creates aliases so you can execute YottaDB and its utilities without typing the full path.
 
-* **gtmbase**: detects the shell type and adds ydb_env_set to .profile or gtmchsrc to .cshrc so the shell automatically sources ydb_env_set or gtmschrc on a subsequent login operation. YottaDB does not recommend using gtmbase as is - use it as an example for you to develop a suitable script for your systems. It is not as actively maintained as the ydb_env_set script.
+* **gtmbase**: detects the shell type and adds :code:`ydb_env_set` to :code:`.profile` or :code:`gtmcshrc` to :code:`.cshrc` so the shell automatically sources :code:`ydb_env_set` or :code:`gtmcshrc` on a subsequent login operation. YottaDB does not recommend using :code:`gtmbase` as is - use it as an example for you to develop a suitable script for your systems. :code:`gtmbase` is deprecated, and not actively maintained or tested.
 
 * **ydb** (gtm): starts YottaDB in direct mode on POSIX shells. The ydb script sources ydb_env_set. It also deletes prior generation journal and temporary files older than the number of days specified by the environment variable gtm_retention. It attempts to automatically recover the database when it runs and as such is suitable for "out of the box" usage of YottaDB. Although it will work for large multi-user environments, you may want to modify or replace it with more efficient scripting.
 
@@ -193,10 +193,32 @@ Sourcing :code:`ydb_env_set` handles the case where replication is turned on.
 
 :code:`ydb_env_set` was modified in YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_, to create a three region database.
 
+Sourcing :code:`ydb_env_set` respects existing values of :code:`ydb_gbldir` and :code:`ydb_routines`.
+Some more features include:
+
+* :code:`ydb_routines` automatically includes the plugins in the :code:`$ydb_dist/plugin` directory. Environment variables to call exported C routines in plugins are also created.
+* In the event the instance is coming up after an unclean shutdown, it recovers the instance using the existing :code:`$ydb_gbldir` using MUPIP JOURNAL RECOVER or MUPIP JOURNAL ROLLBACK depending on the replication setting.
+* Global directory files are automatically upgraded to the format of the current YottaDB release.
+
+Sourcing :code:`ydb_env_set` sets :code:`$?`:
+
+* 0 is normal exit
+* 1 means that :code:`$ydb_dist` does not match the location of :code:`ydb_env_set`
+* 2 means that :code:`$gtm_dist` does not match the location of :code:`ydb_env_set`
+* 3 means that neither :code:`$ydb_dist` nor :code:`$gtm_dist` match the location of :code:`ydb_env_set`
+* Other non-zero codes are as returned by :code:`set^%YDBENV`
+
+:code:`ydb_env_set` was modified to set :code:`$status` in YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
+
 ++++++++++
-gtmscshrc
+gtmcshrc
 ++++++++++
 
+.. note::
+
+   :code:`gtmcshrc` is deprecated and no longer maintained or tested.
+
+.. note::
 Sets a default YottaDB environment for C type shell. It sets the $ydb_dist, $ydb_gbldir, $ydb_chset, $ydb_routines, and adds $ydb_dist to the system environment variable PATH.
 
 To source the gtmcshrc script, type:
@@ -952,7 +974,7 @@ ydb_ztrap_new
 ++++++++++++++++
 **ydb_ztrap_new (gtm_ztrap_new)** specifies whether a SET $ZTRAP also implicitly performs a NEW $ZTRAP before the SET.
 
-The ydb_env_set and gtmschrc scripts sets the following environment variables. YottaDB recommends using the ydb_env_set script (or the ydb script which sources ydb_env_set) to set up an environment for YottaDB.
+The ydb_env_set and gtmcshrc scripts sets the following environment variables. YottaDB recommends using the ydb_env_set script (or the ydb script which sources ydb_env_set) to set up an environment for YottaDB.
 
 +------------------------------------------------+--------------------------------------------------------+
 | Environment Variables                          | Set up by YottaDB shell scripts                        |
@@ -965,7 +987,7 @@ The ydb_env_set and gtmschrc scripts sets the following environment variables. Y
 +------------------------------------------------+--------------------------------------------------------+
 | ydb_rel                                        | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| ydb_dist*                                      | ydb_env_set, gtmschrc                                  |
+| ydb_dist*                                      | ydb_env_set, gtmcshrc                                  |
 +------------------------------------------------+--------------------------------------------------------+
 | ydb_icu_version                                | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
@@ -1071,7 +1093,7 @@ Execute the ydb script.
 To start YottaDB from a C-type shell:
 +++++++++++++++++++++++++++++++++++++
 
-First source the gtmschrc script to set up a default YottaDB environment. At your shell prompt, type:
+First source the gtmcshrc script to set up a default YottaDB environment. At your shell prompt, type:
 
 .. code-block:: bash
 

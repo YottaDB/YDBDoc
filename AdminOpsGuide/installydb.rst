@@ -166,6 +166,8 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-posix                                               | \† | Download and install the `YottaDB POSIX plugin <https://gitlab.com/YottaDB/Util/YDBPosix>`_                            |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
+| \-\-preserveRemoveIPC                                   |    | Do not allow changes to RemoveIPC in :code:`/etc/systemd/logind.conf` if needed; defaults to allow changes             |
++---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-prompt-for-group                                    | \* | YottaDB installation script prompts for group; default is yes                                                          |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-ucaseonly-utils                                     |    | Install only upper case utility program names; defaults to both if not specified                                       |
@@ -225,3 +227,12 @@ With the :code:`--from-source <repo>` option, the :code:`ydbinstall` / :code:`yd
 If :code:`--branch <branch>` is specified, it executes :code:`git checkout -B <branch>` to specify a branch other than the default. Then it builds YottaDB, and if successful, installs the built YottaDB using :code:`sudo ydbinstall` of the :code:`ydbinstall` script of the built YottaDB, passing it all command line options except the :code:`--from-source` and :code:`--branch` options. The :code:`sudo ydbinstall` prompts for a password as required.
 For example, :code:`ydbinstall --from-source https://gitlab.com/ydbuser/YDB.git --branch working --utf8 default --aim --install-directory /usr/local/lib/yottadb/devel_$(date +%Y%m%d)` will checkout, build, and install the :code:`working` branch of YottaDB from the YDB repository of GitLab user :code:`ydbuser` in a date-stamped directory, along with the `Application Independent Metadata plugin <https://gitlab.com/YottaDB/Util/YDBAIM/>`_.
 This was added effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
+
+For YottaDB to correctly operate on Linux systems using `systemd <https://systemd.io>`_, the :code:`RemoveIPC=no` setting is required in :code:`/etc/systemd/logind.conf`. The :code:`ydbinstall`/ :code:`ydbinstall.sh` script checks this setting:
+
+* If :code:`RemoveIPC` is set to no, it proceeds with the installation.
+
+* If :code:`RemoveIPC` is set to yes, the script checks the command line option :code:`--preserveRemoveIPC`:
+
+  * If :code:`--preserveRemoveIPC` is set to no, the script changes the setting in :code:`/etc/systemd/logind.conf` and outputs a message to indicate the change. A restart of :code:`systemd-logind` is required to complete the installation.
+  * If :code:`--preserveRemoveIPC` is set to yes, then change :code:`RemoveIPC` to no and restart :code:`systemd-logind` to complete the installation.

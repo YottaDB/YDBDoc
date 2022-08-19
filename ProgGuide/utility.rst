@@ -1940,7 +1940,7 @@ The routine utilities are:
 
 %RSE: Searches for every occurrence of a text string in a routine or a list of routines.
 
-%RSEL: Selects M routines and places their directories and names in a local array.
+%RSEL: Selects M routines and places their directories and shared libraries and names in a local array.
 
 .. _fl-util:
 
@@ -2394,7 +2394,7 @@ This example instructs ^%RSE to write all lines where the text string occurs to 
 %RSEL
 ++++++++++
 
-The %RSEL utility selects M routines. %RSEL selects routines using directories specified by the YottaDB special variable $ZROUTINES. $ZROUTINES contains an ordered list of directories that certain YottaDB functions use to locate source and object files. If $ZROUTINES is not defined, YottaDB sets it in the environment to :code:`$ydb_dist/libyottadbutil.so` if it exists, and to :code:`$ydb_dist` if it does not, and then uses that value. Other YottaDB utilities call %RSEL.
+The %RSEL utility selects M routines. %RSEL selects routines using directories and shared libraries specified by the YottaDB special variable $ZROUTINES. $ZROUTINES contains an ordered list of directories that certain YottaDB functions use to locate source and object files. If $ZROUTINES is not defined, YottaDB sets it in the environment to :code:`$ydb_dist/libyottadbutil.so` in M mode or to :code:`$ydb_dist/utf8/libyottadbutil.so` in UTF-8 mode, if it exists, and to :code:`$ydb_dist` if it does not, and then uses that value. Other YottaDB utilities call %RSEL.
 
 %RSEL prompts for the name of a routine(s).
 
@@ -2436,7 +2436,7 @@ The following input variables are only valid when invoking CALL^%RSEL:
 
 **Output Variables**
 
-%ZR: As output, contains list of directories indexed by selected routine names.
+%ZR: As output, contains list of directories and shared libraries indexed by selected routine names.
 
 ^%RSET($JOB): The output global variable ^%RSET is used instead of the local variable %RD if the input variable %ZRSET is set. It is indexed by job number $JOB and the selected routine names.
 
@@ -3123,7 +3123,7 @@ Utilities Summary Table
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`rse-util`                   | Searches for every occurrence of a text string in a routine or a list of routines.                       |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
-| :ref:`rsel-util`                  | Selects M routines and places their directories and names in a local array.                              |
+| :ref:`rsel-util`                  | Selects M routines and places their directories and shared libraries and names in a local array.         |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`sqroot-util`                | Calculates the square root of a number.                                                                  |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
