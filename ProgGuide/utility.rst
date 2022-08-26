@@ -901,6 +901,8 @@ The subscript first received by STDIN^%JSWRITE singlesub denotes the start of th
    [{"firstname":"John","lastname":"Doe"},
    {"firstname":"Jane","lastname":"Doe"}]
 
+%JSWRITE is added to YottaDB effective release r1.36.
+
 .. _lcase-util:
 
 +++++++++
@@ -2968,7 +2970,7 @@ The file contains:
 
 If the calling pid and blocking pid are of different uids, the functionality of %YDBPROCSTUCKEXEC is reduced. Depending on security and system administration considerations of the system, it may be appropriate in such cases to create a small setuid root shell script to invoke %YDBPROCSTUCKEXEC. Depending your specific requirements, it may be appropriate to copy and adapt the standard routine for your environment.
 
-%YDBPROCSTUCKEXEC was added to YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+%YDBPROCSTUCKEXEC was added to YottaDB effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 .. _ygblstat-util:
 
@@ -3019,7 +3021,7 @@ where
 
 $$IN^%YGBLSTAT(<pid>,<global directory>,<region>) is used to query whether a process is sharing statistics, returning a TRUE (1) value if the process is sharing statistics in the region, a FALSE (0) if it is not, and an empty string if the pid is invalid or there is no sharing for a region of the specified name. If region is empty or an asterisk, the extrinsic returns a TRUE if the process is sharing statistics in any region, and a FALSE otherwise. If the global directory is not empty the function attempts to use it, but if it is unavailable the function fails into the invoking environment's specified $ETRAP or $ZTRAP.
 
-$$IN^%YGBLSTAT() was implemented effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_
+$$IN^%YGBLSTAT() was implemented effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 $$ORDERPID^%YGBLSTAT(expr1[,expr2[,expr3]]) reports PIDs of processes that have opted in and recorded statistics. Its arguments are as follows:
 

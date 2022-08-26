@@ -569,6 +569,8 @@ ydb_fullblockwrites
 ++++++++++++++++++++++
 **ydb_fullblockwrites (gtm_fullblockwrites)** specifies whether a YottaDB process should write a full filesystem, or full database block, worth of bytes when writing a database block that is not full. Depending on your IO subsystem, writing a full block worth of bytes (even when there are unused garbage bytes at the end) may result in better database IO performance by replacing a low level read-modify-read IO operation with a single write operation.
 
+ydb_fullblockwrites is deprecated in YottaDB effective release r1.36 and no longer maintained or tested.
+
 +++++++++++++
 ydb_gbldir
 +++++++++++++
