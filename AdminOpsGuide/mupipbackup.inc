@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2021-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -18,7 +18,7 @@ The format of the MUPIP BACKUP command is:
    B[ACKUP]
    [
     -BK[UPDBJNL]={DISABLE|OFF}]
-    -B[YTESTREAM] [-NET[TIMEOUT]]
+    -BY[TESTREAM] [-NET[TIMEOUT]]
     -DA[TABASE]
     -[NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]]
     -O[NLINE]
@@ -120,7 +120,7 @@ The format of the BKUPDBJNL qualifier is:
 * Only one of the qualifiers DISABLE or OFF can be specified at any given point.
 
 ^^^^^^^^^^^
--Bytestream
+-BYtestream
 ^^^^^^^^^^^
 
 Transfers MUPIP BACKUP output to a TCP connection, file (or a backup directory), or a pipe. If there are multiple .dat files, BYTESTREAM transfers output to a comma separated list of TCP connections, incremental backup files and/or directories, or pipes. When used with SINCE or TRANSACTION, MUPIP BACKUP allows incremental backup, that is, includes database blocks that have changed since a prior point specified by the SINCE or TRANSACTION.
@@ -134,7 +134,7 @@ The format of the BYTESTREAM qualifier is:
 
 .. code-block:: none
 
-   -B[YTESTREAM]
+   -BY[TESTREAM]
 
 * BYTESTREAM is compatible with SINCE and TRANSACTION.
 

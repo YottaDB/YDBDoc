@@ -135,8 +135,8 @@ The file header data elements are listed as follows in alphabetical order for ea
 | Journal Before imaging             | Indicates whether or not before image journaling is allowed; DSE only reports this field if journaling is ENABLED or ON.                                      |
 |                                    | Journal Before imaging can either be TRUE or FALSE.                                                                                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Journal Buffer Size                | The amount of memory allotted to buffer journal file updates. The default value is 2308. The minimum is 2307 and the maximum is 32K blocks which means that   |
-|                                    | the maximum buffer you can set for your journal file output is 16MB. Larger journal buffers can improve run-time performance, but they also increase the      |
+| Journal Buffer Size                | The amount of memory allotted to buffer journal file updates. The default value is 2312. The minimum is 2307 and the maximum is 1Mi blocks which means that   |
+|                                    | the maximum buffer you can set for your journal file output is 512MB. Larger journal buffers can improve run-time performance, but they also increase the     |
 |                                    | amount of information at risk in failure. Journal Buffer size must be large enough to hold the largest transaction.                                           |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal Epoch Interval             | The elapsed time interval between two successive EPOCHs in seconds. An EPOCH is a checkpoint, at which all updates to a database file are committed to disk.  |

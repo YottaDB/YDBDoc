@@ -1376,7 +1376,7 @@ Using BEFORE with AFTER restricts processing to a particular period of time in t
 
    -BE[FORE]=time
 
-Specifies an ending time for any action FORWARD or BACKWARD. The time specified references time stamps in the journal files. If BEFORE specifies a time preceding the first time recorded in the journal file, or preceding any AFTER or SINCE, JOURNAL processing produces no result, and MUPIP displays a warning message.
+Specifies an ending time for any action FORWARD or BACKWARD. The ending time is inclusive, that is, BEFORE includes the records that match the specified ending time in the journal records. If BEFORE specifies a time preceding the first time recorded in the journal file, or preceding any AFTER or SINCE, JOURNAL processing produces no result, and MUPIP displays a warning message.
 
 If  BEFORE time exceeds the last time recorded in journal files, JOURNAL processing effectively ignores the qualifier and terminates at the end of the journal file. By default, JOURNAL processing terminates at the end of the journal file.
 

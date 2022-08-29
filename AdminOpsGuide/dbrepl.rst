@@ -3708,7 +3708,7 @@ Sets the logging interval to the default value.
 -buffsize=<Journal Pool size in bytes>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Specifies the size of the Journal Pool. The server rounds the size up or down to suit its needs. Any size less than 1 MiB is rounded up to 1 MiB. If you do not specify a qualifier, the size defaults to the YottaDB default value of 64 MiB. Remember that you cannot exceed the system-provided maximum shared memory. For systems with high update rates, specify a larger buffer size to avoid the overflows and file I/O that occur when the Source Server reads journal records from journal files. The maximum value is 4294967288(4GiB-8).
+Specifies the size of the Journal Pool. The server rounds the size up or down to suit its needs. Any size less than 1 MiB is rounded up to 1 MiB. If you do not specify a qualifier, the size defaults to the YottaDB default value of 64 MiB. Remember that you cannot exceed the system-provided maximum shared memory. For systems with high update rates, specify a larger buffer size to avoid the overflows and file I/O that occur when the Source Server reads journal records from journal files. The maximum value is 68719476736 (64GiB). MUPIP REPLICATE SOURCE ignores BUFFSIZE if the Journal Pool is already set up. The first Source Server process started on an instance sets up the Journal Pool.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^
 -filter=<filter command>

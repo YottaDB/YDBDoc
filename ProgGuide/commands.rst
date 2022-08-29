@@ -3682,6 +3682,10 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +================+======================================================================================================================================+
 |  BTD           | # of database Block Transitions to Dirty                                                                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  BTS           | # of times a dirty buffer was flushed so a BT could be reused                                                                        |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  BUS           | # of times db_csh_get could not determine whether a block was in cache or not                                                        |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  CAT           | Critical section Total Acquisitions successes                                                                                        |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  CFE           | Critical section Failed (blocked) acquisition total caused by Epochs. It is incremented a single time for each observed              |
@@ -3812,6 +3816,8 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  TTW           | # of Tp committed Transactions that were read-Write on this database                                                                 |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  WFR           | # of times a process slept while waiting for another process to read in a database block                                             |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  ZPR           | # of $order(,-1) or $ZPRevious() (reverse order) operations (TP and non-TP).                                                         |
 |                | The count of $Order(,1) operations are reported under ORD.                                                                           |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3912,15 +3918,15 @@ For process that has access to two database files produces results like the foll
    GLD:*,REG:*,SET:205,KIL:0,GET:1,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:9,DWT:15,
    NTW:203,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,
    TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,
-   JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
-   GLD:/home/gtmuser1/.yottadb/r120/g/yottadb.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,
+   JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
+   GLD:/home/gtmuser1/.fis-gtm/V5.4-002B_x86/g/mumps.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,
    DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:411,DRD:9,DWT:15,NTW:2
    03,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,TR0:0,
    TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0
    GLD:/tmp/tst/test.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,
    CTN:411,DRD:9,DWT:15,NTW:203,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,
    TBW:2,TBR:6,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,
-   JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
+   JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
 
 Example:
 
@@ -3938,11 +3944,11 @@ Assuming that a YottaDB process uses the global directory "/tmp/x1.gld" and open
    GLD:/tmp/x1.gld,REG:REG1,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,
    DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,
    TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,
-   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
+   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
    GLD:/tmp/x1.gld,REG:REG2,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,
    DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,
    TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,
-   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
+   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
 
 Example:
 
@@ -3957,15 +3963,15 @@ This example redirects the output of ZSHOW "G" into a local variable zgbl:
    zgbl("G",0)="GLD:*,REG:*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,
    ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,
    TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,
-   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0"
+   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0"
    zgbl("G",1)="GLD:/tmp/x1.gld,REG:REG1,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,
    LKS:0,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,
    NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,
-   JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0"
+   JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0"
    zgbl("G",2)="GLD:/tmp/x1.gld,REG:REG2,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,
    LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,
    NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,
-   JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0"
+   JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0"
 
 Example:
 

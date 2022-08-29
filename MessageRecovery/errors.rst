@@ -2341,6 +2341,15 @@ Run Time/MUPIP Error: Indicates YottaDB successfully created the database file D
 
 Action: None required.
 
+--------------
+DBFILERDONLY
+--------------
+
+DBFILERDONLY, The database file ffff was opened as read-only (perms pppp)
+
+All YottaDB Components Error: Database file ffff was opened read-only with permissions pppp, but the read-only status is inconsistent with application expectations.
+
+Action: Use the error and any follow-on messages to assess whether or not the read-only status is correct or the rejection is appropriate.
 
 ---------------------
 DBFILERR
@@ -4047,6 +4056,16 @@ GDE/DSE Information: This indicates that an @ command activated command file xxx
 
 Action: -
 
+-------------
+EXITSTATUS
+-------------
+
+EXITSTATUS, Unexpected process exit (xxxx), exit status aaaa -- called from module yyyy at line zzzz
+
+Run Time Error: Indicates a non-zero exit status aaaa returned from a process started in the context of xxxx. The following are common values (other values are possible depending on the script called) and descriptions for the exit status: 1-"Catchall for general errors", 2-"Misuse of shell builtins", 126-"Command invoked cannot execute", 127-"Command not found", 128-"Invalid argument to exit" and 130-"Script terminated by Control-C".
+
+Action: Use the exit status aaaa to adjust the script causing the unexpected exit.
+
 -----------------------
 EXPR
 -----------------------
@@ -4121,11 +4140,11 @@ Action: Specify another file name and/or directory.
 EXTRFMT
 ----------------------
 
-EXTRFMT, Extract error: bad format type. Must be ZWR, GO, or BINARY.
+EXTRFMT, Extract error: invalid record format - no records found
 
-MUPIP Error: This indicates that EXTRACT could not create the sequential output file because of an invalid format specified.
+MUPIP Error: This indicates that LOAD could not process the sequential output file because the record after the header is invalid.
 
-Action: Change the format to one of the three supported formats.
+Action: Verify the file has a valid format and actually contains records.
 
 -----------------------
 EXTRINTEGRITY

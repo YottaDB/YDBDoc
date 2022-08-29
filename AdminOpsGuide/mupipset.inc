@@ -179,6 +179,16 @@ Tries to minimize epoch duration by reducing the number of buffers to flush by Y
 
    -[NO]EPOCHTAPER
 
+^^^^^^^^^^^^^^^
+-ENCRYPTABLE
+^^^^^^^^^^^^^^^
+
+Performs some basic encryption checks and marks the database as encryptable. Note that marking a database as encryptable does not encrypt the database. For more information on encrypting a database, refer to :ref:`mupip-reorg-encrypt`. The format of the ENCRYPTABLE qualifier is:
+
+.. code-block:: none
+
+   -[NO]ENCRYPTA[BLE]
+
 ^^^^^^^^^^^^^^^^^^
 -EXTENSION_COUNT
 ^^^^^^^^^^^^^^^^^^
@@ -202,7 +212,7 @@ Specifies the amount of time between deferred writes of stale cache buffers. The
    -F[LUSH_TIME]=[[[HOURS:]MINUTES:]SECONDS:]CENTISECONDS
 
 ^^^^^^^^^^^
-FULLBLKWRT
+-FULLBLKWRT
 ^^^^^^^^^^^
 
 Determines whether YottaDB writes bytes in the database or filesystem block past the last valid database record. Full block writes can be more efficient with some secondary storage because they avoid the potential read-before-write that can penalize partial block writes. The format of the FULLBLKWRT qualifier is:
@@ -442,7 +452,7 @@ Specifies the number of times a process suspends its activity while waiting to o
 
    -SLEEP_SPIN_COUNT=integer
 
-* integer is the number of times the process yields to the OS scheduler or sleeps (depending in the SPIN_SLEEP_LIMIT) after exhausting its hard spin count and before enqueuing itself to be awakened by another process releasing the shared resource mutex.
+* integer is the number of times the process yields to the OS scheduler or sleeps (depending on the SPIN_SLEEP_LIMIT) after exhausting its hard spin count and before enqueuing itself to be awakened by another process releasing the shared resource mutex.
 
 * The default is 128.
 

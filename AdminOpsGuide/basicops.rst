@@ -899,7 +899,14 @@ ydb_tls_passwd_<label>
 ++++++++++
 ydb_tmp
 ++++++++++
-**ydb_tmp (gtm_tmp)** specifies a directory where socket files used for communication between gtmsecshr and YottaDB processes are stored. All processes using the same YottaDB should have the same $ydb_tmp.
+**ydb_tmp (gtm_tmp)** specifies a directory where socket files used for communication between gtmsecshr and YottaDB processes are stored. All processes using the same YottaDB should have the same $ydb_tmp. YottaDB recommends setting ydb_tmp to a location:
+
+* which is unique to a YottaDB version, e.g., /tmp/r1.34_x86_64
+* where operation procedures and policies can ensure that the contents are not removed when there are active YottaDB processes
+
+If appropriate, set ydb_tmp to a directory location in tmpfs or ramfs on Linux.
+
+If ydb_tmp is not defined, YottaDB uses the /tmp directory which may disrupt active gtmsecshr operations when /tmp is either cleared manually or by the retention policies of the operating system.
 
 ++++++++++++++++++++
 ydb_tpnotacidtime
