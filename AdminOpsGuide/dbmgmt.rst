@@ -2482,126 +2482,126 @@ MUPIP Command Summary
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | Command                              | Objects                                     | Main Qualifier                                                                           | Standalone Access |
 +======================================+=============================================+==========================================================================================+===================+
-| B[ACKUP]                             | region-name file-name                       | * BK[UPDBJNL]=DISABLE | OFF                                                              |                   |
-|                                      |                                             | * BY[TESTREAM] NET[TIMEOUT]=seconds                                                      |                   |
-|                                      |                                             | * C[OMPREHENSIVE]                                                                        |                   |
-|                                      |                                             | * DA[TABASE] REPLA[CE]                                                                   |                   |
-|                                      |                                             | * DBG                                                                                    |                   |
-|                                      |                                             | * I[NCREMENTAL]                                                                          |                   |
-|                                      |                                             | * [NO]J[OURNAL][=journal-options-list]                                                   |                   |
-|                                      |                                             | * NETTIMEOUT                                                                             |                   |
-|                                      |                                             | * [NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]                                           |                   |
-|                                      |                                             | * O[NLINE]                                                                               |                   |
-|                                      |                                             | * RECORD                                                                                 |                   |
-|                                      |                                             | * REPLI[NSTANCE]=OFF | ON                                                                |                   |
-|                                      |                                             | * S[INCE]={DATABASE|BYTESTREAM|RECORD}                                                   |                   |
-|                                      |                                             | * T[RANSACTION=hexa;transaction_number]                                                  |                   |
+| B[ACKUP]                             | region-name file-name                       | * BK[UPDBJNL]=DISABLE | OFF                                                              | N                 |
+|                                      |                                             | * BY[TESTREAM] NET[TIMEOUT]=seconds                                                      | N                 |
+|                                      |                                             | * C[OMPREHENSIVE]                                                                        | N                 |
+|                                      |                                             | * DA[TABASE] REPLA[CE]                                                                   | N                 |
+|                                      |                                             | * DBG                                                                                    | N                 |
+|                                      |                                             | * I[NCREMENTAL]                                                                          | N                 |
+|                                      |                                             | * [NO]J[OURNAL][=journal-options-list]                                                   | N                 |
+|                                      |                                             | * NETTIMEOUT                                                                             | N                 |
+|                                      |                                             | * [NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]                                           | N                 |
+|                                      |                                             | * O[NLINE]                                                                               | N                 |
+|                                      |                                             | * RECORD                                                                                 | N                 |
+|                                      |                                             | * REPLI[NSTANCE]=OFF | ON                                                                | N                 |
+|                                      |                                             | * S[INCE]={DATABASE|BYTESTREAM|RECORD}                                                   | N                 |
+|                                      |                                             | * T[RANSACTION=hexa;transaction_number]                                                  | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| CR[EATE]                             | \-                                          | * R[EGION]=region-name                                                                   | Y                 |
+| CR[EATE]                             | \-                                          | * R[EGION]=region-name                                                                   | N.A.              |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | DO[WNGRADE]                          | file-name                                   | * V[ERSION]={V4|V5}                                                                      | Y                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| DU[MPFHEAD]                          | file-name or region-list                    | * \-                                                                                     |                   |
+| DU[MPFHEAD]                          | file-name or region-list                    | * \-                                                                                     | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | EN[DIANCVT]                          | file-name                                   | * OUTDB=<outdb-file>                                                                     | Y                 |
 |                                      |                                             | * OV[ERRIDE]                                                                             | Y                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| EXI[T]                               | \-                                          | * \-                                                                                     |                   |
+| EXI[T]                               | \-                                          | * \-                                                                                     | N.A.              |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| EXTE[ND]                             | region-name                                 | * B[LOCKS]=blocks                                                                        |                   |
+| EXTE[ND]                             | region-name                                 | * B[LOCKS]=blocks                                                                        | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| EXTR[ACT]                            | \-                                          | * FO[RMAT]=GO|B[INARY]|Z[WR]                                                             |                   |
-|                                      |                                             | * FR[EEZE]                                                                               |                   |
-|                                      |                                             | * LA[BEL]=text                                                                           |                   |
-|                                      |                                             | * [NO]L[OG]                                                                              |                   |
-|                                      |                                             | * NU[LL_IV]                                                                              |                   |
-|                                      |                                             | * S[ELECT]=global-name-list                                                              |                   |
-|                                      |                                             | * O[CHSET]=character-set                                                                 |                   |
-|                                      |                                             | * R[EGION]=region-list                                                                   |                   |
+| EXTR[ACT]                            | \-                                          | * FO[RMAT]=GO|B[INARY]|Z[WR]                                                             | N                 |
+|                                      |                                             | * FR[EEZE]                                                                               | N                 |
+|                                      |                                             | * LA[BEL]=text                                                                           | N                 |
+|                                      |                                             | * [NO]L[OG]                                                                              | N                 |
+|                                      |                                             | * NU[LL_IV]                                                                              | N                 |
+|                                      |                                             | * S[ELECT]=global-name-list                                                              | N                 |
+|                                      |                                             | * O[CHSET]=character-set                                                                 | N                 |
+|                                      |                                             | * R[EGION]=region-list                                                                   | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| F[REEZE]                             | region-list                                 | * DBG                                                                                    |                   |
-|                                      |                                             | * OF[F] [OV[ERRIDE]]                                                                     |                   |
-|                                      |                                             | * ON [[NO]ONL[INE] [[NO]A[UTORELEASE]] [R[ECORD]]]                                       |                   |
+| F[REEZE]                             | region-list                                 | * DBG                                                                                    | N                 |
+|                                      |                                             | * OF[F] [OV[ERRIDE]]                                                                     | N                 |
+|                                      |                                             | * ON [[NO]ONL[INE] [[NO]A[UTORELEASE]] [R[ECORD]]]                                       | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| FT[OK]                               | File-name                                   | * D[B]                                                                                   |                   |
-|                                      |                                             | * J[NLPOOL]                                                                              |                   |
-|                                      |                                             | * R[ECVPOOL]                                                                             |                   |
+| FT[OK]                               | File-name                                   | * D[B]                                                                                   | N                 |
+|                                      |                                             | * J[NLPOOL]                                                                              | N                 |
+|                                      |                                             | * R[ECVPOOL]                                                                             | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| H[ELP]                               | command-option                              | * \-                                                                                     |                   |
+| H[ELP]                               | command-option                              | * \-                                                                                     | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| I[NTEG]                              | File-name or region-list                    | * A[DJACENCY]=integer                                                                    |                   |
-|                                      |                                             | * BL[OCK]=hexa;block-number                                                              |                   |
-|                                      |                                             | * BR[IEF]                                                                                |                   |
-|                                      |                                             | * FA[ST]                                                                                 |                   |
+| I[NTEG]                              | File-name or region-list                    | * A[DJACENCY]=integer                                                                    | N                 |
+|                                      |                                             | * BL[OCK]=hexa;block-number                                                              | N                 |
+|                                      |                                             | * BR[IEF]                                                                                | N                 |
+|                                      |                                             | * FA[ST]                                                                                 | N                 |
 |                                      |                                             | * FI[LE]                                                                                 | Y                 |
-|                                      |                                             | * FU[LL]                                                                                 |                   |
-|                                      |                                             | * [NO]K[EYRANGES]                                                                        |                   |
-|                                      |                                             | * [NO][MAP]=integer                                                                      |                   |
-|                                      |                                             | * [NO]MAXK[EYSIZE]=integer                                                               |                   |
-|                                      |                                             | * R[EGION]                                                                               |                   |
-|                                      |                                             | * [NO]ST[ATS]                                                                            |                   |
-|                                      |                                             | * SU[BSCRIPT]=subscript                                                                  |                   |
+|                                      |                                             | * FU[LL]                                                                                 | N                 |
+|                                      |                                             | * [NO]K[EYRANGES]                                                                        | N                 |
+|                                      |                                             | * [NO][MAP]=integer                                                                      | N                 |
+|                                      |                                             | * [NO]MAXK[EYSIZE]=integer                                                               | N                 |
+|                                      |                                             | * R[EGION]                                                                               | N                 |
+|                                      |                                             | * [NO]ST[ATS]                                                                            | N                 |
+|                                      |                                             | * SU[BSCRIPT]=subscript                                                                  | N                 |
 |                                      |                                             | * TN[_RESET]                                                                             | Y                 |
-|                                      |                                             | * [NO]TR[ANSACTION][=integer]                                                            |                   |
+|                                      |                                             | * [NO]TR[ANSACTION][=integer]                                                            | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| IN[TRPT]                             | process id                                  |                                                                                          |                   |
+| IN[TRPT]                             | process id                                  |                                                                                          | N.A.              |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| J[OURNAL]                            | file-name                                   | * EX[TRACT][=file-specification|-stdout]                                                 |                   |
-|                                      |                                             | * REC[OVER] | RO[LLBACK]                                                                 |                   |
-|                                      |                                             | * SH[OW][=show-option-list]                                                              |                   |
-|                                      |                                             | * [NO]V[ERIFY]                                                                           |                   |
-|                                      |                                             | * BA[CKWARD] | FO[RWARD]                                                                 |                   |
+| J[OURNAL]                            | file-name                                   | * EX[TRACT][=file-specification|-stdout]                                                 | N                 |
+|                                      |                                             | * REC[OVER] | RO[LLBACK]                                                                 | N                 |
+|                                      |                                             | * SH[OW][=show-option-list]                                                              | N                 |
+|                                      |                                             | * [NO]V[ERIFY]                                                                           | N                 |
+|                                      |                                             | * BA[CKWARD] | FO[RWARD]                                                                 | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| L[OAD]                               | file-name                                   | * BE[GIN]=integer                                                                        |                   |
-|                                      |                                             | * BLOCK_DENSITY                                                                          |                   |
-|                                      |                                             | * E[ND]=integer                                                                          |                   |
-|                                      |                                             | * FI[LLFACTOR]=integer                                                                   |                   |
-|                                      |                                             | * FO[RMAT]=GO|B[INARY]|Z[WR]                                                             |                   |
-|                                      |                                             | * S[TDIN]                                                                                |                   |
-|                                      |                                             | * O[NERROR]                                                                              |                   |
+| L[OAD]                               | file-name                                   | * BE[GIN]=integer                                                                        | N                 |
+|                                      |                                             | * BLOCK_DENSITY                                                                          | N                 |
+|                                      |                                             | * E[ND]=integer                                                                          | N                 |
+|                                      |                                             | * FI[LLFACTOR]=integer                                                                   | N                 |
+|                                      |                                             | * FO[RMAT]=GO|B[INARY]|Z[WR]                                                             | N                 |
+|                                      |                                             | * S[TDIN]                                                                                | N                 |
+|                                      |                                             | * O[NERROR]                                                                              | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| REO[RG]                              | \-                                          | * D[OWNGRADE]                                                                            |                   |
-|                                      |                                             | * ENCR[YPT]=key                                                                          |                   |
-|                                      |                                             | * E[XCLUDE]=global-name-list                                                             |                   |
-|                                      |                                             | * FI[LL_FACTOR]=integer                                                                  |                   |
-|                                      |                                             | * I[NDEX_FILL_FACTOR]=integer                                                            |                   |
-|                                      |                                             | * NOCO[ALESCE]                                                                           |                   |
-|                                      |                                             | * NOSP[LIT]                                                                              |                   |
-|                                      |                                             | * NOSW[AP]                                                                               |                   |
-|                                      |                                             | * REG[ION]                                                                               |                   |
-|                                      |                                             | * R[ESUME]                                                                               |                   |
-|                                      |                                             | * S[ELECT]=global-name-list                                                              |                   |
-|                                      |                                             | * T[RUNCATE][=percentage]                                                                |                   |
-|                                      |                                             | * UP[GRADE]                                                                              |                   |
-|                                      |                                             | * REG[ION] region-list                                                                   |                   |
+| REO[RG]                              | \-                                          | * D[OWNGRADE]                                                                            | N                 |
+|                                      |                                             | * ENCR[YPT]=key                                                                          | N                 |
+|                                      |                                             | * E[XCLUDE]=global-name-list                                                             | N                 |
+|                                      |                                             | * FI[LL_FACTOR]=integer                                                                  | N                 |
+|                                      |                                             | * I[NDEX_FILL_FACTOR]=integer                                                            | N                 |
+|                                      |                                             | * NOCO[ALESCE]                                                                           | N                 |
+|                                      |                                             | * NOSP[LIT]                                                                              | N                 |
+|                                      |                                             | * NOSW[AP]                                                                               | N                 |
+|                                      |                                             | * REG[ION]                                                                               | N                 |
+|                                      |                                             | * R[ESUME]                                                                               | N                 |
+|                                      |                                             | * S[ELECT]=global-name-list                                                              | N                 |
+|                                      |                                             | * T[RUNCATE][=percentage]                                                                | N                 |
+|                                      |                                             | * UP[GRADE]                                                                              | N                 |
+|                                      |                                             | * REG[ION] region-list                                                                   | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| REP[LICATE]                          | file-name                                   | * E[DITINSTANCE]                                                                         |                   |
-|                                      |                                             | * I[NSTANCE_CREATE]                                                                      |                   |
-|                                      |                                             | * R[ECEIVER]                                                                             |                   |
-|                                      |                                             | * S[OURCE]                                                                               |                   |
-|                                      |                                             | * UPDA[TEPROC]                                                                           |                   |
+| REP[LICATE]                          | file-name                                   | * E[DITINSTANCE]                                                                         | N                 |
+|                                      |                                             | * I[NSTANCE_CREATE]                                                                      | N                 |
+|                                      |                                             | * R[ECEIVER]                                                                             | N                 |
+|                                      |                                             | * S[OURCE]                                                                               | N                 |
+|                                      |                                             | * UPDA[TEPROC]                                                                           | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | RE[STORE]                            | file-name or file-list                      | * [NO]E[XTEND]                                                                           | Y                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | RU[NDOWN]                            | file-name or region-name                    | * F[ILE]                                                                                 | Y                 |
-|                                      |                                             | * R[EGION]                                                                               |                   |
-|                                      |                                             | * RELINKCTL [dir]                                                                        |                   |
-|                                      |                                             | * OVERRIDE                                                                               |                   |
+|                                      |                                             | * R[EGION]                                                                               | N                 |
+|                                      |                                             | * RELINKCTL [dir]                                                                        | N                 |
+|                                      |                                             | * OVERRIDE                                                                               | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| SE[T]                                | file-name or region-name                    | * SE[T] {FI[LE] file-name|JN[LFILE] journal-file-name|REG[ION] region-list|              |                   |
-|                                      |                                             |   \REP[LICATION]={ON|OFF}}                                                               |                   |
+| SE[T]                                | file-name or region-name                    | * SE[T] {FI[LE] file-name|JN[LFILE] journal-file-name|REG[ION] region-list|              | N                 |
+|                                      |                                             |   \REP[LICATION]={ON|OFF}}                                                               | N                 |
 |                                      |                                             | * AC[CESS_METHOD]={BG|MM}                                                                | Y                 |
 |                                      |                                             | * [NO]AS[YNCIO]                                                                          | Y                 |
 |                                      |                                             | * [NO]DE[FER_TIME][=seconds]                                                             | Y                 |
-|                                      |                                             | * [NO]DEFER_ALLOCATE                                                                     |                   |
-|                                      |                                             | * [NO]EP[OCHTAPER]                                                                       |                   |
+|                                      |                                             | * [NO]DEFER_ALLOCATE                                                                     | N                 |
+|                                      |                                             | * [NO]EP[OCHTAPER]                                                                       | N                 |
 |                                      |                                             | * [NO]ENCRYPTABLE                                                                        | Y                 |
-|                                      |                                             | * E[XTENSION_COUNT]=integer(no of blocks)                                                |                   |
-|                                      |                                             | * F[LUSH_TIME]=integer                                                                   |                   |
+|                                      |                                             | * E[XTENSION_COUNT]=integer(no of blocks)                                                | N                 |
+|                                      |                                             | * F[LUSH_TIME]=integer                                                                   | N                 |
 |                                      |                                             | * F[ULLBLKWRT]={0|1|2}                                                                   | Y                 |
 |                                      |                                             | * G[LOBAL_BUFFERS]=integer                                                               | Y                 |
-|                                      |                                             | * H[ARD_SPIN_COUNT]=integer                                                              |                   |
-|                                      |                                             | * [NO]INST[_FREEZE_ON_ERROR]                                                             |                   |
+|                                      |                                             | * H[ARD_SPIN_COUNT]=integer                                                              | N                 |
+|                                      |                                             | * [NO]INST[_FREEZE_ON_ERROR]                                                             | N                 |
 |                                      |                                             | * JN[LFILE] journal-file-name                                                            | Y                 |
 |                                      |                                             | * K[EY_SIZE]=bytes                                                                       | Y                 |
 |                                      |                                             | * [NO]LCK_SHARES_DB_CRIT                                                                 | Y                 |
@@ -2612,27 +2612,27 @@ MUPIP Command Summary
 |                                      |                                             | * [NO]Q[DBRUNDOWN]                                                                       | Y                 |
 |                                      |                                             | * [NO]REA[D_ONLY]                                                                        | Y                 |
 |                                      |                                             | * REC[ORD_SIZE]=bytes                                                                    | Y                 |
-|                                      |                                             | * REG[ION] region-list                                                                   |                   |
+|                                      |                                             | * REG[ION] region-list                                                                   | N                 |
 |                                      |                                             | * REP[LICATION]={ON|OFF}                                                                 | Y                 |
 |                                      |                                             | * RES[ERVED_BYTES]=integer                                                               | Y                 |
-|                                      |                                             | * SLEE[P_SPIN_COUNT]=integer                                                             |                   |
-|                                      |                                             | * SPIN[_SLEEP_MASK]=hexa_mask                                                            |                   |
+|                                      |                                             | * SLEE[P_SPIN_COUNT]=integer                                                             | N                 |
+|                                      |                                             | * SPIN[_SLEEP_MASK]=hexa_mask                                                            | N                 |
 |                                      |                                             | * STAN[DALONENOT]                                                                        | Y                 |
 |                                      |                                             | * [NO]STD[NULLCOLL]                                                                      | Y                 |
 |                                      |                                             | * [NO]STAT[S]                                                                            | Y                 |
-|                                      |                                             | * V[ERSION]={V4|V6}                                                                      |                   |
+|                                      |                                             | * V[ERSION]={V4|V6}                                                                      | N                 |
 |                                      |                                             | * W[AIT_DISK]=integer                                                                    | Y                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| SI[ZE]                               | global-name-list region-list                | * H[EURISTIC]=estimation_technique                                                       |                   |
-|                                      |                                             | * S[ELECT]=global-name-list                                                              |                   |
-|                                      |                                             | * R[EGION]=region-list                                                                   |                   |
+| SI[ZE]                               | global-name-list region-list                | * H[EURISTIC]=estimation_technique                                                       | N                 |
+|                                      |                                             | * S[ELECT]=global-name-list                                                              | N                 |
+|                                      |                                             | * R[EGION]=region-list                                                                   | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| ST[OP]                               | process-id                                  | * process-id                                                                             |                   |
+| ST[OP]                               | process-id                                  | * process-id                                                                             | N.A.              |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| TRIGGER                              | \-                                          | * TRIG[GERFILE]=<trigger_definitions_file>                                               |                   |
-|                                      |                                             | * NOPR[OMPT]                                                                             |                   |
-|                                      |                                             | * SELE[CT][=name-list|*][<select-output-file>]                                           |                   |
-|                                      |                                             | * UPGRADE                                                                                |                   |
+| TRIGGER                              | \-                                          | * TRIG[GERFILE]=<trigger_definitions_file>                                               | N                 |
+|                                      |                                             | * NOPR[OMPT]                                                                             | N                 |
+|                                      |                                             | * SELE[CT][=name-list|*][<select-output-file>]                                           | N                 |
+|                                      |                                             | * UPGRADE                                                                                | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | UP[GRADE]                            | file-name                                   | * \-                                                                                     | Y                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
