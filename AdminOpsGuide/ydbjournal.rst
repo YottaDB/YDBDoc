@@ -1635,6 +1635,14 @@ This JOURNAL command does a forward recovery that REDIRECTs the updates in bgdbb
 
 Prints verbose output in the course of processing. It is not negatable and it is set to OFF by default.
 
+.. code-block:: none
+
+   -DETAIL
+
+DETAIL when used with EXTRACT, specifies that detailed journal records must be extracted. Refer to the :ref:`format <detail-extract>` of the detail journal extract below for more information.
+
+DETAIL qualifier is compatible with EXTRACT only.
+
 +++++++++++++++++++++++++++++
 Journal Selection Qualifiers
 +++++++++++++++++++++++++++++
@@ -1781,6 +1789,8 @@ Journal extracts contain NULL records only in a multisite replication configurat
 
 .. note::
    A NULL record does not have global information. Therefore, it resides in the alphabetically last replicated region of the global directory.
+
+.. _detail-extract:
 
 The format of the detail journal extract is as follows:
 
