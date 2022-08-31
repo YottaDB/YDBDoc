@@ -41,7 +41,7 @@ input.gsc-search-button-v2 {
 .wy-table-responsive {
 	margin-bottom: 24px;
 	max-width: 100%;
-	overflow: visible;
+	overflow: auto;
 }
 pre.literal-block {
   white-space: pre;

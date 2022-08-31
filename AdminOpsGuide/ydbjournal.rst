@@ -907,7 +907,7 @@ file-selection-argument is a comma-separated list of journal files.
 | * -EXTRACT[=file specification] | * -BACKWARD | * -AFTER=time                   | * -FETCH_RESYNC=port-number        | * -[NO]APPLY_AFTER_IMAGE                | * -GLOBAL=global-list               |
 | * -RECOVER                      | * -FORWARD  | * -BEFORE=time                  | * -RESYNC=jnlsequence-number       | * -[NO]BROKENTRANS=extract file name    | * -ID=pid-list                      |
 | * -ROLLBACK                     |             | * -[NO]LOOKBACK_TIME[=lookback  |                                    | * -[NO]CHAIN                            | * -TRANSACTION=transaction-type     |
-| * -SHOW[=show-option-list]      |             |    option list]                 |                                    | * -[NO]CHECKTN                          | * -USER=user-list                   |
+| * -SHOW[=show-option-list]      |             |   option list]                  |                                    | * -[NO]CHECKTN                          | * -USER=user-list                   |
 | * -[NO]VERIFY                   |             | * -SINCE=time                   |                                    | * -[NO]ERRORLIMIT[=integer]             |                                     |
 |                                 |             |                                 |                                    | * -FENCES=fence option                  |                                     |
 |                                 |             |                                 |                                    | * -FULL                                 |                                     |
@@ -1530,6 +1530,8 @@ ROLLBACK FORWARD accepts only CHECKTN, which is the default, but does not accept
 
 CHECKTN is incompatible with BACKWARD.
 
+.. code-block:: none
+		
    - [CO]RRUPTDB
 
 Extracts journal records into a single file even if the database is corrupt or missing. Always specify a journal name when you are using CORRUPTDB. CORRUPTDB does not recognize the wildcard character "*" for journal file name and is incompatible with FENCES, LOST, and BROKEN qualifiers.
