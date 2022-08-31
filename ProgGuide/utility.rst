@@ -1268,6 +1268,8 @@ This example invokes %SQROOT as an extrinsic function with the label FUNC.
 String Utilities
 ----------------------
 
+.. _mpiece-util:
+
 +++++++++++
 %MPIECE
 +++++++++++
@@ -1305,6 +1307,8 @@ Example:
    fields(5)="into"
    fields(6)="six"
 
+.. _randstr-util:
+
 +++++++++++++++++++++
 %RANDSTR
 +++++++++++++++++++++
@@ -1326,6 +1330,8 @@ charranges: Range of alphabets defined by charset. By default charranges is 1:1:
 patcodes: specifies pattern codes used to restrict the characters to those that match the selected codes. By default, patcodes is "AN".
 
 charset: Specifies a string of non-zero length. If specified, %RANDSTR generates the random string using the characters in charset, otherwise it takes its alphabet as specified by charranges and patcodes. If charset is of zero length, and is passed by reference, %RANDSTR() initializes it to the alphabet of characters defined by charranges and patcodes. If not specified, strlen defaults to 8, charranges defaults to 1:1:127 and patcodes to "AN".
+
+.. _trim-util:
 
 +++++++++++
 %TRIM
@@ -2614,9 +2620,15 @@ Internationalization Utilities
 
 The internationalization utilities are:
 
+.. _gbldef-util:
+
 %GBLDEF: Manipulates the collation sequence assigned to a global. For more information and usage examples, refer to :ref:`use-gbldef-util`.
 
+.. _lclcol-util:
+
 %LCLCOL: Manipulates the collation sequence assigned to local variables in an active process. For more information and usage examples, refer to :ref:`establish-local-colln-seq`.
+
+.. _patcode-util:
 
 %PATCODE: Loads pattern definition files for use within an active database.
 
@@ -2627,6 +2639,8 @@ System Management Utilities
 ----------------------------
 
 The System Management utilities are:
+
+.. _dsewrap-util:
 
 +++++++++++++++
 %DSEWRAP
@@ -2658,6 +2672,8 @@ Example:
 .. code-block:: bash
 
    $ydb -run ^%XCMD 'do dump^%DSEWRAP("DEFAULT",.dsefields,"","all") zwrite dsefield'
+
+.. _dumpfhead-util:
 
 +++++++++++++
 %DUMPFHEAD
@@ -2901,6 +2917,8 @@ Calls to %PEEKBYNAME with the listed parameter as the first or only parameter re
 .. note::
    %PEEKBYNAME opens the -READ_ONLY help database as part of its operation, and in so doing causes each process using it to create a private semaphore. In addition, the first process to access a database creates an ftok related semaphore, which in the case of a -READ_ONLY database remains until deleted by a MUPIP RUNDOWN.
 
+.. _xcmd-util:
+
 +++++++++++++++++
 %XCMD
 +++++++++++++++++
@@ -2950,6 +2968,8 @@ Example:
    $ $gtm_exe/yottadb -run LOOP^%XCMD --before='/set f="somefile.txt" open f:readonly use f/' --after='/use $p write "Total number of lines in ",f,": ",%NR,\!/'
    Total number of lines in somefile.txt: 9
    $
+
+.. _ydbprocstuckexec-util:
 
 +++++++++++++++++++
 %YDBPROCSTUCKEXEC
@@ -3133,6 +3153,11 @@ Utilities Summary Table
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`do-util`                    | Converts decimal numbers to octal.                                                                       |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`dsewrap-util`               | Provides a programmatic interface that drives DSE either through a PIPE device or through generated      |
+|                                   | command files                                                                                            |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`dumpfhead-util`             | Provides a programmatic interface to the functionality of MUPIP DUMPFHEAD                                |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`exp-util`                   | Raises number to the power of another number.                                                            |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`fl-util`                    | Lists comment lines at the beginning of the source programs.                                             |
@@ -3141,7 +3166,7 @@ Utilities Summary Table
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`g-util`                     | Displays global variables and their values.                                                              |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
-| :ref:`use-gbldef-util`            | Manipulates the collation sequence assigned to a global.                                                 |
+| :ref:`%GBLDEF <gbldef-util>`      | Manipulates the collation sequence assigned to a global.                                                 |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`gc-util`                    | Copies a global or global sub-tree.                                                                      |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
@@ -3171,13 +3196,20 @@ Utilities Summary Table
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`lcase-util`                 | Converts a string to all lower case.                                                                     |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
-| :ref:`establish-local-colln-seq`  | Manipulates the collation sequence assigned to local variables.                                          |
+| :ref:`%LCLCOL <lclcol-util>`      | Manipulates the collation sequence assigned to local variables.                                          |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`mpiece-util`                | Replaces one or more consecutive occurrences of the second argument in the first argument, with the      |
+|                                   | occurrence of the third argument.                                                                        |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`od-util`                    | Converts octal numbers to decimal.                                                                       |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`oh-util`                    | Converts octal numbers to hexadecimal.                                                                   |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
-| :ref:`pattern-code-defn`          | Loads pattern definition files for use within an active database.                                        |
+| :ref:`%PATCODE <patcode-util>`    | Loads pattern definition files for use within an active database.                                        |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`peekbyname-util`            | Provides a stable interface to $ZPEEK() that uses control structure field names.                         |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`randstr-util`               | Generates a random string.                                                                               |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`rce-util`                   | Replaces every occurrence of a text string with another string in a routine or list of routines.         |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
@@ -3199,8 +3231,18 @@ Utilities Summary Table
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`to-util`                    | Converts the current time from $HOROLOG format to [h]h:mm AM/PM format.                                  |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`trim-util`                  | Removes leading and trailing characters from a string.                                                   |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`ucase-util`                 | Converts a string to all upper case.                                                                     |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`utf2hex-util`               | Converts UTF-8 encoded YottaDB character string to bytestream in hexadecimal notation.                   |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
-
+| :ref:`xcmd-util`                  | XECUTEs input from the shell command line and returns any error status generated by the code.            |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`ydbprocstuckexec-util`      | Captures diagnostics when invoked by the                                                                 |
+|                                   | `ydb_procstuckexec <../AdminOpsGuide/basicops.html#ydb-procstuckexec-env-var>`_ mechanism.               |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`ygblstat-util`              | Gathers and reports statistics, offering a high level and low level API.                                 |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
+| :ref:`zshowvtolcl-util`           | Restores ZSHOW "V":gvn data into its original local variables.                                           |
++-----------------------------------+----------------------------------------------------------------------------------------------------------+
