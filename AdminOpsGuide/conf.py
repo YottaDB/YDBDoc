@@ -66,7 +66,7 @@ master_doc = "index"
 
 # General information about the project.
 project = u"Administration and Operations Guide"
-copyright = u"2017-2021, YottaDB LLC"
+copyright = u"2017-2022, YottaDB LLC"
 author = u"YottaDB Team"
 
 # The version info for the project you're documenting, acts as replacement for

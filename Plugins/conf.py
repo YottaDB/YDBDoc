@@ -33,7 +33,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = "Plugins"
-copyright = "2021, YottaDB LLC"
+copyright = "2021-2022, YottaDB LLC"
 author = "YottaDB LLC"
 
 # The short X.Y version
