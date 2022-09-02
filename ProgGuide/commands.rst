@@ -2608,6 +2608,8 @@ The ZALLOCATE command reserves the specified name without releasing previously r
 
 The ZALLOCATE command provides compatibility with some other YottaDB implementations. The M Development Committee chose to add the + and - delimiters to the LOCK command (incremental locking) rather than adopt the ZALLOCATE and ZDEALLOCATE approach. Therefore, when a design requires an incremental lock mechanism, LOCK +/- has the advantage over ZALLOCATE/ZDEALLOCATE of being part of the M standard. LOCK +/- also has the advantage of working symmetrically when routines using LOCKs are nested. That is, a ZALLOCATE command issued by a process for a named resource already ZALLOCATEd by that process results in no change of state. This means that routines that do ZALLOCATE followed by a ZDEALLOCATE on a named resource that is already ZALLOCATEd by the same process (at routine entry time), will end up ZDEALLOCATEing the named resource (which might not be desired). On the other hand, a LOCK + command issued by a process for a named resource already LOCKed by that process causes the LEVEL of the LOCK to be incremented (as seen in a ZSHOW "L" output). Every LOCK - command on that named resource causes the LEVEL to be decremented. When the LEVEL becomes 0, the named resource is no longer LOCKed.
 
+ZALLOCATE is deprecated and YottaDB no longer maintains or tests it.
+
 For more information on troubleshooting LOCKs with the M Lock Utility (LKE), refer to the `appropriate chapter of the Administration and Operations Guide <../AdminOpsGuide/mlocks.html>`_.
 
 The format of the ZALLOCATE command is:
@@ -2888,6 +2890,8 @@ ZDeallocate
 The ZDEALLOCATE command releases a specified resource name or names previously reserved by the ZALLOCATE command. The ZDEALLOCATE command releases only the specified name(s) without releasing other names previously reserved with the ZALLOCATE or LOCK command.
 
 The ZDEALLOCATE command provides compatibility with some other YottaDB implementations. The M Development Committee choose to add the + and - delimiters to the LOCK command rather than adopt the ZALLOCATE and ZDEALLOCATE approach. Therefore, when a design requires an incremental lock mechanism, LOCK +/- has the advantage of being part of the M standard. LOCK +/- also has the advantage of working symmetrically when routines using LOCKs are nested.
+
+ZEALLOCATE is deprecated and YottaDB no longer maintains or tests it.
 
 The format of the ZDEALLOCATE command is:
 
