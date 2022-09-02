@@ -863,7 +863,6 @@ Processing Errors from Direct Mode and Shell
 |                            | * During compilation except of indirection or XECUTE                                                                                                |
 |                            | * The process is about to enter direct mode due to a BREAK command                                                                                  |
 |                            | * The erroneous code was entered at the direct mode prompt                                                                                          |
-|                            |                                                                                                                                                     |
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
 
 For more information, see `Chapter 13: “Error Processing” <./errproc.html>`_.

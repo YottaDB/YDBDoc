@@ -2018,6 +2018,8 @@ Example (the default timezone of the computer is US Eastern Standard Time):
    15:21
    YDB>
 
+.. _view-nostatshare:
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 [NO]STATSHARE[:<region-list>]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3452,11 +3454,13 @@ The three least significant bits (lsb) of these message codes indicate the sever
 +================+==================================+=========================================================================================================+
 | 0              | Warning                          | XECUTEs $ETRAP or $ZTRAP and terminates the process                                                     |
 +----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
-| 1              | Success                          | Displays the associated message and continues execution                                                 |
+| 1              | Success                          | Displays the associated message on STDERR (of the ydb process) and continues execution.                 |
+|                |                                  | It does not invoke $ETRAP or $ZTRAP.                                                                    |
 +----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
 | 2              | Error                            | XECUTEs $ETRAP or $ZTRAP and terminates the process                                                     |
 +----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
-| 3              | Information (success & error)    | Displays the associated message and continues execution. It does not invoke $ETRAP or $ZTRAP.           |
+| 3              | Information (success & error)    | Displays the associated message on STDERR (of the ydb process) and continues execution.                 |
+|                |                                  | It does not invoke $ETRAP or $ZTRAP.                                                                    |
 +----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
 | 4              | Severe/Fatal                     | Displays the associated message and terminates the process.                                             |
 +----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
@@ -3684,6 +3688,10 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 | MNEMONICS      | DESCRIPTION                                                                                                                          |
 +================+======================================================================================================================================+
+|  AFRA          | # of waits for instance freeze to release critical sections                                                                          |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  BREA          | # of waits for block read and decryption                                                                                             |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  BTD           | # of database Block Transitions to Dirty                                                                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  BTS           | # of times a dirty buffer was flushed so a BT could be reused                                                                        |
@@ -3695,7 +3703,7 @@ If G occurs in the list, the statistics are displayed in the following order in 
 |  CFE           | Critical section Failed (blocked) acquisition total caused by Epochs. It is incremented a single time for each observed              |
 |                | instance of contention.                                                                                                              |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  CFS           | Critical section Failed (blocked) acquisition sum of Squares                                                                         |
+|  CFS           | Square of CFT.                                                                                                                       |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  CFT           | Critical section Failed (blocked) acquisition Total. It is incremented a single time for each observed instance of contention.       |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3710,6 +3718,8 @@ If G occurs in the list, the statistics are displayed in the following order in 
 |  CYT           | This mnemonic is not maintained and contains zeros.                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  DEX           | # of Database file EXtentions                                                                                                        |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  DEXA          | # of waits for database extension                                                                                                    |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  DFL           | # of Database FLushes of the entire set of dirty global buffers in shared memory to disk                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3733,6 +3743,8 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  GET           | # of GET operations (TP and non-TP)                                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  GLB           | # of waits for bg access critical section                                                                                            |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  JBB           | # of Journal Buffer Bytes updated in shared memory                                                                                   |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  JEX           | # of Journal file EXtentions                                                                                                         |
@@ -3747,6 +3759,10 @@ If G occurs in the list, the statistics are displayed in the following order in 
 |  JFS           | # of Journal FSync operations on the journal file. For example: when writing an epoch record, switching a journal file etc.          |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  JFW           | # of Journal File Write system calls                                                                                                 |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  JNL           | # of waits for journal access critical section                                                                                       |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  JOPA          | # of waits for journal open critical section                                                                                         |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  JRE           | # of Journal Regular Epoch records written to the journal file (only seen in a -detail journal extract).                             |
 |                | These are written every time an epoch-interval boundary is crossed while processing updates.                                         |
@@ -3768,6 +3784,10 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  LKS           | # of LocK calls (mapped to this db) that Succeeded                                                                                   |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  MLBA          | # of waits for blocked LOCK                                                                                                          |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  MLK           | # of waits for LOCK access                                                                                                           |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  NBR           | # of Non-tp committed transaction induced Block Reads on this database                                                               |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  NBW           | # of Non-tp committed transaction induced Block Writes on this database                                                              |
@@ -3785,6 +3805,8 @@ If G occurs in the list, the statistics are displayed in the following order in 
 |  NTW           | # of Non-tp committed Transactions that were read-Write on this database                                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  ORD           | # of $ORDer(,1) (forward) operations (TP and non-TP); the count of $Order(,-1) operations are reported under ZPR.                    |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  PRC           | # of waits for exit                                                                                                                   |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  QRY           | # of $QueRY() operations (TP and non-TP)                                                                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3816,11 +3838,17 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  TRB           | # of Tp read-only or read-write transactions Rolled Back (excluding incremental rollbacks)                                           |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  TRGA          | # of mini-transaction completion                                                                                                     |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  TRX           | # of waits for transaction in progress                                                                                               |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  TTR           | # of Tp committed Transactions that were Read-only on this database                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  TTW           | # of Tp committed Transactions that were read-Write on this database                                                                 |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  WFR           | # of times a process slept while waiting for another process to read in a database block                                             |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  ZAD           | # of waits for region freeze off                                                                                                     |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  ZPR           | # of $order(,-1) or $ZPRevious() (reverse order) operations (TP and non-TP).                                                         |
 |                | The count of $Order(,1) operations are reported under ORD.                                                                           |

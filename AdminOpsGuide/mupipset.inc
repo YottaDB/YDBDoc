@@ -44,11 +44,11 @@ The format of the SET command is:
     -SPIN_SLEEP_M[ASK]=hex_mask
     -STAN[DALONENOT]
     -[NO]STAT[S]
-    -NO]STD[NULLCOLL]
+    -[NO]STD[NULLCOLL]
     -T[RIGGER_FLUSH]=integer
     -V[ERSION]={V4|V6}
     -W[AIT_DISK]=integer
-    -WR[ITES_PER_FLUSH=integer
+    -WR[ITES_PER_FLUSH]=integer
 
 
 * Exclusive access to the database is required if the MUPIP SET command specifies ACCESS_METHOD, GLOBAL_BUFFERS, LOCK_SPACE or NOJOURNAL, or if any of the JOURNAL options ENABLE, DISABLE, or BUFFER_SIZE are specified.
@@ -226,6 +226,8 @@ Determines whether YottaDB writes bytes in the database or filesystem block past
 * When FULLBLKWRT=0, a process writes only the actual database records when writing to the filesystem. This is the default, and is appropriate for most situations. Evaluate all three values when you need to maximize throughput.
 
 YottaDB ignores FULLBLKWRT for MM databases. Since MM databases are mapped to virtual memory, YottaDB has no control over actual database writes.
+
+FULLBLKWRT was added to YottaDB effective release r1.36.
 
 ^^^^^^^^^^^^^^^^
 -GLOBAL_BUFFERS

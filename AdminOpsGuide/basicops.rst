@@ -297,13 +297,14 @@ If you intend to use Database Encryption, set the ydb_passwd and ydb_crypt_confi
     ydb -run <entryref> to start executing at an entryref
     ydb -help / ydb -h / ydb -? to display this text
 
+
 .. _env-vars:
 
 ------------------------
  Environment Variables
 ------------------------
 
-(Last updated: `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_)
+(Last updated: r1.36)
 
 YottaDB supports both ydb_* environment variables and gtm* environment variables. If the ydb* environment variable is not defined, but the gtm* environment variable is defined, the ydb* environment variable is also defined to have the same value as the gtm* environment variable the first time the gtm* environment variable is read. If the ydb* environment variable and the gtm* environment variable are both defined, the ydb* environment variable value takes precedence.
 
@@ -372,7 +373,13 @@ ydb_badchar
 ++++++++++++++++
 ydb_baktmpdir
 ++++++++++++++++
-**ydb_baktmpdir (gtm_baktmpdir)** specifies the directory where mupip backup creates temporary files. If $ydb_baktmpdir is not defined, YottaDB currently uses the deprecated $GTM_BAKTMPDIR environment variable if defined, and otherwise uses /tmp. All processes performing updates during an online IBACKUP must have the use the same directory and have write access to it.
+**ydb_baktmpdir (gtm_baktmpdir)** specifies the directory where MUPIP BACKUP creates temporary files. If $ydb_baktmpdir is not defined, YottaDB uses the deprecated $GTM_BAKTMPDIR environment variable if defined, and otherwise the temporary files are created as follows:
+
+  * MUPIP BACKUP DATABASE uses the directory of the backup destination for creating temporary files.
+
+  * MUPIP BACKUP BYTESTREAM uses /tmp
+
+All processes performing updates during an online IBACKUP must use the same directory and have write access to it.
 
 .. _ydb-boolean-env-var:
 
@@ -864,7 +871,7 @@ ydb_side_effects
 +++++++++++++++++
 ydb_snaptmpdir
 +++++++++++++++++
-**ydb_snaptmpdir (gtm_snaptmpdir)** specifies the location to place the temporary "snapshot" file created by facilities such as on-line mupip integ. If $ydb_snaptmpdir is not defined, YottaDB uses the $ydb_baktmpdir environment variable if defined, and otherwise uses the current working directory. All processes performing updates during an online INTEG must use the same directory and have write access to it.
+**ydb_snaptmpdir (gtm_snaptmpdir)** specifies the location to place the temporary "snapshot" file created by facilities such as MUPIP INTEG ONLINE. If $ydb_snaptmpdir is not defined, YottaDB uses the deprecated $GTM_BAKTMPDIR environment variable if defined, and otherwise uses the current working directory. All processes performing updates during an online INTEG must use the same directory and have write access to it.
 
 ++++++++++++++++++++++++
 ydb_string_pool_limit
@@ -879,7 +886,7 @@ ydb_statsdir
 ++++++++++++++++
 ydb_statshare
 ++++++++++++++++
-**ydb_statshare (gtm_statshare)** specifies an initial value for the characteristic controlled by VIEW "[NO]STATSHARE" in application code. A value of 1, or any case-independent string or leading substrings of "TRUE" or "YES" in the environment variable ydb_statshare provides the equivalent of VIEW "STATSHARE" as the initial value. Leaving the ydb_statshare undefined or defined to another value, typically 0, "FALSE" or "NO" provides the equivalent of VIEW "NOSTATSHARE" as the initial value.
+**ydb_statshare (gtm_statshare)** specifies an initial value for the `VIEW "[NO]STATSHARE" <../ProgrammersGuide/commands.html#view-nostatshare>`_ setting.
 
 +++++++++++++++
 ydb_stdxkill
@@ -1001,7 +1008,7 @@ The ydb_env_set and gtmcshrc scripts sets the following environment variables. Y
 +------------------------------------------------+--------------------------------------------------------+
 | ydb_icu_version                                | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
-| ydb_log*                                       | ydb_env_set                                            |
+| ydb_log                                        | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+
 | ydb_prompt                                     | ydb_env_set                                            |
 +------------------------------------------------+--------------------------------------------------------+

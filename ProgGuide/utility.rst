@@ -901,7 +901,7 @@ The subscript first received by STDIN^%JSWRITE singlesub denotes the start of th
    [{"firstname":"John","lastname":"Doe"},
    {"firstname":"Jane","lastname":"Doe"}]
 
-%JSWRITE is added to YottaDB effective release r1.36.
+%JSWRITE was added to YottaDB effective release r1.36.
 
 .. _lcase-util:
 

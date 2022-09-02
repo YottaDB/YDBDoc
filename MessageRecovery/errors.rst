@@ -331,6 +331,18 @@ Run Time Error: When YottaDB recognizes that the expr in ICHSET=expr or OCHSET=e
 
 Action: Choose the proper designation for a supported character set.
 
+-----------------
+BADCONNECTPARAM
+-----------------
+
+BADCONNECTPARAM, Error parsing or invalid parameter. [XXXX]
+
+MUPIP Error: MUPIP produces this message when there is an error in any connection parameter specified with -CONNECTPARAMS. XXXX contains a brief description of the parameter and its valid value range.
+
+Action: Specify valid values for the -CONNECTPARAM parameter. Refer to the `-CONNECTPARAM documentation <../AdminOpsGuide/dbrepl.html#connectparams>`_ in the Administration and Operations Guide for more information.
+
+BADCONNECTPARAM was added to YottaDB effective release r1.36.
+
 --------
 BADDBVER
 --------
@@ -391,6 +403,18 @@ Run Time Error: YottaDB detected a LOCK (or ZALLOCATE) argument using an extrins
 
 Action: Revise the code to avoid such a construct. Note that YottaDB recommends avoiding this code pattern as it can produce unintended results that YottaDB does not detect.
 
+---------------
+BADPARAMCOUNT
+---------------
+
+BADPARAMCOUNT, -CONNECTPARAMS accepts one to six parameter values
+
+MUPIP Error: MUPIP produces this message when there are more than six parameters specified for -CONNECTPARAMS.
+
+Action: Specify one to six parameters or omit -CONNECTPARAMS from the MUPIP REPLICATE -SOURCE -START command to use the default connection parameters.
+
+BADPARAMCOUNT was added to YottaDB effective release r1.36.
+
 -------
 BADQUAL
 -------
@@ -400,7 +424,6 @@ BADQUAL, Unrecognized qualifier: xxxx
 Run Time Error: This indicates that a SET of $ZROUTINES specified xxxx, which is an unknown qualifier.
 
 Action: Use an accepted qualifier: SRC= or NOSRC.
-
 
 ---------
 BADREGION
@@ -2351,6 +2374,8 @@ All YottaDB Components Error: Database file ffff was opened read-only with permi
 
 Action: Use the error and any follow-on messages to assess whether or not the read-only status is correct or the rejection is appropriate.
 
+DBFILERDONLY was added to YottaDB effective release r1.36.
+
 ---------------------
 DBFILERR
 ---------------------
@@ -2380,6 +2405,8 @@ DBFILNOFULLWRT, Disabling fullblock writes. iiii tttt: bbbb
 MUPIP Warning: Indicates full block writes were not successfully enabled. iiii describes the issue, tttt describes the type and bbbb is a block size.
 
 Action: Consider planning to choose a blocksize better aligned with the file system blocksize at the next opportunity.
+
+DBFILNOFULLWRT was added to YottaDB effective release r1.36.
 
 ----------------------
 DBFILOPERR
@@ -4065,6 +4092,8 @@ EXITSTATUS, Unexpected process exit (xxxx), exit status aaaa -- called from modu
 Run Time Error: Indicates a non-zero exit status aaaa returned from a process started in the context of xxxx. The following are common values (other values are possible depending on the script called) and descriptions for the exit status: 1-"Catchall for general errors", 2-"Misuse of shell builtins", 126-"Command invoked cannot execute", 127-"Command not found", 128-"Invalid argument to exit" and 130-"Script terminated by Control-C".
 
 Action: Use the exit status aaaa to adjust the script causing the unexpected exit.
+
+EXITSTATUS was added to YottaDB effective release r1.36.
 
 -----------------------
 EXPR
@@ -11468,6 +11497,18 @@ MUPIP Error: This indicates a problem with the semaphore xxxx associated with th
 
 Action: Review the accompanying message(s) for details.
 
+-----------
+REPLALERT
+-----------
+
+REPLALERT, Source Server could not connect to replicating instance [XXXX] for [NNNN] seconds
+
+MUPIP Warning: The Source Server records this warning message when the Source Server fails to establish a replication connection with the secondary instance [XXXX] for [NNNN] seconds. The frequency of recording this warning message can be adjusted with the soft connection attempt period (the third -CONNECTPARAM).
+
+Action: Use the REPLALERT message as an mechanism to alert operations about replication network issues. Specify 0 as the REPLALERT period parameter (the third -CONNECTPARAM) to disable logging this message. The REPLALERT messages are disabled by default (that is, without specifying -CONNECTPARAM).
+
+REPLALERT was added to YottaDB effective release r1.36.
+
 ---------------------
 REPLBRKNTRANS
 ---------------------
@@ -13770,7 +13811,7 @@ Run Time Error: This indicates that the terminal serving as the PRINCIPAL device
 
 Action: When a process receives this error it must avoid any further READs from, or WRITEs to $PRINCIPAL, typically shutting down in a wholesome fashion. Failure to do so causes YottaDB to terminate the process with a NOPRINCIO message to the operator log.
 
-TERMHANGUP was added effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
+TERMHANGUP was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
 
 -------------------
 TERMWRITE

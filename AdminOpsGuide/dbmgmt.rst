@@ -896,13 +896,19 @@ This command unfreezes the DEFAULT region even if the freeze was set by a proces
 FTOK
 +++++++++
 
-Produces the "public" (system generated) IPC Keys (essentially hash values) of a given file.
+Produces the "public" (system generated) IPC Keys (essentially hash values) of a given file-list or the journal/receiver pool in a table form.
 
 The format of the MUPIP FTOK command is:
 
 .. code-block:: none
 
-   FT[OK] [-DB] [-JNLPOOL] [-RECVPOOL] file-name
+   FT[OK] [-DB] [-JNLPOOL] [-RECVPOOL] [-ID] [-ONLY] [-[NO]HEADER] file-name
+
+where,
+
+* file-list a space delimited list of files, such as that provided by the use of the * and ? shell wildcard characters.
+
+* With -JNLPOOL or -RECVPOOL, MUPIP FTOK ignores any files in the list.
 
 ~~~
 -DB
@@ -921,6 +927,50 @@ Specifies that the reported key is for the Journal Pool of the instance created 
 ~~~~~~~~~
 
 Specifies that the reported key is for the Receive Pool of the instance created by the current Global Directory.
+
+~~~~~
+-ID
+~~~~~
+
+Specified the signature use for the FTOK; if unspecified, it defaults to the signature for a YottaDB database file.
+
+ID qualifier was added to YottaDB effective release r1.36.
+
+~~~~~~~
+-ONLY
+~~~~~~~
+
+Restricts the output to only the FTOK key; if a file is not valid and accessible, FTOK reports -1 values. ONLY does not report the table header even when HEADER is specified. If the database file is unavailable, the utility defaults to the ONLY behavior.
+
+ONLY qualifier was added to YottaDB effective release r1.36.
+
+~~~~~~~~~
+-HEADER
+~~~~~~~~~
+
+Displays or omits the header of the table. By default, MUPIP FTOK displays the header.
+
+Example:
+
+.. code-block:: none
+
+   $ mupip ftok -id mumps.dat
+		  File ::            Semaphore Id ::        Shared Memory Id ::                FTOK Key ::                             FileId
+   -------------------------------------------------------------------------------------------------------------------------------------------
+              mumps.dat :: 1044382209 [0x3e400201] ::  613417274 [0x2490013a] ::  725039842 [0x2b373ae2] :: 0x00000000000e09818000002900000001
+
+   $ mupip ftok -id -only mumps.dat
+	      mumps.dat  ::   725039842  [ 0x2b373ae2 ]
+   $ mupip ftok -id -noheader mumps.dat
+              mumps.dat :: 1044382209 [0x3e400201] ::  613417274 [0x2490013a] ::  725039842 [0x2b373ae2] :: 0x00000000000e09818000002900000001
+
+   $ mupip ftok -jnlpool
+                   File ::            Semaphore Id ::        Shared Memory Id ::                FTOK Key ::                             FileId
+   -------------------------------------------------------------------------------------------------------------------------------------------
+             multi.repl ::         -1 [0xffffffff] ::         -1 [0xffffffff] ::  743218009 [0x2c4c9b59] :: 0x00000000000e09838000002900000001
+                jnlpool ::  636486196 [0x25f00234] ::  578814256 [0x22800130]
+
+HEADER qualifier was added to YottaDB effective release r1.36.
 
 +++++++++++++++
 HASH
@@ -1994,6 +2044,20 @@ When MUPIP RUNDOWN has no qualifier, it performs rundown on all inactive databas
 Cleans up orphaned Relinkctl files. YottaDB strongly recommends avoiding actions that tend to make such cleanup necessary - for example, :code:`kill -9` of YottaDB processes or :code:`ipcrm -m` of active Relinkctl and/or Rtnobj shared memory segments.
 
 If the optional dir1 is not specified, MUPIP RUNDOWN RELINKCTL examines the environment variable $ydb_routines, attempts to verify and correct their attach counts and runs down all its inactive auto-relink-enabled directories (those with with a \*-suffix). Alternatively, one can specify a directory path for the parameter dir1 and MUPIP RUNDOWN RELINKCTL treats it as an auto-relink-enabled directory and runs down the resources associated with this directory. It prints a RLNKCTLRNDWNSUC message on a successful rundown and a RLNKCTLRNDWNFL message on a failure (usually because live processes are still accessing the Relinkctl file).
+
++++++++++++
+SEMAPHORE
++++++++++++
+
+Reports the details of a space delimited list of semaphore IDs.
+
+The format of the MUPIP SEMAPHORE command is:
+
+.. code-block:: none
+
+   MUPIP SEMAPHORE <sem-ids-list>
+
+SEMAPHORE command was added to YottaDB effective release r1.36.
 
 .. _mupip-set:
 

@@ -1656,7 +1656,7 @@ In an A→B replication configuration, follow these steps:
 
 On A:
 
-* Shut down the Source Server with an appropriate timeout. The timeout should be long enough to replicate pending transactions to the replicating instance but not so long so as to cause clients to conclude that the application is not available. The YottaDB default Source Server wait period is up to 120 seconds. In most cases, the default wait period is sufficient.
+* Shut down the Source Server with an appropriate timeout. The timeout should be long enough to replicate pending transactions to the replicating instance but not so long so as to cause clients to conclude that the application is not available. The YottaDB default Source Server wait period is 30 seconds.
 
 On B:
 
@@ -3470,7 +3470,7 @@ If an instance file already exists, YottaDB renames it with a timestamp suffix, 
 -name
 ^^^^^
 
-Specifies the instance name that uniquely identifies the instance and is immutable. The instance name can be from 1 to 16 characters. YottaDB takes the instance name (not the same as instance file name) from the environment variable ydb_repl_instname. If ydb_repl_instname is not set and -name is not specified, YottaDB produces an error.
+Specifies the instance name that uniquely identifies the instance and is immutable. The instance name can be from 1 to 16 characters. YottaDB takes the instance name (not the same as instance file name) from the environment variable ydb_repl_instname. If ydb_repl_instname is not set and -name is not specified, YottaDB produces an error. For more information, refer to the entries for ydb_repl_instname and ydb_repl_instance in :ref:`Environement Variables <env-vars>`.
 
 ^^^^^^^^^^
 -noreplace
@@ -3629,26 +3629,51 @@ This command sets the value of the field having the specified offset and size to
 Starting the Source Server
 +++++++++++++++++++++++++++++++++++
 
+The MUPIP REPLICATE SOURCE START command starts a Source Server process. The general syntax for starting a Source Server in active mode is:
+
 Command Syntax:
 
 .. code-block:: bash
 
    mupip replicate -source -start
-   {-secondary=<hostname:port>|-passive}
-   [-buffsize=<Journal Pool size in bytes>]
-   [-filter=<filter command>]
+   [connection_qualifiers]
+   [instance_freeze_qualifiers]
+   [jnlpool_setup_qualifiers]
+   log_file_management_qualifiers
+   [primary_role_qualifiers]
+   secondary_identification_qualifiers
+   [tls_replication_qualifiers]
+   [replication_filter_qualifier]
+
    [-freeze[=on|off] -[no]comment[='"<string>"']
-   [-connectparams=<hard tries>,<hard tries period>,
-    <soft tries period>, <alert time>, <heartbeat period>,
-    <max heartbeat wait>]
-   -instsecondary=<replicating instance name>
-   [-[no]jnlf[ileonly]]
-   -log=<log file name> [-log_interval=<integer>]
-   {-rootprimary|-propagateprimary} [{-updok|-updnotok}]
-   [-cmplvl=<compression level>]
-   [-tlsid=<label>]
-   [-[no]plaintextfallback]
-   [-renegotiate_interval=<minutes>]
+
+
+The square brackets [] denote an optional qualifier group. The optional and mandatory qualifiers in each qualifier group are as follows:
+
++---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
+| Category                        | Qualifiers                                                                                                                         |
++=================================+====================================================================================================================================+
+| :ref:`connection-qs`            | * [-cmplvl=n]                                                                                                                      |
+|                                 | * [-connectparams=<hard_tries>, <hard_tries_period>, <soft_tries_period>, <alert_time>, <heartbeat_period>, <max_heartbeat_wait>]  |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`jnlpool-setup-qs`         | * [-buffsize=<Journal Pool size in bytes>]                                                                                         |
+|                                 | * [-[no]jnlfileonly]                                                                                                               |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`logfile-mgmt-qs`          | * -log=<log file name>                                                                                                             |
+|                                 | * [-log_interval=<integer>]                                                                                                        |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`primary-role-qs`          | * {-rootprimary|-propagateprimary}                                                                                                 |
+|                                 | * [{-updok|-updnotok}]                                                                                                             |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`replication-filter-qs`    | * -filter=<filter command>                                                                                                         |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`secondary-id-qs`          | * -instsecondary=<secondary_instance_name>                                                                                         |
+|                                 | * -secondary=<hostname:port>                                                                                                       |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`tls-replication-qs`       | * [-[no]plaintextfallback]                                                                                                         |
+|                                 | * [-renegotiate_interval=<minutes>]                                                                                                |
+|                                 | * -tlsid=<label>                                                                                                                   |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
 
 ~~~~~~~~~~~
 Qualifiers:
@@ -3666,14 +3691,6 @@ Identifies the Source Server.
 
 Starts the Source Server.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^
--secondary=<hostname:port>
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Identifies the replicating instance. <hostname:port> specifies an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a hostname that resolves to an IPv4 or IPv6 address and the port at which the Receiver Server is waiting for a connection.
-
-If, in your environment, the same hostname is used for both IPv4 and IPv6, YottaDB defaults to IPv6. If you wish to use IPv4, set the environment variable ydb_ipv4_only to "TRUE", "YES", or a non-zero integer in order to force YottaDB to use IPv4.
-
 ^^^^^^^^
 -passive
 ^^^^^^^^
@@ -3686,33 +3703,162 @@ Each replicated instance requires a :ref:`Journal Pool <repl-architecture>` to b
 
    One and only one of PASSIVE or SECONDARY must be specified with START.
 
-^^^^^^^^^^^^^^^^^^^^
--log=<log file name>
-^^^^^^^^^^^^^^^^^^^^
-
-Specifies the location of the log file. The Source Server logs its unsuccessful connection attempts starting frequently and slowing to approximately once every five minutes. This interval does not affect the rate of connection attempts. The Source Server also directs errors to the log file. Operators should check the Source Server log file for errors.
+.. _connection-qs:
 
 ^^^^^^^^^^^^^^^^^^^^^^^
--log_interval=<integer>
+Connection Qualifiers
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Specifies the number of transactions for which the Source Server should wait before writing to the log file. The default logging interval is 1000 transactions.
+*********
+-cmplvl=n
+*********
 
-^^^^^^^^^^^^^^^
--log_interval=0
-^^^^^^^^^^^^^^^
+Specifies the desired compression level for the replication stream. n is a positive integer value indicating the level of compression desired. Level 0 offers no compression. Level 1 offers the least compression while Level 9 (as of version 1.2.3.3 of the zlib library) offers the most compression (at the cost of the most CPU usage). Specifying -cmplvl without an accompanying -start produces an error. For the Source Server, if N specifies any value outside of the range accepted by the zlib library or if -cmplvl is not specified, the compression level defaults to zero (0). For the Receiver Server, as long as N is non-zero, the decompression feature is enabled; since the Source Server setting determines the actual level, any legal non-zero value enables compressed operation at the receiver.
 
-Sets the logging interval to the default value.
+Alternatively, the environment variable ydb_zlib_cmp_level can specify the desired compression level (in the same value range as N above) and the source server can then be started without -cmplvl. This has the same effect as starting it with -cmplvl specified. An explicitly specified value on the command line overrides any value specified by the environment variable.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Whenever the source and receiver server connect with each other, if the source server was started with a valid non-zero compression level, they first determine whether the receiver server is running a version of YottaDB which handles compressed records and has been started with a non-zero compression level. Only if this is true, do they agree to use compressed journal records. They also verify with a test message that compression/decompression works correctly before sending any compressed journal data across. They automatically fall back to the uncompressed mode of transmission if this test fails or if, at any point, either side detects that compression or decompression has failed. That is, any runtime error in the compression/decompression logic results in uncompressed replication (thereby reducing replication throughput) but never jeopardizes the functional health of replication.
+
+The Source and Receiver Servers log all compression related events and/or messages in their respective logs. The source server also logs the length of the compressed data (in addition to the uncompressed data length) in its logfile.
+
+.. note::
+   If you plan to use the optional compression facility for replication, you must provide the compression library. The YottaDB interface for compression libraries uses the zlib compression libraries without any need for adaptation. These libraries are included in all or most Linux distributions and are downloadable from the zlib home page. If you prefer to use other compression libraries, you need to configure or adapt them to provide the same API provided by zlib. Although YottaDB uses zlib, zlib is not YottaDB software. If YottaDB fails to find the libz.so file the replication logic logs a DLLNOOPEN error and continues with no compression.
+
+.. _connectparams:
+
+**************************************************************************************************************************
+-connectparams=<hard tries>,<hard tries period>,<soft tries period>,<alert time>,<heartbeat period>,<max heartbeat wait>
+**************************************************************************************************************************
+
+Specifies the connection retry parameters.
+
+All six values need to be specified to use this option. If one or more of the values are not specified it will result in an error. Following are the default values that should be used if any of the values are not being supplied:
+
+ * hard tries : 5
+ * hard tries period : 500 msec
+ * soft tries period : 5 sec
+ * alert time : 0 sec
+ * heartbeat period : 15 sec
+ * max heartbeat wait : 60 sec
+
+If the connection between the Source and Receiver Servers is broken or the Source Server fails to connect to the Receiver Server at startup, the Source Server applies these parameters to the reconnection attempts.
+
+First, the Source Server makes the number of reconnection attempts specified by the <hard tries> value every <hard tries period> milliseconds. Then, the Source Server attempts reconnection every <soft tries period> seconds and logs an alert message every <alert time> seconds. If the specified <alert time> value is less than <soft tries period>, it is set to the larger value i.e., <soft tries period>. If the specified <max heartbeat wait> value is less than <heartbeat period>, it is set to the larger value i.e., <heartbeat period>. The Source Server sends a heartbeat message to the Receiver Server every <heartbeat period> seconds and expects a response back from the Receiver Server within <max heartbeat wait> seconds.
+
+The only difference between hard and soft connection attempts is their interval duration measurement units (milliseconds vs. seconds) and the association of the REPLALERT message with failed soft connection attempts.
+
+The presence of the REPLALERT message in the Source Server log file can be used with a monitoring tool to alert the operator about an unaccessible Receiver Server.
+
+Specifying 0 for <alert time> disables the REPLALERT messages. By default, REPLAERT messages are disabled. Specifying 0 for <hard tries> disables making hard connection attempts which is useful in a situation where the early of logging of the REPLALERT messages is relevant.
+
+.. _jnlpool-setup-qs:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Journal Pool Setup Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+****************************************
 -buffsize=<Journal Pool size in bytes>
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+****************************************
 
 Specifies the size of the Journal Pool. The server rounds the size up or down to suit its needs. Any size less than 1 MiB is rounded up to 1 MiB. If you do not specify a qualifier, the size defaults to the YottaDB default value of 64 MiB. Remember that you cannot exceed the system-provided maximum shared memory. For systems with high update rates, specify a larger buffer size to avoid the overflows and file I/O that occur when the Source Server reads journal records from journal files. The maximum value is 68719476736 (64GiB). MUPIP REPLICATE SOURCE ignores BUFFSIZE if the Journal Pool is already set up. The first Source Server process started on an instance sets up the Journal Pool.
 
-^^^^^^^^^^^^^^^^^^^^^^^^
+******************
+-[no]jnlfileonly
+******************
+
+Forces the Source Server to read transactions from journal files instead of journal pool shared memory. When combined with the SYNC_IO journal option, this feature delays replication of transactions until their journal records are hardened to disk. This may be useful when replicating to a supplementary instance, as a crash and rollback on the primary could otherwise necessitate a rollback of local updates on the receiving instance. The default is -NOJNLFILEONLY.
+
+.. _logfile-mgmt-qs:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Log File Management Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**********************
+-log=<log file name>
+**********************
+
+Specifies the location of the log file. The Source Server logs its unsuccessful connection attempts starting frequently and slowing to approximately once every five minutes. This interval does not affect the rate of connection attempts. The Source Server also directs errors to the log file. Operators should check the Source Server log file for errors.
+
+*************************
+-log_interval=<integer>
+*************************
+
+Specifies the number of transactions for which the Source Server should wait before writing to the log file. The default logging interval is 1000 transactions.
+
+-log_interval=0 sets the logging interval to the default value.
+
+.. _primary-role-qs:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^
+Primary Role Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+*********************
+-propagate[primary]
+*********************
+
+Use this optional qualifier to assign the current instance as a propagating instance. Specifying -propagateprimary disables updates on the current instance. We recommend :code:`-updnotok` in new scripting for clarity, in preference to :code:`-propagateprimary`.
+
+Note that it is not possible to transition an originating instance to a propagating instance without bringing down the Journal Pool. However, it is possible to transition a propagating instance to an originating instance without bringing down the Journal Pool for an already running passive Source Server (start one with -propagateprimary if none is running).
+
+Either -rootprimary or -propagateprimary are optional and mutually exclusive. However, YottaDB recommends you to specify both -rootprimary and -propagateprimary explicitly in scripting, for clarity.
+
+Example:
+
+.. code-block:: bash
+
+   $ mupip replicate -source -activate -rootprimary
+
+This command transitions a propagating instance to an originating instance without bringing down the Journal Pool.
+
+With neither -rootprimary nor -propagateprimary specified, YottaDB uses a default value of -propagateprimary for the passive Source Server startup command (mupip replic -source -start -passive) and the deactivate qualifier (mupip replicate -source -deactivate). YottaDB uses a default value of -rootprimary for the mupip replicate -source -start -secondary=... and the mupip replic -source -activate commands. These default values make the replication script simpler for users who are planning to limit themselves to one originating instance and multiple replicating instances (without any further replicating instances downstream).
+
+.. code-block:: bash
+
+   $ export ydb_repl_instance=multisite.repl
+   $ mupip set -journal="enable,before,on" -replication=on -region "*"
+   $ mupip replicate -instance_create -name=America
+   $ mupip replicate -source -start -buffsize=$jnlpool_size -secondary=localhost:1234 -log=A2B.log -instsecondary=Brazil
+
+This example starts the Source Server at port 1234 for the replicating instance Brazil. The Source Server creates a Journal Pool. A YottaDB Process writes the updated journal records to the Journal Pool. Then, the Source Server process transports each record from the Journal Pool to Brazil via a TCP/IP connection.
+
+.. note::
+   Before starting replication, always remember to rundown every replicated database region then start the Source Server.
+
+.. note::
+   YottaDB updates to replicated regions are permitted only on the originating instance and disabled on ALL other replicating instances.
+
+The Source Server records actions and errors in A2B.log. It also periodically records statistics such as the current backlog, the number of journal records sent since the last log, the rate of transmission, the starting and current JNL_SEQNO, and the path of the filter program, if any.
+
+**************
+-rootprimary
+**************
+
+Assign the current instance as the originating instance. You can specify -rootprimary either explicitly or implicitly to start an instance as an originating instance. We recommend :code:`-updok` in new scripting for clarity, in preference to :code:`-rootprimary`.
+
+********
+-updok
+********
+
+Instructs the Source Server to allow local updates on this instance. This is a synonym for -rootprimary but is named so that it better conveys its purpose.
+
+***********
+-updnotok
+***********
+
+Instructs the Source Server not to allow local updates on this instance. This is a synonym for -propagateprimary but is named so that it better conveys its purpose.
+
+.. _replication-filter-qs:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Replication Filter Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**************************
 -filter=<filter command>
-^^^^^^^^^^^^^^^^^^^^^^^^
+**************************
 
 Specifies the complete path of the filter program and any associated arguments. If you specify arguments, then enclose the command string in quotation marks. If a filter is active, the Source Server passes the entire output stream to the filter as input. Then, the output from the filter stream passes to the replicating instance. If the filter program is an M program with entry-ref OLD2NEW^FILTER, specify the following path:
 
@@ -3777,44 +3923,15 @@ Example:
 
 This example reads logical database updates associated with a transaction from STDIN and writes them to log.out and STDOUT just like the UNIX tee command. It runs on the latest version of YottaDB where it is no longer required to treat filter output as a transaction.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--freeze[=on|off] -[no]comment[='"<string>"']
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. _secondary-id-qs:
 
-Promptly sets or clears an Instance Freeze on an instance irrespective of whether a region is enabled for an Instance Freeze. -freeze with no arguments displays the current state of the Instance Freeze on the instance.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Secondary Identification Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
--[no]comment[='"<string>"']
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Allows specifying a comment/reason associated with an Instance Freeze. Specify -nocomment if you do not wish to specify a comment/reason.
-
-For more information on enabling a region to invoke an Instance Freeze on custom errors, refer to the -INST_FREEZE_ON_ERROR section of “SET”.
-
-For more information on Instance Freeze, refer to :ref:`instance-freeze`.
-
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--connectparams=<hard tries>,<hard tries period>,<soft tries period>,<alert time>,<heartbeat period>,<max heartbeat wait>
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Specifies the connection retry parameters.
-
-All six values need to be specified to use this option. If one or more of the values are not specified it will result in an error. Following are the default values that should be used if any of the values are not being supplied:
-
- * hard tries : 5
- * hard tries period : 500 msec
- * soft tries period : 5 sec
- * alert time : 30 sec
- * heartbeat period : 15 sec
- * max heartbeat wait : 60 sec
-
-If the connection between the Source and Receiver Servers is broken or the Source Server fails to connect to the Receiver Server at startup, the Source Server applies these parameters to the reconnection attempts.
-
-First, the Source Server makes the number of reconnection attempts specified by the <hard tries> value every <hard tries period> milliseconds. Then, the Source Server attempts reconnection every <soft tries period> seconds and logs an alert message every <alert time> seconds. If the specified <alert time> value is less than <soft tries period>, it is set to the larger value i.e., <soft tries period>. If the specified <max heartbeat wait> value is less than <heartbeat period>, it is set to the larger value i.e., <heartbeat period>. The Source Server sends a heartbeat message to the Receiver Server every <heartbeat period> seconds and expects a response back from the Receiver Server within <max heartbeat wait> seconds.
-
-^^^^^^^^^^^^^^
+****************
 -instsecondary
-^^^^^^^^^^^^^^
+****************
 
 Identifies the replicating instance to which the Source Server replicates data.
 
@@ -3834,101 +3951,35 @@ Example:
 
 This command starts the Source Server for the originating instance with instance B as its replicating instance.
 
-^^^^^^^^^^^^^^^^
--[no]jnlfileonly
-^^^^^^^^^^^^^^^^
+****************************
+-secondary=<hostname:port>
+****************************
 
-Forces the Source Server to read transactions from journal files instead of journal pool shared memory. When combined with the SYNC_IO journal option, this feature delays replication of transactions until their journal records are hardened to disk. This may be useful when replicating to a supplementary instance, as a crash and rollback on the primary could otherwise necessitate a rollback of local updates on the receiving instance. The default is -NOJNLFILEONLY.
+Identifies the replicating instance. <hostname:port> specifies an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a hostname that resolves to an IPv4 or IPv6 address and the port at which the Receiver Server is waiting for a connection.
 
-^^^^^^^^^^^^
--rootprimary
-^^^^^^^^^^^^
+If, in your environment, the same hostname is used for both IPv4 and IPv6, YottaDB defaults to IPv6. If you wish to use IPv4, set the environment variable ydb_ipv4_only to "TRUE", "YES", or a non-zero integer in order to force YottaDB to use IPv4.
 
-Assign the current instance as the originating instance. You can specify -rootprimary either explicitly or implicitly to start an instance as an originating instance.
+.. _tls-replication-qs:
 
-^^^^^^
--updok
-^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TLS Replication Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Instructs the Source Server to allow local updates on this instance. This is a synonym for -rootprimary but is named so that it better conveys its purpose.
-
-^^^^^^^^^^^^^^^^^^^
--propagate[primary]
-^^^^^^^^^^^^^^^^^^^
-
-Use this optional qualifier to assign the current instance as a propagating instance. Specifying -propagateprimary disables updates on the current instance.
-
-Note that it is not possible to transition an originating instance to a propagating instance without bringing down the Journal Pool. However, it is possible to transition a propagating instance to an originating instance without bringing down the Journal Pool for an already running passive Source Server (start one with -propagateprimary if none is running).
-
-Both -rootprimary and -propagateprimary are optional and mutually exclusive. However, YottaDB recommends you to specify both -rootprimary and -propagateprimary explicitly in the script for clarity.
-
-Example:
-
-.. code-block:: bash
-
-   $ mupip replicate -source -activate -rootprimary
-
-This command transitions a propagating instance to an originating instance without bringing down the Journal Pool.
-
-With neither -rootprimary nor -propagateprimary specified, YottaDB uses a default value of -propagateprimary for the passive Source Server startup command (mupip replic -source -start -passive) and the deactivate qualifier (mupip replicate -source -deactivate). YottaDB uses a default value of -rootprimary for the mupip replicate -source -start -secondary=... and the mupip replic -source -activate commands. These default values make the replication script simpler for users who are planning to limit themselves to one originating instance and multiple replicating instances (without any further replicating instances downstream).
-
-.. code-block:: bash
-
-   $ export ydb_repl_instance=multisite.repl
-   $ mupip set -journal="enable,before,on" -replication=on -region "*"
-   $ mupip replicate -instance_create -name=America
-   $ mupip replicate -source -start -buffsize=$jnlpool_size -secondary=localhost:1234 -log=A2B.log -instsecondary=Brazil
-
-This example starts the Source Server at port 1234 for the replicating instance Brazil. The Source Server creates a Journal Pool. A YottaDB Process writes the updated journal records to the Journal Pool. Then, the Source Server process transports each record from the Journal Pool to Brazil via a TCP/IP connection.
-
-.. note::
-   Before starting replication, always remember to rundown every replicated database region then start the Source Server.
-
-.. note::
-   YottaDB updates to replicated regions are permitted only on the originating instance and disabled on ALL other replicating instances.
-
-The Source Server records actions and errors in A2B.log. It also periodically records statistics such as the current backlog, the number of journal records sent since the last log, the rate of transmission, the starting and current JNL_SEQNO, and the path of the filter program, if any.
-
-^^^^^^^^^
--updnotok
-^^^^^^^^^
-
-Instructs the Source Server not to allow local updates on this instance. This is a synonym for -propagateprimary but is named so that it better conveys its purpose.
-
-^^^^^^^^^
--cmplvl=n
-^^^^^^^^^
-
-Specifies the desired compression level for the replication stream. n is a positive integer value indicating the level of compression desired. Level 0 offers no compression. Level 1 offers the least compression while Level 9 (as of version 1.2.3.3 of the zlib library) offers the most compression (at the cost of the most CPU usage). Specifying -cmplvl without an accompanying -start produces an error. For the Source Server, if N specifies any value outside of the range accepted by the zlib library or if -cmplvl is not specified, the compression level defaults to zero (0). For the Receiver Server, as long as N is non-zero, the decompression feature is enabled; since the Source Server setting determines the actual level, any legal non-zero value enables compressed operation at the receiver.
-
-Alternatively, the environment variable ydb_zlib_cmp_level can specify the desired compression level (in the same value range as N above) and the source server can then be started without -cmplvl. This has the same effect as starting it with -cmplvl specified. An explicitly specified value on the command line overrides any value specified by the environment variable.
-
-Whenever the source and receiver server connect with each other, if the source server was started with a valid non-zero compression level, they first determine whether the receiver server is running a version of YottaDB which handles compressed records and has been started with a non-zero compression level. Only if this is true, do they agree to use compressed journal records. They also verify with a test message that compression/decompression works correctly before sending any compressed journal data across. They automatically fall back to the uncompressed mode of transmission if this test fails or if, at any point, either side detects that compression or decompression has failed. That is, any runtime error in the compression/decompression logic results in uncompressed replication (thereby reducing replication throughput) but never jeopardizes the functional health of replication.
-
-The Source and Receiver Servers log all compression related events and/or messages in their respective logs. The source server also logs the length of the compressed data (in addition to the uncompressed data length) in its logfile.
-
-.. note::
-   If you plan to use the optional compression facility for replication, you must provide the compression library. The YottaDB interface for compression libraries accepts the zlib compression libraries without any need for adaptation. These libraries are included in all or most Linux distributions and are downloadable from the zlib home page. If you prefer to use other compression libraries, you need to configure or adapt them to provide the same API provided by zlib. Simple instructions for compiling zlib on a number of platforms follow. Although YottaDB uses zlib, zlib is not YottaDB software and YottaDB does not support zlib. These instructions are merely provided as a convenience to you.
-
-If a package for zlib is available with your operating system, YottaDB suggests that you use it rather than building your own.
-
-By default, YottaDB searches for the libz.so shared library in the standard system library directories (for example, /usr/lib, /usr/local/lib, /usr/local/lib64). If the shared library is installed in a non-standard location, before starting replication, you must ensure that the environment variable $LD_LIBRARY_PATH includes the directory containing the library. The Source and Receiver Server link the shared library at runtime. If this fails for any reason (such as file not found, or insufficient authorization), the replication logic logs a DLLNOOPEN error and continues with no compression.
-
-^^^^^^^^^^^^^^
+****************
 -tlsid=<label>
-^^^^^^^^^^^^^^
+****************
 
 Instructs the Source or Receiver Server to use the TLS certificate and private key pairs having <label> as the TLSID in the configuration file pointed to by the ydb_crypt_config environment variable. TLSID is a required parameter if TLS/SSL is to be used to secure replication connection between instances. If private keys are encrypted, an environment variable of the form ydb_tls_passwd_<label> specifies their obfuscated password. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you use unencrypted private keys, set the ydb_tls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
 
-^^^^^^^^^^^^^^^^^^^^^^
+************************
 -[NO]PLAINtextfallback
-^^^^^^^^^^^^^^^^^^^^^^
+************************
 
 Specifies whether the replication server is permitted to fallback to plaintext communication. The default is -NOPLAINtextfallback. If NOPLAINTEXTFALLBACK is in effect, YottaDB issues a REPLNOTLS error in the event it is unable to establish a TLS connection. If PLAINTEXTFALLBACK is in effect, in the event of a failure to establish a TLS connection, YottaDB issues REPLNOTLS as a warning. Once a permitted plaintext replication connection is established for a connection session, YottaDB never attempts to switch that connection session to TLS connection.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--RENEGotiate_interval=<minutes >
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*********************************
+-RENEGotiate_interval=<minutes>
+*********************************
 
 Specifies the time in minutes to wait before attempting to perform a TLS renegotiation. The default -RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB to never attempt a renegotiation. The MUPIP REPLIC -SOURCE -JNLPOOL -SHOW [-DETAIL] command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in the replication backlog.
 
@@ -3958,7 +4009,7 @@ Shuts down the Source Server.
 -timeout=<timeout in seconds>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Specifies the time (in seconds) that the shutdown command should wait before signaling the Source Server to shut down. If you do not specify -timeout, the default timeout period is 30 seconds. If you specify -timeout=0 , shutdown is signaled immediately.
+Specifies the time (in seconds) that the shutdown command should wait before signaling the Source Server to shut down. If you specify -timeout=0 , shutdown is signaled immediately. The default is 120 seconds and the maximum timeout is 3600 seconds. Any value higher than 3600 produces the INVSHUTDOWN error.
 
 ^^^^^^^^^^^^
 -zerobacklog
@@ -4608,6 +4659,39 @@ Command syntax:
 *-stopreceiverfilter*
 
 Turns off any active filter on the Receiver Server without turning off the Receiver Server. Using -stopreceiverfilter when no filter is active returns a non-success return code. -stopreceiverfilter is not compatible with any other -receiver qualifier.
+
+++++++++++++++++++++++
+Freezing an instance
+++++++++++++++++++++++
+
+The MUPIP REPLICATE SOURCE command with instance freeze qualifiers manage the Instance Freeze facility of an instance. The syntax is:
+
+.. code-block:: none
+
+   mupip replicate -source
+     [-[no]comment[='"<string>"']]
+     -freeze[=on|off]
+
+~~~~~~~~~~~
+Qualifiers:
+~~~~~~~~~~~
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-[no]comment[='"<string>"']
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Allows specifying a comment/reason associated with an Instance Freeze. Specify -nocomment if you do not wish to specify a comment/reason.
+
+^^^^^^^^^^^^^^^^^^^
+-freeze[=on|off]
+^^^^^^^^^^^^^^^^^^^
+
+Promptly sets or clears an Instance Freeze on an instance irrespective of whether a region is enabled for an Instance Freeze. -freeze with no arguments displays the current state of the Instance Freeze on the instance.
+
+
+For more information on enabling a region to invoke an Instance Freeze on custom errors, refer to the -INST_FREEZE_ON_ERROR section of “SET”.
+
+For more information on Instance Freeze, refer to :ref:`instance-freeze`.
 
 ++++++++++++++++++++++++++
 Checking Server Health
