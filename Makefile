@@ -1,6 +1,6 @@
  ###############################################################
  #                                                             #
- # Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.#
+ # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
  # All rights reserved.                                        #
  #                                                             #
  #     This source code contains the intellectual property     #
@@ -17,7 +17,7 @@
 SPHINXOPTS    = -W --keep-going
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = GTMAdminOps
-SOURCEDIRS    = AcculturationGuide AdminOpsGuide MessageRecovery MultiLangProgGuide ProgGuide ReleaseNotes StyleGuide Plugins
+SOURCEDIRS    = AcculturationGuide AdminOpsGuide MessageRecovery MultiLangProgGuide ProgGuide StyleGuide Plugins
 SOURCEDIR     = .
 BUILDDIR      = _build
 

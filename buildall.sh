@@ -44,7 +44,6 @@ DIRECTORIES=(
 	MessageRecovery/
 	MultiLangProgGuide/
 	ProgGuide/
-	ReleaseNotes/
 	StyleGuide/
 	Plugins/
 )
