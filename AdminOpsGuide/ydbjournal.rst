@@ -1531,7 +1531,7 @@ ROLLBACK FORWARD accepts only CHECKTN, which is the default, but does not accept
 CHECKTN is incompatible with BACKWARD.
 
 .. code-block:: none
-		
+
    - [CO]RRUPTDB
 
 Extracts journal records into a single file even if the database is corrupt or missing. Always specify a journal name when you are using CORRUPTDB. CORRUPTDB does not recognize the wildcard character "*" for journal file name and is incompatible with FENCES, LOST, and BROKEN qualifiers.
@@ -1720,7 +1720,7 @@ Specifies that MUPIP JOURNAL processing include or exclude database updates gene
 By default, JOURNAL processes database updates regardless of the user who initiated them.
 
 -----------------------------
-JOURNAL EXTRACT FORMATS
+Journal Extract Formats
 -----------------------------
 
 Journal EXTRACT files always start with a label. For the current release of YottaDB (r1.30), the label is YDBJEX08 for a simple journal extract file. This label is necessary to identify the format of the file. The label for the detail journal extract file is YDBJDX09.
@@ -1737,21 +1737,20 @@ The format of the plain journal extract is as follows:
 
 .. code-block:: none
 
-   NULL    00\time\tnum\pid\clntpid\jsnum\strm_num\strm_seq\salvaged
-   PINI    01\time\tnum\pid\nnam\unam\term\clntpid\clntnnam\clntunam\clntterm
-   PFIN    02\time\tnum\pid\clntpid
    EOF     03\time\tnum\pid\clntpid\jsnum
    KILL    04\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   SET     05\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   ZTSTART 06\time\tnum\pid\clntpid\token
-   ZTCOM   07\time\tnum\pid\clntpid\token\partners
-   TSTART  08\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq
-   TCOM    09\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\partners\tid
-   ZKILL   10\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   ZTWORM  11\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
-   ZTRIG   12\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
    LGTRIG  13\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
-
+   NULL    00\time\tnum\pid\clntpid\jsnum\strm_num\strm_seq\salvaged
+   PFIN    02\time\tnum\pid\clntpid
+   PINI    01\time\tnum\pid\nnam\unam\term\clntpid\clntnnam\clntunam\clntterm
+   SET     05\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   TCOM    09\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\partners\tid
+   TSTART  08\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq
+   ZKILL   10\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   ZTCOM   07\time\tnum\pid\clntpid\token\partners
+   ZTRIG   12\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   ZTSTART 06\time\tnum\pid\clntpid\token
+   ZTWORM  11\time\tnum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
 
 where:
 
@@ -1796,54 +1795,53 @@ The format of the detail journal extract is as follows:
 
 .. code-block:: none
 
-   PINI    time\tnum\chksum\pid\nnam\unam\term\clntpid\clntnnam\clntunam\clntterm
-   PFIN    time\tnum\chksum\pid\clntpid
-   EOF     time\tnum\chksum\pid\clntpid\jsnum
-   SET     time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   KILL    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   ZKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   ZTWORM  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
-   ZTRIG   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   TSTART  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq
-   TSET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   TKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   TZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   TZTWORM time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
-   TZTRIG  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   TLGTRIG time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
-   USET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   UKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   UZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   UZTWORM time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
-   UZTRIG  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   ULGTRIG time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
-   TCOM    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\partners\tid
-   INCTN   time\tnum\chksum\pid\clntpid\opcode\incdetail
-   EPOCH   time\tnum\chksum\pid\clntpid\jsnum\blks_to_upgrd\free_blocks\total_blks\fully_upgraded[\strm_num\strm_seq]...
-   PBLK    time\tnum\chksum\pid\clntpid\blknum\bsiz\blkhdrtn\ondskbver
    AIMG    time\tnum\chksum\pid\clntpid\blknum\bsiz\blkhdrtn\ondskbver\dsecmdline
-   NULL    time\tnum\chksum\pid\clntpid\jsnum\strm_num\strm_seq\salvaged
-   ZTSTART time\tnum\chksum\pid\clntpid\token
-   FSET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   FKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   FZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   GSET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
-   GKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   GZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
-   ZTCOM   time\tnum\chksum\pid\clntpid\token\partners
    ALIGN   time\tnum\chksum\pid\clntpid
+   EOF     time\tnum\chksum\pid\clntpid\jsnum
+   EPOCH   time\tnum\chksum\pid\clntpid\jsnum\blks_to_upgrd\free_blocks\total_blks\fully_upgraded[\strm_num\strm_seq]...
+   FKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   FSET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   FZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   GKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   GSET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   GZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   INCTN   time\tnum\chksum\pid\clntpid\opcode\incdetail
+   KILL    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   NULL    time\tnum\chksum\pid\clntpid\jsnum\strm_num\strm_seq\salvaged
+   PFIN    time\tnum\chksum\pid\clntpid
+   PINI    time\tnum\chksum\pid\nnam\unam\term\clntpid\clntnnam\clntunam\clntterm
+   SET     time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   TCOM    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\partners\tid
+   TKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   TLGTRIG time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
+   TSET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   TSTART  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq
+   TZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   TZTRIG  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   TZTWORM time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
+   UKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   ULGTRIG time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\trigdefinition
+   USET    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
+   UZKILL  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   UZTRIG  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   UZTWORM time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
+   ZKILL   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   ZTCOM   time\tnum\chksum\pid\clntpid\token\partners
+   ZTRIG   time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
+   ZTSTART time\tnum\chksum\pid\clntpid\token
+   ZTWORM  time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\ztwormhole
 
 where:
 
 * AIMG records are unique to DSE action and exist because those actions do not have a "logical" representation.
-
-* EPOCH records are status records that record information related to check pointing of the journal.
-
-* NCTN records are the transaction numbers of the sequence of critical sections in the process and mark the database blocks of the globals as previously used but no longer in use in the bit maps.
-
-* PBLK records are the before-image records of the bit maps.
-
 * ALIGN records pad journal records so that every alignsize boundary (set with MUPIP SET JOURNAL and is visible in DSE DUMP FILEHEADER output) in the journal file starts with a fresh journal record. The sole purpose of these records is to help speed up journal recovery.
+* EPOCH records are status records that record information related to check pointing of the journal.
+* NCTN records are the transaction numbers of the sequence of critical sections in the process and mark the database blocks of the globals as previously used but no longer in use in the bit maps.
+* PBLK records are the before-image records of the bit maps.
+* F prefixed records (FKILL, FSET, and FZKILL) indicate the first update in that region inside a ZTSTART fence
+* G prefixed records (GKILL, GSET, and GZKILL) indicate second and later updates in that region inside a ZTSART fence
+* T prefixed records (TKILL, TLGTRIG, TSET, TZKILL, TZTRIG, and TZTWORM) indicate the first update in that region inside a TSTART fence
+* U prefixed records (UKILL, ULGTRIG, USET, UZKILL, UZTRIG, and UZTWORM) indicate second and later updates in that region inside a TSTART fence
 
 Legend (All hexadecimal fields have a 0x prefix. All numeric fields otherwise are decimal):
 
