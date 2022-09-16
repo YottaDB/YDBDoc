@@ -1,9 +1,35 @@
+<!--
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This document contains the intellectual property        #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
+  -->
+
 {%- if builder != 'singlehtml' %}
 <div role="search">
-	  <form id="rtd-search-form" class="wy-form" action="{{ pathto('search') }}" method="get">
-		      <input type="text" name="q" placeholder="{{ _('Search') }}" />
-		          <input type="hidden" name="check_keywords" value="yes" />
-			      <input type="hidden" name="area" value="default" />
-			        </form>
+  <form id="rtd-search-form" class="wy-form" action="{{ pathto('search') }}" method="get">
+     <input type="text" name="q" placeholder="{{ _('Search') }}" />
+     <input type="hidden" name="check_keywords" value="yes" />
+     <input type="hidden" name="area" value="default" />
+  </form>
 </div>
+<br/>
+<div class="rst-releases">
+{% if releases %}
+<h5 class="release-dropdown">{{ _('Releases : ') }}</h5>
+<select class="release-dropdown" id="select-releases">
+  {%- for tag,url in releases %}
+  <option id="{{ tag }}" value="{{ url }}"{% if curr_rel == tag %} selected{% endif %}>{{ tag }}</option>
+  {%- endfor %}
+</select>
+{% endif %}
+</div>
+
 {%- endif %}
