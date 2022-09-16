@@ -1754,31 +1754,31 @@ The format of the plain journal extract is as follows:
 
 where:
 
-* 01 record indicates a process/image-initiated update (PINI) into the current journal file for the first time.
+* 01 record (PINI) indicates a process/image-initiated update into the current journal file for the first time.
 
-* 02 record indicates a process/image dropped interest (PFIN) in the current journal file.
+* 02 record (PFIN) indicates a process/image dropped interest in the current journal file.
 
-* 03 record indicates all YottaDB images dropped interest in this journal file and the journal file was closed normally.
+* 03 record (EOF) indicates all YottaDB images dropped interest in this journal file and the journal file was closed normally.
 
-* 04 record indicates a database update caused by a KILL command.
+* 04 record (KILL) indicates a database update caused by a KILL command.
 
-* 05 record indicates a database update caused by a SET command.
+* 05 record (SET) indicates a database update caused by a SET command.
 
-* 06 record indicates a ZTSTART command.
+* 06 record (ZTSTART) indicates a ZTSTART command.
 
-* 07 record indicates a ZTCOMMIT command.
+* 07 record (ZTCOM) indicates a ZTCOMMIT command.
 
-* 08 record indicates a TSTART command.
+* 08 record (TSTART) indicates a TSTART command.
 
-* 09 record indicates a TCOMMIT command.
+* 09 record (TCOM) indicates a TCOMMIT command.
 
-* 10 record indicates a database update caused by a ZKILL command.
+* 10 record (ZKILL) indicates a database update caused by a ZKILL command.
 
-* 11 records indicates a value for/from $ZTWORMHOLE (when replication is turned on).
+* 11 record (ZTWORM) indicates a value for/from $ZTWORMHOLE (when replication is turned on).
 
-* 12 record indicates a ZTRIGGER command.
+* 12 record (ZTRIG) indicates a ZTRIGGER command.
 
-* 13 record indicates a trigger definition as a logical action from an originating/primary instance to a replicating/secondary instance
+* 13 record (LGTRIG) indicates a trigger definition as a logical action from an originating/primary instance to a replicating/secondary instance
 
 Journal extracts contain NULL records only in a multisite replication configuration where triggers or external M-filters are active. Here are two examples when NULL records are sent to the journal files:
 
@@ -1808,6 +1808,7 @@ The format of the detail journal extract is as follows:
    INCTN   time\tnum\chksum\pid\clntpid\opcode\incdetail
    KILL    time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node
    NULL    time\tnum\chksum\pid\clntpid\jsnum\strm_num\strm_seq\salvaged
+   PBLK    time\tnum\chksum\pid\clntpid\blknum\bsiz\blkhdrtn\ondskbver
    PFIN    time\tnum\chksum\pid\clntpid
    PINI    time\tnum\chksum\pid\nnam\unam\term\clntpid\clntnnam\clntunam\clntterm
    SET     time\tnum\chksum\pid\clntpid\token_seq\strm_num\strm_seq\updnum\nodeflags\node=sarg
@@ -1835,13 +1836,25 @@ where:
 
 * AIMG records are unique to DSE action and exist because those actions do not have a "logical" representation.
 * ALIGN records pad journal records so that every alignsize boundary (set with MUPIP SET JOURNAL and is visible in DSE DUMP FILEHEADER output) in the journal file starts with a fresh journal record. The sole purpose of these records is to help speed up journal recovery.
+* EOF records indicate all YottaDB images dropped interest in this journal file and the journal file was closed normally.
 * EPOCH records are status records that record information related to check pointing of the journal.
-* NCTN records are the transaction numbers of the sequence of critical sections in the process and mark the database blocks of the globals as previously used but no longer in use in the bit maps.
-* PBLK records are the before-image records of the bit maps.
-* F prefixed records (FKILL, FSET, and FZKILL) indicate the first update in that region inside a ZTSTART fence
-* G prefixed records (GKILL, GSET, and GZKILL) indicate second and later updates in that region inside a ZTSART fence
-* T prefixed records (TKILL, TLGTRIG, TSET, TZKILL, TZTRIG, and TZTWORM) indicate the first update in that region inside a TSTART fence
-* U prefixed records (UKILL, ULGTRIG, USET, UZKILL, UZTRIG, and UZTWORM) indicate second and later updates in that region inside a TSTART fence
+* F prefixed records (FKILL, FSET, and FZKILL) indicate the first update in that region inside a ZTSTART fence.
+* G prefixed records (GKILL, GSET, and GZKILL) indicate second and later updates in that region inside a ZTSART fence.
+* INCTN records are the transaction numbers of the sequence of critical sections in the process and mark the database blocks of the globals as previously used but no longer in use in the bit maps.
+* KILL records indicate a database update caused by a KILL command.
+* PBLK records are the before-image records of all the blocks.
+* PFIN records indicate a process/image dropped interest in the current journal file.
+* PINI records indicate a process/image-initiated update into the current journal file for the first time.
+* SET records indicate a database update caused by a SET command.
+* T prefixed records (TKILL, TLGTRIG, TSET, TZKILL, TZTRIG, and TZTWORM) indicate the first update in that region inside a TSTART fence.
+* TCOM records indicate a TCOMMIT command.
+* TSTART records indicate a TSTART command.
+* U prefixed records (UKILL, ULGTRIG, USET, UZKILL, UZTRIG, and UZTWORM) indicate second and later updates in that region inside a TSTART fence.
+* ZKILL records indicate a database update caused by a ZKILL command.
+* ZTCOM records indicate a ZTCOMMIT command.
+* ZTRIG records indicate a ZTRIGGER command.
+* ZTSTART records indicate a ZTSTART command.
+* ZTWORM records indicate a value for/from $ZTWORMHOLE (when replication is turned on).
 
 Legend (All hexadecimal fields have a 0x prefix. All numeric fields otherwise are decimal):
 
