@@ -1197,7 +1197,14 @@ The show-option-list includes (these are not case-sensitive):
 
 * B[ROKEN_TRANSACTIONS]: Display all processes that had incomplete fenced transactions at the end of the period covered by the JOURNAL command.
 
-* H[EADER]: Displays the journal file header information. If the MUPIP JOURNAL command includes only the :code:`-show=header` action qualifier, YottaDB processes only the journal file header (not the contents) even if you specify BACKWARD or FORWARD with it. The size of a journal file header is 64K. HEADER displays almost all the fields in the journal file header. The NODE field is printed up to a maximum of the first 12 characters. The following is an example of :code:`-show=header` output:
+* H[EADER]: Displays the journal file header information. If the MUPIP JOURNAL command includes only the :code:`-show=header` action qualifier, YottaDB processes only the journal file header (not the contents) even if you specify BACKWARD or FORWARD with it. The size of a journal file header is 64K. HEADER displays almost all the fields in the journal file header. The NODE field is printed up to a maximum of the first 12 characters.
+
+* P[ROCESSES] : Displays all processes active during the period specified implicitly or explicitly by the JOURNAL command time qualifiers.
+
+* S[TATISTICS]: Displays a count of all journal record types processed during the period specified implicitly or explicitly by the JOURNAL command time qualifiers.
+
+
+The following is an example of :code:`-show=header` output:
 
  .. code-block:: bash
 
@@ -1245,9 +1252,20 @@ The show-option-list includes (these are not case-sensitive):
    ------------------------------------------------------------
    0000006706 jdoe-laptop jdoe         0    2018/01/29 17:30:33
 
-* P[ROCESSES] : Displays all processes active during the period specified implicitly or explicitly by the JOURNAL command time qualifiers.
 
-* S[TATISTICS]: Displays a count of all journal record types processed during the period specified implicitly or explicitly by the JOURNAL command time qualifiers. The following is an example of :code:`-show=statistics` output:
+where;
+
+* PID is the process ID.
+
+* NODE is the name of the computer.
+
+* USER is the name of the user.
+
+* TERM if set is the terminal or pseudo terminal (e.g., :code:`/dev/pts/3`) from which the processes were connected. If blank, it was a process not attached to a terminal, e.g., a JOB'd process
+
+* JPV_TIME is the time that that process opened its first database file. While this is a somewhat obscure piece of data, for forensic purposes, one need not search for any database updates by that process before that time.
+
+The following is an example of :code:`-show=statistics` output:
 
   .. code-block:: bash
 
