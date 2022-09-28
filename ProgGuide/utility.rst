@@ -2812,41 +2812,6 @@ System Management Utilities
 
 The System Management utilities are:
 
-.. _dsewrap-util:
-
-+++++++++++++++
-%DSEWRAP
-+++++++++++++++
-
-The %DSEWRAP utility provides a programmatic interface that drives DSE either through a PIPE device or through generated command files. The current implementation only provides access to dumping the database file header.
-
-.. note::
-   %DSEWRAP is currently deprecated. Please use the %PEEKBYNAME utility to programatically read database file header information. MUPIP DUMPFHEAD and/or the %DUMPFHEAD utility provide additional alternatives.
-
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
-
-DUMP^%DSEWRAP(regions,.fdump,"fileheader","all") : Retrieve and parse the result of the DSE's DUMP -FILEHEADER -ALL command into the second parameter (passed by reference) for the regions contained in the local variable 'regions'. If invoked as an extrinsic function, %DSEWRAP returns the status of DUMP -FILEHEADER -ALL command.
-
-The first parameter 'regions' can be undefined, "", "*" or "all" to mean all available regions.
-
-The second parameter is a required passed-by-reference variable that the caller uses to retrieve data.
-
-The third optional parameter defaults to DUMP -FILEHEADER. Using any other command dump command has not been tested.
-
-The fourth optional parameter indicates the level of detail, -ALL, for the DUMP -FILEHEADER command. Fore more information on other -FILEHEADER qualifiers, please refer to the `DSE chapter in the Administration and Operations Guide <../AdminOpsGuide/dse.html>`_.
-
-The format of the output array is fdump(<REGION NAME>,<FIELD NAME>). In the event of a field collision, dump^%DSEWRAP avoids overwriting existing data by creating number descendants.
-
-The default $ETRAP handler for %DSEWRAP terminates the application if it detects an error during input validation. Application developers must define $ETRAP prior to calling %DSEWRAP.
-
-Example:
-
-.. code-block:: bash
-
-   $ydb -run ^%XCMD 'do dump^%DSEWRAP("DEFAULT",.dsefields,"","all") zwrite dsefield'
-
 .. _dumpfhead-util:
 
 +++++++++++++
@@ -3061,6 +3026,8 @@ When using the following, remember to write code that allows for values other th
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Writes in progress           |  "node_local.wcs_wip_lvl"                     | Integer count of blocks for which YottaDB has issued writes that have not yet been recognized as complete                   |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Writes writes per flush      |  "sgmnt_data.n_wrt_per_flu"                   | Integer count of database blocks written each time a process needs to flush blocks                                          |
++------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 
 ~~~~~~~~~~~~~~~~~~~~~~~~
 Replication Parameters
@@ -3102,6 +3069,9 @@ Calls to %PEEKBYNAME with the listed parameter as the first or only parameter re
 +--------------------------------------+-----------------------------------------------------------+-------------------------------------------------------------+
 | Updates disabled                     |  "jnlpool_ctl_struct.upd_disabled"                        | Integer - 1 means updates disabled; 0 means updates         |
 |                                      |                                                           | permitted                                                   |
++--------------------------------------+-----------------------------------------------------------+-------------------------------------------------------------+
+| Sequence number acknowledged from    |  "gtmsource_local_struct.heartbeat_jnl_seqno"             | Integer                                                     |
+| the replicating (secondary) instance |                                                           |                                                             |
 +--------------------------------------+-----------------------------------------------------------+-------------------------------------------------------------+
 
 .. note::
@@ -3551,9 +3521,6 @@ Utilities Summary Table
 | :ref:`dh-util`                    | Converts decimal numbers to hexadecimal.                                                                 |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`do-util`                    | Converts decimal numbers to octal.                                                                       |
-+-----------------------------------+----------------------------------------------------------------------------------------------------------+
-| :ref:`dsewrap-util`               | Provides a programmatic interface that drives DSE either through a PIPE device or through generated      |
-|                                   | command files                                                                                            |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`dumpfhead-util`             | Provides a programmatic interface to the functionality of MUPIP DUMPFHEAD                                |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+

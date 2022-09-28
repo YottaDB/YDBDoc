@@ -1705,6 +1705,8 @@ The format of the VIEW command is:
 * The optional expression following the keyword specifies the nature of the change to the environmental factor. When this expression is a region list (a comma delimited list of regions), YottaDB sorts the regions in an internal order eliminating any duplicates from the list for deadlock prevention. When region list is not specified, VIEW operates on all regions under the current global directory.
 * An indirection operator and an expression atom evaluating to a list of one or more VIEW arguments form a legal argument for a VIEW
 
+VIEW uses the first 31 characters of overly long region names.
+
 .. _keywords-view-command:
 
 +++++++++++++++++++++++++

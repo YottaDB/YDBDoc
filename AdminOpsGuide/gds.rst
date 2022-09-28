@@ -192,9 +192,9 @@ The file header data elements are listed as follows in alphabetical order for ea
 |                                    | An error occurs if you decrease and then make an attempt to update nodes with existing longer records.                                                        |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Maximum TN                         | The maximum number of TNs that the current database can hold. For a database in the most recent format, the default value of Maximum TN is                    |
-|                                    | 18,446,744,071,629,176,83 or 0xFFFFFFFF83FFFFFF.                                                                                                              |
+|                                    | 18,446,744,039,416,922,111 or 0xFFFFFFF803FFFFFF.                                                                                                             |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Maximum TN Warn                    | The transaction number after which YottaDB generates a warning and update it to a new value. The default value of Maximum TN Warn is 0xFFFFFFFD93FFFFFF.      |
+| Maximum TN Warn                    | The transaction number after which YottaDB generates a warning and update it to a new value. The default value of Maximum TN Warn is 0xFFFFFFD813FFFFFF.      |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Modified cache blocks              | The current number of modified blocks in the buffer pool waiting to be written to the database.                                                               |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+

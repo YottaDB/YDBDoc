@@ -1558,6 +1558,8 @@ The format for the $VIEW function is:
 * The first expression specifies a keyword identifying the target factor for $VIEW() to examine.
 * The second expression differentiates between multiple possible targets for some keywords. $VIEW() requires the second expression for some keywords and does not permit it for others.
 
+Note that $VIEW uses the first 31 characters of overly long region names.
+
 .. _arg-kwrds-view:
 
 +++++++++++++++++++++++++++++

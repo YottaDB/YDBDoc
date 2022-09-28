@@ -416,6 +416,8 @@ Under typical operating conditions, with no system or network bottlenecks, Yotta
 
 On Rose and Yellow instances, a Receiver Server receives update records sent by the White Source Server and puts them in the Receive Pool, which is in a shared memory segment. Source and Receiver Server processes implement flow control to ensure that the Receive Pool does not overflow. The Update Process picks these update records and writes them to the journal file, the database file, and the Journal Pool. The Update Process on a replicating instance performs operations analogous to "Application Logic" on the originating instance.
 
+During soft tries connection attempts, the Source Server waits for the specified soft tries period when it encounters a network error for the host name specified with the SECONDARY qualifier.
+
 ~~~~~~~~~~~~~~~~
 Helper Processes
 ~~~~~~~~~~~~~~~~
@@ -4024,11 +4026,19 @@ Shuts down the Source Server.
 
 Specifies the time (in seconds) that the shutdown command should wait before signaling the Source Server to shut down. If you specify -timeout=0 , shutdown is signaled immediately. The default is 120 seconds and the maximum timeout is 3600 seconds. Any value higher than 3600 produces the INVSHUTDOWN error.
 
+After initiating shutdown of the Source Server, YottaDB waits up to 90 * number_of_regions seconds (with a minimum of 120 seconds) for the Source Server process to exit normally.
+
 ^^^^^^^^^^^^
 -zerobacklog
 ^^^^^^^^^^^^
 
-Shuts down the Source Server either when the backlog goes to zero or the timeout expires, whichever occurs first.
+Restricts Journal Pool in a way that only existing processes can complete their updates and shuts down the Source Server:
+
+with the REPL0BACKLOG message as soon as there is no backlog and the Source Server has received acknowledgement of all its updates from the Receiver Server.
+
+with the REPLBACKLOG message when the timeout expires while there was a backlog and/or unacknowledged updates from the Receiver Server.
+
+The REPL0BACKLOG message helps confirm that two instances are in sync (seqno-wise) because all Source Server updates have reached the Receive Pool at the time of shutdown and there are no-inflight updates. The REPL0BACKLOG message also causes the timeout to expire prematurely. In planned switchover scenarios, the REPL0BACKLOG message assists in operationally preventing lost transaction file generation.
 
 ++++++++++++++++++++++++++++++++++
 Activating a Passive Source Server
@@ -4324,17 +4334,24 @@ Qualifiers:
 
 Reports the current backlog of journal records (in terms of JNL_SEQNO) on the output device (normally the standard output device). This qualifier does not affect the statistics logged in the log file. The backlog is the difference between the last JNL_SEQNO written to the Journal Pool and the last JNL_SEQNO sent by the Source Server to the Receiver Server. In the WAS_ON state, -showbacklog reports the backlog information even if the Source Server is shut down.
 
+-showbacklog also reports the sequence number acknowledged from the Receiver Server. The acknowledged sequence number from the replicating (secondary) instance can also be accessed from the originating (primary) instance using the "gtmsource_local_struct.heartbeat_jnl_seqno" field of the %PEEKBYNAME utility function.
+
 Example:
 
 .. code-block:: bash
 
-   $ mupip replic -source -showbacklog -inst=INSTB
-   Wed May 19 18:58:29 2010 : Initiating SHOWBACKLOG operation on source server pid [0] for secondary
-   instance [INSTB]
-   101 : backlog number of transactions written to journal pool and yet to be sent by the source server
-   102 : sequence number of last transaction written to journal pool
-   1 : sequence number of last transaction sent by source server
-   %YDB-E-SRCSRVNOTEXIST, Source server for secondary instance INSTB is not alive
+    $ mupip replic -source -showbacklog -inst=INSTB
+    Tue Jan  5 10:36:46 2021 : Initiating SHOWBACKLOG operation on source server pid [0] for secondary instance [INSTB]
+    52 : backlog number of transactions written to journal pool and yet to be sent by the source server
+    102 : sequence number of last transaction written to journal pool
+    50 : sequence number of last transaction sent by source server
+    25 : sequence number acknowledged by the secondary instance [INSTB]
+
+The following example programs further demonstrate sequence number behavior:
+
+* `replspeed.m <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/AdminOpsGuide/replspeed.m>`_.
+* `waitforhrtbt.m <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/AdminOpsGuide/waitforhrtbt.m>`_.
+* `waitforseqnosync.m <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/AdminOpsGuide/waitforseqnosync.m>`_.
 
 ++++++++++++++++++++++++++++++++++++++
 Processing Lost Transactions File

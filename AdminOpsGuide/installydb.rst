@@ -99,6 +99,11 @@ Installing YottaDB
      Build commit SHA:        177eb8e48098204dafe564cac2bcb84312b2853a
      $
 
+Note that the ``ydbinstall`` script explicitly removes ``setgid``, ``setuid`` and sticky bits from the target installation directory if it exists with
+those bits set. Previously the sub-directories created by the installation script inappropriately carried the ``setgid`` settings.
+
+Additionally, the ``ydbinstall`` script records ownership, permissions and OpenSSH SHA256 checksum values of all installed files for future reference in ``$ydb_dist/install_permissions.log`` and ``$ydb_dist/install_sha256_checksum.log``.
+
 +++++++++++++++++++++++++++++++++++++++++++++
 Compiling the Reference Implementation Plugin
 +++++++++++++++++++++++++++++++++++++++++++++

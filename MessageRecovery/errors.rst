@@ -698,7 +698,7 @@ BOVTMGTEOVTM
 
 BOVTMGTEOVTM, Journal file xxxx has beginning timestamp aaaa greater than end timestamp bbbb
 
-MUPIP Error: This indicates that the beginning time stamp aaaa of the journal file xxxx is greater than the ending timestamp bbbb. This could be due to something that changed the system time while journaling was going on.
+MUPIP Error: This indicates that the beginning time stamp aaaa of the journal file xxxx is greater than the ending timestamp bbbb. This could be due to something that changed the system time,such as a daylight savings time change or a testing time reset, while YottaDB was journaling. YottaDB recommends against changing system time during YottaDB Run-time as a matter of course, as this disruption is not heavily tested.
 
 Action: Changing system time during YottaDB run-time is not allowed. Contact your YottaDB support channel for further assistance.
 
@@ -1732,19 +1732,19 @@ DBADDRANGE
 
 DBADDRANGE, Database file xxxx, element location yyyy: control zzzz was outside aaaa range bbbb to cccc
 
-Run Time Information: This indicates that a process was abnormally terminated. Database control structures may be damaged.
+Run Time Information: This indicates that a process was abnormally terminated while updating the database. Database control structures may be damaged.
 
-Action: YottaDB often fixes this error unless there is a serious problem causing this error. If there is a serious problem, the accompanying messages identify the cause.
+Action: This typically indicates a process terminated abnormally while updating the database. YottaDB often fixes such an error unless there is a serious problem causing this error. If YottaDB cannot correct the issue, the accompanying messages should expand on the situation. You are advised to report such a database error to the group responsible for database integrity at your operation.
 
 --------------------
 DBADDRANGE8
 --------------------
 
-DBADDRANGE8, Database file xxxx, element location yyyy: control zzzz was outside aaaa range bbbb to cccc.
+DBADDRANGE8, Database file rrrr element location aaaa: control vvvv was outside qqqq range bbbb to tttt
 
-Run Time Error: This message is the same as a DBADDRANGE message except that bbb8 and ccc8 are 8-byte quantities (as opposed to 4-byte quantitites in DBADDRANGE).
+Run Time Error: This indicates a database control structure for database region rrrr at memory location aaaa contains a value vvvv outside range bbbb to tttt for quantity qqqq.This message is the same as a DBADDRANGE message except that vvvv, bbbb and tttt are 8-byte quantities (as opposed to 4-byte quantitites in DBADDRANGE).
 
-Action: YottaDB often fixes this error unless there is a serious problem causing this error. If there is a serious problem, the accompanying messages identify the cause.
+Action: This typically indicates a process terminated abnormally while updating the database. YottaDB often fixes such an error unless there is a serious problem causing this error. If YottaDB cannot correct the issue, the accompanying messages should expand on the situation. You are advised to report such a database error to the group responsible for database integrity at your operation.
 
 ----------------------
 DBBADFREEBLKCTR
@@ -4900,6 +4900,16 @@ Compile Time/Run Time Fatal: This indicates that a design assumption failed at t
 
 Action: Preserve the core (dump) files and report the entire incident context to your YottaDB support channel for further analysis. If appropriate, verify database integrity by using the -FAST qualifier.
 
+----------------
+GTMCURUNSUPP
+----------------
+
+GTMCURUNSUPP, The requested operation is unsupported in this version of YottaDB
+
+All YottaDB Components Error: YottaDB tried to perform an operation that is unsupported in the current version. This is only thrown by YottaDB when trying to perform an upgrade/downgrade operation.
+
+Action: YottaDB does not support upgrade/downgrade between r1.x and r2.x databases.
+
 -----------------
 GTMDISTUNDEF
 -----------------
@@ -5454,6 +5464,26 @@ GVZTRIGFAIL, ZTRIGGER of a global variable failed. Failure code: cccc.
 Run Time Error: A ZTRIGGER command failed because of problems in the database. cccc is a list of four codes indicating the reason for the failure on each of the attempts to commit the ZTRIGGER action.
 
 Action: Report this database error to the group responsible for database integrity at your operation.
+
+------------
+HEX64ERR
+------------
+
+HEX64ERR, Error: cannot convert VVVV value to 64 bit hexadecimal number
+
+All YottaDB Components Error: The entered value does not correspond to a valid hexadecimal representation of a 64-bit number.
+
+Action: Enter an appropriate hexadecimal value starting with 0X.
+
+----------
+HEXERR
+----------
+
+HEXERR, Error: cannot convert VVVV value to hexadecimal number
+
+All YottaDB Components Error: The entered value does not correspond to a valid hexadecimal number.
+
+Action: Enter an appropriate hexadecimal value starting with 0X.
 
 -------------------
 HLPPROC
@@ -6063,7 +6093,17 @@ INVSEQNOQUAL, Invalid SEQNO qualifier value xxxx
 
 MUPIP Error: This error indicates that MUPIP JOURNAL -EXTRACT -SEQNO command could not extract a journal file because an invalid SEQNO format was specified.
 
-Action: Enter a comma-separated list of valid sequence numbers (‘0’ or positive integers) as values for the SEQNO qualifier. The format of the -SEQNO qualifier is -SEQNO=seqno1[,seqno2,seqno3…..] where seqno is the region sequence number in decimal format.
+Action: Enter a comma-separated list of valid sequence numbers (‘0’ or positive integers) as values for the SEQNO qualifier. The format of the SEQNO qualifier is -SEQNO=seqno1[,seqno2,seqno3…..] where seqno is the region sequence number in decimal format.
+
+---------------
+INVSHUTDOWN
+---------------
+
+INVSHUTDOWN, Shutdown timeout should be from 0 to 3600 seconds
+
+MUPIP Error: This error appears when the TIMEOUT specified with SOURCE SHUTDOWN exceeds 3600 seconds (1 hour).
+
+Action: Specify TIMEOUT between 0 to 3600 seconds
 
 ---------------------
 INVSPECREC
@@ -10403,6 +10443,26 @@ Run Time/MUPIP Error: This indicates that a global variable specified a null sub
 
 Action: Look for the source of the null subscript(s) and consider whether they are appropriate or due to a coding error. If they are appropriate, use MUPIP SET -NULL_SUBSCRIPTS, and remember to make the same adjustment with GDE CHANGE REGION -NULL_SUBSCRIPTS to ensure the next time you recreate a database that the characteristic persists.
 
+--------------
+NUM64ERR
+--------------
+
+NUM64ERR, Error: cannot convert VVVV value to 64 bit decimal or hexadecimal number
+
+All YottaDB Components Error: The entered value does not correspond to a valid decimal or hexidecimal representation of a 64-bit number.
+
+Action: Enter an appropriate decimal value or hexadecimal value starting with 0X.
+
+------------
+NUMERR
+------------
+
+NUMERR, Error: cannot convert VVVV value to 64 bit decimal or hexadecimal number
+
+All YottaDB Components Error: The entered value does not correspond to a valid decimal or hexidecimal number.
+
+Action: Enter an appropriate decimal value or hexadecimal value starting with 0X.
+
 ------------------
 NUMOFLOW
 ------------------
@@ -11488,6 +11548,16 @@ MUPIP Warning: This indicates that MUPIP did not reorg all the globals because o
 
 Action: Review the accompanying message(s) for more information.
 
+-------------
+REPL0BACKLOG
+-------------
+
+REPL0BACKLOG, Total backlog for the specified replicating instance(s) is 0
+
+MUPIP Success: This message indicates a successful ZEROBACKLOG SHUTDOWN. It means that there was no backlog for the specified replicating instance(s), no inflight updates, and all updates were successfully acknowledged by the Receiver Server.
+
+Action: None.
+
 ------------------
 REPL2OLD
 ------------------
@@ -11519,6 +11589,16 @@ MUPIP Warning: The Source Server records this warning message when the Source Se
 Action: Use the REPLALERT message as an mechanism to alert operations about replication network issues. Specify 0 as the REPLALERT period parameter (the third -CONNECTPARAM) to disable logging this message. The REPLALERT messages are disabled by default (that is, without specifying -CONNECTPARAM).
 
 REPLALERT was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.
+
+-------------
+REPLBACKLOG
+-------------
+
+REPLBACKLOG, Timeout occurred while there was a backlog
+
+MUPIP Error: This error occurs when the TIMEOUT specified with SOURCE ZEROBACKLOG SHUTDOWN expires and there is a either a backlog and/or there was a failure to receive an acknowledgement of the latest sequence number on the Source Server by the Receiver Server. If REPLNORESP also accompanies this error, it means that the Source Server did not receive a response from the Receiver Server acknowledging sequence number confirmation.
+
+Action: This error means that the ZEROBACKLOG checks did not pass. Restart the Source Server to clear any backlog. The presence of a REPL0BACKLOG success message for ZEROBACKLOG SHUTDOWN confirms that there are no inflight updates and all updates are acknowledged by the Receiver Server.
 
 ---------------------
 REPLBRKNTRANS
@@ -11928,6 +12008,16 @@ REPLNOHASHTREC, Sequence number NNNN contains trigger definition updates. IIII s
 Receiver Server log/Source Server log Error: $ZTRIGGER() or MUPIP TRIGGER updated a trigger definition in a replicated region, but the replicating instance is running a version that cannot process trigger definitions from this version. Previously, trigger maintenance actions replicated as data, and now, trigger maintenance actions replicate as logical actions.
 
 Action: Use V6.2-000 as a step on an upgrade path from earlier to later versions. Alternatively, if you need to perform trigger maintenance on replicating instances that are on either side of V6.2-000, you must perform them independently on the two systems when replication is off, recording and manipulating the sequence numbers such that you can resume replication.
+
+------------
+REPLNORESP
+------------
+
+REPLNORESP, No sequence number confirmation from the replicating instance xxxx after waiting for nnnn second(s)
+
+MUPIP Warning: This message appears when the Source Server fails to receive a response from the Receiver Server during a ZEROBACKLOG SHUTDOWN. The presence of a REPLNORESP indicates that a ZEROBACKLOG SHUTDOWN check failed. This warning is accompanied by the REPLBACKLOG error message.
+
+Action: This warning means that the ZEROBACKLOG checks did not pass. Restart the Source Server to clear any backlog. The presence of a REPL0BACKLOG success message for ZEROBACKLOG SHUTDOWN confirms that there are no inflight updates and all updates are acknowledged by the Receiver Server.
 
 ----------------------
 REPLNOTLS
@@ -12782,6 +12872,16 @@ SHRMEMEXHAUSTED, Attempt by process to use more shared memory than currently per
 Run Time Error: An out-of-memory error was encountered while trying to open a shared global section for a database file.
 
 Action: Reduce the shared global section usage by reducing the number of global buffers, or database block size, or the number of database files that the process tries to open.
+
+------------
+SHUT2QUICK
+------------
+
+SHUT2QUICK, Shutdown timeout ssss shorter than the heartbeat period SSSS; cannot confirm the backlog at the replicating instance iiii
+
+MUPIP Warning: This warning appears when the TIMEOUT=ssss specified with ZEROBACKLOG is less than the heartbeat period SSSS (the fifth parameter of CONNECTPARAMS). If TIMEOUT is less than the heartbeat period, ZEROBACKLOG cannot confirm that there is zero backlog as it cannot obtain the acknowledgement of the latest sequence number from the Receiver Server of instance iiii in such a short time.
+
+Action: Specify TIMEOUT that is larger or equal to the heartbeat period.
 
 -------------------
 SIDEEFFECTEVAL
@@ -14677,6 +14777,15 @@ Run Time Error: This indicates that a GT.CM component received a network message
 
 Action: Ensure that no agents outside the GT.CM environment are improperly sending messages to GT.CM.
 
+-----------
+UNUM64ERR
+-----------
+
+UNUM64ERR, Error: cannot convert VVVV value to 64 bit unsigned decimal or hexadecimal number
+
+All YottaDB Components Error: The entered value does not correspond to a valid unsigned decimal or hexidecimal representation of a 64-bit number.
+
+Action: Enter an appropriate decimal value or hexadecimal value starting with 0X.
 
 ------------------
 UPDATEFILEOPEN
@@ -14941,6 +15050,16 @@ VIEWNOTFOUND, View parameter xxxx not valid
 Run Time Error: This indicates that the VIEW command or $VIEW() function has an invalid argument xxxx.
 
 Action: Modify the argument.
+
+-------------
+VIEWREGLIST
+-------------
+
+VIEWREGLIST, $VIEW() only handles the first region subparameter
+
+Run Time Warning: $VIEW() with a region subparameter only operates on a single region. This differs from the VIEW command which has similar arguments and accepts region-lists for regions. This error is a warning and the function attempts to act on the first region.
+
+Action: If the requirement is for multiple regions, use multiple $VIEW() invocations.
 
 ------------------
 WAITDSKSPACE

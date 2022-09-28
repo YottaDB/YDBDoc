@@ -20,6 +20,7 @@ The format of the MUPIP BACKUP command is:
     -BK[UPDBJNL]={DISABLE|OFF}]
     -BY[TESTREAM] [-NET[TIMEOUT]]
     -DA[TABASE]
+    -DBG
     -[NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]]
     -[NO]O[NLINE]
     -REC[ORD]
@@ -160,6 +161,12 @@ The format of the DATABASE qualifier is:
 * The DATABASE qualifier is only compatible with the [NO]NEW[JNLFILES], ONLINE, and RECORD qualifiers.
 
 * COMPREHENSIVE is deprecated in favor of DATABASE. For upward compatibility, MUPIP temporarily continues to support the deprecated COMPREHENSIVE.
+
+^^^^
+-DBG
+^^^^
+
+Produces verbose output to help with debugging.
 
 ^^^^^^^^^^^^
 -NETtimeout

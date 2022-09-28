@@ -1262,7 +1262,7 @@ Example:
 
 .. code-block:: bash
 
-   DSE> change -fileheader -reserved_bytes=8 -record_max_size=496
+   DSE> change -fileheader -record_max_size=496
 
 This command sets the maximum record size as 496 for the default region.
 
@@ -1755,7 +1755,7 @@ Locates a given block or region. The format of the FIND command is:
    -K[EY]=key
    -[NO]C[RIT]
    -R[EGION][=region]
-   -S[IBLINGS]
+   -SI[BLINGS]
    ]
 
 * At the beginning of a DSE session, use the FIND -REGION command to select the target region.
@@ -1844,7 +1844,7 @@ The region name is case-insensitive.
 Use Alone.
 
 ^^^^^^^^^^^
--S[IBLINGS]
+-SI[BLINGS]
 ^^^^^^^^^^^
 
 Displays the block number of the specified block and its logical siblings in hexadecimal format.
@@ -2872,7 +2872,7 @@ DSE Command Summary
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -R[EGION][=region]                       | Use alone                                                                  |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -S[BLINGS]                               | Incompatible with -FREEBLOCK, -HINT, -KEY, -REGION                         |
+| \-                                       | -SI[BLINGS]                               | Incompatible with -FREEBLOCK, -HINT, -KEY, -REGION                        |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | :ref:`dse-help`                          | [help topic]                             | \-                                                                         |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+

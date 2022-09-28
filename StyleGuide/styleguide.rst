@@ -73,6 +73,14 @@ For example:
 
    > Paris is at transaction 95 or less.
 
++++++++++++++++
+Command Options
++++++++++++++++
+
+Options passed to commands should be spelled out and include the preceding ``-`` when they are included in an executable command string, e.g. ``mupip replicate -source -zerobacklog -shutdown``.
+
+However, when they are referenced independently, outside the context of a valid command, the ``-`` should be omitted, e.g. ``-SOURCE -ZEROBACKLOG -SHUTDOWN`` should be referenced as ``SOURCE ZEROBACKLOG SHUTDOWN``.
+
 -------------------------
 Documentation Elements
 -------------------------

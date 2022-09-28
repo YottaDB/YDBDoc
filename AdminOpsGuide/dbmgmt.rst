@@ -182,7 +182,7 @@ The format of the CREATE command is:
 
 The single optional REGION qualifier specifies a region for which to create a database file.
 
-Note that one YottaDB database file grows to a maximum size of 1,040,187,392(992Mi) blocks. This means, for example, that with an 8KiB block size, the maximum single database file size is 7,936GiB (8KiB*992Mi). Also, this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files.
+Note that one YottaDB database file grows to a maximum size of 17,179,869,184(16Gi) blocks. This means, for example, that with an 4KiB block size, the maximum single database file size is 131,072GiB (4KiB*16Gi). Also, this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files.
 
 Note that a MUPIP CREATE command that explicitly specifies a region which is tagged as :ref:`AutoDB <region-no-autodb>`, creates the database file for that region if it does not exist.
 
@@ -722,6 +722,7 @@ The optional qualifiers are:
 .. code-block:: none
 
    -[NO]A[UTORELEASE] - only valid with -ONLINE
+   -DBG
    -ON[LINE] - only valid with -ON
    -OV[ERRIDE]
    -R[ECORD] - only valid with -ON
@@ -791,6 +792,12 @@ Controls the behavior of a FREEZE specified with -ONLINE when YottaDB must write
 * An AUTORELEASE action requires a FREEZE OFF to reestablish a normal database state.
 
 * Incompatible with: OFF, NOONLINE
+
+~~~~
+-DBG
+~~~~
+
+Produces verbose output to help with debugging.
 
 ~~~~~~~~
 -ONLINE
@@ -907,6 +914,9 @@ The format of the MUPIP FTOK command is:
    FT[OK] [-DB] [-JNLPOOL] [-RECVPOOL] [-ID] [-ONLY] [-[NO]HEADER] file-list
 
 where file-list is a space delimited list of files, such as that provided by the use of the * and ? shell wildcard characters.
+
+* With JNLPOOL or RECVPOOL, MUPIP FTOK ignores any files in the list.
+* With JNLPOOL or RECVPOOL, MUPIP FTOK uses the entire replication instance file path.
 
 ~~~
 -DB
@@ -2594,6 +2604,7 @@ MUPIP Command Summary
 | I[NTEG]                              | File-name or region-list                    | * A[DJACENCY]=integer                                                                    | N                 |
 |                                      |                                             | * BL[OCK]=hexa;block-number                                                              | N                 |
 |                                      |                                             | * BR[IEF]                                                                                | N                 |
+|                                      |                                             | * DBG                                                                                    | N                 |
 |                                      |                                             | * FA[ST]                                                                                 | N                 |
 |                                      |                                             | * FI[LE]                                                                                 | Y                 |
 |                                      |                                             | * FU[LL]                                                                                 | N                 |

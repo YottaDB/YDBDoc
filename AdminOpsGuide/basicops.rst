@@ -885,7 +885,7 @@ ydb_tprestart_log_delta
 ++++++++++++++++++++++++++
 ydb_tprestart_log_first
 ++++++++++++++++++++++++++
-**ydb_tprestart_log_first (gtm_tprestart_log_first)** specifies the initial number of transaction restarts which YottaDB should report before pacing transaction restart reports to the operator logging facility using the :ref:`ydb-tprestart-log-delta-env-var` value. If :ref:`ydb-tprestart-log-delta-env-var` is defined and ydb_tprestart_log_first is not defined, YottaDB initializes ydb_tprestart_log_first to 1.
+**ydb_tprestart_log_first (gtm_tprestart_log_first)** specifies the initial number of transaction restarts which YottaDB should report before pacing transaction restart reports to the operator logging facility using the :ref:`ydb-tprestart-log-delta-env-var` value. If :ref:`ydb-tprestart-log-delta-env-var` is defined and ydb_tprestart_log_first is not defined, YottaDB initializes ydb_tprestart_log_first to 0.
 
 +++++++++++++++++++++
 ydb_trace_gbl_name

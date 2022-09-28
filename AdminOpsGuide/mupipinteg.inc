@@ -34,6 +34,7 @@ The format of the MUPIP INTEG command is:
     -A[DJACENCY]=integer
     -BL[OCK]=hexa;block-number
     -BR[IEF]
+    -DBG
     -FA[ST]
     -FU[LL]
     -[NO]K[EYRANGES]
@@ -118,6 +119,12 @@ Displays a single summary report by database file of the total number of directo
 * By default, MUPIP INTEG uses the BRIEF qualifier.
 
 * Incompatible with: FULL
+
+^^^^
+-DBG
+^^^^
+
+Produces verbose output to help with debugging.
 
 ^^^^^^
 -FAST
