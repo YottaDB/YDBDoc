@@ -187,6 +187,24 @@ Unless used with -EXACT, specifies the leading prefix for an implicit wild card 
 
 * When used with SHOW,-LOCK provides a precise way to examine the specified lock.
 
+.. note::
+
+   When the string subscript contains a :code:`,` the resource name must be quoted and quotation marks within the subscripts will need to be doubled.
+
+   For example;
+
+   .. code-block:: bash
+
+      LKE> clear -lock=^x(",")
+      Error getting LOCK parameter
+      LKE> clear -lock="^x("","")"
+
+      DEFAULT
+      ^x(",") Owned by PID= 13295 which is an existing process
+      Clear lock ? y
+      Lock removed : ^x(",")
+      LKE>
+
 ~~~~~~~~~~~~~~~~~~~
 -[NO]I[NTERACTIVE]
 ~~~~~~~~~~~~~~~~~~~
