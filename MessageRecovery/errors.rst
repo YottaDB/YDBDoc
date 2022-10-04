@@ -5709,7 +5709,7 @@ Action: Verify and correct the IP address and port.
 INVALIDGBL
 -----------------
 
-INVALIDGBL, Search pattern is invalid
+INVALIDGBL, Search pattern is invalid in %GSEL
 
 Utility Error: The search pattern used is invalid due to either using invalid characters or improper formatting.
 
