@@ -36,6 +36,7 @@ deadlinks:
 
 pages:
   stage: deploy
+  image: bitnami/minideb
   script:
     - make html
     - ./buildall.sh public
