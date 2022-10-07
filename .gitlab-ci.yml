@@ -19,27 +19,17 @@ before_script:
     - pip3 install sphinx_rtd_theme sphinxprettysearchresults
     - git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto ../YDBOcto
 
-deadlinks:
-  stage: build
-  image: bitnami/minideb
-  script:
-    - make html
-    - ./buildall.sh target
-    # The VM zip file is many gigabytes large, so it doesn't make sense
-    # to keep it in the repository. Instead, create a dummy file so `deadlinks`
-    # thinks it exists.
-    - touch target/AcculturationGuide/Debian-Hybrid_yottadbworkshop15.zip
-    - export DEADLINKS_VERSION=$(wget -q -O - https://api.github.com/repos/deadlinks/cargo-deadlinks/releases/latest | jq --raw-output .tag_name)
-    - wget https://github.com/deadlinks/cargo-deadlinks/releases/download/$DEADLINKS_VERSION/deadlinks-linux -O deadlinks
-    - chmod +x ./deadlinks
-    - ./deadlinks -v target
-
 pages:
   stage: deploy
   image: bitnami/minideb
   script:
     - make html
     - ./buildall.sh public
+    - touch public/AcculturationGuide/Debian-Hybrid_yottadbworkshop15.zip
+    - export DEADLINKS_VERSION=$(wget -q -O - https://api.github.com/repos/deadlinks/cargo-deadlinks/releases/latest | jq --raw-output .tag_name)
+    - wget https://github.com/deadlinks/cargo-deadlinks/releases/download/$DEADLINKS_VERSION/deadlinks-linux -O deadlinks
+    - chmod +x ./deadlinks
+    - ./deadlinks -v public
   artifacts:
     paths:
       - public
