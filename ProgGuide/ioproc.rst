@@ -1998,6 +1998,8 @@ The following table provides a brief summary of deviceparameters for socket devi
 | ZIBFSIZE=intexpr       | O/U                            | Sets the buffer size used by the network software (setsockopt SO_RCVBUF).                 |
 +------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
 
+.. _socket-device-examples:
+
 ++++++++++++++++++++++++++++++++++
 Socket Device Examples
 ++++++++++++++++++++++++++++++++++
@@ -2055,6 +2057,7 @@ The ZSHOW "D" command reports available information on both the local and remote
    REMOTE=10.1.2.3@53731 LOCAL=10.2.3.4@7777
    ZDELAY ZIBFSIZE=1024 ZIBFSIZE=0
 
+.. _tls-on-yottadb:
 
 ++++++++++++++++++++
 TLS on YottaDB
@@ -2062,19 +2065,7 @@ TLS on YottaDB
 
 TLS (Transport Layer Security) can be turned on for YottaDB using the following steps:
 
-* As root, go to the following directory and extract source.tar:
-
-  .. code-block:: bash
-
-     cd $ydb_dist/plugin/gtmcrypt
-     tar x < source.tar
-
-* Make sure the openssl-dev, libconfig-dev, and gpgme-dev libraries are installed before the next step.
-
-  .. code-block:: bash
-
-     ydb_dist=../.. make
-     ydb_dist=../.. make install
+* To use TLS communication on YottaDB, you need to install the YDBEncrypt plugin, as it is not installed by default. See the `YDBEncrypt README file <https://gitlab.com/YottaDB/Util/YDBEncrypt/-/blob/master/README.md>`_ for instructions.
 
 * In your application directory, make a directory for certificates.
 
@@ -2096,18 +2087,21 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
   .. code-block:: none
 
      tls: {
-       dev: {
-           format: "PEM";
-           cert: "/home/ydbuser/workspace/db/certs/mycert.pem";
-           key:  "/home/ydbuser/workspace/db/certs/mycert.key";
-             }
-          }
+       server: {
+         format: "PEM";
+         cert: "/data/certs/mycert.pem";
+	 key:  "/data/certs/mycert.key";
+       };
+       client: {
+         CAfile: "/data/certs/mycert.pem";
+       };
+     }
 
 * Set the environment variable ydb_crypt_config to be the path to your config file:
 
   .. code-block:: bash
 
-     export ydb_crypt_config=ydb_crypt_config.libconfig"
+     export ydb_crypt_config="ydb_crypt_config.libconfig"
 
 * Find out the hash of your key password using the maskpass utility.
 
@@ -2116,15 +2110,15 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
      echo "ydbpass" | $ydb_dist/plugin/gtmcrypt/maskpass | cut -d ":" -f2 | tr -d ' '
      7064420FDCAEE313B222
 
-* In your environment file, set ydb_tls_passwd_{section name} to be that hash.
+* In your environment file, set ydb_tls_passwd_{server name} to be that hash.
 
   .. code-block:: bash
 
-     export ydb_tls_passwd_dev="7064420FDCAEE313B222"
+     export ydb_tls_passwd_server="7064420FDCAEE313B222"
 
-* Start the server
+* Refer to the :ref:`socket-device-examples` section on starting a server in YottaDB.
 
-For more documentation on TLS, see `Appendix H: Creating a TLS Configuration File <../AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
+For more documentation on TLS configuration file options, see `Appendix F: Creating a TLS Configuration File <../AdminOpsGuide/tls.html>` in the Administration and Operations Guide.
 
 ----------------------------
 I/O Commands

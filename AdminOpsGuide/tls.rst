@@ -20,6 +20,8 @@ Appendix F : Creating a TLS Configuration File
 .. contents::
    :depth: 3
 
+To use TLS with YottaDB sockets, see `TLS on YottaDB <../ProgrammersGuide/ioproc.html#tls-on-yottadb>`_ of the M Programming Guide.
+
 ------------------------------------
 Creating a TLS Configuration File
 ------------------------------------
