@@ -61,9 +61,13 @@ Installation Procedure
 
 * Run it with your choice of directory where you want it installed (omit the –verbose option for less output):
 
- .. code-block:: bash
+  .. code-block:: bash
 
-    sudo ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose
+    sudo --preserve-env=ydb_icu_version ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose
+
+  The :code:`--preserve-env=ydb_icu_version` is needed in case the :code:`ydb_icu_version` env var is set to a value
+  other than what :code:`pkg-config --modversion icu-io` would return (seen as necessary for example, on a :code:`SLED 15`
+  or :code:`openLeap 15` SUSE Linux system). It is not needed otherwise but does not hurt either.
 
 * :code:`yottadb -version` provides a detailed report on the YottaDB build, e.g.,
 
@@ -85,13 +89,13 @@ Compile the reference implementation plugin as follows:
 
 * Install the development headers and libraries for libgcrypt, libgpgme, libconfig, and libssl. On Linux, the package names of development libraries usually have a suffix such as -dev or -devel and are available through the package manager. For example, on Ubuntu_x86_64, the following command installs the required development libraries:
 
-.. code-block:: bash
+  .. code-block:: bash
 
    sudo apt-get install libgcrypt11-dev libgpgme11-dev libconfig-dev libssl-dev
 
-The package names vary by distribution/version.
+  The package names vary by distribution/version.
 
-.. note::
+  .. note::
 
    :code:`$ydb_dist` points to the absolute path for the directory where YottaDB is installed.
 
@@ -217,19 +221,19 @@ Examples
 
 .. code-block:: bash
 
-   sudo ./ydbinstall.sh
+   sudo --preserve-env=ydb_icu_version ./ydbinstall.sh
 
-This example installs the latest YottaDB release in a subdirectory of :code:`/usr/local/lib/yottadb`, e.g., :code:`/usr/local/lib/yottadb/r130`.
+This example installs the latest YottaDB release in a subdirectory of :code:`/usr/local/lib/yottadb`, e.g., :code:`/usr/local/lib/yottadb/r134`.
 
 .. code-block:: bash
 
-   sudo ./ydbinstall.sh --utf8 default --verbose
+   sudo --preserve-env=ydb_icu_version ./ydbinstall.sh --utf8 default --verbose
 
 This example installs the latest YottaDB release with added support for UTF-8 and outputs diagnostic information as the script executes.
 
 .. code-block:: bash
 
-   sudo ./ydbinstall.sh --installdir /r120 r1.20
+   sudo --preserve-env=ydb_icu_version ./ydbinstall.sh --installdir /r120 r1.20
 
 This example installs YottaDB release r1.20 in the r120 directory.
 
