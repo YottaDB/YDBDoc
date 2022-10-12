@@ -4965,9 +4965,9 @@ Action: Verify that the environment provides the desired dddd, that dddd exists 
 GTMSECSHRDMNSTARTED
 ------------------------
 
-GTMSECSHRDMNSTARTED, [client pid pppp] File (ffff) removed
+GTMSECSHRDMNSTARTED, GTMSECSHR daemon started (key: kkkk) for version vvvv from dddd
 
-GTMSECSHR Information: This message indicates that GTMSECSHR removed file ffff on behalf of process pppp.
+GTMSECSHR Information: This message indicates that GTMSECSHR daemon was started for the version vvvv from the installation directory dddd with the ftok() key kkkk.
 
 Action: N/A
 
