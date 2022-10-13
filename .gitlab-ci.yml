@@ -17,7 +17,7 @@ stages:
 before_script:
     - apt-get update -qq && apt-get install -y -qq --no-install-recommends git make rsync tcsh sphinx-common python3-pip python3-setuptools python3-wheel jq wget
     - pip3 install sphinx_rtd_theme sphinxprettysearchresults
-    - git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto ../YDBOcto
+    - if [ ! -d ../YDBOcto ]; then git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto ../YDBOcto; else (cd ../YDBOcto && git fetch); fi
 
 pages:
   stage: deploy
