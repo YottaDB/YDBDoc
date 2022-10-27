@@ -1467,9 +1467,6 @@ Setting up an A -> P replication configuration with empty databases
 
    BACKUP COMPLETED.
 
-.. note::
-   While a backed up instance file helps start replication on the P side of A→P, it does not prevent the need for taking a backup of the database on A. You need to do a database backup/restore or an extract/load from A to P to ensure P has all of the data as on A at startup.
-
 **On P**:
 
 * Source the environment variable.
