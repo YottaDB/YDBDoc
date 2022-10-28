@@ -53,6 +53,24 @@ Before you begin installing YottaDB, perform the following tasks:
 Installation Procedure
 -------------------------
 
++++++++++++++++++++++++++++++++++
+Installing prerequisite packages
++++++++++++++++++++++++++++++++++
+
+Install the following packages:
+
+.. code-block:: bash
+
+   # Ubuntu/Debian
+   apt-get install -y --no-install-recommends file binutils libelf-dev libicu-dev nano wget
+
+   # RHEL/Rocky Linux
+   yum install -y file binutils findutils elfutils-libelf libicu wget procps-ng nano gzip
+
++++++++++++++++++++
+Installing YottaDB
++++++++++++++++++++
+
 * Create a temporary directory and change to it, e.g.: mkdir /tmp/tmp ; cd /tmp/tmp
 
 * Get the YottaDB installer: wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
