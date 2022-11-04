@@ -123,6 +123,8 @@ The following table describes the legal types defined in the C header file $ydb_
 +-----------------------+-------------------+-------------------------------------------------------------------------------------------+
 | ydb_char_t**          | Yes               | For passing a pointer to a "C" style string.                                              |
 +-----------------------+-------------------+-------------------------------------------------------------------------------------------+
+| ydb_buffer_t*         | Yes               | For passing string values to and from YottaDB.                                            |
++-----------------------+-------------------+-------------------------------------------------------------------------------------------+
 | ydb_double_t          | No                | Double-precision floating point number on 64-bit platforms.                               |
 +-----------------------+-------------------+-------------------------------------------------------------------------------------------+
 | ydb_double_t*         | Yes               | For passing a pointer to double-precision floating point numbers.                         |
@@ -204,12 +206,12 @@ Specification of a pre-allocation value should follow these rules:
 
 * Pre-allocation is an unsigned integer value specifying the number of bytes to be allocated on the system heap with a pointer passed into the external call.
 * Pre-allocating on a type with a direction of input or input/output results in a YottaDB error.
-* Pre-allocation is meaningful only on types ydb_char_t * and ydb_string_t \*. On all other types the pre-allocation value specified will be ignored and the parameter will be allocated a default value for that type. With ydb_string_t * arguments make sure to set the 'length' field appropriately before returning control to YottaDB. On return from the external call, YottaDB uses the value in the length field as the length of the returned value, in bytes.
+* Pre-allocation is meaningful only on types ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*. On all other types the pre-allocation value specified will be ignored and the parameter will be allocated a default value for that type. Make sure to set the 'length' field for ydb_string_t \* arguments and 'len_alloc' field for ydb_buffer_t * appropriately before returning control to YottaDB. On return from the external call, YottaDB uses the value in the length field as the length of the returned value, in bytes.
 * If the user does not specify any value, then the default pre-allocation value would be assigned to the parameter.
 * Specification of pre-allocation for "scalar" types (parameters which are passed by value) is an error.
 
 .. note::
-   Pre-allocation is optional for all output-only parameters except ydb_string_t * and ydb_char_t \*. Pre-allocation yields better management of memory for the external call. When an external call exceeds its specified preallocation (ydb_string_t * or ydb_char_t * output), YottaDB produces the EXCEEDSPREALLOC error. In the case that the user allocates space for the character pointer inside a ydb_string_t * type output parameter, a length field longer than the specified preallocated size for the output parameter does not cause an EXCEEDSPREALLOC error.
+   Pre-allocation is optional for all output-only parameters except ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*. Pre-allocation yields better management of memory for the external call. When an external call exceeds its specified preallocation (ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*), YottaDB produces the EXCEEDSPREALLOC error. In the case that the user allocates space for the character pointer inside a ydb_string_t * type output parameter, a length field longer than the specified preallocated size for the output parameter does not cause an EXCEEDSPREALLOC error.
 
  .. _callback-mech:
 
@@ -523,12 +525,12 @@ libyottadb.h defines the following types that can be used in Call-Ins.
 +-----------------------+----------------------------------------------------------------------------------------------------------+
 | ydb_ulong_t*          | Pointer to ydb_ulong_t. Good for returning unsigned integers.                                            |
 +-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_string_t*         | Pointer to ydb_string_t described below. Used to move binary data in and out (in spite of its name). Also|
-|                       | you can use it if the cost of doing strlen() on a ydb_char_t* is too high for your application.          |
+| ydb_string_t*         | Pointer to ydb_string_t described below. Used to move binary data in and out (in spite of its name).     |
 +-----------------------+----------------------------------------------------------------------------------------------------------+
 | ydb_char_t*           | Alias for char*. Useful for passing strings to and from YottaDB                                          |
 +-----------------------+----------------------------------------------------------------------------------------------------------+
-
+| ydb_buffer_t*         | Pointer to ydb_buffer_t described below. Used to pass strings.                                           |
++-----------------------+----------------------------------------------------------------------------------------------------------+
 
 .. code-block:: C
 
@@ -536,6 +538,14 @@ libyottadb.h defines the following types that can be used in Call-Ins.
        ydb_long_t length;
        ydb_char_t* address;
    } ydb_string_t;
+
+.. code-block:: C
+
+   typedef struct {
+       ydb_uint_t len_alloc;
+       ydb_uint_t len_used;
+       ydb_char_t* buf_addr;
+   } ydb_buffer_t;
 
 The pointer types defined above are 32-bit addresses on all 32-bit platforms. For 64-bit platforms, ydb_string_t* is a 64-bit address.
 
@@ -605,10 +615,10 @@ The <direction> indicates the type of operation that YottaDB performs on the par
 +===================+==============================================================================================================+
 | I                 | ydb_int_t, ydb_int64_t, ydb_uint_t, ydb_uint64_t, ydb_long_t, ydb_ulong_t, ydb_float_t, ydb_double_t,        |
 |                   | ydb_int_t*, ydb_int64_t*, ydb_uint_t*, ydb_uint64_t*, ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,|
-|                   | ydb_char_t*, ydb_string_t*                                                                                   |
+|                   | ydb_char_t*, ydb_string_t*, ydb_buffer_t*                                                                    |
 +-------------------+--------------------------------------------------------------------------------------------------------------+
 | O/IO              | ydb_int_t*, ydb_int64_t*, ydb_uint_t*, ydb_uint64_t*                                                         |
-|                   | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*                           |
+|                   | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*,ydb_buffer_t*             |
 +-------------------+--------------------------------------------------------------------------------------------------------------+
 
 Call-In tables support comments effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ YottaDB ignores text from a double slash (//) on a line to the end of the line.
@@ -983,10 +993,104 @@ In the following table, the YottaDB->C limit applies to 1 and the C->YottaDB lim
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
 | ydb_string_t *                                     | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_buffer_t *                                     | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
 
 .. note::
    ydb_char_t ** is not supported for call-ins but they are included for IO and O direction usage with call-outs. For call-out use of ydb_char_t \* and ydb_string_t \*, the specification in the interface definition for preallocation sets the range for IO and O, with a maximum of 1MiB.
 
 .. note::
-   Call-ins where the return value is a string check for buffer overflows (where possible) and return an error if the return area is not large enough. Note that for string parameters, use of the :code:`ydb_string_t` type is highly recommended as it enables checking for buffer overflows. A :code:`char *` type does not enable such checks and is best avoided.
+   Call-ins where the return value is a string check for buffer overflows (where possible) and return an error if the return area is not large enough. Note that for string parameters, use of the :code:`ydb_buffer_t*` type is highly recommended as it enables checking for buffer overflows. A :code:`char *` type does not enable such checks and is best avoided.
+
+-------------------------------
+Error cases for ydb_buffer_t *
+-------------------------------
+
+.. list-table:: Error cases for ydb_buffer_t usage in call-ins
+   :widths: 40 15
+   :header-rows: 1
+
+   * - Scenario
+     - Result
+   * - I ydb_buffer_t parameter with len_used more than len_alloc
+     - PARAMINVALID error
+   * - I ydb_buffer_t parameter with len_used more than 0 but buf_addr == NULL
+     - PARAMINVALID error
+   * - IO ydb_buffer_t parameter with len_used more than len_alloc
+     - PARAMINVALID error
+   * - IO ydb_buffer_t parameter with len_used more than 0 but buf_addr == NULL
+     - PARAMINVALID error
+   * - IO ydb_buffer_t parameter with output value more than len_alloc
+     - INVSTRLEN error
+   * - O ydb_buffer_t parameter with len_used more than 1MiB
+     - No MAXSTRLEN error
+   * - O ydb_buffer_t parameter with len_used more than len_allocMAXSTRLEN error
+     - No PARAMINVALID error
+   * - O ydb_buffer_t parameter with len_used more than 0 but buf_addr == NULL
+     - No PARAMINVALID error
+   * - O ydb_buffer_t parameter with output len_used more than 0 but buf_addr == NULL
+     - PARAMINVALID error
+   * - O ydb_buffer_t parameter with output value more than len_alloc
+     - INVSTRLEN error
+   * - RETURN ydb_buffer_t parameter with len_used more than 1MiB
+     - No MAXSTRLEN error
+   * - RETURN ydb_buffer_t parameter with len_used more than len_alloc
+     - No PARAMINVALID error
+   * - RETURN ydb_buffer_t parameter with len_used more than 0 but buf_addr == NULL
+     - No PARAMINVALID error
+   * - RETURN ydb_buffer_t parameter with return len_used more than 0 but buf_addr == NULL
+     - PARAMINVALID error
+   * - RETURN ydb_buffer_t parameter with return value more than len_alloc
+     - INVSTRLEN error
+
+.. list-table:: Error cases for ydb_buffer_t usage in call-outs
+   :widths: 40 25
+   :header-rows: 1
+
+   * - Scenario
+     - Result
+   * - No preallocation specified for O parameter of type ydb_buffer_t * using the default external call package
+     - Default-package ZCNOPREALLOUTPAR error
+   * - No preallocation specified for O parameter of type ydb_buffer_t * using a custom external call package
+     - Custom-package ZCNOPREALLOUTPAR error
+   * - IO parameter of type ydb_buffer_t * has no preallocation specified
+     - No ZCNOPREALLOUTPAR error
+   * - RETURN value of type ydb_buffer_t * is NULL
+     - M string returned is an empty string
+   * - O parameter of type ydb_buffer_t * has NULL value
+     - M string returned is an empty string
+   * - IO parameter of type ydb_buffer_t * has NULL value
+     - M string returned is an empty string
+   * - O parameter of type ydb_buffer_t * has NULL value is not passed by reference
+     - M string returned is NOT an empty string
+   * - IO parameter of type ydb_buffer_t * has NULL value is not passed by reference
+     - M string returned is NOT an  empty string
+   * - O ydb_buffer_t * parameter with output length is greater than 1MiB
+     - MAXSTRLEN error
+   * - IO ydb_buffer_t * parameter with output length is greater than 1MiB
+     - MAXSTRLEN error
+   * - RETURN ydb_buffer_t * parameter with return length is greater than 1MiB
+     - MAXSTRLEN error
+   * - RETURN type ydb_buffer_t * has buf_addr NULL after call-out
+     - M string returned is an empty string
+   * - O parameter of type ydb_buffer_t * has buf_addr NULL after call-out
+     - M string returned is an empty string
+   * - IO parameter of type ydb_buffer_t * has buf_addr NULL after call-out
+     - M string returned is an empty string
+   * - RETURN type ydb_buffer_t * has len_used 0 after call-out
+     - M string returned is an empty string
+   * - O parameter of type ydb_buffer_t * has len_used 0 after call-out
+     - M string returned is an empty string
+   * - O parameter of type ydb_buffer_t * has len_used 0 after call-out
+     - M string returned is an empty string
+   * - O ydb_buffer_t * parameter with return length is greater than pre-alloc length
+     - EXCEEDSPREALLOC error
+
+----------------------------------------------
+Choosing the right parameter type for strings
+----------------------------------------------
+
+* :code:`ydb_char_t *` is null terminated and is the simplest to use.
+* Use :code:`ydb_string_t *` if you to pass data from/to M that contains embedded NULLs (e.g. binary data).
+* Use :code:`ydb_buffer_t *` if you need to send data back (IO parameter) that has a larger length than the input data. For input-only, or output-only parameters, using :code:`ydb_string_t *` is simpler to use.
 
