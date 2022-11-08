@@ -2364,18 +2364,6 @@ Run Time/MUPIP Error: Indicates YottaDB successfully created the database file D
 
 Action: None required.
 
---------------
-DBFILERDONLY
---------------
-
-DBFILERDONLY, The database file ffff was opened as read-only (perms pppp)
-
-All YottaDB Components Error: Database file ffff was opened read-only with permissions pppp, but the read-only status is inconsistent with application expectations.
-
-Action: Use the error and any follow-on messages to assess whether or not the read-only status is correct or the rejection is appropriate.
-
-DBFILERDONLY was added to YottaDB effective release r1.36.
-
 ---------------------
 DBFILERR
 ---------------------
