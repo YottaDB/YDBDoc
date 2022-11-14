@@ -3471,6 +3471,18 @@ Compile Time/Run Time Error: This error occurs when the TIMEOUT=<seconds> device
 
 Action: Specify an integer value greater than 0 as the TIMEOUT.
 
+-------------
+DEVPARPARSE
+-------------
+
+DEVPARPARSE, Error parsing device parameter specification
+
+Compile Time Error: While parsing deviceparameters, YottaDB encountered syntax errors.
+
+Action: Correct the code with the deviceparameter syntax.
+
+DEVPARPARSE was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
+
 ----------------
 DEVPARPROT
 ----------------
@@ -12716,6 +12728,18 @@ Run Time Error: This indicates that there is an invalid directory specified in t
 
 Action: Make sure the specified argument conforms to the syntax of a directory specification on the host operating system. Check for the existence of the directory and the access control permissions associated with the directory.
 
+----------------
+SETZDIRTOOLONG
+----------------
+
+SETZDIRTOOLONG, $ZDIR value specified is xxxx bytes long which is greater than the allowed maximum of yyyy bytes
+
+Compile / Run Time Error: The value to be assigned to `$ZDIRECTORY <../ProgrammersGuide/isv.html#zdirectory>`_ is xxxx bytes long, but the maximum supported string length for $ZDIRECTORY is yyyy bytes.
+
+Action: Correct the code that attempts to set $ZDIRECTORY to an excessively long value.
+
+SETZDIRTOOLONG was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
+
 ------------------------
 SHMPLRECOV
 ------------------------
@@ -14720,6 +14744,18 @@ UTF16ENDIAN, The device previously set UTF-16 endianness to cccc and cannot chan
 Run Time Error: YottaDB does not permit changing endian ordering on an OPEN device.
 
 Action: Check for a logic error and for appropriate device set up on the OPEN command. If the input has changed its characteristic, CLOSE and re-OPEN the device.
+
+------------------
+UTF8NOTINSTALLED
+------------------
+
+UTF8NOTINSTALLED, $ydb_dist does not have utf8 folder installed. Please use M mode or re-install YottaDB with UTF-8 support
+
+Run Time Error: The environment variable :code:`ydb_chset` (or if it is not set, the environment variable :code:`gtm_chset`) has the case-independent value :code:`"UTF-8"` instructing the YottaDB process to run in UTF-8 mode. However, YottaDB at :code:`$ydb_dist` was not installed with UTF-8 support.
+
+Action: Reinstall YottaDB with UTF-8 support and try again.
+
+UTF8NOTINSTALLED was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
 
 -------------------
 VALTOOBIG
