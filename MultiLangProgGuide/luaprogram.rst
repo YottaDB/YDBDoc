@@ -17,7 +17,7 @@ Programming in Lua
 .. contents::
    :depth: 5
 
-Programming YottaDB in `Lua <https://www.lua.org/>`_ is provided by `lua-yottadb <https://github.com/orbitalquark/lua-yottadb>`_, developed by `Mitchell <https://github.com/orbitalquark/>`_ and sponsored by the `University of Antwerp <https://www.uantwerpen.be>`_. We acknowledge their contribution and thank them for the value it adds to the YottaDB community.
+Programming YottaDB in `Lua <https://www.lua.org/>`_ is provided by `lua-yottadb <https://github.com/anet-be/lua-yottadb>`_, developed by `Mitchell <https://github.com/orbitalquark/>`_ and sponsored by the `University of Antwerp <https://www.uantwerpen.be>`_. We acknowledge their contribution and thank them for the value it adds to the YottaDB community.
 
 lua-yottadb wraps the YottaDB :ref:`c-simple-api` to provide a Lua API.
 
@@ -32,7 +32,7 @@ If a different version of Lua is being used make sure to either modify the *Make
 
    $ sudo apt install lua5.4
    $ sudo apt install liblua5.4-dev
-   $ git clone https://github.com/orbitalquark/lua-yottadb.git
+   $ git clone https://github.com/anet-be/lua-yottadb.git
    $ cd lua-yottadb
    $ sed -i 's/5.3/5.4/g' Makefile
    $ sudo make install
