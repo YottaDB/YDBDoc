@@ -1155,6 +1155,40 @@ Utility functions whose names end in :code:`_t()` are for use by multi-threaded 
 :ref:`ydb-exit-fn`, :ref:`ydb-fork-n-core-fn`, and :ref:`ydb-init-fn` do not have separate variants for single- and multi-threaded applications and are suitable for both.
 
 
++++++++++++++++++++++++++++++++
+ydb_call_variadic_plist_func()
++++++++++++++++++++++++++++++++
+
+.. code-block:: C
+
+   int ydb_call_variadic_plist_func(ydb_vplist_func cgfunc, gparam_list *cvplist)
+
+:code:`ydb_call_variadic_plist_func` allows a language wrapper to make pseudo variadic calls to routines if the wrapper doesn't support variadic calls. Since some variadic calls are required to interface properly with YottaDB interfaces (e.g., :code:`ydb_ci()`, :code:`ydb_cip`, and :code:`ydb_lock_st()` etc.) this routine is needed. The return value is the same as the return value from the function, if any, with a 0 return value indicating successful completion.
+
+The :code:`ydb_vplist_func` type is defined as follows:
+
+.. code-block:: C
+
+   typedef uintptr_t (*ydb_vplist_func)();
+
+The :code:`gparam_list` type is defined as follows:
+
+.. code-block:: C
+
+   typedef struct gparam_list_struct
+   {
+	intptr_t	n;				/* Count of parameter/arguments */
+	void    	*arg[MAX_GPARAM_LIST_ARGS];	/* Parameter/argument array */
+   } gparam_list;
+
+The first field :code:`n` is the count of valid parameters, which can have a maximum value of MAX_GPARAM_LIST_ARGS (currently 36).
+
+To use :code:`ydb_call_variadic_plist_func()`, the :code:`cvplist` array needs to be filled in. Each element in the array is sized to hold a pointer. The :code:`arg` array holds all of the parameters (a maximum of 36 entries at this time) to be passed to the function. If a parameter does not fit as a single element, multiple elements can be used but this must be done in accordance with the calling API of the particular system.
+
+.. note::
+
+   On a 32 bit machine, each argument is only 32 bits wide so to pass a 64 bit value like a :code:`ydb_double_t`, the value will have to be split across two parameter slots. Alternatively, it may be easier to use a :code:`ydb_double_t *` type instead of :code:`ydb_double_t` so the parameter only takes one slot.
+
 ++++++++++++++++
 ydb_child_init()
 ++++++++++++++++
