@@ -727,35 +727,10 @@ This example defines the environment variable ydb_gbldir. Upon entering YottaDB 
 
 The SET command attempts to change the value of $ZGBLDIR to test.gld. Because the file does not exist, YottaDB reports an error and does not change the value of $ZGBLDIR.
 
-To facilitate application migration to YottaDB from other M implementations (for example to convert UCI and VOL specifications to global directories) in the environment specification, YottaDB provides an interface to translate strings to global directory filenames. With the exception of the function name, this facility is identical to that :ref:`used for extended references <opt-ydb-env-xltn-fac>`.
+To facilitate application migration to YottaDB from other M implementations (for example to convert UCI and VOL specifications to global directories) in the environment specification, YottaDB provides an :ref:`interface to translate strings to global directory filenames <opt-ydb-gbldir-xltn-fac>`. With the exception of the function name, this facility is identical to that :ref:`used for extended references <opt-ydb-env-xltn-fac>`.
 
 .. note::
    Using this facility impacts the performance of *every* global access. Make sure you use it only when static determination of the global directory is not feasible. When used, maximize the efficiency of the translation routines.
-
-Enable the facility by setting the environment variable :code:`ydb_gbldir_translate` to the path of a shared library with the entry point :code:`ydb_gbldir_xlate()` . The global directory used is the value assigned to $zgbldir as translated by the routine. :code:`ydb_gbldir_xlate()` has the same signature as the ydb_env_xlate() routine used for environment translation.
-
-.. parsed-literal::
-   int ydb_gbldir_xlate(ydb_string_t \*in1, ydb_string_t \*in2, ydb_string_t \*in3, ydb_string_t \*out)
-
-where ydb_string_t is a structure defined in libyottadb.h as follows:
-
-.. parsed-literal::
-   typedef struct
-   {
-	unsigned long	length;
-	char		\*address;
-   } ydb_string_t;
-
-and
-
-* :code:`in1` references the value being assigned to $zgbldir;
-* :code:`in2` is the NULL string - the parameter exists only so that the signature matches that of :code:`ydb_env_translate()`;
-* :code:`in3` references $zdirectory the current directory of the process; and
-* :code:`out` is a return value that references the actual global directory file to be used.
-
-A return value other than zero (0) indicates an error in translation, and is reported as a YottaDB error.
-
-Refer to :ref:`the extended reference facility <opt-ydb-env-xltn-fac>` for more information.
 
 -----------------
 $ZHOROLOG

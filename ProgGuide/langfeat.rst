@@ -677,142 +677,131 @@ Example:
 
    $ cat ydb_env_xlate.c
    #include <stdio.h>
+
    #include <string.h>
+
    #include "libyottadb.h"
+
    static int init = 0;
-   typedef struct
-   {
-     ydb_string_t field1, field2, ret;
-   } line_entry ;
-   static line_entry table[5], *line, linetmp;
+   typedef struct {
+       ydb_string_t field1, field2, ret;
+   }
+   line_entry;
+   static line_entry table[5], * line, linetmp;
    /* Since these errors may occur before setup is complete, they are statics */
-   static char *errorstring1 ="Error in function initialization, environment variable GTM_CALLIN_START not defined. Environment translation failed.";
-   static char *errorstring2 ="Error in function initialization, function pointers could not be determined. Environment translation failed.";
-   #define ENV_VAR"GTM_CALLIN_START"
-   typedef int(*int_fptr)();
+   static char * errorstring1 = "Error in function initialization, environment variable GTM_CALLIN_START not defined. Environment translation failed.";
+   static char * errorstring2 = "Error in function initialization, function pointers could not be determined. Environment translation failed.";
+   #define ENV_VAR "GTM_CALLIN_START"
+   typedef int( * int_fptr)();
    int_fptr GTM_MALLOC;
-   int init_functable(ydb_string_t *ptr)
-   {
-   /* This function demonstrates the initialization of other function pointers as well (if the user-code needs them for any reason, they should be defined as globals) */
-   char *pcAddress;
-   long lAddress;
-   void **functable;
-   void (*setup_timer) ();
-   void (*cancel_timer) ();
-   pcAddress = getenv(ENV_VAR);
-   if (pcAddress == NULL)
-   {
-   ptr->length = strlen(errorstring1);
-   ptr->address = errorstring1;
-   return 1;
+   int init_functable(ydb_string_t * ptr) {
+       /* This function demonstrates the initialization of other function pointers as well (if the user-code needs them for any reason, they should be defined as globals) */
+       char * pcAddress;
+       long lAddress;
+       void ** functable;
+       void( * setup_timer)();
+       void( * cancel_timer)();
+       pcAddress = getenv(ENV_VAR);
+       if (pcAddress == NULL) {
+           ptr -> length = strlen(errorstring1);
+           ptr -> address = errorstring1;
+           return 1;
+       }
+       lAddress = -1;
+       lAddress = atol(pcAddress);
+       if (lAddress == -1) {
+           ptr -> length = strlen(errorstring2);
+           ptr -> address = errorstring2;
+           return 1;
+       }
+       functable = (void * ) lAddress;
+       setup_timer = (void( * )()) functable[2];
+       cancel_timer = (void( * )()) functable[3];
+       GTM_MALLOC = (int_fptr) functable[4];
+       return 0;
    }
-   lAddress = -1;
-   lAddress = atol(pcAddress);
-   if (lAddress == -1)
-   {
-   ptr->length = strlen(errorstring2);
-   ptr->address = errorstring2;
-   return 1;
+   void copy_string(char ** loc1, char * loc2, int length) {
+       char * ptr;
+       ptr = (char * ) ydb_malloc(length);
+       strncpy(ptr, loc2, length);
+       * loc1 = ptr;
    }
-   functable = (void *)lAddress;
-   setup_timer = (void(*)()) functable[2];
-   cancel_timer = (void(*)()) functable[3];
-   GTM_MALLOC = (int_fptr) functable[4];
-   return 0;
+   int init_table(ydb_string_t * ptr) {
+       int i = 0;
+       char buf[100];
+       char * buf1, * buf2;
+       FILE * tablefile;
+       char * space = " ";
+       char * errorstr1 = "Error opening table file table.dat";
+       char * errorstr2 = "UNDETERMINED ERROR FROM GTM_ENV_XLATE";
+       if ((tablefile = fopen("table.dat", "r")) == (FILE * ) NULL) {
+           ptr -> length = strlen(errorstr1);
+           copy_string( & (ptr -> address), errorstr1, strlen(errorstr1));
+           return 1;
+       }
+       while (fgets(buf, (int) sizeof(buf), tablefile) != (char * ) NULL) {
+           line = & table[i++];
+           buf1 = buf;
+           buf2 = strstr(buf1, space);
+           line -> field1.length = buf2 - buf1;
+           copy_string( & (line -> field1.address), buf1, line -> field1.length);
+           buf1 = buf2 + 1;
+           buf2 = strstr(buf1, space);
+           line -> field2.length = buf2 - buf1;
+           copy_string( & (line -> field2.address), buf1, line -> field2.length);
+           buf1 = buf2 + 1;
+           line -> ret.length = strlen(buf1) - 1;
+           copy_string( & (line -> ret.address), buf1, line -> ret.length);
+       }
+       fclose(tablefile);
+       /* In this example, the last entry in the table is the error string */
+       line = & table[4];
+       copy_string( & (line -> ret.address), errorstr2, strlen(errorstr2));
+       line -> ret.length = strlen(errorstr2);
+       return 0;
    }
-   void copy_string(char **loc1, char *loc2, int length)
-   {
-   char *ptr;
-   ptr = (char *) ydb_malloc(length);
-   strncpy( ptr, loc2, length);
-   *loc1 = ptr;
+   int cmp_string(ydb_string_t str1, ydb_string_t str2) {
+       if (str1.length == str2.length)
+           return strncmp(str1.address, str2.address, (int) str1.length);
+       else
+          return str1.length - str2.length;
    }
-   int init_table(ydb_string_t *ptr)
-   {
-   int i = 0;
-   char buf[100];
-   char *buf1, *buf2;
-   FILE *tablefile;
-   char *space = " ";
-   char *errorstr1 = "Error opening table file table.dat";
-   char *errorstr2 = "UNDETERMINED ERROR FROM GTM_ENV_XLATE";
-   if ((tablefile = fopen("table.dat","r")) == (FILE *)NULL)
-   {
-   ptr->length = strlen(errorstr1);
-   copy_string(&(ptr->address), errorstr1, strlen(errorstr1));
-   return 1;
+   int cmp_line(line_entry * line1, line_entry * line2) {
+       return (((cmp_string(line1 -> field1, line2 -> field1)) || (cmp_string(line1 -> field2, line2 -> field2))));
    }
-   while (fgets(buf, (int)sizeof(buf), tablefile) != (char *)NULL)
-   {
-   line= &table[i++];
-   buf1 = buf;
-   buf2 =strstr(buf1, space);
-   line->field1.length = buf2 - buf1;
-   copy_string( &(line->field1.address), buf1, line->field1.length);
-   buf1 = buf2+1;
-   buf2 = strstr(buf1, space);
-   line->field2.length = buf2-buf1;
-   copy_string( &(line->field2.address), buf1, line->field2.length);
-   buf1 = buf2+1;
-   line->ret.length = strlen(buf1) - 1;
-   copy_string( &(line->ret.address), buf1, line->ret.length);
+   int look_up_table(line_entry * aline, ydb_string_t * ret_ptr) {
+       int i;
+       int ret_v;
+       for (i = 0; i < 4; i++) {
+           line = & table[i];
+           ret_v = cmp_line(aline, line);
+           if (!ret_v) {
+               ret_ptr -> length = line -> ret.length;
+               ret_ptr -> address = line -> ret.address;
+               return 0;
+           }
+       }
+       /*ERROR OUT*/
+       line = & table[4];
+       ret_ptr -> length = line -> ret.length;
+       ret_ptr -> address = line -> ret.address;
+       return 1;
    }
-   fclose(tablefile);
-   /* In this example, the last entry in the table is the error string */
-   line = &table[4];
-   copy_string( &(line->ret.address), errorstr2, strlen(errorstr2));
-   line->ret.length = strlen(errorstr2);
-   return 0;
-   }
-   int cmp_string(ydb_string_t str1, ydb_string_t str2)
-   {
-   if (str1.length == str2.length)
-   return strncmp(str1.address, str2.address, (int) str1.length);
-   else
-   return str1.length - str2.length;
-   }
-   int cmp_line(line_entry *line1, line_entry *line2)
-   {
-   return (((cmp_string(line1->field1, line2->field1))||(cmp_string(line1->field2, line2->field2))));
-   }
-   int look_up_table(line_entry *aline, ydb_string_t *ret_ptr)
-   {
-   int i;
-   int ret_v;
-   for(i=0;i<4;i++)
-   {
-   line = &table[i];
-   ret_v = cmp_line( aline, line);
-   if (!ret_v)
-   {
-   ret_ptr->length = line->ret.length;
-   ret_ptr->address = line->ret.address;
-   return 0;
-   }
-   }
-   /*ERROR OUT*/
-   line = &table[4];
-   ret_ptr->length= line->ret.length;
-   ret_ptr->address = line->ret.address;
-   return 1;
-   }
-   int ydb_env_xlate(ydb_string_t *ptr1, ydb_string_t *ptr2, ydb_string_t *ptr_zdir, ydb_string_t *ret_ptr)
-   {
-   int return_val, return_val_init;
-   if (!init)
-   {
-   return_val_init = init_functable(ret_ptr);
-   if (return_val_init) return return_val_init;
-   return_val_init = init_table(ret_ptr);
-   if (return_val_init) return return_val_init;
-   init = 1;
-   }
-   linetmp.field1.length= ptr1->length;
-   linetmp.field1.address= ptr1->address;
-   linetmp.field2.length= ptr2->length;
-   linetmp.field2.address= ptr2->address;
-   return_val = look_up_table(&linetmp, ret_ptr);
-   return return_val;
+   int ydb_env_xlate(ydb_string_t * ptr1, ydb_string_t * ptr2, ydb_string_t * ptr_zdir, ydb_string_t * ret_ptr) {
+       int return_val, return_val_init;
+       if (!init) {
+           return_val_init = init_functable(ret_ptr);
+           if (return_val_init) return return_val_init;
+           return_val_init = init_table(ret_ptr);
+           if (return_val_init) return return_val_init;
+           init = 1;
+       }
+       linetmp.field1.length = ptr1 -> length;
+       linetmp.field1.address = ptr1 -> address;
+       linetmp.field2.length = ptr2 -> length;
+       linetmp.field2.address = ptr2 -> address;
+       return_val = look_up_table( & linetmp, ret_ptr);
+       return return_val;
    }
    > cat table.dat
    day1 week1 yottadb
@@ -821,6 +810,37 @@ Example:
    day4 week2 c.gld
 
 This example demonstrates the mechanism. A table is set up the first time for proper memory management, and for each reference, a table lookup is performed. Note that for the purpose of simplicity, no error checking is done, so table.dat is assumed to be in the correct format, and have exactly four entries. This routine should be built as a shared library, see `Chapter 11: “Integrating External Routines” <./extrout.html>`_ for information on building as a shared library. The function init_functable is necessary to set up the YottaDB memory management functions.
+
+.. _opt-ydb-gbldir-xltn-fac:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Optional YottaDB Global Directory Translation Facility
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Enable the facility by setting the environment variable :code:`ydb_gbldir_translate` to the path of a shared library with the entry point :code:`ydb_gbldir_xlate()`. The global directory used is the value assigned to $zgbldir as translated by the routine. :code:`ydb_gbldir_xlate()` has the same signature as the ydb_env_xlate() routine used for :ref:`environment translation <opt-ydb-env-xltn-fac>`.
+
+.. code-block:: bash
+
+   int ydb_gbldir_xlate(ydb_string_t \*in1, ydb_string_t \*in2, ydb_string_t \*in3, ydb_string_t \*out)
+
+where ydb_string_t is a structure defined in libyottadb.h as follows:
+
+.. code-block:: bash
+
+   typedef struct
+   {
+	unsigned long	length;
+	char		\*address;
+   } ydb_string_t;
+
+and
+
+* :code:`in1` references the value being assigned to $zgbldir;
+* :code:`in2` is the NULL string - the parameter exists only so that the signature matches that of :code:`ydb_env_translate()`;
+* :code:`in3` references $zdirectory the current directory of the process; and
+* :code:`out` is a return value that references the actual global directory file to be used.
+
+A return value other than zero (0) indicates an error in translation, and is reported as a YottaDB error.
 
 ----------------------------
 Literals

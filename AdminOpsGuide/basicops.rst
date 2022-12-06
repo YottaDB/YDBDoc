@@ -586,7 +586,7 @@ ydb_gbldir
 +++++++++++++++++++++++
 ydb_gbldir_translate
 +++++++++++++++++++++++
-**ydb_gbldir_translate** provides the path to a shared library to allow a set of $ZGBLDIR to be transformed for application portability across platforms. This is similar to the the optional YottaDB environment translation facility provided by :ref:`ydb-env-translate-env-var` above. ydb_gbldir_translate was added effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+**ydb_gbldir_translate** provides the path to a shared library to allow a set of $ZGBLDIR to be transformed for application portability across platforms, using the optional YottaDB `global directory translation facility <../ProgrammersGuide/langfeat.html#opt-ydb-gbldir-xltn-fac>`_. This is similar to the the optional YottaDB environment translation facility provided by :ref:`ydb-env-translate-env-var` above. ydb_gbldir_translate was added effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 ++++++++++++++
 ydb_gdscert
