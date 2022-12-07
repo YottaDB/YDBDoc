@@ -2736,7 +2736,7 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 * The optional second expression specifies a region name, structure index or a base address associated with the first (field name) argument. The choice is governed by the following rules applied in the following order:
 
   1. If the value is a hex value in the form of 0xhhhhhhhh[hhhhhhhh], then PEEKBYNAME uses it as the base address of the data to fetch. Also in this case, the offset, length, and type are taken from the field specified in the first expression (field). For more information, see the description of the "PEEK" mnemonic in :ref:`zpeek-function`.
-  2. If the first expression refers to one of the region-related structures supported by the $ZPEEK() function, PEEKBYNAME treats this second expression as a region name.
+  2. If the first expression refers to one of the region-related structures supported by the $ZPEEK() function, %PEEKBYNAME() treats this second expression as a region name. Always specify region names to %PEEKBYNAME() in uppercase. As YottaDB uses lower case region names for :ref:`ygblstat-util`, using lowercase names may yield unexpected results.
   3. If the first expression refers to one of the replication related structures supported by the $ZPEEK() function that are indexed, PEEKBYNAME treats this second expression as a numerical (base 10) index value.
   4. For those structures supported by the $ZPEEK() function that do not accept an argument, this second expression must be NULL or not specified.
 
