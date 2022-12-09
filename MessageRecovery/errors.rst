@@ -15152,6 +15152,16 @@ Run Time Information: This indicates that a ZBREAK command failed to set a break
 Action: Check for very large local variables. The memory requirement for ZBREAK is proportional to the size of the routine containing the entry reference. If the routine is large, divide the routine into smaller routines thereby reducing the memory requirement for ZBREAK. If appropriate, increase the memory quota for the user.
 
 -------------------
+ZBRKCNTNEGATIVE
+-------------------
+
+ZBRKCNTNEGATIVE, Count xxx, of transits through a ZBREAK breakpoint before activating it, cannot be negative
+
+Run Time Information: This indicates that a ZBREAK command specified a negative count of process transits through the breakpoint before the breakpoint action takes effect. xxx is the specified negative count.
+
+Action: Specify a positive count. Note that a count of 0 is treated as if a count of 1 was specified (i.e. the breakpoint action takes effect the first time the breakpoint is reached).
+
+-------------------
 ZCALLTABLE
 -------------------
 
