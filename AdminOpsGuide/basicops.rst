@@ -304,9 +304,9 @@ If you intend to use Database Encryption, set the ydb_passwd and ydb_crypt_confi
  Environment Variables
 ------------------------
 
-(Last updated: r1.36)
+(Last updated: `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_)
 
-YottaDB supports both ydb_* environment variables and gtm* environment variables. If the ydb* environment variable is not defined, but the gtm* environment variable is defined, the ydb* environment variable is also defined to have the same value as the gtm* environment variable the first time the gtm* environment variable is read. If the ydb* environment variable and the gtm* environment variable are both defined, the ydb* environment variable value takes precedence.
+YottaDB supports both ydb_* environment variables and GT.M environment variables (referred to here as gtm*, though some are upper case). If the ydb* environment variable is not defined, but the gtm* environment variable is defined, the ydb* environment variable is also defined to have the same value as the gtm* environment variable the first time the gtm* environment variable is read. If the ydb* environment variable and the gtm* environment variable are both defined, the ydb* environment variable value takes precedence.
 
 Environment variables of the form ydb_xc_<package> are used to point to the call-out tables for external calls, and the GT.M names of these variables are of the form GTMXC_<package>.
 
@@ -451,6 +451,13 @@ ydb_custom_errors
 ++++++++++++++++++++
 **ydb_custom_errors (gtm_custom_errors)** specifies the complete path to the file that contains a list of errors that should automatically stop all updates on those region(s) of an instance which have the Instance Freeze mechanism enabled.
 
++++++++++++++++++++
+ydb_cur_gbldir
++++++++++++++++++++
+**ydb_cur_gbldir** specifies the current value of $ZGBLDIR set by the parent process using SET $ZGBLDIR. If ydb_cur_gbldir is not set it means the parent has not set a value to ZGBLDIR, and is using the value set from the environment at process startup.
+
+ydb_cur_gbldir was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`.
+
 ++++++++++++++++++++++++++++++
 ydb_dbfilext_syslog_disable
 ++++++++++++++++++++++++++++++
@@ -563,6 +570,8 @@ ydb_etrap
 ++++++++++++
 **ydb_etrap (gtm_etrap)** specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydb_env_set script sets ydb_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs.
 
+.. _ydb-extract-nocol:
+
 ++++++++++++++++++++
 ydb_extract_nocol
 ++++++++++++++++++++
@@ -570,6 +579,13 @@ ydb_extract_nocol
 
 .. note::
     If default collation is used for a database with custom collation, the subscripts reported by MUPIP JOURNAL -EXTRACT are those stored in the database, which may differ from those used by application logic.
+
+++++++++++++++++++++++
+ydb_flushoncallout
+++++++++++++++++++++++
+**ydb_flushoncallout** specifies whether the process should startup with `VIEW FLUSHONCALLOUT <../ProgrammersGuide/commands.html#view-flushoncallout>`_. If set to a non-zero numeric value. "yes" or "TRUE" (case-insensitive), or a leading substring thereof, causes the process to startup with VIEW FLUSHONCALLOUT. Any other value, or no value causes the process to startup with VIEW NOFLUSHONCALLOUT.
+
+ydb_flushoncallout was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`.
 
 ++++++++++++++++++++++
 ydb_fullblockwrites

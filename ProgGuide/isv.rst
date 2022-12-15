@@ -25,7 +25,7 @@ This chapter describes the M Intrinsic Special Variables implemented in YottaDB.
 M Intrinsic Special Variables start with a single dollar sign ($). YottaDB provides such variables for program examination. In some cases, the Intrinsic Special Variables may be set to modify the corresponding part of the environment.
 
 .. note::
-   None of the Intrinsic Special Variables can be KILLed. SETting or NEWing is generally not allowed, but is specifically noted in the descriptions of those that do.
+   None of the Intrinsic Special Variables can be KILLed. Setting or Newing is generally not allowed, but is specifically noted in the descriptions of those that do.
 
 ---------------
 $DEVICE
@@ -281,7 +281,7 @@ $ST[ACK] contains an integer value of zero (0) or greater indicating the current
 When a process is initiated but before any command is executed, the value of $STACK is zero (0).
 
 .. note::
-   The difference between $STACK and $ESTACK is that $ESTACK may appear as an argument of the NEW command. NEWing $ESTACK resets its value to zero (0), and can be useful to set up a layered error trapping mechanism.
+   The difference between $STACK and $ESTACK is that $ESTACK may appear as an argument of the NEW command. Newing $ESTACK resets its value to zero (0), and can be useful to set up a layered error trapping mechanism.
 
 The value of $STACK is "absolute" since the start of a YottaDB process, whereas the value of $ESTACK is "relative" to the most recent "anchoring point".
 
@@ -685,9 +685,11 @@ $ZG[BLDIR] contains the value of the current Global Directory filename. When $ZG
 
 YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to the value of the environment variable gtm_gbldir, and if that is not defined, then to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the string $ydb_gbldir and the extension .gld in the current working directory.
 
-$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR using the same logic as at process startup. NEWing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. As with NEWed local variables, QUIT restores the prior value in effect at the time of call. A $ZGBLDIR value may include an environment variable.
+$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR using the same logic as at process startup. Newing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. As with NEWed local variables, QUIT restores the prior value in effect at the time of call. A $ZGBLDIR value may include an environment variable.
 
-SETting $ZGBLDIR also causes YottaDB to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB triggers an error without changing the value of $ZGBLDIR.
+Setting $ZGBLDIR sets the environment variable `ydb_cur_gbldir <../AdminOpsGuide/basicops.html#>`_ to the new value of $ZGBLDIR. This allows a child process to decide whether to use the current global directory of the parent or the :code:`$ydb_gbldir`/ :code:`$gtm_gbldir` at parent process startup.
+
+Setting $ZGBLDIR also causes YottaDB to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB triggers an error without changing the value of $ZGBLDIR.
 
 To establish a value for $ZGBLDIR outside of M, use the appropriate shell command to assign a translation to ydb_gbldir. Defining ydb_gbldir provides a convenient way to use the same Global Directory during a session where you repeatedly invoke and leave YottaDB.
 
@@ -1687,7 +1689,7 @@ This example sets $ZSTEP to code that displays the contents of the next line to 
 $ZSTRPLLIM
 -----------------
 
-$ZSTRP[LLIM] provides a way for a process to limit its process private memory used for local variable and scratch storage. When the value is 0 or negative, the default, there is no limit. A positive value specifies a byte limit. When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces an STPCRIT error. By default, a later request for memory produces an STPOFLOW, unless subsequent to STPCRIT , $ZSTRPLLIM has been set to the same or higher limit. Note that YottaDB allocates memory in large blocks so the interaction of $ZSTRPLLIM with memory growth is not exact. When the ydb_string_pool_limit environment variable specifies a positive value, YottaDB uses it for the initial value of $ZSTRPLLIM.
+$ZSTRP[LLIM] provides a way for a process to limit its process private memory used for local variable and scratch storage. When the value is 0 or negative, the default, there is no limit. A positive value specifies a byte limit. An attempt to assign a value smaller than the minimum value (150,000 bytes) will assign the minimum value to $ZSTRPLLIM. When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces an STPCRIT error. By default, a later request for memory produces an STPOFLOW, unless subsequent to STPCRIT , $ZSTRPLLIM has been set to the same or higher limit. Note that YottaDB allocates memory in large blocks so the interaction of $ZSTRPLLIM with memory growth is not exact. When the ydb_string_pool_limit environment variable specifies a positive value, YottaDB uses it for the initial value of $ZSTRPLLIM.
 
 .. _zsystem-isv:
 
@@ -2150,7 +2152,7 @@ Note that if a trigger sets values of $ZTWORMHOLE or NEW's it within the trigger
 
 Note that if trigger code does not reference/set $ZTWORMHOLE, YottaDB does not make it available to MUPIP (via the journal files or replication stream). Therefore, if a replicating secondary has different trigger code than the initiating primary and the triggers on the replicating node require information from $ZTWORMHOLE, the triggers on the initiating node must reference/set $ZTWORMHOLE to ensure YottaDB maintains the data it contains for use by the update process on the replicating node. While you can change $ZTWORMHOLE within trigger code, because of the arbitrary ordering of trigger invocation on the same node, if multiple triggers for the same update modify $ZTWORMHOLE to different values, the final value of $ZTWORMHOLE after all triggers have been invoked (which is what gets stored in the journal file and gets replicated across to the replicating instance update process) becomes unpredictable. Therefore, such an approach requires careful design and implementation.
 
-YottaDB allows $ZTWORMHOLE to be NEW'd. NEWing $ZTWORMHOLE is like NEWing `$ZGBLDIR <https://docs.yottadb.com/ProgrammersGuide/isv.html#zgbldir>`_ in that the NEW'd value is initialized with the value pushed on the stack (i.e. $ZTWORMHOLE retains its original value after the NEW). However, like other NEWs, YottaDB restores $ZTWORMHOLE's value when the stack level pops.
+YottaDB allows $ZTWORMHOLE to be NEW'd. Newing $ZTWORMHOLE is like Newing `$ZGBLDIR <https://docs.yottadb.com/ProgrammersGuide/isv.html#zgbldir>`_ in that the NEW'd value is initialized with the value pushed on the stack (i.e. $ZTWORMHOLE retains its original value after the NEW). However, like other NEWs, YottaDB restores $ZTWORMHOLE's value when the stack level pops.
 
 The ability to propagate a value of $ZTWORMHOLE set in a trigger was added in `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
 

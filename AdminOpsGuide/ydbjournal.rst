@@ -1737,6 +1737,8 @@ Specifies that MUPIP JOURNAL processing include or exclude database updates gene
 
 By default, JOURNAL processes database updates regardless of the user who initiated them.
 
+.. _journal-extract-formats:
+
 -----------------------------
 Journal Extract Formats
 -----------------------------

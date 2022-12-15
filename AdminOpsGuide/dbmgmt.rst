@@ -182,7 +182,9 @@ The format of the CREATE command is:
 
 The single optional REGION qualifier specifies a region for which to create a database file.
 
-Note that one YottaDB database file grows to a maximum size of 1,040,187,392(992Mi) blocks. This means, for example, that with an 8KB block size, the maximum single database file size is 1,792GB (8KB*224M). Note that this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files.
+Note that one YottaDB database file grows to a maximum size of 1,040,187,392(992Mi) blocks. This means, for example, that with an 8KiB block size, the maximum single database file size is 7,936GiB (8KiB*992Mi). Also, this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files.
+
+Note that a MUPIP CREATE command that explicitly specifies a region which is tagged as :ref:`AutoDB <region-no-autodb>`, creates the database file for that region if it does not exist.
 
 ~~~~~~~~~~
 -Region

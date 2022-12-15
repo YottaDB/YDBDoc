@@ -26,7 +26,7 @@ This chapter describes the installation procedure for YottaDB. Always read the r
 Obtaining YottaDB Distribution Media
 -------------------------------------
 
-YottaDB distributions for selected platforms, including GNU/Linux on the popular x86 architecture and Raspberry Pi hardware, can be downloaded under the terms of the Affero GNU General Public License (AGPL) version 3, from the `YottaDB releases page on GitLab <https://gitlab.com/YottaDB/DB/YDB/-/releases>`_. Each distribution is a tarball that includes a :code:`ydbinstall` script. Unpack the tarball in a temporary directory, change to that directory, and run the script. For Supported platforms, and selected Supportable platforms, we recommend using the `ydbinstall.sh <https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_unix/ydbinstall.sh>` script, which will download, unpack, and install YottaDB for the platform on which it is run. The instructions for :ref:`ydbinstall script <ydbinstall-script>` and ydbinstall.sh script are identical.
+YottaDB distributions for selected platforms, including GNU/Linux on standard x86_64 and ARM architectures, can be downloaded under the terms of the Affero GNU General Public License (AGPL) version 3, from the `YottaDB releases page on GitLab <https://gitlab.com/YottaDB/DB/YDB/-/releases>`_. Each distribution is a tarball that includes a :code:`ydbinstall` script. Unpack the tarball in a temporary directory, change to that directory, and run the script. For Supported platforms, and selected Supportable platforms, we recommend using the `ydbinstall.sh <https://download.yottadb.com/ydbinstall.sh>`_ script, which will download, unpack, and install YottaDB for the platform on which it is run. The instructions for :ref:`ydbinstall script <ydbinstall-script>` and ydbinstall.sh script are identical.
 
 ---------------------------
 Before You Begin
@@ -73,7 +73,7 @@ Installing YottaDB
 
 * Create a temporary directory and change to it, e.g.: mkdir /tmp/tmp ; cd /tmp/tmp
 
-* Get the YottaDB installer: wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
+* Get the YottaDB installer: wget https://download.yottadb.com/ydbinstall.sh
 
 * Make it executable: chmod +x ydbinstall.sh
 
@@ -143,7 +143,9 @@ Compile the reference implementation plugin as follows:
 ydbinstall Script
 ---------------------
 
-ydbinstall is a stand-alone YottaDB installation script that installs YottaDB using reasonable defaults. ydbinstall is a part of the YottaDB binary distribution and you can use it to install YottaDB from the temporary directory in which you unpack the YottaDB distribution. It allows considerable customization using the following command line switches:
+`ydbinstall.sh <https://download.yottadb.com/ydbinstall.sh>`_ is a stand-alone YottaDB installation script that installs YottaDB using reasonable defaults. It deduces the distribution from :code:`/etc/os-release` and downloads the appropriate binary distribution. For selected derivatives of Supported distributions (e.g., `Rocky Linux <https://rockylinux.org/>`_ as a derivative of `Red Hat Enterprise Linux <https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux>`_), it downloads the YottaDB binary distribution of the Supported distribution. The derivative distributions are Supportable, not Supported. :code:`ydbinstall.sh` then invokes the :code:`ydbinstall` in the unpacked distribution, passing to it command line switches as discussed below.
+
+:code:`ydbinstall` in each YottaDB binary distribution installs YottaDB from the temporary directory in which the distribution is unpacked. It allows considerable customization using the following command line switches:
 
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | Command Line Switches                                   | \* | Description                                                                                                            |
@@ -185,10 +187,10 @@ ydbinstall is a stand-alone YottaDB installation script that installs YottaDB us
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-keep-obj                                            |    | Keep .o files of M routines (normally deleted on platforms with YottaDB support for routines in shared libraries);     |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-linkenv [dirname]                                   |    | Create link in dirname to ydb_env_set, ydb_env_unset and gtmprofile files, default :code:`/usr/local/etc`;             |
+| \-\-linkenv [dirname]                                   |    | Create or update links in dirname to ydb_env_set, ydb_env_unset and gtmprofile files, default :code:`/usr/local/etc`;  |
 |                                                         |    | incompatible with copyenv                                                                                              |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-linkexec [dirname]                                  |    | Create link in dirname to ydb and gtm scripts, default :code:`/usr/local/bin`; incompatible with copyexec              |
+| \-\-linkexec [dirname]                                  |    | Create or update links in dirname to ydb and gtm scripts, default :code:`/usr/local/bin`; incompatible with copyexec   |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-nocopyenv                                           |    | Do not copy ydb_env_set, ydb_env_unset, and gtmprofile to another directory                                            |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+

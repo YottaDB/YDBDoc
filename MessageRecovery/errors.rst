@@ -341,7 +341,7 @@ MUPIP Error: MUPIP produces this message when there is an error in any connectio
 
 Action: Specify valid values for the -CONNECTPARAM parameter. Refer to the `-CONNECTPARAM documentation <../AdminOpsGuide/dbrepl.html#connectparams>`_ in the Administration and Operations Guide for more information.
 
-BADCONNECTPARAM was added to YottaDB effective release r1.36.
+BADCONNECTPARAM was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.
 
 --------
 BADDBVER
@@ -413,7 +413,7 @@ MUPIP Error: MUPIP produces this message when there are more than six parameters
 
 Action: Specify one to six parameters or omit -CONNECTPARAMS from the MUPIP REPLICATE -SOURCE -START command to use the default connection parameters.
 
-BADPARAMCOUNT was added to YottaDB effective release r1.36.
+BADPARAMCOUNT was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.
 
 -------
 BADQUAL
@@ -2394,7 +2394,7 @@ MUPIP Warning: Indicates full block writes were not successfully enabled. iiii d
 
 Action: Consider planning to choose a blocksize better aligned with the file system blocksize at the next opportunity.
 
-DBFILNOFULLWRT was added to YottaDB effective release r1.36.
+DBFILNOFULLWRT was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.
 
 ----------------------
 DBFILOPERR
@@ -4093,7 +4093,7 @@ Run Time Error: Indicates a non-zero exit status aaaa returned from a process st
 
 Action: Use the exit status aaaa to adjust the script causing the unexpected exit.
 
-EXITSTATUS was added to YottaDB effective release r1.36.
+EXITSTATUS was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.
 
 -----------------------
 EXPR
@@ -5343,15 +5343,15 @@ Compile Time Error: This indicates that a global variable reference used the env
 
 Action: Verify that the environment specifies a full global name.
 
--------------------
-GVNEXTARG
--------------------
+------------------
+GVNUNSUPPORTED
+------------------
 
-GVNEXTARG, Argument to global variable $NEXT must be subscripted
+GVNUNSUPPORTED, Global variable name xxxx not supported in yyyy call
 
-Compile Time Error: This indicates that an attempt was made to use an un-subscripted global or local variable as the argument for a $NEXT() function. In contrast to $ORDER(), which can operate on un-subscripted names, $NEXT() requires subscripted names.
+Run Time Error: This indicates that the global variable xxxx was passed as a parameter to function yyyy where it is not meaningful, e.g., ^ABC passed as a parameter to ydb_delete_excl_s().
 
-Action: Use $ORDER() or revise the code.
+Action: Fix the application code bug.
 
 ---------------
 GVORDERFAIL
@@ -5912,16 +5912,6 @@ Run Time Error: Indicates the process cannot access directory dddd, which it nee
 
 Action: The directory specification comes from $ydb_linktmpdir if it is defined, otherwise from $ydb_tmp if that is defined; otherwise it defaults to the system temporary directory, typically /tmp. Either correct the environment variable definition or ensure directory dddd is appropriately set up. Note that all users of auto-relink for a directory normally need to use the same temporary directory for their relink control files.
 
------------------------
-INVLNPAIRLIST
------------------------
-
-INVLNPAIRLIST, Invalid lockname/subscript pair list (uneven number of lockname/subscript parameters)
-
-Runtime Error: This message comes only from the Golang wrapper. When specifying the locks to be acquired in the parameter list of LockE(), each lock is represented by a pair of arguments - a lock name and a list of subscripts. If the arguments aren't paired properly such that the last lock name read has no subscripts specified, this error is given.
-
-Action: Determine why the parameter list is not paired up correctly and fix it.
-
 ------------------------
 INVLOCALE
 ------------------------
@@ -6335,6 +6325,25 @@ Run Time Error: This indicates that a $ $ set^%GBLDEF or $ $ kill^%GBLDEF was at
 
 Action: Only $$get^%GBLDEF is supported for spanning globals. Specify a non-spanning global or change the set/kill to a get. For spanning globals, use the GDE ADD -GBLNAME command to set collation characteristics.
 
+----------------
+ISVSUBSCRIPTED
+----------------
+
+ISVSUBSCRIPTED, ISV variable name xxxx specified with a non-zero subscript count of nnnn
+
+Run Time Error: Intrinsic special variable xxxx was passed as a parameter to a Simple API function with nnnn subscripts. YottaDB has no subscripted intrinsic special variables.
+
+Action: Fix the applicated code bug.
+
+------------------
+ISVUNSUPPORTED
+------------------
+
+ISVUNSUPPORTED, ISV variable name xxxx not supported in yyyy call
+
+Run Time Error: This indicates that the intrinsic special variable xxxx was passed as a parameter to function yyyy where it is not meaningful, e.g., $TRESTART passed as a parameter to ydb_delete_excl_s().
+
+Action: Fix the application code bug.
 
 ---------------------
 JIUNHNDINT
@@ -11507,7 +11516,7 @@ MUPIP Warning: The Source Server records this warning message when the Source Se
 
 Action: Use the REPLALERT message as an mechanism to alert operations about replication network issues. Specify 0 as the REPLALERT period parameter (the third -CONNECTPARAM) to disable logging this message. The REPLALERT messages are disabled by default (that is, without specifying -CONNECTPARAM).
 
-REPLALERT was added to YottaDB effective release r1.36.
+REPLALERT was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.
 
 ---------------------
 REPLBRKNTRANS
@@ -13643,16 +13652,6 @@ DSE Error: This error shows in DSE when there is a string input that cannot be c
 
 Action: Review and correct typographical errors.
 
--------------------
-STRUCTNOTALLOCD
--------------------
-
-STRUCTNOTALLOCD, Structure not previously called with Alloc() method
-
-Runtime Error: This message comes only from the Golang wrapper. If a BufferT or BufferTArray structure is used without having been allocated by the Alloc() message, the wrapper can return this error.
-
-Action: Be sure the structure has been allocated before attempting to use it.
-
 ----------------
 STRUNXEOR
 ----------------
@@ -13747,7 +13746,7 @@ Action: Look for inappropriate $ prefixes and attempts to modify read-only speci
 SYSCALL
 ------------------
 
-SYSCALL, Error received from system call xxxx -- called from module yyyy at line zzzz
+SYSCALL, Error received from system call cccc on file xxxx-- called from module yyyy at line zzzz
 
 Run Time Error: This indicates that a system call failed due to some unusual error condition.
 

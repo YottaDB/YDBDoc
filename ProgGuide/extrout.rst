@@ -539,6 +539,10 @@ libyottadb.h defines the following types that can be used in Call-Ins.
        ydb_char_t* address;
    } ydb_string_t;
 
+.. note::
+
+   For :code:`ydb_string *` O and IO call-in parameters, YottaDB copies a maximum of :code:`length` bytes. YottaDB recommends using the :code:`ydb_buffer_t` structure, defined below, to pass strings and binary data between application code and the YottaDB runtime system.
+
 .. code-block:: C
 
    typedef struct {

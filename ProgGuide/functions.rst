@@ -1584,6 +1584,8 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |                  |                  | evaluation side effects" when it is not explicitly set, but that mode of operation is required by the setting of ydb_side_effects, and "Standard Boolean side-effect|
 |                  |                  | warning" when warnings have been specified.                                                                                                                         |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "FLUSHONCALLOUT" | none             | Returns 1 if VIEW FLUSHONCALLOUT is set, 0 otherwise.                                                                                                               |
++------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "GDSCERT"        | none             | Truth Value indicating whether Database block certification is currently enabled or disabled. To enable or disable Database block certification, use the VIEW       |
 |                  |                  | "GDSCERT" command.                                                                                                                                                  |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1622,6 +1624,8 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "JNLTRANSACTION" | none             | Index showing how many ZTSTART transaction fences have been opened (and not closed).                                                                                |
 |                  |                  |                                                                                                                                                                     |
++------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "JOBPID"         | none             | Returns the current setting of :ref:`VIEW "JOBPID" <view-jobpid>`.                                                                                                  |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "LABELS"         | none             | Truth value showing whether label case sensitivity is ON (1 for "LOWER") or OFF (0 for "UPPER"); YottaDB defaults to 1.                                             |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2793,7 +2797,7 @@ Returns job or process information of the specified process. The format for the 
 | UTIME                      | Process user time                                                                                                                    |
 +----------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
 
-* Note that the $ZGETJPI() retrieves process time measurements (CPUTIM, CSTIME, CUTIME, STIME, and UTIME) only of the current process ($JOB). The "child" process time includes ZSYSTEM and PIPE device sub-processes (only after the PIPE CLOSEs), but excludes processes created by JOB commands.
+* $ZGETJPI() retrieves process time measurements (CPUTIM, CSTIME, CUTIME, STIME, and UTIME) for the requested process. If the information is not available for the specified process, the function returns -1. If the process ID specified is 0, the current process ($JOB) time measurements are returned. The "child" process time includes ZSYSTEM and PIPE device sub-processes (only after the PIPE CLOSEs), but excludes processes created by JOB commands.
 * $ZGETJPI() provides a tool for examining the characteristics of a UNIX process. Accessing information about processes belonging to other users requires certain UNIX privileges. Consult your system manager if you require additional privileges.
 
 +++++++++++++++++++++++

@@ -1711,7 +1711,7 @@ The format of the VIEW command is:
 Keywords in VIEW Command
 +++++++++++++++++++++++++
 
-(Last updated: `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_)
+(Last updated: `r1.36 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.36>`_)
 
 The following sections describe the keywords available for the VIEW command in YottaDB.
 
@@ -1793,6 +1793,14 @@ FLUSH[:REGION]
 
 Flushes dirty global buffers from the global buffer pool. If journaling is turned on, "FLUSH" writes an EPOCH record and flushes dirty journal buffers prior to flushing dirty global buffers. If no region is specified, VIEW "FLUSH" flushes all regions in the current global directory that the YottaDB process has opened.
 
+.. _view-flushoncallout:
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+[NO]FLUSHONCALLOUT
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Allows an application to specify whether or not YottaDB should flush the output buffer of a terminal $PRINCIPAL when executing a call-out from M code to non-M code.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 [NO]FULL_BOOL[EAN|WARN]
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1810,6 +1818,12 @@ YottaDB picks up the value of [NO]FULL_BOOL[EAN|WARN] from the environment varia
 VIEW "[NO]FULL_BOOL[EAN|WARN]" takes effect immediately for indirection and XECUTE.
 
 VIEW "NOFULLBOOLEAN" produces an error when ydb_side_effects is on. For more information on the ydb_side_effects environment variable, refer to the `Environment Variables section in the Basic Operations chapter <../AdminOpsGuide/basicops.html#env-vars>`_ of the Administration and Operations Guide.
+
+~~~~~~~~~~~~~~~~~
+GBLDIRLOAD:str
+~~~~~~~~~~~~~~~~~
+
+Instructs YottaDB to read the global directory file specified by :code:`str`, cache its contents in memory, and switch to it as the current global directory (:code:`$ZGBLDIR`). If the global directory file was previously read and its contents cached (e.g., by a :code:`SET $ZGBLDIR`, or from the environment variables :code:`ydb_gbldir` / :code:`gtmgbldir` at process startup), YottaDB replaces its cached copy with a fresh copy. If :code:`str` is not a valid global directory, YottaDB issues a `GDINVALID <../MessageRecovery/errors.html#gdinvalid>`_ error. If :code:`str` is the empty string (""), YottaDB re-reads and again caches the global directory file specified by ydb_gbldir / gtmgbldir. If :code:`str` is omitted, a `VIEWARGCNT <../MessageRecovery/errors.html#viewargcnt>`_ error is issued.
 
 ~~~~~~~~~~~~~~~~
 GDSCERT:value
@@ -1848,6 +1862,8 @@ JNLWAIT
 Causes a process to pause until its journaling buffers have been written. JNLWAIT ensures that YottaDB successfully transfers all database updates issued by the process to the journal file before the process continues. Normally, YottaDB performs journal buffer writes synchronously for TP updates, and asynchronously, while the process continues execution, for non-TP updates or TP updates with TRANSACTIONID=BATCH.
 
 JNLWAIT operates only on those regions for which the current process has opened journal files. As all the journal activity for a TP transaction occurs at commit time, YottaDB ignores JNLWAIT when inside a TP TRANSACTION ($TLEVEL > 0). For more information on journaling, refer to the `"YottaDB Journaling" chapter in the Administration and Operations Guide <../AdminOpsGuide/ydbjournal.html>`_.
+
+.. _view-jobpid:
 
 ~~~~~~~~~~~~~~~~~
 JOBPID:value
@@ -3688,9 +3704,9 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 | MNEMONICS      | DESCRIPTION                                                                                                                          |
 +================+======================================================================================================================================+
-|  AFRA          | # of processes waiting for instance freeze to release critical sections                                                              |
+|  AFRA          | Set to 1 when waiting for instance freeze to release critical sections, 0 otherwise                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  BREA          | # of processes waiting for block read and decryption                                                                                 |
+|  BREA          | Set to 1 when waiting for block read & decryption, 0 otherwise                                                                       |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  BTD           | # of database Block Transitions to Dirty                                                                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3719,7 +3735,7 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  DEX           | # of Database file EXtentions                                                                                                        |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  DEXA          | # of processes waiting for database extension                                                                                        |
+|  DEXA          | Set to 1 when waiting for db extension, 0 otherwise                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  DFL           | # of Database FLushes of the entire set of dirty global buffers in shared memory to disk                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3743,7 +3759,7 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  GET           | # of GET operations (TP and non-TP)                                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  GLB           | # of processes waiting for bg access critical section                                                                                |
+|  GLB           | Set to 1 waiting for BG access critical section, 0 otherwise                                                                         |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  JBB           | # of Journal Buffer Bytes updated in shared memory                                                                                   |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3760,9 +3776,9 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  JFW           | # of Journal File Write system calls                                                                                                 |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  JNL           | # of processes waiting for journal access critical section                                                                           |
+|  JNL           | Set to 1 when waiting for journal access critical section, 0 otherwise                                                               |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  JOPA          | # of processes waiting for journal open critical section                                                                             |
+|  JOPA          | Set to 1 when waiting for journal open critical section, 0 otherwise                                                                 |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  JRE           | # of Journal Regular Epoch records written to the journal file (only seen in a -detail journal extract).                             |
 |                | These are written every time an epoch-interval boundary is crossed while processing updates.                                         |
@@ -3784,9 +3800,9 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  LKS           | # of LocK calls (mapped to this db) that Succeeded                                                                                   |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  MLBA          | # of processes waiting for blocked LOCK                                                                                              |
+|  MLBA          | Set to 1 when waiting for blocked LOCK, 0 otherwise                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  MLK           | # of processes waiting for LOCK access                                                                                               |
+|  MLK           | Set to 1 when waiting for LOCK access, 0 otherwise                                                                                   |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  NBR           | # of Non-tp committed transaction induced Block Reads on this database                                                               |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3806,7 +3822,7 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  ORD           | # of $ORDer(,1) (forward) operations (TP and non-TP); the count of $Order(,-1) operations are reported under ZPR.                    |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  PRC           | # of processes waiting for exit                                                                                                      |
+|  PRC           | Set to 1 when waiting on exit, 0 otherwise                                                                                           |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  QRY           | # of $QueRY() operations (TP and non-TP)                                                                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3838,9 +3854,9 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  TRB           | # of Tp read-only or read-write transactions Rolled Back (excluding incremental rollbacks)                                           |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  TRGA          | # of processes waiting for mini-transaction completion                                                                               |
+|  TRGA          | Set to 1 when waiting for mini-transaction completion, 0 otherwise                                                                   |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  TRX           | # of processes waiting for transaction in progress                                                                                   |
+|  TRX           | Set to 1 when waiting for transaction in progress, 0 otherwise                                                                       |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  TTR           | # of Tp committed Transactions that were Read-only on this database                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3848,7 +3864,7 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  WFR           | # of times a process slept while waiting for another process to read in a database block                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  ZAD           | # of processes waiting for region freeze off                                                                                         |
+|  ZAD           | Set to 1 when waiting for region freeze off, 0 otherwise                                                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  ZPR           | # of $order(,-1) or $ZPRevious() (reverse order) operations (TP and non-TP).                                                         |
 |                | The count of $Order(,1) operations are reported under ORD.                                                                           |
@@ -3951,6 +3967,7 @@ For process that has access to two database files produces results like the foll
    NTW:203,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,
    TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,
    JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
+   DEXA:0,GLB:0,JNL:0,MLK:0,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0
    GLD:/home/gtmuser1/.yottadb/r135/yottadb.gld,REG:DEFAULT,SET:205,KIL:0,GET:1,
    DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:411,DRD:9,DWT:15,NTW:2
    03,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,TBW:2,TBR:6,TR0:0,
@@ -3959,6 +3976,7 @@ For process that has access to two database files produces results like the foll
    CTN:411,DRD:9,DWT:15,NTW:203,NTR:4,NBW:212,NBR:414,NR0:0,NR1:0,NR2:0,NR3:0,TTW:1,TTR:0,TRB:0,
    TBW:2,TBR:6,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,
    JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
+   DEXA:0,GLB:0,JNL:0,MLK:0,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0
 
 Example:
 
@@ -3977,10 +3995,12 @@ Assuming that a YottaDB process uses the global directory "/tmp/x1.gld" and open
    DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,
    TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,
    JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
+   DEXA:0,GLB:0,JNL:0,MLK:0,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0
    GLD:/tmp/x1.gld,REG:REG2,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,
    DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,
    TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,
    JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
+   DEXA:0,GLB:0,JNL:0,MLK:0,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0
 
 Example:
 
@@ -3995,15 +4015,18 @@ This example redirects the output of ZSHOW "G" into a local variable zgbl:
    zgbl("G",0)="GLD:*,REG:*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,
    ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,
    TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,
-   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0"
+   JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
+   DEXA:0,GLB:0,JNL:0,MLK:0,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0"
    zgbl("G",1)="GLD:/tmp/x1.gld,REG:REG1,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,
    LKS:0,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,
    NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,
-   JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0"
+   JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
+   DEXA:0,GLB:0,JNL:0,MLK:0,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0"
    zgbl("G",2)="GLD:/tmp/x1.gld,REG:REG2,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,
    LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,
    NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,
-   JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0"
+   JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:4,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0
+   DEXA:0,GLB:0,JNL:0,MLK:0,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0"
 
 Example:
 
