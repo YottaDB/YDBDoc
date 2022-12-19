@@ -26,7 +26,7 @@ This chapter describes the installation procedure for YottaDB. Always read the r
 Obtaining YottaDB Distribution Media
 -------------------------------------
 
-YottaDB LLC prefers to distribute YottaDB online via the Internet. YottaDB for selected platforms, including GNU/Linux on the popular x86 architecture and Raspberry Pi hardware, can be downloaded under the terms of the Affero GNU General Public License (AGPL) version 3, from GitLab (https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_unix/ydbinstall.sh). Contact YottaDB Support (info@yottadb.com) to obtain a copy of a YottaDB distribution for other platforms or on physical media.
+YottaDB distributions for selected platforms, including GNU/Linux on the popular x86 architecture and Raspberry Pi hardware, can be downloaded under the terms of the Affero GNU General Public License (AGPL) version 3, from the `YottaDB releases page on GitLab <https://gitlab.com/YottaDB/DB/YDB/-/releases>`_. Each distribution is a tarball that includes a :code:`ydbinstall` script. Unpack the tarball in a temporary directory, change to that directory, and run the script. For Supported platforms, and selected Supportable platforms, we recommend using the `ydbinstall.sh <https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_unix/ydbinstall.sh>` script, which will download, unpack, and install YottaDB for the platform on which it is run. The instructions for :ref:`ydbinstall script <ydbinstall-script>` and ydbinstall.sh script are identical.
 
 ---------------------------
 Before You Begin
@@ -136,6 +136,8 @@ Compile the reference implementation plugin as follows:
   * Copy and paste the commands from the README to compile and install the encryption plugin with the permissions defined at install time
 
 * Compare the permissions of $ydb_dist/libyottadb.so to the newly installed shared libraries in $ydb_dist/plugin. Adjust the permission of the newly installed libraries as necessary.
+
+.. _ydbinstall-script:
 
 ---------------------
 ydbinstall Script
