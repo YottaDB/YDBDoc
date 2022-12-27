@@ -1585,12 +1585,14 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |                  |                  | warning" when warnings have been specified.                                                                                                                         |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "FLUSHONCALLOUT" | none             | Returns 1 if VIEW FLUSHONCALLOUT is set, 0 otherwise.                                                                                                               |
+|                  |                  | "FLUSHONCALLOUT" was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.                                                  |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "GDSCERT"        | none             | Truth Value indicating whether Database block certification is currently enabled or disabled. To enable or disable Database block certification, use the VIEW       |
 |                  |                  | "GDSCERT" command.                                                                                                                                                  |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "GBLDIRXLATE"    | [$ZGBLDIR]       | Returns the translated Global Directory filename.                                                                                                                   |
 |                  |                  | Refer to the optional YottaDB :ref:`global directory translation facility <opt-ydb-gbldir-xltn-fac>` for more information.                                          |
+|                  |                  | "GBLDIRXLATE" was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.                                                     |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "GVACCESS_METHOD"| none             | Access method of the region.                                                                                                                                        |
 |                  |                  |                                                                                                                                                                     |
@@ -1626,6 +1628,7 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |                  |                  |                                                                                                                                                                     |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "JOBPID"         | none             | Returns the current setting of :ref:`VIEW "JOBPID" <view-jobpid>`.                                                                                                  |
+|                  |                  | "JOBPID" was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.                                                          |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "LABELS"         | none             | Truth value showing whether label case sensitivity is ON (1 for "LOWER") or OFF (0 for "UPPER"); YottaDB defaults to 1.                                             |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+

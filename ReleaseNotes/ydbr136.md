@@ -421,7 +421,7 @@ YottaDB r1.36 incorporates enhancements and fixes from [GT.M V6.3-014](http://ti
 
   Previously the `ydb_fullblockwrites` environment variable of the first process to access the database (or its absence) determined this characteristic. With this change, YottaDB no longer recognizes the enviroment variable `ydb_fullblockwrites`. ([GTM-5381](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-012_Release_Notes.html#GTM-5381))
 
-* <a name="GTM-7628"></a>If there is enough free shared memory available, the MUPIP REPILCATE qualifier -BUFFSIZE accepts values of up to 64 GiB for source and receiver servers. Previously, this maximum was 4GiB. ([GTM-7628](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-014_Release_Notes.html#GTM-7628))
+* <a name="GTM-7628"></a>If there is enough free shared memory available, the MUPIP REPLICATE qualifier -BUFFSIZE accepts values of up to 64 GiB for source and receiver servers. Previously, this maximum was 4GiB. ([GTM-7628](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V6.3-014_Release_Notes.html#GTM-7628))
 
 * <a name="GTM-7759"></a> By default YottaDB uses the the syslog() facility to log a number of errors related to permissions and access. Previously, it only noted these messages on the console or, if output was redirected, in a YottaDB process's error output. The YottaDB restriction LOGDENIALS provides a facility for disabling this logging on a Unix group basis. If the restriction mechanism is not used, the logging takes place for all YottaDB processes. If the restriction is used logging takes place for specified groups only.
 

@@ -456,7 +456,7 @@ ydb_cur_gbldir
 +++++++++++++++++++
 **ydb_cur_gbldir** specifies the current value of $ZGBLDIR set by the parent process using SET $ZGBLDIR. If ydb_cur_gbldir is not set it means the parent has not set a value to ZGBLDIR, and is using the value set from the environment at process startup.
 
-ydb_cur_gbldir was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`.
+ydb_cur_gbldir was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.
 
 ++++++++++++++++++++++++++++++
 ydb_dbfilext_syslog_disable
@@ -585,7 +585,7 @@ ydb_flushoncallout
 ++++++++++++++++++++++
 **ydb_flushoncallout** specifies whether the process should startup with `VIEW FLUSHONCALLOUT <../ProgrammersGuide/commands.html#view-flushoncallout>`_. If set to a non-zero numeric value. "yes" or "TRUE" (case-insensitive), or a leading substring thereof, causes the process to startup with VIEW FLUSHONCALLOUT. Any other value, or no value causes the process to startup with VIEW NOFLUSHONCALLOUT.
 
-ydb_flushoncallout was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`.
+ydb_flushoncallout was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.
 
 ++++++++++++++++++++++
 ydb_fullblockwrites
