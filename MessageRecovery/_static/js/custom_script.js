@@ -37,7 +37,7 @@ function setupReleaseSelector () {
 	    var currentURL = window.location.href;
 	    var currentURLSplit = currentURL.split('/');
 	    var path = currentURLSplit[currentURLSplit.length - 1];
-	    var remaining = "//" + currentURLSplit.slice(2,currentURLSplit.length - 3).join('/') + "/";
+	    var remaining = currentURL.includes(".net") ? "//docs.yottadb.net/" : "//docs.yottadb.com/";
             if (this.value) {
 		var currentSel = this.value.replace(".","");
 	        var newURL = remaining + currentSel + path;
