@@ -70,7 +70,7 @@ YottaDB provides:
 - Throughput that scales to the needs of the largest applications
 - Unique functionality for creating logical multi-site configurations for mission critical applications that must always be available - including availability during upgrades that involve changes to the database schema.
 
-At the time of writing of this edition of the Acculturation Workshop, the latest YottaDB release is r1.34, on which the text and exercises are based. If there is a newer version of YottaDB when you go through the exercises, the same commands will work, but the output messages you see may vary.
+At the time of writing of this edition of the Acculturation Workshop, the latest YottaDB release is r1.36. The text and exercises are based on earlier releases of YottaDB. While there is no material difference between the YottaDB releases of the exercises and the latest YottaDB release, the output messages you see may vary slightly from the text here.
 
 .. note::
 
@@ -207,11 +207,11 @@ Install YottaDB
   .. code-block:: bash
 
      $ yottadb -version
-     YottaDB release:         r1.34
-     Upstream base version:   GT.M V6.3-011
+     YottaDB release:         r1.36
+     Upstream base version:   GT.M V6.3-014
      Platform:                Linux x86_64
-     Build date/time:         2022-02-23 20:57
-     Build commit SHA:        f2f77cc184d9fe2e272d7b1d39b64434e9769804
+     Build date/time:         2022-12-19 14:04
+     Build commit SHA:        31b5a92f2122b81fae315c2a59f4b3d1c975942d
      $
 
 +++++++++++
