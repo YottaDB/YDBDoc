@@ -4608,5 +4608,22 @@ Example:
    A=1 ;*
    *B=A
 
+Example:
+
+.. code-block:: bash
+
+   YDB>SET x(1)="a"
+
+   YDB>SET x(5,2,3)="b"
+
+   YDB>SET x(3,2,4)="c"
+
+   YDB>ZWRITE x(?.E,?.E,:)
+   x(3,2,4)="c"
+   x(5,2,3)="b"
+
+The above example displays all nodes of :code:`x` containing exactly 3 subscripts, not 1 or 2 subscripts.
+
+
 
 
