@@ -119,44 +119,6 @@ html_static_path = ["_static"]
 #
 html_sidebars = {"**": ["relations.html", "globaltoc.html", "searchbox.html"]}  # needs 'show_related': True theme option to display
 
-#################################################################################
-#                  RELEASE SPECIFIC DOCUMENTATION
-#################################################################################
-
-# html_context is used to supply values to templates (under _templates).
-# The current release and all the git tags values will be supplied using html_context.
-
-try:
-   html_context
-except NameError:
-   html_context = dict()
-
-from git import Repo
-repo = Repo( search_parent_directories=True )
-
-# Creating a list to store all the releases
-html_context['releases'] = list()
-
-# Fetching the tags in reverse sorted order (most recent first)
-# Only interested in tags from d1.34 onwards
-tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)[7:]
-latest_tag = tags[-1]
-
-# Setting html_context['curr_rel'] value depending on whether current commit has a tag associated to it or not.
-# If the latest commit has a tag associated to it, it means documentation has not yet diverged from latest release.
-# In this case the curr_rel is "rn.nn (current)", else it is just "current"
-curr_commit_sha = repo.head.object
-latest_tag_sha = latest_tag.commit
-if curr_commit_sha == latest_tag_sha:
-   html_context['curr_rel'] = str(latest_tag).replace("d", "r") + " (current)"
-else:
-   html_context['curr_rel'] = "current"
-
-# Populate the releases list
-html_context['releases'].append((html_context['curr_rel'], "current/StyleGuide/"))
-for tag in tags:
-   current_tag = str(tag).replace("d","r")
-   html_context['releases'].append((current_tag, current_tag.replace(".","")+"/StyleGuide/"))
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
