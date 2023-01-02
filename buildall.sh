@@ -54,7 +54,6 @@ then
 fi
 git fetch upstream --tags
 tags=( `git tag --list` )
-tags_len=${#tags[@]}
 
 rsync() {
 	command rsync --delete -lrtuv --exclude=\*.zip --exclude=.buildinfo --exclude=.nojekyll "$@"
@@ -91,10 +90,10 @@ cp index.html "$target/current"
 make clean
 
 # The latest tag is checked out, its documentation is built and copied to the appropriate directories
-for tag in ${tags[@]:7:$tags_len-7}; do
+for tag in ${tags[-1]}; do
     dir_name=`echo $tag | sed -e 's/d/r/g' -e 's/\.//g'`
     mkdir $target/$dir_name
-    git checkout -f $tag
+    git checkout $tag
 
     # A lot of changes were made to the documentation after r1.34, which is why a lot of fixes have
     # to be done manually in this script.

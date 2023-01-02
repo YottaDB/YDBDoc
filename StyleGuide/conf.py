@@ -141,7 +141,6 @@ html_context['releases'] = list()
 # Only interested in tags from d1.34 onwards
 tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)[7:]
 latest_tag = tags[-1]
-tags.reverse()
 
 # Setting html_context['curr_rel'] value depending on whether current commit has a tag associated to it or not.
 # If the latest commit has a tag associated to it, it means documentation has not yet diverged from latest release.
