@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -1402,6 +1402,8 @@ Restrictions apply as follows:
 |                                                         | facility. The YottaDB restriction LOGDENIALS provides a facility for disabling this logging on a   |
 |                                                         | Unix group basis. If this mechanism is not used, the logging takes place for all YottaDB processes |
 |                                                         | If the restriction is used, logging takes place for specified groups only.                         |
+|                                                         | YottaDB supports group names using the POSIX Portable Filename Character Set which includes        |
+|                                                         | characters from [A-Z], [a-z], [0-9], ., _ , and -.                                                 |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
 | ZBREAK                                                  | any ZBREAK produces a RESTRICTEDOP error                                                           |
 +---------------------------------------------------------+----------------------------------------------------------------------------------------------------+
