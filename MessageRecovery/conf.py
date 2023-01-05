@@ -1,6 +1,6 @@
 #################################################################
 #                                                               #
-# Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -44,7 +44,7 @@ import sphinx_rtd_theme
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.mathjax", "sphinx.ext.githubpages", "sphinxprettysearchresults"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.mathjax", "sphinx.ext.githubpages", "sphinxcontrib.jquery"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

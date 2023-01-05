@@ -46,7 +46,8 @@ echo '# Add the line:'
 echo '# <script type="text/javascript" src="_static/language_data.js"></script>'
 echo ''
 echo '# Step 5 : Make the following change in the all .html files under docs.yottadb.com:'
-echo '# After the line that contains: <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">'
+echo '# After the line that contains: <li class="toctree-l1"><a class="reference internal" href="LICENSE.html">LICENSE</a></li>'
+echo '# or <li class="toctree-l1 current"><a class="current reference internal" href="#">LICENSE</a></li>'
 echo '# Add the line:'
 echo '# <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/yottadb-pixel.png" />'
 
@@ -93,8 +94,15 @@ foreach d ($DIRECTORIES)
 	perl -p -i -e "s|$from|$to|g" $filelist
 
 	# Step 5
+	# Adding the pixel to all HTML pages except LICENSE.html
 	set filelist = `find _build/html/ -name '*.html'`
-	set from = '<div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">'
+	set from = '<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">LICENSE</a></li>'
+	set to1 = '<img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/yottadb-pixel.png" />'
+	set to = "$from${to1}"
+	perl -p -i -e "s|$from|$to|g" $filelist
+
+	# Adding the pixel to LICENSE.html pages
+	set from = '<li class="toctree-l1 current"><a class="current reference internal" href="#">LICENSE</a></li>'
 	set to1 = '<img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/yottadb-pixel.png" />'
 	set to = "$from${to1}"
 	perl -p -i -e "s|$from|$to|g" $filelist
