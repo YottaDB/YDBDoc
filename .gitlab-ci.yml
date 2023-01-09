@@ -33,3 +33,5 @@ pages:
   artifacts:
     paths:
       - public
+  tags:
+    - amd64
