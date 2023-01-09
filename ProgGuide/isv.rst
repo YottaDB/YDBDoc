@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -1924,7 +1924,7 @@ YottaDB permits $ZYERROR to be modified by the SET and NEW commands.
 $ZYINTRSIG
 ---------------
 
-$ZYINTRSIG is a read only ISV that holds the value :code:`"SIGUSR1"` or :code:`"SIGUSR2"` depending on whether a :code:`SIGUSR1` or :code:`SIGUSR2` signal triggers the current :code:`$ZINTERRUPT` invocation (i.e. if :code:`$ZINTERRUPT` is 1). If :code:`$ZINTERRUPT` is 0, :code:`$ZYINTRSIG` holds the value :code:`" "`. Note that the value can be :code:`"SIGUSR2"` only if the environment variable :code:`ydb_treat_sigusr2_like_sigusr1` was set to a non-zero value.
+$ZYINTRSIG is a read only ISV that holds the value :code:`"SIGUSR1"` or :code:`"SIGUSR2"` depending on whether a :code:`SIGUSR1` or :code:`SIGUSR2` signal triggers the current :code:`$ZINTERRUPT` invocation (i.e. if :code:`$ZININTERRUPT` is 1). If :code:`$ZININTERRUPT` is 0, :code:`$ZYINTRSIG` holds the value :code:`" "`. Note that the value can be :code:`"SIGUSR2"` only if the environment variable :code:`ydb_treat_sigusr2_like_sigusr1` was set to a non-zero value.
 
 :code:`$ZYINTRSIG` allows M code inside :code:`$ZINTERRUPT` differentiate whether it was a :code:`SIGUSR1` or :code:`SIGUSR2` that invoked the :code:`$ZINTERRUPT` mechanism and take different actions if necessary.
 
