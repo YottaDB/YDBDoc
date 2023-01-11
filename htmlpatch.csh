@@ -1,4 +1,5 @@
 #!/usr/bin/env -S tcsh -fe
+set verbose
 
 ###############################################################
 #                                                             #
@@ -58,29 +59,36 @@ foreach d ($DIRECTORIES)
 	set filelist = `ls -1 _build/html/_static/css/theme.css`
 	set from = 'monospace,serif'
 	set to   = 'Inconsolata,Consolas,monospace'
+	grep -q "$from" $filelist
 	perl -p -i -e "s/$from/$to/g" $filelist
 	set from = 'Lato,proxima-nova,Helvetica Neue,Arial,sans-serif'
 	set to   = 'FiraGO,Tahoma,sans-serif'
+	grep -q "$from" $filelist
 	perl -p -i -e "s/$from/$to/g" $filelist
 	set from = 'Roboto Slab,ff-tisa-web-pro,Georgia,Arial,sans-serif'
 	set to   = 'Lora,Georgia,serif'
+	grep -q "$from" $filelist
 	perl -p -i -e "s/$from/$to/g" $filelist
 	set from = 'SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,Courier,monospace'
 	set to   = 'Inconsolata,Consolas,monospace'
+	grep -q "$from" $filelist
 	perl -p -i -e "s/$from/$to/g" $filelist
 
 	# Step 2
 	set filelist = `ls -1 _build/html/_static/css/theme.css`
 	set from1 = 'background:#6ab0de'
 	set to1 = 'background:#3b1a68'
+	grep -q "$from1" $filelist
 	perl -p -i -e "s/$from1/$to1/g" $filelist
 	set from2 = 'e7f2fa'
 	set to2 = 'e0d1f3'
+	grep -q "$from2" $filelist
 	perl -p -i -e "s/$from2/$to2/g" $filelist
 
 	# Step 3
 	set filelist = `ls -1 _build/html/index.html`
 	set from = '<script src="_static/js/theme.js"></script>'
+	grep -q "$from" $filelist
 	set to1 = '<script type="text/javascript" src="_static/searchtools.js"></script>'
 	set to2 = '<script type="text/javascript" src="searchindex.js"></script>'
 	set to = "$from${to1}${to2}"
@@ -89,6 +97,7 @@ foreach d ($DIRECTORIES)
 	# Step 4
 	set filelist = `ls -1 _build/html/search.html`
 	set from = '<script src="_static/js/theme.js"></script>'
+	grep -q "$from" $filelist
 	set to1 = '<script type="text/javascript" src="_static/language_data.js"></script>'
 	set to = "$from${to1}"
 	perl -p -i -e "s|$from|$to|g" $filelist
@@ -97,6 +106,7 @@ foreach d ($DIRECTORIES)
 	# Adding the pixel to all HTML pages except LICENSE.html
 	set filelist = `find _build/html/ -name '*.html'`
 	set from = '<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">LICENSE</a></li>'
+	grep -q "$from" $filelist
 	set to1 = '<img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/yottadb-pixel.png" />'
 	set to = "$from${to1}"
 	perl -p -i -e "s|$from|$to|g" $filelist
@@ -104,6 +114,7 @@ foreach d ($DIRECTORIES)
 	# Adding the pixel to LICENSE.html pages
 	set from = '<li class="toctree-l1 current"><a class="current reference internal" href="#">LICENSE</a></li>'
 	set to1 = '<img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/yottadb-pixel.png" />'
+	grep -q "$from" $filelist
 	set to = "$from${to1}"
 	perl -p -i -e "s|$from|$to|g" $filelist
 
