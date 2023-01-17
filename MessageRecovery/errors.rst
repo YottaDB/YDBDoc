@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -2147,6 +2147,8 @@ DBCNTRLERR, Database file xxxx: control error suspected but not found
 Run Time Error: This indicates that YottaDB detected the possibility of damage to database cache structures and performed a cache verification and rebuild, but found no evidence of damage.
 
 Action: Verify that there are no locked or runaway processes. Check disk loads for evidence of resource constraints.
+
+.. _dbcollreq:
 
 ------------------
 DBCOLLREQ
@@ -12656,6 +12658,8 @@ SETENVFAIL, VIEW "SETENV":"eeee" failed in setenv() system call
 Run Time Error: This indicates that a setenv() system call failed for the environment variable named eeee.
 
 Action: Examine the accompanying SYSCALL error message which has more detail on the error returned by the setenv() call.
+
+.. _setextrenv:
 
 -------------------
 SETEXTRENV
