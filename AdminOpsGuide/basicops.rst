@@ -953,6 +953,8 @@ ydb_trace_gbl_name
 +++++++++++++++++++++
 **ydb_trace_gbl_name (gtm_trace_gbl_name)** enables YottaDB tracing at process startup. Setting ydb_trace_gbl_name to a valid global variable name instructs YottaDB to report the data in the specified global when a VIEW command disables the tracing, or implicitly at process termination. This setting behaves as if the process issued a VIEW "TRACE" command at process startup. However, ydb_trace_gbl_name has a capability not available with the VIEW command, such that if the environment variable is defined but evaluates to zero (0) or to the empty string, YottaDB collects the M-profiling data in memory and discards it when the process terminates (this feature is mainly used for in-house testing). Note that having this feature activated for processes that otherwise don't open a database file (such as GDE) can cause them to encounter an error.
 
+.. _ydb-treat-sigusr2-like-sigusr1:
+
 ++++++++++++++++++++++++++++++++
 ydb_treat_sigusr2_like_sigusr1
 ++++++++++++++++++++++++++++++++

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -300,3 +300,4 @@ Operational Considerations
 * Journaling and Replication are not necessary for AIM globals since they can be generated on demand as needed. Of course, you can always turn on journaling and replication if you so choose.
 * By default :code:`ydb_env_set` puts the AIM globals in a separate region and they get deleted upon recovering from a crash.
 * To avoid tuning and to maximize performance, AIM globals use the MM access method. It directly maps the cross reference into the address space of the process.
+* If `ydb-treat-sigusr2-like-sigusr1 <../AdminOpsGuide/basicops.html#ydb-treat-sigusr2-like-sigusr1>`_ is set, on receipt of a SIGUSR2 %YDBAIM terminates indexing of data and returns to its caller; otherwise it ignores SIGUSR2. This facilitates use of %YDBAIM with Octo.
