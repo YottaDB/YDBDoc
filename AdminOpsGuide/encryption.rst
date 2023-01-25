@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -500,7 +500,7 @@ In order to create the libconfig format encryption configuration file there are 
                  keys: (
 		       {
 		           dat: "database_file with its absolute path";
-			   keys: "encrypted keyfile with its absolute path";
+			   key: "encrypted keyfile with its absolute path";
 		       }
 		 );
          }
@@ -513,7 +513,7 @@ In order to create the libconfig format encryption configuration file there are 
                  keys: (
 		       {
 		           dat: "/home/phil/cust.dat";
-			   keys: "/home/phil/phil_cust_dat.txt";
+			   key: "/home/phil/phil_cust_dat.txt";
 		       }
 		 );
          }
