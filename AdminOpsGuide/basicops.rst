@@ -736,7 +736,7 @@ ydb_nofflf was added to YottaDB effective release `r1.34 <https://gitlab.com/Yot
 ++++++++++++++++++++++++++++++++
 ydb_non_blocked_write_retries
 ++++++++++++++++++++++++++++++++
-**ydb_non_blocked_write_retries (gtm_non_blocked_write_retries)** modifies FIFO or PIPE write behavior. A WRITE which would block is retried up to the number specified with a 100 milliseconds delay between each retry. The default value is 10 times. If all retries block, the WRITE command issues a %SYSTEM-E-ENO11 (EAGAIN) error. For more details, refer to `PIPE Device Examples <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#pipe-device-ex>`_ in the Programmers Guide.
+**ydb_non_blocked_write_retries (gtm_non_blocked_write_retries)** modifies FIFO or PIPE write behavior. A WRITE which would block is retried up to the number specified with a 100 milliseconds delay between each retry. The default value is 10 times. If all retries block, the WRITE command issues a %SYSTEM-E-ENO11 (EAGAIN) error. For more details, refer to `PIPE Device Examples <../ProgrammersGuide/ioproc.html#pipe-device-ex>`_ in the Programmers Guide.
 
 .. _ydb-nontprestart-log-delta-env-var:
 

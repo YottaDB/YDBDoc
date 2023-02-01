@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -21,18 +21,19 @@ The format of the MUPIP BACKUP command is:
     -BY[TESTREAM] [-NET[TIMEOUT]]
     -DA[TABASE]
     -[NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]]
-    -O[NLINE]
+    -[NO]O[NLINE]
     -REC[ORD]
-    -REPL[ACE]
-    -REPLINSTANCE=target_location
+    -REPLA[CE]
+    -REPLIC[ATION]=ON
+    -REPLIN[STANCE]=target_location
     -S[INCE]={DATABASE|BYTESTREAM|RECORD}
     -T[RANSACTION]=hexadecimal_transaction_number
    ] region-list[,...] destination-list
 
 .. note::
-   MUPIP BACKUP does a more comprehensive job of managing backup activities than other backup techniques such as a SAN backup, disk mirroring, or a file system snapshot because it integrates journal management, instance file management, and records timestamps in the database file headers. To use other techniques, you must first freeze all regions concurrently with a command such as MUPIP FREEZE ON "*" in order to ensure a consistent copy of files with internal structural integrity. YottaDB neither endorses nor tests any third party products for backing up a YottaDB database.
+   MUPIP BACKUP does a more comprehensive job of managing backup activities than other backup techniques such as a SAN backup, disk mirroring, or a file system snapshot because it integrates journal management, instance file management, and records timestamps in the database file headers. To use other techniques, you must first freeze all regions concurrently with a command such as MUPIP FREEZE in order to ensure a consistent copy of files with internal structural integrity. YottaDB neither endorses nor tests any third party products for backing up a YottaDB database.
 
-* MUPIP BACKUP supports two methods of database backup: BYTESTREAM and DATABASE. MUPIP BACKUP BYTESTREAM directs the output to a broad range of devices, including disks, TCP sockets, and pipes. MUPIP BACKUP DATABASE directs the output to random access devices (i.e., disks).
+* MUPIP BACKUP supports two methods of database backup: BYTESTREAM and DATABASE. MUPIP BACKUP BYTESTREAM directs the output to a broad range of devices, including disks, TCP sockets, and pipes. MUPIP BACKUP DATABASE directs the output to files on filesystems with random access (e.g., disks).
 
 * [NO]ONLINE qualifier determines whether MUPIP BACKUP should suspend updates to regions. For example, MUPIP BACKUP NOONLINE suspends updates to all regions from the time it starts the first region until it finishes the last region. However, it does not suspend processes that only read from the database.
 
@@ -46,17 +47,17 @@ The format of the MUPIP BACKUP command is:
 
 * Region-list and destination-list items are matched in order - the first region is mapped to the first destination, the second to the second destination, and so on. If YottaDB encounters a region mapped to a directory, YottaDB treats that directory as the destination for all subsequent regions in the region-list.
 
-* YottaDB implicitly timestamps both BYTESTREAM and DATABASE backups using relative timestamps (transaction numbers). You can also explicitly specify a RECORD timestamp for custom-control (SANS or mirrored disk) backup protocol. You might want to use these timestamps as reference points for subsequent backups.
+* YottaDB implicitly timestamps both BYTESTREAM and DATABASE backups using relative timestamps (transaction numbers). You can also explicitly specify a RECORD timestamp. You can use these timestamps as reference points for subsequent backups.
 
-* It takes approximately one (1) minute (per region) for BACKUP ONLINE to give up and bypass a KILLs in progress; backup does not wait for Abandoned Kills to clear.
+* It takes approximately one (1) minute (per region) for BACKUP ONLINE to give up and bypass KILLs in progress; backup does not wait for Abandoned Kills to clear.
 
-* The environment variable ydb_baktmpdir specifies the directory where mupip backup creates temporary files. If ydb_baktmpdir is not defined, YottaDB uses the deprecated GTM_BAKTMPDIR environment variable, if defined, and otherwise uses the current working directory.
+* The environment variable ydb_baktmpdir specifies the directory where mupip backup creates temporary files. If ydb_baktmpdir is not defined, YottaDB uses the environment variable gtm_baktmpdir, and if that too is not defined, the deprecated GTM_BAKTMPDIR environment variable, if defined. If none of these is defined, MUPIP BACKUP uses the current working directory.
 
 * When you restrict access to a database file, YottaDB propagates those restrictions to shared resources associated with the database file, such as semaphores, shared memory, journals and temporary files used in the course of MUPIP BACKUP.
 
-* YottaDB supports only one concurrent -ONLINE backup on a database. MUPIP BACKUP displays the BKUPRUNNING message if started when there is an already running BACKUP.
+* YottaDB supports only one concurrent ONLINE backup on a database. MUPIP BACKUP displays the BKUPRUNNING message if started when there is an already running BACKUP.
 
-* MUPIP BACKUP protects against overwriting of existing destination files. However, it cannot protect other destinations, for example, if the destination is a pipe into a shell command that overwrites a file.
+* Unless the REPLACE option is used, MUPIP BACKUP protects against overwriting of existing destination files. However, it cannot protect other destinations, for example, if the destination is a pipe into a shell command that overwrites a file.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Before Starting a MUPIP Backup
@@ -64,13 +65,15 @@ Before Starting a MUPIP Backup
 
 Perform the following tasks before you begin a database backup.
 
-* Ensure adequate disk space for target location and temporary files. Set the environment variable ydb_baktmpdir to specify the directory where MUPIP BACKUP creates temporary files. If ydb_baktmpdir is not defined, YottaDB uses the deprecated GTM_BAKTMPDIR environment variable if defined, and otherwise uses the current working directory. Do not place temporary files in the current directory for large databases in production environments.
+* Ensure adequate disk space for target location and temporary files. Set the environment variable ydb_baktmpdir to specify the directory where MUPIP BACKUP creates temporary files. If ydb_baktmpdir is not defined, YottaDB uses the environment variable gtm_baktmpdir, and if that too is not defined, the deprecated GTM_BAKTMPDIR environment variable, if defined. If none of these is defined, MUPIP BACKUP uses the current working directory. Do not place temporary files in the current directory for large databases in production environments.
 
-* When using replication, ensure that the Source/Receiver process is alive (MUPIP REPLIC SOURCE/RECEIVER CHECKHEALTH). Always backup the replicating instance file with the database (BACKUP REPLINST).
+If you are backing up any encrypted regions, you need to backup your $ydb_crypt_config / $gtmcrypt_config file and protect the encryption keys. You also need to backup the related algorithms used to retrieve or regenerate keys. For example, if you are using `GnuPG <https://gnupg.org/>`_ for encryption and signing services, you must backup the relevant files in your $GNUPGHOME directory as part of your backup in addition to preserving the encryption key. Look in the manpages of GnuPG (:code:`man gpg`) to see what files are required.  Remember that if you cannot retrieve the encryption key which was in use at the time of the backup, there is no way to decrypt the data from the encrypted regions. Therefore, ensure that you have procedures in place to securely handle storage and retrieval of the encryption keys.
 
-* If you intend to use a DATABASE backup at the same time in the same computer system as the source database, be sure to disable journaling in the backed up database with BKUPDBJNL=DISABLE.
+* When using replication, ensure that a Source/Receiver process is alive (`MUPIP REPLICATE SOURCE CHECKHEALTH <./dbrepl.html#checking-server-health>`_). Always backup the replication instance file with the database (`MUPIP BACKUP REPLINSTANCE <./dbmgmt.html#replinstance>`_).
 
-* When doing a complete backup, switch journal files as part of the backup command using NEWJNLFILES=NOPREVLINK. This aligns the journal files with the backup and simplifies journal file retention. Use the NOPREVLINK option for this qualifier with caution if the original database is used for replication. If the link to the previous generation journal file is cut, then the source server cannot supply transactions from the prior generation journal files.
+* If you intend to use a DATABASE backup at the same time in the same computer system as the source database, be sure to disable journaling in the backed up database with `BKUPDBJNL=DISABLE <./dbmgmt.html#bkupdbjnl>`_.
+
+* We recommend switching journal files as part of the backup command using `NEWJNLFILES <./dbmgmt.html#mupip-backup-newjnlfiles>`_. This aligns the journal files with the backup and simplifies journal file retention. Use the NOPREVLINK option for this qualifier with caution if the original database is used for replication. If the link to the previous generation journal file is cut, then the source server cannot supply transactions from the prior generation journal files.
 
 * If you follow separate procedures for backup and archival (moving to secondary storage), you can save time by starting archival as soon as MUPIP BACKUP completes the process of creating a backup database file for a region. You do not need to wait for MUPIP BACKUP to complete processing for all regions before starting archival. For example, a message like:
 
@@ -81,9 +84,9 @@ Perform the following tasks before you begin a database backup.
 
 confirms that ydb.dat is backed up correctly and is ready for archival.
 
-* Determine an appropriate frequency, timing, and backup method (BYTESTREAM or DATABASE) based on the situation.
+* Determine an appropriate frequency, timing, and backup method (BYTESTREAM or DATABASE) based on business and operational considerations.
 
-* Ensure the user issuing backup commands has appropriate permissions before starting the backup. Backup files have the ownership of the user running MUPIP BACKUP.
+* Ensure the user issuing backup commands has appropriate permissions before starting the backup. Backup files are owned by the user running MUPIP BACKUP.
 
 * There is one circumstance under which a MUPIP BACKUP is not advised.  When your operational procedures call for taking backups of unmodified databases and journal files when rebooting a system after a crash, use an underlying operating system command (cp, cpio, gzip, tar, and so on) which will open the files read-only.  Note that for ordinary system crashes where the system simply stops writing to open files at power down, you can use MUPIP JOURNAL to recover journaled database files, and taking backups on reboot should not be required.  However, for system crashes with the possibility of damage to files already written to disk (for example, if the crash involved an IO controller with the potential for having written random data to disk immediately prior to power down), such backups on reboot are appropriate.
 
@@ -105,7 +108,7 @@ BACKUP Qualifiers
 -BKupdbjnl
 ^^^^^^^^^^
 
-A backup database shares the same journaling characteristics of the source database. However, with BKUPDBJNL you can disable or turn off journaling in the backup database. Use this qualifier if you intend to open your backup database at the same time in the same environment as the source database.
+A backup database shares the same journaling characteristics of the source database. However, with BKUPDBJNL you can disable or turn off journaling in the backup database. Be sure to use BKUPDBJNL=DISABLE if you intend to open your backup database on the same system as the source database to ensure that two database files do not inadvertently point to the same journal file.
 
 The format of the BKUPDBJNL qualifier is:
 
@@ -144,7 +147,7 @@ The format of the BYTESTREAM qualifier is:
 -Database
 ^^^^^^^^^^
 
-Creates a disk-to-disk backup copy of the files of all selected regions. DATABASE backup copy is a ready-to-use YottaDB database unlike BYTESREAM backup which is required to be restored to a random access file.
+Creates a disk-to-disk backup copy of the files of all selected regions. DATABASE backup copy is a ready-to-use YottaDB database unlike BYTESREAM backups which must be restored.
 
 The format of the DATABASE qualifier is:
 
@@ -178,29 +181,30 @@ Specifies the timeout period when a bytestream BACKUP data is sent over a TCP/IP
 -NEWJNLFILES
 ^^^^^^^^^^^^^
 
-Determines the journaling characteristics of the database files being backed-up. All the established journaling characteristics apply to new journal files. This qualifier is effective only for an ONLINE backup (the default), when the database has journaling enabled.
+Determines the journaling characteristics of the database files as part of the backp. This qualifier is effective only for an ONLINE backup (the default), for database regions that have journaling enabled. When new journal files are created, journal records for all updates up to and including the last update in the backed up database files are in the prior journal files, and journal records for updates not in the backed up database files are in the new journal files.
 
 The format of the NEWJNLFILES qualifier is:
 
 .. code-block:: none
 
-   -[NO]NEWJNLFILES[=[NO]PREVLINK], [NO]S[YNC_IO]]
+   -[NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]]
 
 * NEWJNLFILES can take the following three values:
 
-  * PREVLINK: Back links new journal files with the journal files of the prior generation. This is the default value.
-  * NOPREVLINK: Indicates that there should be no back link between the newly created journals and the journal files of the prior generation.
-  * SYNC_IO: Specifies that every WRITE to a journal file is to be committed directly to disk. On high-end disk subsystems (for example, those that include a non-volatile cache and consider the data to be committed when it reaches this cache), this might result in a better performance than the NOSYNC_IO option. (NOSYNC_IO turns off this option).
+  * PREVLINK: New journal files are created with back links to the prior journal files. This is the default value.
+  * NOPREVLINK: New journal files are created without back links to the prior journal files.
+  * SYNC_IO: Specifies that the new journal files should use the `SYNC_IO <./ydbjournal.html#no-s-ync-io>`_ option.
+  * NOSYNC_IO: Specifies that new journal files should not use the SYNC_IO option.
 
 * NONEWJNLFILES causes journaling to continue with the current journal files. It does not accept any arguments.
 
-* The default is NEWJNLFILES=PREVLINK.
+* The default is NEWJNLFILES=PREVLINK, with the current values of SYNC_IO for each region retained by the new journal files.
 
 ^^^^^^^^
 -Online
 ^^^^^^^^
 
-Specifies that while a MUPIP BACKUP operation is active, other processes can update the database without affecting the result of the backup. The format of the ONLINE qualifier is:
+Specifies that while the MUPIP BACKUP operation is active, processes can continue to update the database without affecting the result of the backup. The format of the ONLINE qualifier is:
 
 .. code-block:: none
 
@@ -208,7 +212,7 @@ Specifies that while a MUPIP BACKUP operation is active, other processes can upd
 
 * MUPIP BACKUP ONLINE creates a backup of the database as of the moment the backup starts. If running processes subsequently update the database, the backup does not reflect those updates.
 
-* MUPIP BACKUP ONLINE on region(s) waits for up to one minute so any concurrent KILL or MUPIP REORG operations can complete. If the KILL or MUPIP REORG operations do not complete within one minute, MUPIP BACKUP ONLINE starts the backup with a warning that the backup may contain incorrectly marked busy blocks. Such blocks waste space and can desensitize operators to much more dangerous errors, but otherwise don't affect database integrity. If you get such an error, it may be better to stop the backup and restart it when KILL or MUPIP REORG operations are less likely to interfere. Performing MUPIP STOP on a process performing a KILL or MUPIP REORG operation may leave the database with incorrectly marked busy blocks. In this situation, YottaDB converts the ongoing KILLs flag to an Abandoned KILLs flag. If MUPIP BACKUP ONLINE encounters ADANDONED_KILLS, it gives a message and then starts the backup. An ABANDONED_KILLS error means that both the original database and the backup database possibly have incorrectly busy blocks which should be corrected promptly.
+* MUPIP BACKUP ONLINE on region(s) waits for up to one minute so any concurrent KILL or MUPIP REORG operations can complete. If the KILL or MUPIP REORG operations do not complete within one minute, MUPIP BACKUP ONLINE starts the backup with a warning that the backup may contain incorrectly marked busy blocks. Such blocks waste space and can desensitize operators to much more dangerous errors, but otherwise do not affect database integrity. If you get such an error, consider whether to stop the backup and restart it when KILL or MUPIP REORG operations are less likely to interfere. MUPIP STOP on a process performing a KILL or MUPIP REORG operation may leave the database with incorrectly marked busy blocks. In this situation, YottaDB converts the ongoing KILLs flag to an Abandoned KILLs flag. If MUPIP BACKUP ONLINE encounters ADANDONED_KILLS, it gives a message and then starts the backup. An ABANDONED_KILLS error means that both the original database and the backup database possibly have incorrectly busy blocks which should be corrected.
 
 * By default, MUPIP BACKUP is ONLINE.
 
@@ -216,7 +220,7 @@ Specifies that while a MUPIP BACKUP operation is active, other processes can upd
 -Record
 ^^^^^^^^
 
-Timestamps (in the form of a transaction number) a database file to mark a reference point for subsequent bytestream, database, or custom backup (SANS or disk mirror) protocols. Even though DATABASE and BYTESTREAM both mark their own relative timestamps, RECORD provides an additional timestamp option. MUPIP FREEZE also provides the RECORD qualifier because a FREEZE may be used to set the database up for a SAN or disk-mirror based backup mechanism.
+Timestamps (in the form of a transaction number) a database file to mark a reference point for subsequent bytestream, database, or custom backup protocols. Even though DATABASE and BYTESTREAM both mark their own relative timestamps, RECORD provides an additional timestamp option. MUPIP FREEZE also provides the RECORD qualifier because a FREEZE may be used to set the database up for a SAN or disk-mirror based backup mechanism.
 
 The format of the RECORD qualifier is:
 
@@ -229,7 +233,7 @@ The format of the RECORD qualifier is:
 * RECORD replaces the previously RECORDed transaction identifier for the database file.
 
 ^^^^^^^^^
--REPlace
+-REPLAce
 ^^^^^^^^^
 
 Overwrites the existing destination files.
@@ -238,26 +242,42 @@ The format of the REPLACE qualifier is:
 
 .. code-block:: none
 
-   -[REPL]ACE
+   -[REPLA]CE
 
 * By default, MUPIP BACKUP protects against overwriting the destination files. REPLACE disables this default behavior.
 
 * REPLACE is compatible only with DATABASE.
 
+^^^^^^^^^^^^^
+-REPLICation
+^^^^^^^^^^^^^
+
+`Recovering from the replication WAS_ON state <./dbrepl.html#recovering-from-the-replication-was-on-state>`_ involves taking a backup with new journal files and turning replication back on. The REPLICATION qualifier allows this to be performed as part of the backup.
+
+.. code-block:: none
+
+   -[REPLIC]ation=ON
+
+* REPLICATION is compatible only with DATABASE.
+
+* If replication in the database file being backed up is already in the ON state, this option is a no-op.
+
+* If replication in the database file being backed up is in the WAS_ON state, and NEWJNLFILES is specified or defaulted, REPLICATION=ON changes the replication state in the database file header to ON. NOPREVLINK is automatic in this case, because there is no prior generation journal file to which the new file can link. Note that even with new journal files, the system should not be considered in a safe state till the MUPIP BACKUP completes.
+
 ^^^^^^^^^^^^^^
--REPLInstance
+-REPLINstance
 ^^^^^^^^^^^^^^
 
-Specifies the target location to place the backup of the replication instance file.
+Specifies the target location, a directory or a file, for the backup of the replication instance file. If a directory is specified, the file has the same name as replication instance file being backed up.
 
 .. note::
-   The replication instance file should always be backed up with the database file. The source server for the instance must be started at least once before backing up the replication instance file.
+   In replicated instances, always back the replication instance file along with database files. A Source Server for the instance must be started at least once before backing up the replication instance file.
 
 The format of the REPLINSTANCE qualifier is:
 
 .. code-block:: none
 
-   -REPLI[NSTANCE]=<target_location>
+   -REPLIN[STANCE]=<target_location>
 
 ^^^^^^^
 -Since
@@ -310,15 +330,15 @@ Example:
 
    $ mupip backup -bytestream MAMMALS,CRUSTACEANS bkup
 
-Suppose that the environment variable ydb_gbldir has regions MAMMALS and CRUSTACEANS that map to files called LINNAEUS.DAT and BRUNNICH.DAT (no matter which directory or directories the files reside in). Then the above example creates bytestream backup files MAMMALS.DAT and CRUSTACEANS.DAT in the bkup directory since the last DATABASE backup.
+If the global directory has regions MAMMALS and CRUSTACEANS that map to files called LINNAEUS.DAT and BRUNNICH.DAT (no matter which directory or directories the files reside in). Then the above example creates bytestream backup files MAMMALS.DAT and CRUSTACEANS.DAT in the bkup directory with updates since the last DATABASE backup.
 
 Example:
 
 .. code-block:: bash
 
-   $ mupip backup -bkupdbjnl="OFF" "*"
+   $ mupip backup -bkupdbjnl="OFF" "*" bkup
 
-This command turns off journaling in the backup database.
+This command backs up all regions in the :code:`bkup` directory, with journaling turned off in the backup database files.
 
 Example:
 
@@ -326,7 +346,7 @@ Example:
 
    $ mupip backup -bytestream "*" tcp://philadelphia:7883,tcp://tokyo:8892
 
-Assuming a Global Directory with two regions pointing to ACN.DAT and HIST.DAT, this example creates a backup of ACN.DAT to a possible MUPIP RESTORE process listening at port 7883 on server philadelphia and HIST.DAT to a possible MUPIP RESTORE process listening at port 8893 on server tokyo.
+Assuming a global directory with two regions pointing to ACN.DAT and HIST.DAT, this example creates a backup of ACN.DAT to a possible MUPIP RESTORE process listening at port 7883 on server philadelphia and HIST.DAT to a possible MUPIP RESTORE process listening at port 8893 on server tokyo.
 
 Always specify the <machine name> and <port> even if both backup and restore are on the same system, and ensure that the MUPIP RESTORE process is started before the MUPIP BACKUP process.
 

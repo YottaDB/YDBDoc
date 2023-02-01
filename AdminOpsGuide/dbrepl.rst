@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -3135,9 +3135,10 @@ If the replication WAS_ON state occurs on the originating side:
 
 In this case, proceed as follows:
 
-- Take a backup (with MUPIP BACKUP -BKUPDBJNL=OFF -REPLINST=<bckup_inst>) of the originating instance.
+- Take a backup (with MUPIP BACKUP -BKUPDBJNL=OFF -REPLICATION=ON -REPLINST=<bckup_inst>) of the originating instance.
 
-- Because journaling was turned off in the replication WAS_ON state, the originating instance cannot be rolled back to a state prior to the start of the backup. Therefore, cut the previous generation link of the journal files on the originating instance and turn replication back on. Both these operations can be accomplished with MUPIP SET -REPLICATION="ON".
+.. note::
+   As journaling would have been turned off in the replication WAS_ON state, the originating instance cannot be rolled back to a state prior to the start of the backup. The command therefore creates new journal files with no links to prior journal files, when it turns the replication state to ON. It also turns journaling off in the backed up database file, but does not disable it (i.e., the database file retains journaling parameters such as the journal file name and type of journaling).
 
 - Restore the replicating instance from the backup of the originating instance. Change the instance name of <bckup_inst> to the name of the replicating instance (with MUPIP REPLIC -EDITINST -NAME).
 
