@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -2985,6 +2985,10 @@ When using the following, remember to write code that allows for values other th
 | Commit wait spin count       |  "sgmnt_data.wcs_phase2_commit_wait_spincnt"  | Integer Count                                                                                                               |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Current transaction          |  "sgmnt_data.trans_hist.curr_tn"              | Integer Count                                                                                                               |
++------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Database file FTOK           |  "unix_db_info.ftok_semid"                    | Id of the semaphore used when creating and releasing the shared memory and private semaphore for each database file         |
++------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Database file inode          |  "unix_db_info.fileid.inode"                  | Database file's inode value                                                                                                 |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Database file name           |  "gd_segment.fname"                           | String of text. See example above for how to use.                                                                           |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+

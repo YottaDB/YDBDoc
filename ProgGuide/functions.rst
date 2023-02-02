@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -3143,6 +3143,7 @@ mnemonic specifies the memory area $ZPEEK() is to access. Some mnemonics have ar
 * PEEK:baseaddr - returns a value based on the supplied argument. Argument is the base address of the value to obtain in 0xhhhhhhh format where the h's are hex digits.
 * RIH[REPL] - returns a value from the jnlpool.repl_inst_filehdr control block. No argument allowed.
 * RPC[REPL] - returns a value from the recvpool.recvpool_ctl control block. No argument allowed. Only available when run on a non-primary instance.
+* UDI[REG]:region - return a value from the unix_db_info (process private) control block. Takes a case independent region name as an argument.
 * UHC[REPL] - returns a value from the recvpool.upd_helper_ctl control block. No argument allowed. Only available when run on a non-primary instance.
 * UPL[REPL] - returns a value from the recvpool.upd_proc_local control block. No argument allowed. Only available when run on a non-primary instance.
 
@@ -3172,13 +3173,13 @@ Note that $ZPEEK() with 8 byte numeric formatting can return numeric string valu
 
 When values from replication structures are requested and the structures are not available due to replication not running or, in the case of the gtmrecv.* control block base options, if not running on a non-primary instance where the gtmrecv.* control are available, a ZPEEKNOREPLINFO error is raised.
 
-The JNL[REG] and JBL[REG] mnemonics and characteristics are defined by the running the GTMDefinedTypesInit.m utility, which produces a cross-index in the form:
+The JNL[REG] and JBL[REG] mnemonics and characteristics are defined by running the GTMDefinedTypesInit.m utility, which produces a cross-index in the form:
 
 .. code-block:: none
 
    gtmtypfldindx(<structure-name>.<field-mnemonic>)=<n>
 
-where gtmtypes(<structure-name>,<n>,*) nodes contain the field characteristics.
+where gtmtypes(<structure-name>,<n>,*) nodes contain the field characteristics. These fields are also available as global variables in the $ydb_dist/gtmhelp.dat database using the $ydb_dist/gtmhelp.gld global directory.
 
 .. _zpiece-function:
 
