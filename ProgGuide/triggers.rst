@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -19,6 +19,8 @@
 
 .. contents::
    :depth: 5
+
+.. _about-triggers:
 
 --------------------
 Triggers
