@@ -11713,11 +11713,11 @@ Action: Specify a valid instance name that is 1 to 15 characters long.
 REPLINSTNMSAME
 -------------------
 
-REPLINSTNMSAME, Primary and Secondary instances have the same replication instance name xxxx
+REPLINSTNMSAME, Secondary instance name in source server command is same as current instance name xxxx
 
-MUPIP Error: This error is issued by any source server command where the -instsecondary qualifier specifies a secondary instance name that matches the name of the primary instance the command is started from.
+MUPIP Error: This error is issued by any source server (:code:`mupip replic -source`) command when the :code:`-instsecondary` qualifier or the :code:`ydb_repl_instsecondary` env var specifies a secondary instance name that matches the name of the primary instance (obtained from the replication instance file on the primary) the command is started from.
 
-Action: Two instances should never have the same name. Recreate the instance file on the secondary with a different name and restart the receiver server with the updateresync qualifier.
+Action: Every replication instance has a different name. Specify the correct secondary instance name in the :code:`-instsecondary` qualifier or using the environment variable :code:`ydb_repl_instsecondary`.
 
 --------------------
 REPLINSTNMUNDEF
