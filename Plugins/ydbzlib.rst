@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -78,7 +78,7 @@ YDBzlib can be installed with YottaDB by using the :code:`--zlib` option:
 
 .. code-block:: bash
 
-   sudo ./ydbinstall.sh --utf8 default --verbose --zlib
+   sudo ./ydbinstall.sh --utf8 --verbose --zlib
 
 --------------------------
 Installation from Source

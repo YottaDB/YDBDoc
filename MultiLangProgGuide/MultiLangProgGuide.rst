@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -45,7 +45,7 @@ Local Installation
    - Create a temporary directory and change to it, e.g.: :code:`mkdir /tmp/tmp ; cd /tmp/tmp`
    - Get the YottaDB installer: :code:`wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh`
    - Make it executable: :code:`chmod +x ydbinstall.sh`
-   - Run it with your choice of directory where you want it installed (omit the :code:`--verbose` option for less output): :code:`sudo ./ydbinstall.sh --utf8 default --verbose`. If you do not specify an installation directory with :code:`--installdir`, the script installs YottaDB in :code:`/usr/local/lib/yottadb/r###` where :code:`r###` is the release, e.g., :code:`r130`.
+   - Run it with your choice of directory where you want it installed (omit the :code:`--verbose` option for less output): :code:`sudo ./ydbinstall.sh --utf8 --verbose`. If you do not specify an installation directory with :code:`--installdir`, the script installs YottaDB in :code:`/usr/local/lib/yottadb/r###` where :code:`r###` is the release, e.g., :code:`r130`.
 
 #. Set up the environment: :code:`source /usr/local/etc/ydb_env_set`. This defaults to an environment in :code:`$HOME/.yottadb`; to use another directory, set the environment variable :code:`ydb_dir` to the desired directory.
 

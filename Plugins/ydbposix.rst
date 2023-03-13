@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -55,7 +55,7 @@ The POSIX plugin can also be installed when installing YottaDB, by adding the :c
 
 .. code-block:: bash
 
-   sudo ./ydbinstall.sh --utf8 default --verbose --posix
+   sudo ./ydbinstall.sh --utf8 --verbose --posix
 
 -------
 Testing

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -19,7 +19,7 @@ Acculturation Workshop
 
 Welcome to the YottaDB Acculturation Workshop!
 
-Copyright © 2017-2022 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
+Copyright © 2017-2023 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
 
 Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsidiaries. All Rights Reserved.
 
@@ -204,7 +204,7 @@ Install YottaDB
 - Create a temporary directory and change to it, e.g.: :code:`mkdir /tmp/tmp ; cd /tmp/tmp`
 - Get the YottaDB install script: :code:`wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh`
 - Make it executable: :code:`chmod +x ydbinstall.sh`
-- Run it (omit the :code:`--verbose` option if you want less output): :code:`sudo ./ydbinstall.sh --verbose --utf8 default --gui --octo` (This command installs YottaDB under :code:`/usr/local/lib/`.)
+- Run it (omit the :code:`--verbose` option if you want less output): :code:`sudo ./ydbinstall.sh --verbose --utf8 --gui --octo` (This command installs YottaDB under :code:`/usr/local/lib/`.)
 - The script has a plethora of installation options, which you will not use in the Acculturation Workshop. You can query it to list the options with the :code:`--help` option, e.g., :code:`./ydbinstall.sh --help`.
 - :code:`yottadb -version` provides a detailed report on the YottaDB build, e.g.,
 

@@ -81,7 +81,7 @@ Installing YottaDB
 
   .. code-block:: bash
 
-    sudo --preserve-env=ydb_icu_version ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 default --verbose
+    sudo --preserve-env=ydb_icu_version ./ydbinstall.sh --installdir /opt/yottadb/ --utf8 --verbose
 
   The :code:`--preserve-env=ydb_icu_version` is needed in case the :code:`ydb_icu_version` env var is set to a value
   other than what :code:`pkg-config --modversion icu-io` would return (seen as necessary for example, on a :code:`SLED 15`
@@ -229,7 +229,7 @@ ydbinstall Script
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-user username                                       |    | User who should own YottaDB installation; default is root                                                              |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-utf8 ICU_version                                    |    | Install UTF-8 support using specified major.minor ICU version; specify default to use default version                  |
+| \-\-utf8                                                |    | Install UTF-8 support using the default ICU version of the system                                                      |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-verbose                                             | \* | Output diagnostic information as the script executes; default is to run quietly                                        |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
@@ -256,7 +256,7 @@ This example installs the latest YottaDB release in a subdirectory of :code:`/us
 
 .. code-block:: bash
 
-   sudo --preserve-env=ydb_icu_version ./ydbinstall.sh --utf8 default --verbose
+   sudo --preserve-env=ydb_icu_version ./ydbinstall.sh --utf8 --verbose
 
 This example installs the latest YottaDB release with added support for UTF-8 and outputs diagnostic information as the script executes.
 
@@ -280,7 +280,7 @@ The :code:`--plugins-only` option was added to the :code:`ydbinstall` / :code:`y
 
 With the :code:`--from-source <repo>` option, the :code:`ydbinstall` / :code:`ydbinstall.sh` script clones the repository specified by :code:`<repo>` using :code:`git clone <repo>` in the current directory, and changes to the :code:`YDB/` subdirectory.
 If :code:`--branch <branch>` is specified, it executes :code:`git checkout -B <branch>` to specify a branch other than the default. Then it builds YottaDB, and if successful, installs the built YottaDB using :code:`sudo ydbinstall` of the :code:`ydbinstall` script of the built YottaDB, passing it all command line options except the :code:`--from-source` and :code:`--branch` options. The :code:`sudo ydbinstall` prompts for a password as required.
-For example, :code:`ydbinstall --from-source https://gitlab.com/ydbuser/YDB.git --branch working --utf8 default --aim --install-directory /usr/local/lib/yottadb/devel_$(date +%Y%m%d)` will checkout, build, and install the :code:`working` branch of YottaDB from the YDB repository of GitLab user :code:`ydbuser` in a date-stamped directory, along with the `Application Independent Metadata plugin <https://gitlab.com/YottaDB/Util/YDBAIM/>`_.
+For example, :code:`ydbinstall --from-source https://gitlab.com/ydbuser/YDB.git --branch working --utf8 --aim --install-directory /usr/local/lib/yottadb/devel_$(date +%Y%m%d)` will checkout, build, and install the :code:`working` branch of YottaDB from the YDB repository of GitLab user :code:`ydbuser` in a date-stamped directory, along with the `Application Independent Metadata plugin <https://gitlab.com/YottaDB/Util/YDBAIM/>`_.
 This was added effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
 
 For YottaDB to correctly operate on Linux systems using `systemd <https://systemd.io>`_, the :code:`RemoveIPC=no` setting is required in :code:`/etc/systemd/logind.conf`. The :code:`ydbinstall`/ :code:`ydbinstall.sh` script checks this setting:
