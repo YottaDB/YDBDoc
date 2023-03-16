@@ -463,6 +463,14 @@ $ZALLOCSTOR
 
 $ZALLOCSTOR contains the number of bytes that are (sub) allocated (including overhead) by YottaDB for various activities. It provides one view (see also “$ZREalstor” and “$ZUSedstor”) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZALLOCSTOR to be SET or NEWed.
 
+.. _zaudit-isv:
+
+---------
+$ZAUDIT
+---------
+
+$ZAUDIT contains a boolean value that indicates whether `Audit Principal Device <../AdminOpsGuide/basicops.html#audit-principal-device-restriction-facility>`_ is enabled. YottaDB does not permit $ZAUDIT to be SET or NEWed.
+
 ----------
 $ZB
 ----------

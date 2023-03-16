@@ -3468,7 +3468,7 @@ If an instance file already exists, YottaDB renames it with a timestamp suffix, 
 -name
 ^^^^^
 
-Specifies the instance name that uniquely identifies the instance and is immutable. The instance name can be from 1 to 16 characters. YottaDB takes the instance name (not the same as instance file name) from the environment variable ydb_repl_instname. If ydb_repl_instname is not set and -name is not specified, YottaDB produces an error. For more information, refer to the entries for ydb_repl_instname and ydb_repl_instance in :ref:`Environement Variables <env-vars>`.
+Specifies the instance name that uniquely identifies the instance and is immutable. The instance name can be from 1 to 16 characters. YottaDB takes the instance name (not the same as instance file name) from the environment variable ydb_repl_instname. If ydb_repl_instname is not set and -name is not specified, YottaDB produces an error. For more information, refer to the entries for ydb_repl_instname and ydb_repl_instance in `Environment Variables <./basicops.html#env-vars>`_.
 
 ^^^^^^^^^^
 -noreplace
@@ -3639,7 +3639,7 @@ Command Syntax:
    [jnlpool_setup_qualifiers]
    log_file_management_qualifiers
    [primary_role_qualifiers]
-   secondary_identification_qualifiers
+   secondary_qualifiers
    [tls_replication_qualifiers]
    [replication_filter_qualifier]
 
@@ -3667,6 +3667,7 @@ The square brackets [] denote an optional qualifier group. The optional and mand
 +---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
 | :ref:`secondary-id-qs`          | * -instsecondary=<secondary_instance_name>                                                                                         |
 |                                 | * -secondary=<hostname:port>                                                                                                       |
+|                                 | * -trigupdate                                                                                                                      |
 +---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
 | :ref:`tls-replication-qs`       | * [-[no]plaintextfallback]                                                                                                         |
 |                                 | * [-renegotiate_interval=<minutes>]                                                                                                |
@@ -3923,9 +3924,9 @@ This example reads logical database updates associated with a transaction from S
 
 .. _secondary-id-qs:
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Secondary Identification Qualifiers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+Secondary Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^
 
 ****************
 -instsecondary
@@ -3956,6 +3957,21 @@ This command starts the Source Server for the originating instance with instance
 Identifies the replicating instance. <hostname:port> specifies an IPv4 or IPv6 address optionally encapsulated by square-brackets ([]) like "127.0.0.1", "::1", "[127.0.0.1]", or "[::1]" or a hostname that resolves to an IPv4 or IPv6 address and the port at which the Receiver Server is waiting for a connection.
 
 If, in your environment, the same hostname is used for both IPv4 and IPv6, YottaDB defaults to IPv6. If you wish to use IPv4, set the environment variable ydb_ipv4_only to "TRUE", "YES", or a non-zero integer in order to force YottaDB to use IPv4.
+
+*************
+-trigupdate
+*************
+
+Specifies that the Source Server should replicate updates made by triggers on its database. The default is to not replicate updates made by triggers, but instead invoke triggers defined on the receiving instance to make updates corresponding to those made by triggers on the originating instance.
+
+  * An instance can have multiple Source Servers, some started with the :code:`-trigupdate` option and some without it, depending on the type of replication needed by each connection.
+  * A Source Server started with the :code:`-trigupdate` option does not replicate trigger definition changes made by `MUPIP TRIGGER <./dbmgmt.html#trigger>`_ and `$ZTRIGGER() <../ProgrammersGuide/functions.html#ztrigger>`_. Having the same trigger definitions on both sides of a replication connection would at best result in duplication of updates, and in the worst case cause anomalies where updates on one side conflict with updates on the other side.
+  * While a Source Server started with the :code:`-trigupdate` option replicates updates made by the `ZTRIGGER <../ProgrammersGuide/commands.html#ztrigger>`_ command, it does not replicate the record for the ZTRIGGER command itself, as it would otherwise cause triggers to execute on the replicating secondary instance.
+  * The :code:`-trigupdate` option requires the `-secondary <./dbrepl.html#secondary-hostname-port>`_ option, i.e., only the initial startup of an active Source Server, or switching a passive Source Server to an active role support the :code:`-trigupdate` option.
+  * When switching an instance from a primary role to a secondary role where it will receive database updates generated by triggers, trigger definitions should be removed (see below) before starting replication, to avoid duplication and anomalies. Conversely, when switching an instance without triggers from a secondary role to a primary role, triggers need to be installed before it comes up in a primary role.
+  * When creating a new replicating secondary instance from a backup of another instance, with the intention of having the new instance replicated to by a Source Server using the :code:`-trigupdate` option, we recommend removing triggers before bringing it online, and at least, reviewing trigger definitions for those that can result in redundant or conflicting updates.
+  * To remove triggers, turn replication off, remove triggers, and turn replication back on. This will preserve the `Journal Sequence Number <./dbrepl.html#journal-sequence-number>`_ used by replication.
+  * The `$ZTWORMHOLE <../ProgrammersGuide/isv.html#ztwormhole>`_ intrinsic special variable can be used to pass information from an originating instance to a replicating instance and can be set inside a trigger. Depending on the requirement, this may be a simpler alternative to :code:`-trigupdate`.
 
 .. _tls-replication-qs:
 

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -1158,7 +1158,7 @@ ROLLBACK FORWARD does not support the [NO]O[NLINE] qualifier.
 
 Specifies that ROLLBACK can run without requiring exclusive access to the database and the replication instance file.
 
-Any utility/command attempted while MUPIP JOURNAL ONLINE ROLLBACK operates, waits for ROLLBACK to complete; the $ydb_db_startup_max_wait environment variable configures the wait period. For more information on $ydb_db_startup_max_wait, refer to :ref:`Environment Variables <env-vars>`.
+Any utility/command attempted while MUPIP JOURNAL ONLINE ROLLBACK operates, waits for ROLLBACK to complete; the $ydb_db_startup_max_wait environment variable configures the wait period. For more information on $ydb_db_startup_max_wait, refer to `Environment Variables <./basicops.html#env-vars>`_.
 
 .. note::
    Because MUPIP ROLLBACK ONLINE can take a database backwards in state space, please make sure that you understand what you intend it to do when you invoke it. YottaDB developed it as a step towards a much larger project and anticipates that it will not be broadly useful in its current form.
