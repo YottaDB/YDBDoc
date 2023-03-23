@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -481,7 +481,7 @@ ZMessage Codes
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380250 | CIMAXPARAM, Exceeded maximum number of parameters in the call-in table entry. An M routine cannot accept more than 32 parameters.                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379666 | CINOENTRY, No entry specified for xxxx in the call-in table                                                                                                            |
+| 150379666 | CINOENTRY, No entry specified for xxxx in the call-in table yyyy                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379650 | CIPARTYPE, Invalid type specification for O/IO directive - expected pointer type                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

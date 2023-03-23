@@ -1001,11 +1001,11 @@ Action: Reduce the number of parameters to be less than 32 in the call-in table 
 CINOENTRY
 ----------------------
 
-CINOENTRY, No entry specified for xxxx in the call-in table
+CINOENTRY, No entry specified for xxxx in the call-in table yyyy
 
-Run Time Error: This indicates that the call-name invoked by the C program does not have a corresponding entry in the call-in table specified by ydb_ci environment variable.
+Run Time Error: This indicates that the C call-name xxxx does not have a corresponding entry in the call-in table file yyyy.
 
-Action: Add an entry to the call-in table for the call-name. Refer to the `External Calls section in the Programmer's Guide <../ProgrammersGuide/langfeat.html#ext-calls>`_.
+Action: Add an entry to the call-in table yyyy for the C call-name xxxx. Refer to the `External Calls section in the Programmer's Guide <../ProgrammersGuide/langfeat.html#ext-calls>`_.
 
 -----------------------
 CIPARTYPE
@@ -1024,9 +1024,9 @@ CIRCALLNAME
 
 CIRCALLNAME, Call-in routine name expected but not found
 
-Syntax/Call in Error: This indicates that a call-name, which is to be bound to an M routine, is either missing or syntactically invalid for an entry in the call-in table file.
+Syntax/Call in Error: This indicates that a C call-name, which is to be bound to an M routine, is either missing or syntactically invalid for an entry in the call-in table file.
 
-Action: Make sure a valid call-name is specified in the call-in table entry, at the location pointed to by the two previous messages: EXTSRCLIN and EXTSRCLOC, displaying the line and the column number respectively.
+Action: Make sure a valid C call-name is specified in the call-in table entry, at the location pointed to by the two previous messages: EXTSRCLIN and EXTSRCLOC, displaying the line and the column number respectively.
 
 -------------------
 CIRPARMNAME
