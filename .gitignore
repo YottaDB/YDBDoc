@@ -1,4 +1,6 @@
 make.bat
 _build/
+build/
+deadlinks
 target/
 *~

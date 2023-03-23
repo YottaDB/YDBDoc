@@ -1828,7 +1828,9 @@ WRITE Command
 
 The WRITE command sends data to a socket.
 
-WRITE ! inserts the character(s) of the first I/O delimiter (if any) to the sending buffer. If "ZFF=expr" has been specified, WRITE # inserts the characters of expr. Otherwise WRITE # has no effect. WRITE ! and WRITE # always maintain $X and $Y in a fashion that emulates a terminal cursor position except when the device is OPENed with a UTF CHSET because the units for $X and $Y for terminals are in display columns while for sockets they are in codepoints.
+``WRITE !`` inserts the character(s) of the first I/O delimiter (if any) to the sending buffer. If ``"ZFF=expr"`` has been specified, ``WRITE #`` inserts the characters of ``expr``. Otherwise ``WRITE #`` has no effect. ``WRITE !`` and ``WRITE #`` always maintain ``$X`` and ``$Y`` in a fashion that emulates a terminal cursor position except when the device is ``OPEN``ed with a UTF ``CHSET`` because the units for ``$X`` and ``$Y`` for terminals are in display columns while for sockets they are in codepoints.
+
+Both ``WRITE !`` and ``WRITE #`` flush the data from the buffer. Normally when writing TCP socket code, data may be sent with e.g. ``WRITE MYDATA,!``.
 
 The WRITE command for SOCKET devices accepts the following control mnemonics:
 
@@ -2000,17 +2002,19 @@ The following table provides a brief summary of deviceparameters for socket devi
 
 .. _socket-device-examples:
 
-++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++
 Socket Device Examples
-++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++
 
-The sockexamplemulti31.m routine shows the use of $KEY and $ZKEY in a basic socket I/O setup. It's functionality is atypical in order to demonstrate a number of features. It launches two jobs: a server process which opens a listening socket and a client process which makes five connections to the server. The server sends a message to each connection socket. Even-numbered client sockets read the message partially but do not send a response back to the server. Odd-numbered client sockets receive the full message and respond to the server with the message "Ok.". The server reads two characters (but the client sends three) and $ZKEY shows sockets with unread characters.
+**Using ``$KEY`` and ``$ZKEY`` for Socket I/O**
+
+The :code:`sockexamplemulti31.m` routine shows the use of :code:`$KEY` and :code:`$ZKEY` in a basic socket I/O setup. It's functionality is atypical in order to demonstrate a number of features. It launches two jobs: a server process which opens a listening socket and a client process which makes five connections to the server. The server sends a message to each connection socket. Even-numbered client sockets read the message partially but do not send a response back to the server. Odd-numbered client sockets receive the full message and respond to the server with the message "Ok.". The server reads two characters (but the client sends three) and :code:`$ZKEY` shows sockets with unread characters.
 
 You can download `sockexamplemulti31.m <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/ProgGuide/sockexamplemulti31.m>`_ from GitLab and follow the instructions in the comments near the top of the program file.
 
-You can start a YottaDB process in response to a connection request made using inetd/xinetd. The following example uses inetd/xinetd to implement a listener which responds to connections and messages just as the prior example.
+You can start a YottaDB process in response to a connection request made using inetd/xinetd. The following example uses :code:`inetd`/:code:`xinetd` to implement a listener which responds to connections and messages just as the prior example.
 
-In the configuration file for xinetd, define a new service called ydbserver. Set socket_type to "stream" and wait to "no" as in the following snippet:
+In the configuration file for :code:`xinetd`, define a new service called :code:`ydbserver`. Set :code:`socket_type` to "stream" and wait to "no" as in the following snippet:
 
 .. code-block:: none
 
@@ -2025,9 +2029,9 @@ In the configuration file for xinetd, define a new service called ydbserver. Set
    server = /path/to/startyottadb
    }
 
-If you define the server in /etc/services, the type and port options are not needed. For more information, the xinetd.conf man page for more details.
+If you define the server in :code:`/etc/services`, the type and port options are not needed. For more information, the :code:`xinetd.conf` :code:`man` page for more details.
 
-If you are using inetd, add a line to /etc/inetd.conf with the sockettype "stream", protocol "tcp", and specify the "nowait" flag as in the example below, which assumes a ydbserver service is defined in /etc/services:
+If you are using :code:`inetd`, add a line to :code:`/etc/inetd.conf` with the :code:`sockettype` set to :code:`stream`, :code:`protocol` set to :code:`tcp`, and specify the :code:`nowait` flag as in the example below, which assumes a :code:`ydbserver` service is defined in :code:`/etc/services`:
 
 .. code-block:: none
 
@@ -2056,6 +2060,19 @@ The ZSHOW "D" command reports available information on both the local and remote
    SOCKET[0]=h11135182870 DESC=0 CONNECTED ACTIVE NOTRAP
    REMOTE=10.1.2.3@53731 LOCAL=10.2.3.4@7777
    ZDELAY ZIBFSIZE=1024 ZIBFSIZE=0
+
+**Passing Socket Devices Between Processes**
+
+Examples that pass sockets between processes are demonstrated in:
+
+ * :code:`passTCPSocket.m`  sample an M program available on GitLab at `passTCPSocket.m <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/ProgGuide/passTCPSocket.m>`_.
+ * :code:`passTCPSocket2.m` sample an M program available on GitLab at `passTCPSocket2.m <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/ProgGuide/passTCPSocket2.m>`_.
+
+Both samples contain 3 processes: a parent process and two child jobs JOB'ed off by the parent process.
+
+In the :code:`passTCPSocket.m` sample, the parent process opens a socket (which is now in a LISTENING state), and passes that to the :code:`server` process. The :code:`client` child then connects to the :code:`server` process.
+
+In the :code:`passTCPSocket2.m` sample, the parent process opens a socket, waits for a connection from the :code:`client` child and passes the CONNECTED socket to a :code:`worker` process. The :code:`client` child then continues talking to the :code:`worker` process.
 
 .. _tls-on-yottadb:
 
