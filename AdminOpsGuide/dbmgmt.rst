@@ -904,13 +904,9 @@ The format of the MUPIP FTOK command is:
 
 .. code-block:: none
 
-   FT[OK] [-DB] [-JNLPOOL] [-RECVPOOL] [-ID] [-ONLY] [-[NO]HEADER] file-name
+   FT[OK] [-DB] [-JNLPOOL] [-RECVPOOL] [-ID] [-ONLY] [-[NO]HEADER] file-list
 
-where,
-
-* file-list a space delimited list of files, such as that provided by the use of the * and ? shell wildcard characters.
-
-* With -JNLPOOL or -RECVPOOL, MUPIP FTOK ignores any files in the list.
+where file-list is a space delimited list of files, such as that provided by the use of the * and ? shell wildcard characters.
 
 ~~~
 -DB
