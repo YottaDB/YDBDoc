@@ -867,9 +867,9 @@ You can also compile and run all the samples by running this script:
 .. code-block:: bash
 
         #!/bin/bash
-        source `pkg-config --variable=prefix yottadb`/ydb_env_unset
+        source /usr/local/etc/ydb_env_unset
         export ydb_dir=$PWD/db
-        source `pkg-config --variable=prefix yottadb`/ydb_env_set
+        source /usr/local/etc/ydb_env_set
 
         cc -Wall -g ydbaccess_ci.c $(pkg-config --cflags yottadb) -o ydbaccess_ci $(pkg-config --libs yottadb)
         ydb_routines=". $ydb_routines" ./ydbaccess_ci

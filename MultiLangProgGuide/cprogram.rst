@@ -27,7 +27,7 @@ In order to help understand a lot of the description below, you can download the
         mkdir test
         cd test
         git clone https://gitlab.com/YottaDB/DB/YDBTest
-        source `pkg-config --variable=prefix yottadb`/ydb_env_set
+        source /usr/local/etc/ydb_env_set
         gcc `pkg-config --cflags yottadb` wordfreq.c `pkg-config --libs yottadb` -o wordfreq
         ./wordfreq < YDBTest/simpleapi/outref/wordfreq_input.txt > wordfreq.out
         diff wordfreq.out YDBTest/simpleapi/outref/wordfreq_output.txt

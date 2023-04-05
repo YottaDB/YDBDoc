@@ -47,7 +47,7 @@ Local Installation
    - Make it executable: :code:`chmod +x ydbinstall.sh`
    - Run it with your choice of directory where you want it installed (omit the :code:`--verbose` option for less output): :code:`sudo ./ydbinstall.sh --utf8 default --verbose`. If you do not specify an installation directory with :code:`--installdir`, the script installs YottaDB in :code:`/usr/local/lib/yottadb/r###` where :code:`r###` is the release, e.g., :code:`r130`.
 
-#. Set up the environment: :code:`source $(pkg-config --variable=prefix yottadb)/ydb_env_set`. This defaults to an environment in :code:`$HOME/.yottadb`; to use another directory, set the environment variable :code:`ydb_dir` to the desired directory.
+#. Set up the environment: :code:`source /usr/local/etc/ydb_env_set`. This defaults to an environment in :code:`$HOME/.yottadb`; to use another directory, set the environment variable :code:`ydb_dir` to the desired directory.
 
 #. Put your C program in the :code:`$ydb_dir` directory, :code:`#include` the file :code:`libyottadb.h` in your C program and compile it. As a sample program, you can download the `wordfreq.c <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/inref/wordfreq.c>`_ program, with a `reference input file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_input.txt>`_ and `corresponding reference output file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_output.txt>`_ and compile it.
 

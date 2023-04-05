@@ -48,7 +48,7 @@ This section assumes that YottaDB has already been installed. One way to install
 
 #. Set YottaDB environment variables:
 
-    #. Set YottaDB environment variables: :code:`source $(pkg-config --variable=prefix yottadb)/ydb_env_set`
+    #. Set YottaDB environment variables: :code:`source /usr/local/etc/ydb_env_set`
     #. *Optional*: If YottaDB is built with Address Sanitization (ASAN) enabled, :code:`LD_PRELOAD` and :code:`ASAN_OPTIONS` must be set:
 
         * :code:`export ASAN_OPTIONS="detect_leaks=0:disable_coredump=0:unmap_shadow_on_exit=1:abort_on_error=1"`

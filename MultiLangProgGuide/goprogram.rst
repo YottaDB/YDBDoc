@@ -46,7 +46,7 @@ The :ref:`go-quick-start` assumes that YottaDB has already been installed as des
 
         $ go get lang.yottadb.com/go/yottadb
         $ go build lang.yottadb.com/go/yottadb
-        $ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
+        $ source /usr/local/etc/ydb_env_set
         $ go get -t lang.yottadb.com/go/yottadb
         $ go test lang.yottadb.com/go/yottadb
         ok      lang.yottadb.com/go/yottadb     0.194s

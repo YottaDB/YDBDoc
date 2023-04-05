@@ -98,7 +98,7 @@ There are standards for all of the above, with the twin goals of:
 
 - eliminating collisions between plugins and minimizing the potential for collision between plugins and applications; and
 
-- enabling the environment set up by sourcing the :code:`ydb_env_set` file (e.g., with :code:`source $(pkg-config --variable=prefix yottadb)/ydb_env_set`) to make YottaDB and installed plugins available.
+- enabling the environment set up by sourcing the :code:`ydb_env_set` file (e.g., with :code:`source /usr/local/etc/ydb_env_set`) to make YottaDB and installed plugins available.
 
 +++++++++++
 C Functions

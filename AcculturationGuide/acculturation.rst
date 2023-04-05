@@ -133,6 +133,8 @@ Virtual Machine Download
 
 Download `Debian-11_yottadbworkshop.zip <https://docs.yottadb.com/AcculturationGuide/Debian-11_yottadbworkshop.zip>`_ and unzip it to access the disk image file Debian-11_yottadbworkshop.vmdk.
 
+.. _vm-config:
+
 +++++++++++++++++++++++++++++
 Virtual Machine Configuration
 +++++++++++++++++++++++++++++
@@ -145,13 +147,13 @@ Refer to the user documentation for your virtualization software to set up virtu
 
 .. code-block:: bash
 
-   qemu-system-x86_64 -enable-kvm -cpu host -m 256 -net nic -net user,hostfwd=tcp::2222-:22 -hda Debian-11_yottadbworkshop.vmdk
+   qemu-system-x86_64 -enable-kvm -cpu host -m 256 -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::9080-:9080,hostfwd=tcp::1337-:1337 -hda Debian-11_yottadbworkshop.vmdk
 
 Using kvm on a Linux host, the following command boots the vmdk image with port 2222 on the host forwarded to port 22 on the guest for ssh sessions:
 
 .. code-block:: bash
 
-    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22 -hda Debian-11_yottadbworkshop.vmdk
+    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::9080-:9080,hostfwd=tcp::1337-:1337 -hda Debian-11_yottadbworkshop.vmdk
 
 +++++++++++++++++++++++++++++++
 Control of the Keyboard & Mouse
@@ -164,6 +166,8 @@ Terminal Emulation
 ++++++++++++++++++
 
 Even when running with a console, we recommend that you boot and minimize the virtual machine, and connect to your virtual machines with terminal sessions from a terminal emulator. On Windows, you can use a terminal emulator such as `PuTTY <https://www.chiark.greenend.org.uk/~sgtatham/putty/>`_. Linux distributions and OS X include terminal emulation.
+
+.. _acculturation-quickstart:
 
 -----------
 Quick Start
@@ -200,7 +204,7 @@ Install YottaDB
 - Create a temporary directory and change to it, e.g.: :code:`mkdir /tmp/tmp ; cd /tmp/tmp`
 - Get the YottaDB install script: :code:`wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh`
 - Make it executable: :code:`chmod +x ydbinstall.sh`
-- Run it (omit the :code:`--verbose` option if you want less output): :code:`sudo ./ydbinstall.sh --utf8 default --verbose` (This command installs YottaDB under :code:`/usr/local/lib/`.)
+- Run it (omit the :code:`--verbose` option if you want less output): :code:`sudo ./ydbinstall.sh --verbose --utf8 default --gui --octo` (This command installs YottaDB under :code:`/usr/local/lib/`.)
 - The script has a plethora of installation options, which you will not use in the Acculturation Workshop. You can query it to list the options with the :code:`--help` option, e.g., :code:`./ydbinstall.sh --help`.
 - :code:`yottadb -version` provides a detailed report on the YottaDB build, e.g.,
 
@@ -226,7 +230,7 @@ As YottaDB needs a working environment and several environment variables to be s
 
 .. code-block:: bash
 
- ydbuser@ydbdev:~$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
+ ydbuser@ydbdev:~$ source /usr/local/etc/ydb_env_set
  ydbuser@ydbdev:~$ yottadb -run %xcmd 'write $zyrelease,!'
  YottaDB r1.34 Linux x86_64
  ydbuser@ydbdev:~$
@@ -574,6 +578,75 @@ YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBR
    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 8  max subsc len: 16  max rec len: 37  max node len: 48
    ydbuser@ydbdev:~$
 
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Access from SQL via Octo®
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can access YottaDB using SQL syntax by using the Octo SQL engine `YDBOcto <https://gitlab.com/YottaDB/DBMS/YDBOcto>`_.
+
+To install Octo within the YottaDB virtual machine and use it from the host machine, follow the instructions in the :ref:`vm-config` and :ref:`acculturation-quickstart` sections.
+
+Next, if you haven't already, ``source`` the ``ydb_env_set`` file with ``source /usr/local/etc/ydb_env_set`` to setup the YottaDB environment variables required by Octo.
+
+Now, you can run Octo from the terminal with the ``octo`` command.
+
+To load some dummy data to play around with, you can use the Northwind dataset, available in the YDBOcto repository. You can get this dataset by downloading it to a temporary directory within the YottaDB virtual machine and loading it into Octo:
+
+.. code-block:: bash
+
+    wget -O northwind.sql https://gitlab.com/YottaDB/DBMS/YDBOcto/-/raw/master/tests/fixtures/northwind.sql?inline=false
+    wget -O northwind.zwr https://gitlab.com/YottaDB/DBMS/YDBOcto/-/raw/master/tests/fixtures/northwind.zwr?inline=false
+    octo -f northwind.sql
+    mupip load northwind.zwr
+
+You can now query the Northwind database from within the VM using the ``octo`` command from your terminal. Here is a sample query you can run in Octo to confirm that the data was correctly loaded:
+
+.. code-block:: sql
+
+select * from employees inner join orders on employees.employeeid = orders.employeeid;
+
+If Octo was correctly installed and the data correctly loaded, then Octo will output a number of SQL data rows for this query. To exit the Octo prompt, you can enter the command ``\q``, or just use CTRL-C.
+
+You can also connect to the Octo installation the virtual machine from your host machine by using the ``rocto`` remote Octo server. To do this, first create a new remote user using the ``%ydboctoAdmin`` Octo administration tool, e.g.:
+
+.. code-block:: bash
+
+    $ydb_dist/yottadb -r %ydboctoAdmin add user ydbuser
+
+You will be prompted to enter a password for the new user.
+
+Once you've created a new remote Octo user, run the ``rocto`` command in the terminal of the virtual machine. This will start ``rocto``, which will listen on port 1337 by default.
+
+Then, from the host machine, connect to the ``rocto`` server using the PostgreSQL CLI client, ``psql``, e.g.:
+
+.. code-block:: bash
+
+    psql -U ydbuser -h localhost -p 1337
+
+You should then enter an interactive ``psql`` prompt, where you can enter SQL queries against the YottaDB database, as mediated through the Octo SQL engine. Try querying the Northwind dataset again to confirm everything is working correctly.
+
+~~~~~~~~~~~~~~~~~~~~~~~
+GUI Access from the Web
+~~~~~~~~~~~~~~~~~~~~~~~
+
+You can access and manage YottaDB using a graphical user interface (GUI) via the `YDBGUI <https://gitlab.com/YottaDB/UI/YDBGUI>`_ web application. The simplest way to get started with YDBGUI is to install it using the YottaDB installation script, ``ydbinstall``.
+
+To install the GUI within the YottaDB virtual machine and use it from the host machine, follow the instructions in the :ref:`vm-config` and :ref:`acculturation-quickstart` sections.
+
+Next, if you haven't already, ``source`` the ``ydb_env_set`` file with ``source /usr/local/etc/ydb_env_set`` to setup the YottaDB environment variables required by YDBGUI.
+
+Then start YDBGUI with:
+
+.. code-block:: bash
+
+    $ydb_dist/yottadb -run %ydbgui
+
+This will run YDBGUI at the default port of 9080, with TLS disabled. Since the VM was instructed to forward this port to port 9080 on the host machine, you can now access YDBGUI from the host machine by navigating your web browser to ``http://localhost:9080/`` You should see something like this:
+
+.. image:: main-screen.png
+
+To specify a different port or do additional configuration, please see the YDBGUI README on the `YDBGUI project page <https://gitlab.com/YottaDB/UI/YDBGUI>`_.
+
 ----------
 Journaling
 ----------
@@ -597,7 +670,7 @@ Create a directory with a name like :code:`jnlex` (for journaling exercises) or 
 .. code-block:: bash
 
    ydbuser@ydbdev:~/jnlex$ cat jnlex_env
-   export ydb_dist=$(pkg-config --variable=prefix yottadb)
+   export ydb_dist=/usr/local/etc/
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
    alias mupip=$ydb_dist/mupip
@@ -761,7 +834,7 @@ GDE, the Global Directory Editor, is a program used to manipulate global directo
 .. code-block:: bash
 
    ydbuser@ydbdev:~/jnlex$ cat jnlex_env
-   export ydb_dist=$(pkg-config --variable=prefix yottadb)
+   export ydb_dist=/usr/local/etc/
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
    alias mupip=$ydb_dist/mupip
@@ -1169,7 +1242,7 @@ The file :code:`ydb_env_set` that is supplied with YottaDB, and which must be so
 .. code-block:: bash
 
    ydbuser@ydbdev:~$ env | grep ^ydb
-   ydbuser@ydbdev:~$ source $(pkg-config --variable=prefix yottadb)/ydb_env_set
+   ydbuser@ydbdev:~$ source /usr/local/etc/ydb_env_set
    ydbuser@ydbdev:~$ env | grep ^ydb
    ydb_dist=/usr/local/lib/yottadb/r134
    ydb_log=/tmp/yottadb/r1.34_x86_64
@@ -1295,7 +1368,7 @@ Because replication builds on journaling, use the :code:`jnlex` directory create
 .. code-block:: bash
 
    ydbuser@ydbdev:~/jnlex$ cat jnlex_env
-   export ydb_dist=$(pkg-config --variable=prefix yottadb)
+   export ydb_dist=/usr/local/etc
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
    alias mupip=$ydb_dist/mupip
@@ -1437,7 +1510,7 @@ On each machine, edit :code:`jnlex_env` in each instance and change the line :co
 .. code-block:: bash
 
    ydbuser@santiago:~/jnlex$ cat jnlex_env
-   export ydb_dist=$(pkg-config --variable=prefix yottadb)
+   export ydb_dist=/usr/local/etc
    export ydb_routines=$ydb_dist/libyottadbutil.so
    alias yottadb=$ydb_dist/yottadb
    alias mupip=$ydb_dist/mupip
@@ -2232,7 +2305,7 @@ Prepare for backups by creating a :code:`jnlex/backup` subdirectory where you ca
    ydbuser@paris:~/jnlex/backup$ cp ../ydb.gld ./
    ydbuser@paris:~/jnlex/backup$ nano jnlex_bak_env
    ydbuser@paris:~/jnlex/backup$ cat jnlex_bak_env
-   export ydb_dist=$(pkg-config --variable=prefix yottadb)
+   export ydb_dist=/usr/local/etc
    export ydb_routines=". $ydb_dist/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
    alias mupip=$ydb_dist/mupip
