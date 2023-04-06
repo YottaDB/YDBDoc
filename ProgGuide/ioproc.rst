@@ -1853,7 +1853,7 @@ where timeout is a numeric expression that specifies how long in seconds a serve
 
    WRITE /PASS([targetpid],[timeout],handle[,handle]...)
 
-WRITE /PASS allows a YottaDB process to send DETACHed TCP or LOCAL sockets (that is, sockets in the socket pool) to another YottaDB process. The receiving process should execute WRITE /ACCEPT to receive the socket.
+WRITE /PASS allows a YottaDB process to send DETACHed TCP or LOCAL sockets (that is, sockets in the socket pool) to another YottaDB process. The receiving process should execute WRITE /ACCEPT to receive the socket. WRITE /PASS and WRITE /ACCEPT may be used to send and receive both LISTENING and CONNECTED sockets.
 
 * If a numeric target pid is specified, YottaDB matches the value against the process id ($JOB) of the process receiving the sockets. YottaDB uses a system service to perform this check on platforms that support it. If the pids do not match, YottaDB issues a PEERPIDMISMATCH error and does not transfer the sockets.
 * If a numeric timeout is specified, YottaDB sets $TEST to 1 if the transfer completes within the specified time, and otherwise sets $TEST to 0 and does not transfer any of the sockets.
