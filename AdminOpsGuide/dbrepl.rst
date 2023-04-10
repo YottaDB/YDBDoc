@@ -1572,7 +1572,7 @@ The most common scenario for bringing up a replicating instance is to take a bac
 
    $ydb_dist/mupip replicate -editinstance -name=backupA backupA/yottadb.repl
 
-* Start the Receiver Server for the BC replicating instance. **Do not use the -UPDATERESYNC qualifier to start the receiver server of a BC replicating instance**. -UPDATERESYNC is necessary when you start the Receiver Server of an SI replicating instance for the first time. Without -UDPATERESYNC, the SI replicating instance may refuse to start replication because the journal sequence number in the replicating instance may be higher than the originating instance expects.
+* Start the Receiver Server for the BC replicating instance. **Do not use the UPDATERESYNC qualifier to start the receiver server of a BC replicating instance**. UPDATERESYNC is necessary when you start the Receiver Server of an SI replicating instance for the first time. Without UPDATERESYNC, the SI replicating instance may refuse to start replication because the journal sequence number in the replicating instance may be higher than the originating instance expects.
 
 .. code-block:: bash
 
@@ -3195,27 +3195,27 @@ Setting up a new replicating instance of an originating instance (A→B, P→Q, 
 
 To set up a new replicating instance of an originating instance for the first time or to replace a replicating instance if database and instance file get deleted, you need to create the replicating instance from a backup of the originating instance or one of its replicating instances.
 
-If you are running a recent version of YottaDB:
+- Take a backup of the replicated regions of a database and the replication instance file of the originating instance together at the same time with the following command.
 
-- Take a backup of the database and the replication instance file of the originating instance together at the same time with :code:`mupip backup -replinstance=backup_dir/<repl_file_name> '*' backup_dir/` and transfer them to the location of the replicating instance. The backup of the instance file would be stored in the file :code:`backup_dir/inst.repl` and the backup of the database files would be stored in the directory :code:`backup_dir/`. If the originator's replicating instance file is newly created, take its backup while the Source Server is running to ensure that the backup contains at least one history record.
+  .. code-block:: bash
 
-.. code-block:: bash
+     mupip backup -replinst=/pathA/backup_dir/inst.repl DEFAULT,XREF /pathA/backup_dir/
 
-   mupip backup -replinst=backup_dir/inst.repl '*' backup_dir/
+  The above command takes a backup of the instance file at the path :code:`/pathA/backup_dir/inst.repl` and a backup of the database files corresponding to DEFAULT and XREF in the directory :code:`/pathA/backup_dir`.
 
-- Transfer the backup files to the location of the replicating instance.
+  If the originator's replicating instance file is newly created, take its backup while the Source Server is running to ensure that the backup contains at least one history record.
 
-- Use MUPIP REPLICATE -EDITINST -NAME=<secondary-instname> to change the replicating instance's name.
+- Transfer the backup files (both replicated regions database files and replication instance file) to a directory in the replicating instance (say :code:`/pathB/backup_dir`)
 
-.. code-block:: bash
+- Start the replicating instance with :code:`-updateresync=</path/to/bkup-orig-repl-inst-file>`.
 
-   mupip replicate -editinstance -name=backupA backupA/ydb.repl
+  .. code-block:: bash
 
-- Start the replicating instance without -udpateresync.
+     mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/A/receive.log -updateresync=/pathB/backup_dir/inst.repl
 
-.. code-block:: bash
+  In this case, the Receiver Server determines the current instance's journal sequence number by taking a maximum of the Region Sequence Numbers in the database file headers on the replicating instance, uses the input instance file to locate the history record corresponding to this journal sequence number, and exchanges this history information with the Source Server.
 
-   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/A/receive.log
+  Note that the Receiver Server also handles the case where the replication instance backup file is cross-endian (for example, A is running AIX whereas B is running Linux) by endian converting the needed parts of the backup instance file (importantly, history records).
 
 .. _replace-repl-inst-file-repl-ab-pq:
 
@@ -3227,22 +3227,21 @@ In this case, it is possible that the replicating instance's database files are 
 
 To replace the existing replicating instance file with a new replication instance file, follow these steps:
 
-If you are running a recent version of YottaDB:
+- Take a backup of just the replication instance file (the below command creates the backup in the path :code:`/pathA/backupA.repl` assuming the current instance is A).
 
-- Take a backup of just the replication instance file (no database files with BACKUP -REPLINST=</path/to/bkup-orig-repl-inst-file>) and transfer it to the site of the replicating instance.
+  .. code-block:: bash
 
-.. code-block:: bash
+     mupip backup -replinst=/pathA/backupA.repl
 
-   mupip backup -replinst=backupA
-   mupip replicate -editinstance -name=startA
+- Transfer the backup file to some location in the replicating instance (say :code:`/pathB/backupA.repl`)
 
-- Start the replicating instance with -updateresync=</path/to/bkup-orig-repl-inst-file>.
+- Start the replicating instance with :code:`-updateresync=</path/to/bkup-orig-repl-inst-file>`.
 
-.. code-block:: bash
+  .. code-block:: bash
 
-   mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/A/receive.log -updateresync=startA
+     mupip replicate -receive -start -listenport=4000 -buffsize=1048576 -log=home/user/A/receive.log -updateresync=/pathB/backupA.repl
 
-In this case, the Receiver Server determines the current instance's journal sequence number by taking a maximum of the Region Sequence Numbers in the database file headers on the replicating instance and uses the input instance file to locate the history record corresponding to this journal sequence number, and exchanges this history information with the Source Server.
+In this case, the Receiver Server determines the current instance's journal sequence number by taking a maximum of the Region Sequence Numbers in the database file headers on the replicating instance, uses the input instance file to locate the history record corresponding to this journal sequence number, and exchanges this history information with the Source Server.
 
 .. _replace-repl-inst-file-repl-ap:
 
@@ -4515,11 +4514,14 @@ Starting the Receiver Server with -stopreceiverfilter turns off any active filte
 
 -updateresync uses the journal sequence number stored in the replicating instance's database and the history record available in the backup copy of the replication instance file of the originating instance (</path/to/bkup-orig-repl-inst-file>) to determine the journal sequence number at which to start replication.
 
+
 When replication resumes after a suspension (due to network or maintenance issues), YottaDB compares the history records stored in the replication instance file of the replicating instance with the history records stored in the replication instance file of the originating instance to determine the point at which to resume replication. This mechanism ensures that two instances always remain in sync when a replication connection resumes after an interruption. -updateresync bypasses this mechanism by ignoring the replication history of the replicating instance and relying solely on the current journal sequence number and its history record in the originating instance's history to determine the point for resuming replication. As it overrides a safety check, use -updateresync only after careful consideration. You can check with your YottaDB support channel as to whether -updateresync is appropriate in your situation.
 
 To perform an updateresync, the originating instance must have at least one history record. You need to take a backup (BACKUP -REPLINST) of the replication instance file of the originating instance while the Source Server is running. This ensures that the instance file has at least one history record. Even though it is safe to use a copy (for example, an scp) of the replication instance file of the originating instance taken after shutting down its Source Server, BACKUP -REPLINST is recommended because it does not require Source Server shutdown. You also need an empty instance file (-INSTANCE_CREATE) of the replicating instance to ensure that it bypasses the history information of the current and prior states.
 
 You also need use -updateresync to replace your existing replication instance files if a YottaDB version upgrade changes the instance file format.
+
+Note that :code``-updateresync`` works even when the replication instance file of the originating instance differs in endianness.
 
 For information on the procedures that use -updateresync, refer to :ref:`setup-new-repl-inst-orig-ab-pq-ap`, :ref:`replace-repl-inst-file-repl-ab-pq`, :ref:`replace-repl-inst-file-repl-ap`, and :ref:`setup-new-repl-inst-orig-ap`.
 
