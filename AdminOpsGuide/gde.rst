@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -365,6 +365,12 @@ from the shell, enter:
 .. code-block:: bash
 
    $ yottadb -r GDE
+
+If you have an existing GDE commands file, you can load it into GDE, and execute it by using the :ref:`\@ <gde-at>` syntax:
+
+.. code-block:: bash
+
+   $ yottadb -r GDE @/path/to/file.gde
 
 GDE displays informational messages like the following, and then the GDE> prompt:
 
