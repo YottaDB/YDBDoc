@@ -2124,7 +2124,7 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
 
   .. code-block:: bash
 
-     echo "ydbpass" | $ydb_dist/plugin/gtmcrypt/maskpass | cut -d ":" -f2 | tr -d ' '
+     echo "ydbpass" | $ydb_dist/plugin/ydbcrypt/maskpass | cut -d ":" -f2 | tr -d ' '
      7064420FDCAEE313B222
 
 * In your environment file, set ydb_tls_passwd_{server name} to be that hash.
