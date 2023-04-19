@@ -51,3 +51,7 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`search`
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/yottadb-pixel.png" />
