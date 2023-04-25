@@ -28,14 +28,19 @@ help:
 
 .PHONY: help Makefile
 
-# Clean target: remove all files under _build directory.
+# Clean target: remove all files under _build directory, as well as
+# duplicated favicons.
 # The Sphinx command below functions the same way as that for the
 # Catch-all target.
 clean:
+	@$(foreach dir, $(SOURCEDIRS), rm -f "$(dir)/favicon.png";)
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 # All of the $(SOURCEDIRS) are built at once.
+#
+# Also, copy the YDB favicon into each source directory.
 %: Makefile
+	@$(foreach dir, $(SOURCEDIRS), cp favicon.png "$(dir)";)
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)

@@ -103,6 +103,7 @@ html_show_sourcelink = False
 #
 html_theme_options = {"sticky_navigation": "true", "prev_next_buttons_location": "both", "logo_only": True}
 html_logo = "logo.png"
+html_favicon = "favicon.png"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Add any paths that contain custom static files (such as style sheets) here,
