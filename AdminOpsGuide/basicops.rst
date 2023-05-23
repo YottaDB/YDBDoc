@@ -25,11 +25,11 @@ YottaDB Environment Setup
 
 Several environment variables control the operation of YottaDB. Some of them are required for normal operation, whereas for others, YottaDB assumes a default value if they are not set. The three most important ones are:
 
-* **ydb_dist**: Points to the directory where YottaDB is installed. If it is not set, the :code:`yottadb` program sets it to the directory from which it is executed. [JOB](https://docs.yottadb.com/ProgrammersGuide/commands.html#job)'d processes inherit it.
+* **ydb_dist**: Points to the directory where YottaDB is installed. If it is not set, the :code:`yottadb` program sets it to the directory from which it is executed. Processes started with the `JOB <../ProgrammersGuide/commands.html#job>`_ command inherit this and other environment variables from their parent processes.
 
 * **ydb_gbldir**: Points to a global directory file. A global directory file maps global variables (the hierarchical key-value relationships of the YottaDB database) to database files in the filesystem. This is not required by processes that do not access any global variables. There is no default.
 
-* **ydb_routines**: Tells a process where to find application code written in M. It is not required by applications that do not invoke M code. If it is not set, the :code:`yottadb` program sets it to :code:`$ydb_dist/libyottadbutil.so` where YottaDB's own utility routines (such as GDE) are available. [JOB](https://docs.yottadb.com/ProgrammersGuide/commands.html#job)'d processes inherit it.
+* **ydb_routines**: Tells a process where to find application code written in M. It is not required by applications that do not invoke M code. If it is not set, the :code:`yottadb` program sets it to :code:`$ydb_dist/libyottadbutil.so` where YottaDB's own utility routines (such as GDE) are available.
 
 A YottaDB distribution comes with many scripts that set up a default YottaDB environment for the shell of your choice. These scripts are as follows:
 
@@ -760,6 +760,8 @@ You can use this as a monitoring facility for processes holding a resource for a
 * *count* is the number of times the script has been invoked for the current condition (1 for the first occurrence).
 
 Each invocation generates an operator log message and if the invocation fails, an error message to the operator log. The shell script should start with a line beginning with #! that designates the shell.
+
+Instead of creating your own custom script, we recommend that you use the `%YDBPROCSTUCEXEC <../ProgrammersGuide/utility.html#ydbprocstuckexec>`_ utility program included with YottaDB. Set :code:`$ydb_procstuckexec` / :code:`$gtm_procstuckexec` to :code:`"$ydb_dist/yottadb -run %YDBPROCSTUCKEXEC"` to use this standard utility program. In this case, ensure that all processes have the same value for :code:`$ydb_tmp` / :code:`$gtm_tmp`.
 
 .. note::
    Make sure that user processes have sufficient space and permissions to run the shell command/script. For example - for the script to invoke the debugger, the process must be of the same group or have a way to elevate privileges.
