@@ -23,15 +23,15 @@ Introduction
 
 This style guide applies to user documentation for all YottaDB software. Existing documentation predating these standards should be reviewed for compliance on material edits, but not necessarily on minor edits such as fixing typos.
 
----------------------
+--------------
 Language Usage
----------------------
+--------------
 
 This section focuses on the writing part of the documentation, in regards to the language that must be used.
 
-++++++++++++++
+++++++++
 Language
-++++++++++++++
+++++++++
 
 Use American English, not British.
 For example, use suffix :code:`-ize/-yze/-ization` not :code:`-ise/-yse/-isation`.
@@ -49,9 +49,15 @@ For example:
 
    > The three virtual machines should be booted now. (Passive voice)
 
-++++++++++++
++++++++++++++++
+Mode of Address
++++++++++++++++
+
+Use second person as the normal form of addressing, especially for tutorial documentation. Reference documentation can use the third person.
+
+++++++++
 Acronyms
-++++++++++++
+++++++++
 
 For a small document the first usage of an acronym should spell out the entire name followed by the acronym in parentheses. The acronym alone may be used in all other instances.
 
@@ -59,9 +65,9 @@ For a large document have a glossary of acronyms with their entire names. Every 
 
 Don't use a full stop after an acronym unless it is the last word in a sentence.
 
-++++++++++++
++++++++
 Numbers
-++++++++++++
++++++++
 
 Spell out the numbers 0-9 in full, and use numerals for numbers 10 or greater.
 
@@ -81,15 +87,15 @@ Options passed to commands should be spelled out and include the preceding ``-``
 
 However, when they are referenced independently, outside the context of a valid command, the ``-`` should be omitted, e.g. ``-SOURCE -ZEROBACKLOG -SHUTDOWN`` should be referenced as ``SOURCE ZEROBACKLOG SHUTDOWN``.
 
--------------------------
+----------------------
 Documentation Elements
--------------------------
+----------------------
 
 This section focuses on the reStructuredText(rST) elements that are used in the documentation across YottaDB, their syntax and usage.
 
-+++++++++++
++++++++
 Heading
-+++++++++++
++++++++
 
 Text can be underlined or under and overlined to represent a title/heading.
 

@@ -17,7 +17,7 @@
 SPHINXOPTS    = -W
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = GTMAdminOps
-SOURCEDIRS    = AcculturationGuide AdminOpsGuide MessageRecovery MultiLangProgGuide ProgGuide StyleGuide Plugins
+SOURCEDIRS    = AcculturationGuide AdminOpsGuide ApplicationsManual MessageRecovery MultiLangProgGuide ProgGuide StyleGuide Plugins
 SOURCEDIR     = .
 BUILDDIR      = _build
 

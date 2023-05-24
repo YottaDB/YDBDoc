@@ -41,6 +41,7 @@ needs_clone "$octo" https://gitlab.com/YottaDB/DBMS/YDBOcto
 DIRECTORIES=(
 	AcculturationGuide/
 	AdminOpsGuide/
+	ApplicationsManual/
 	MessageRecovery/
 	MultiLangProgGuide/
 	ProgGuide/
