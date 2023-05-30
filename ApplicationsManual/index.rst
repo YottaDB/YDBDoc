@@ -29,6 +29,7 @@ Index
    ApplicationsManual
    ydbpython
    ydbapron
+   demopi
    LICENSE
 
 Indices and tables
