@@ -15,8 +15,7 @@ stages:
   - deploy
 
 before_script:
-    - apt-get update -qq && apt-get install -y -qq --no-install-recommends git make rsync tcsh python3-pip python3-setuptools python3-wheel sphinx-common jq wget
-    - pip3 install sphinx_rtd_theme sphinxcontrib-jquery
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends git make jq python3-sphinx-rtd-theme rsync sphinx-common tcsh wget
     - if [ ! -d ../YDBOcto ]; then git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto ../YDBOcto; else (cd ../YDBOcto && git pull); fi
 
 pages:
