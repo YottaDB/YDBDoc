@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -1448,6 +1448,124 @@ If unspecified, the default increment is 1. Note that the value of the empty str
     print(key.incr()) # Prints b'1'
     print(key.incr()) # Prints b'2'
 
++++++++++++++++
+Key.load_json()
++++++++++++++++
+
+.. code-block:: python
+
+    def load_json(self, key: Key = None, spaces: str = "") -> object
+
+The inverse of `Key.save_json()`_, ``Key.load_json()`` retrieves JSON data stored under the YottaDB database node represented by the calling `Key` object, and returns it as a Python object. For example:
+
+.. code-block:: python
+
+    import yottadb
+    import requests
+    import json
+
+
+    response = requests.get("https://rxnav.nlm.nih.gov/REST/relatedndc.json?relation=product&ndc=0069-3060")
+    original_json = json.loads(response.content)
+    key = yottadb.Key("^rxnorm")
+    key.delete_tree()
+    key.save_json(original_json)
+
+    saved_json = key.load_json()
+    key["ndcInfoList"]["ndcInfo"]["3"]["ndc11"].value = b'00069306087'
+    revised_json = key.load_json()
+
+    with open('original.json', 'w', encoding='utf-8') as f:
+        json.dump(original_json, f, sort_keys = True, indent=4)
+    with open('saved.json', 'w', encoding='utf-8') as f:
+        json.dump(saved_json, f, sort_keys = True, indent=4)
+    with open('revised.json', 'w', encoding='utf-8') as f:
+        json.dump(revised_json, f, sort_keys = True, indent=4)
+
++++++++++++++++
+Key.load_tree()
++++++++++++++++
+
+.. code-block:: python
+
+   def load_tree(self) -> dict
+
+The :code:`Key.load_tree()` method retrieves the entire subtree stored under the database node represented by the given :code:`Key` and stores it in a series of nested Python dictionaries.
+
+The nested dictionaries are structured using YottaDB subscripts as keys, with node values stored under a :code:`"value"` key at the appropriate subscript level.
+
+For example, these YottaDB database nodes:
+
+.. code-block::
+
+   ^test4="test4"
+   ^test4("sub1")="test4sub1"
+   ^test4("sub1","subsub1")="test4sub1subsub1"
+   ^test4("sub1","subsub2")="test4sub1subsub2"
+   ^test4("sub1","subsub3")="test4sub1subsub3"
+   ^test4("sub2")="test4sub2"
+   ^test4("sub2","subsub1")="test4sub2subsub1"
+   ^test4("sub2","subsub2")="test4sub2subsub2"
+   ^test4("sub2","subsub3")="test4sub2subsub3"
+   ^test4("sub3")="test4sub3"
+   ^test4("sub3","subsub1")="test4sub3subsub1"
+   ^test4("sub3","subsub2")="test4sub3subsub2"
+   ^test4("sub3","subsub3")="test4sub3subsub3"
+
+To convert these nodes into a Python dictionary, :code:`Key.load_tree()` can be used like so:
+
+.. code-block:: python
+
+    import yottadb
+
+
+    key = yottadb.Key("^test4")
+    print(key.load_tree())
+
+This will produce the following dictionary (formatted for clarity):
+
+.. code-block:: python
+
+    {
+        'value': 'test4',
+        'sub1': {
+            'value': 'test4sub1',
+            'subsub1': {
+                'value': 'test4sub1subsub1'
+            },
+            'subsub2': {
+                'value': 'test4sub1subsub2'
+            },
+            'subsub3': {
+                'value': 'test4sub1subsub3'
+            }
+        },
+        'sub2': {
+            'value': 'test4sub2',
+            'subsub1': {
+                'value': 'test4sub2subsub1'
+            },
+            'subsub2': {
+                'value': 'test4sub2subsub2'
+            },
+            'subsub3': {
+                'value': 'test4sub2subsub3'
+            }
+        },
+        'sub3': {
+            'value': 'test4sub3',
+            'subsub1': {
+                'value': 'test4sub3subsub1'
+            },
+            'subsub2': {
+                'value': 'test4sub3subsub2'
+            },
+            'subsub3': {
+                'value': 'test4sub3subsub3'
+            }
+        }
+    }
+
 ++++++++++
 Key.lock()
 ++++++++++
@@ -1469,6 +1587,7 @@ The following example provides a demonstration of basic :code:`Key` locking oper
 
     import multiprocessing
     import datetime
+
 
     # Lock a value in the database
     def lock_value(key: Union[yottadb.Key, tuple], interval: int = 2, timeout: int = 1):
@@ -1535,6 +1654,7 @@ In the event of an error in the underlying :ref:`ydb-lock-decr-s-st-fn` call, a 
     import multiprocessing
     import datetime
 
+
     key = yottadb.Key("^myglobal")["sub1"]
     # For the definition of lock_value(), see the entry for Key.lock()
     process = multiprocessing.Process(target=lock_value, args=(key,))
@@ -1581,6 +1701,103 @@ Matching `Python node_next()`_, :code:`Key.node_next()` wraps :ref:`ydb-node-nex
 - If there is a next node, it returns the subscripts of that next node as a tuple of Python :code:`bytes` objects.
 - If there is no node following the specified node, a :code:`yottadb.YDBNodeEnd` exception will be raised.
 - In the event of an error in the underlying :ref:`ydb-node-next-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
+
+++++++++++++++++++
+Key.replace_tree()
+++++++++++++++++++
+
+.. code-block:: python
+
+    def replace_tree(self, tree: dict)
+
+``Key.replace_tree()`` stores data from a nested Python dictionary in YottaDB, replacing the tree in the database with the one defined by the ``tree`` argument. The dictionary must have been previously created using the ``Key.load_tree()`` method, or otherwise match the format used by that method.
+
+Note that this method will delete any nodes and subtrees that exist in the database but are absent from ``tree``.
+
++++++++++++++++
+Key.save_json()
++++++++++++++++
+
+.. code-block:: python
+
+    def save_json(self, json: object, key: Key = None)
+
+``Key.save_json()`` saves JSON data stored in a Python object under the YottaDB node represented by the calling ``Key`` object. For example:
+
+.. code-block:: python
+
+    import yottadb
+    import requests
+    import json
+
+    response = requests.get("https://rxnav.nlm.nih.gov/REST/relatedndc.json?relation=product&ndc=0069-3060")
+    json_data = json.loads(response.content)
+    key = yottadb.Key("^rxnav")
+    key.save_json(json_data)
+
+This saved JSON data can subsequently be loaded with `Key.load_json()`_.
+
+++++++++++++++++
+Key.save_tree()
+++++++++++++++++
+
+.. code-block:: python
+
+    def save_tree(self, tree: dict, key: Key = None)
+
+The :code:`Key.save_tree()` method performs the reverse operation of the :code:`Key.load_tree()` method, and stores a Python dictionary representing a YottaDB tree or subtree in the database.
+
+The dictionary passed to :code:`Key.save_tree()` must have been previously generated by a call to :code:`Key.load_tree()` or otherwise maintain the same format. Any such dictionary may, however, be modified after its creation and subsequently passed to :code:`Key.save_tree()`.
+
+For example, consider again these database nodes:
+
+.. code-block::
+
+   ^test4="test4"
+   ^test4("sub1")="test4sub1"
+   ^test4("sub1","subsub1")="test4sub1subsub1"
+   ^test4("sub1","subsub2")="test4sub1subsub2"
+   ^test4("sub1","subsub3")="test4sub1subsub3"
+   ^test4("sub2")="test4sub2"
+   ^test4("sub2","subsub1")="test4sub2subsub1"
+   ^test4("sub2","subsub2")="test4sub2subsub2"
+   ^test4("sub2","subsub3")="test4sub2subsub3"
+   ^test4("sub3")="test4sub3"
+   ^test4("sub3","subsub1")="test4sub3subsub1"
+   ^test4("sub3","subsub2")="test4sub3subsub2"
+   ^test4("sub3","subsub3")="test4sub3subsub3"
+
+These can be retrieved and stored in a dictionary using :code:`Key.load_tree()`, modified, and then stored again in the database using :code:`Key.save_tree()`:
+
+.. code-block:: python
+
+    import yottadb
+
+
+    key = yottadb.Key("^test4")
+    key_dict = key.load_tree()
+
+    key_dict["value"] = "test4new"
+    key_dict["sub3"]["subsub3"] = "test4sub3subsub3new"
+
+The database will now contain the following nodes:
+
+.. code-block::
+
+    ^test4="test4new"
+    ^test4("sub1")="test4sub1"
+    ^test4("sub1","subsub1")="test4sub1subsub1"
+    ^test4("sub1","subsub2")="test4sub1subsub2"
+    ^test4("sub1","subsub3")="test4sub1subsub3"
+    ^test4("sub2")="test4sub2"
+    ^test4("sub2","subsub1")="test4sub2subsub1"
+    ^test4("sub2","subsub2")="test4sub2subsub2"
+    ^test4("sub2","subsub3")="test4sub2subsub3"
+    ^test4("sub3")="test4sub3subsub3new"
+    ^test4("sub3","subsub1")="test4sub3subsub1"
+    ^test4("sub3","subsub2")="test4sub3subsub2"
+    ^test4("sub3","subsub3")="test4sub3subsub3"
+
 
 +++++++++
 Key.set()
