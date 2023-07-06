@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -3477,6 +3477,8 @@ Enables or disables canonical input as controlled by the ICANON terminal attribu
 
 By default, canonical input is enabled (that is [NO]CANONICAL is the default).
 
+.. _cenable:
+
 ~~~~~~~~
 CENABLE
 ~~~~~~~~
@@ -3488,6 +3490,8 @@ Enables or disables the ability to force YottaDB into Direct Mode by entering <C
 If CENABLE is set, <CTRL-C> interrupts process execution. For more information on interrupt handling, refer to `Interrupt Handling <./isv.html#interrupt-handling>`_.
 
 By default, CENABLE is set. If CTRAP contains $C(3), CENABLE is disabled.
+
+Note that if CENABLE/NOCENABLE is used in M code invoked from a call-in where the main program is not M, this parameter is ignored.
 
 Example:
 
