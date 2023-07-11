@@ -81,14 +81,13 @@ master_doc = "index"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path.
+# These patterns also effect to html_static_path and html_extra_path
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
 
-
-# -- Options for HTML output -------------------------------------------------
+# -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -122,13 +121,13 @@ html_static_path = ["_static"]
 html_sidebars = {"**": ["relations.html", "globaltoc.html", "searchbox.html"]}  # needs 'show_related': True theme option to display
 
 
-# -- Options for HTMLHelp output ---------------------------------------------
+# -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = "Pluginsdoc"
 
 
-# -- Options for LaTeX output ------------------------------------------------
+# -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
@@ -139,7 +138,7 @@ latex_elements = {
     # 'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
     #
-    "preamble": "",
+    # "preamble": "",
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
@@ -154,14 +153,14 @@ latex_documents = [
 ]
 
 
-# -- Options for manual page output ------------------------------------------
+# -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [(master_doc, "plugins", "Plugins Documentation", [author], 1)]
 
 
-# -- Options for Texinfo output ----------------------------------------------
+# -- Options for Texinfo output -------------------------------------------
 
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
@@ -171,7 +170,7 @@ texinfo_documents = [
 ]
 
 
-# -- Options for Epub output -------------------------------------------------
+# -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
 epub_title = project

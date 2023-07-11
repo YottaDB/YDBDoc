@@ -34,7 +34,7 @@ import sphinx_rtd_theme
 
 project = "StyleGuide"
 copyright = "2020-2022, YottaDB LLC"
-author = "YottaDB Team"
+author = "YottaDB LLC"
 
 # The short X.Y version
 version = ""
@@ -81,14 +81,13 @@ master_doc = "index"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path.
+# These patterns also effect to html_static_path and html_extra_path
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
 
-
-# -- Options for HTML output -------------------------------------------------
+# -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -105,6 +104,7 @@ html_theme_options = {"sticky_navigation": "true", "prev_next_buttons_location":
 html_logo = "logo.png"
 html_favicon = "favicon.png"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -121,13 +121,13 @@ html_static_path = ["_static"]
 html_sidebars = {"**": ["relations.html", "globaltoc.html", "searchbox.html"]}  # needs 'show_related': True theme option to display
 
 
-# -- Options for HTMLHelp output ---------------------------------------------
+# -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = "StyleGuidedoc"
 
 
-# -- Options for LaTeX output ------------------------------------------------
+# -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
@@ -138,7 +138,7 @@ latex_elements = {
     # 'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
     #
-    "preamble": "",
+    # "preamble": "",
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
@@ -149,18 +149,18 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "StyleGuide.tex", "StyleGuide Documentation", "YottaDB Team", "manual"),
+    (master_doc, "StyleGuide.tex", "StyleGuide Documentation", "YottaDB LLC", "manual"),
 ]
 
 
-# -- Options for manual page output ------------------------------------------
+# -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [(master_doc, "styleguide", "StyleGuide Documentation", [author], 1)]
 
 
-# -- Options for Texinfo output ----------------------------------------------
+# -- Options for Texinfo output -------------------------------------------
 
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
@@ -178,10 +178,13 @@ texinfo_documents = [
 ]
 
 
-# -- Options for Epub output -------------------------------------------------
+# -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
 epub_title = project
+epub_author = author
+epub_publisher = author
+epub_copyright = copyright
 
 # The unique identifier of the text. This can be a ISBN number
 # or the project homepage.

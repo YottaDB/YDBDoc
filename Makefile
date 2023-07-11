@@ -33,14 +33,12 @@ help:
 # The Sphinx command below functions the same way as that for the
 # Catch-all target.
 clean:
-	@$(foreach dir, $(SOURCEDIRS), rm -f "$(dir)/favicon.png";)
+	@$(foreach dir, $(SOURCEDIRS), rm -rf "$(dir)/favicon.png" "$(dir)/_static" "$(dir)/_templates" "$(dir)/LICENSE.rst" "$(dir)/logo.png";)
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 # All of the $(SOURCEDIRS) are built at once.
-#
-# Also, copy the YDB favicon into each source directory.
 %: Makefile
-	@$(foreach dir, $(SOURCEDIRS), cp favicon.png "$(dir)";)
+	@$(foreach dir, $(SOURCEDIRS), ln -s ../shared/LICENSE.rst ../shared/_static  ../shared/_templates  ../shared/favicon.png ../shared/logo.png "$(dir)";)
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)
