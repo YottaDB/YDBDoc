@@ -3028,6 +3028,13 @@ When using the following, remember to write code that allows for values other th
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Writes writes per flush      |  "sgmnt_data.n_wrt_per_flu"                   | Integer count of database blocks written each time a process needs to flush blocks                                          |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Sequence number acknowledged |  "gtmsource_local_struct.heartbeat_jnl_seqno" | Integer number signifying the sequence number issued by a replicating database instance                                     |
+| from a replicating instance  |                                               |                                                                                                                             |
++------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+
+.. note::
+
+    Note that ``gtmsource_local_struct.heartbeat_jnl_seqno`` is an array field, so ``^%PEEKBYNAME`` requires an additional integer parameter to specify which array element to index. Also, the return value must be reduced by 1 for conformity to the values in MUPIP REPLIC -SOURCE -BACKLOG. For example, the following statement will fetch array index 0 (indices run from 0-15): ``write ($$FUNC^%HD($$^%PEEKBYNAME("gtmsource_local_struct.heartbeat_jnl_seqno",0)))-1,!``.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~
 Replication Parameters
