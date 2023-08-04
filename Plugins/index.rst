@@ -24,6 +24,7 @@ Welcome to Plugins documentation!
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation/>
    ydbaim
    ydbposix
+   ydbsyslog
    ydbzlib
    LICENSE
 
