@@ -1287,23 +1287,23 @@ Example:
 
 These examples demonstrate combinations of the string relational operators with the NOT operator.
 
-The (]]) operator can be used to test whether a value is a canonical number.
+The (]]) operator can be used to test whether a value with a non-zero length is a canonic number.
 
 Example:
 
 .. code-block:: none
 
-   YDB>SET x=123 WRITE $CHAR(0)]]x
+   YDB>SET x=123 WRITE $ZLENGTH(x)&($CHAR(0)]]x)
    1
-   YDB>SET x="123" WRITE $CHAR(0)]]x
+   YDB>SET x="123" WRITE $ZLENGTH(x)&($CHAR(0)]]x)
    1
-   YDB>SET x="123." WRITE $CHAR(0)]]x
+   YDB>SET x="123." WRITE $ZLENGTH(x)&($CHAR(0)]]x)
    0
-   YDB>SET x="123.4" WRITE $CHAR(0)]]x
+   YDB>SET x="123.4" WRITE $ZLENGTH(x)&($CHAR(0)]]x)
    1
-   YDB>SET x=".123" WRITE $CHAR(0)]]x 
+   YDB>SET x=".123" WRITE $ZLENGTH(x)&($CHAR(0)]]x) 
    1
-   YDB>SET x="0.123" WRITE $CHAR(0)]]x
+   YDB>SET x="0.123" WRITE $ZLENGTH(x)&($CHAR(0)]]x)
    0
    YDB>
 
