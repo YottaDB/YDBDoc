@@ -71,6 +71,8 @@ Conceptually, a canonical number is a string from the Latin character set that r
 
 #. Any of the above two forms followed by "E" (upper case only) followed by a canonical integer in the range -43 to 47 such that the magnitude of the resulting number is between 1E-43 through .1E47.
 
+Checking whether the string :code:`'\0'` follows a value in subscript collation order determines whether the value is a canonical string. In M code, if :code:`x` is the value, this would be written :code:`$char(0)]]x` (see `String Relational Operators <../ProgrammersGuide/langfeat.html#string-relational-operators>`_).
+
 .. _zwrite-format:
 
 -------------
