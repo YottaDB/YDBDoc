@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -262,6 +262,12 @@ YDB_MAX_IDENT
 ~~~~~~~~~~~~~
 
 The maximum space in bytes required to store a complete variable name, not including the preceding caret for a global variable. Therefore, when allocating space for a string to hold a global variable name, add 1 for the caret.
+
+~~~~~~~~~~~~~~~~~~
+YDB_MAX_M_LINE_LEN
+~~~~~~~~~~~~~~~~~~
+
+The maximum M source code line length, in bytes.
 
 ~~~~~~~~~~~~~
 YDB_MAX_NAMES
