@@ -141,6 +141,7 @@ Although there are many ways to script gathering data from multiple systems usin
 #. Save the file as :code:`UseYDBSyslog.m` on the loghost and on each server in a location where YottaDB can execute it.
 #. To use it, first start it on the loghost, and then on each server, and confirm that the two port numbers reported by the loghost for each server match those the server reports.
 #. To collect all syslogs from all servers, intially, start it with :code:`yottadb -run %XCMD 'do ^UseYDBSyslog(1)'`. Subsequently, a simple :code:`yottadb -run UseYDBSyslog` suffices to capture syslogs from the current boot.
+#. To collect all syslogs from all servers starting at a specific time, pass the time as the third parameter, e.g., :code:`yottadb -run %XCMD 'do ^UseYDBSyslog(,,,"--since=""2023-08-13 14:04""")'`.
 
 The default configuration of UseYDBSyslog creates an unjournaled database that uses the MM access method. If you use journaling for recoverability, remember to monitor space used by prior generation journal files, and to delete those old journal files when they are no longer needed.
 
