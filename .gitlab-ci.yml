@@ -33,8 +33,6 @@ pages:
     - apt-get update
     - apt-get install -y --no-install-recommends git make jq python3-sphinx-rtd-theme python3-sphinx-copybutton rsync sphinx-common tcsh wget luarocks lua-ldoc pkg-config
     - if [ ! -d ../YDBOcto ]; then git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto.git ../YDBOcto; else (cd ../YDBOcto && git pull); fi
-    - if [ ! -d ../lua-yottadb ]; then git clone --depth 1 https://github.com/anet-be/lua-yottadb.git ../lua-yottadb; else (cd ../lua-yottadb && git pull); fi
-    - (cd ../lua-yottadb && make docs/lua-yottadb-ydbdocs.rst && cp docs/lua-yottadb-ydbdocs.rst $OLDPWD/MultiLangProgGuide/)
     - make html
     - ./buildall.sh public
     - touch public/AcculturationGuide/Debian-Hybrid_yottadbworkshop15.zip

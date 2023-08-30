@@ -1,6 +1,6 @@
  ###############################################################
  #                                                             #
- # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+ # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
  # All rights reserved.                                        #
  #                                                             #
  #     This source code contains the intellectual property     #
@@ -40,5 +40,10 @@ clean:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 # All of the $(SOURCEDIRS) are built at once.
 %: Makefile
+	@if [ ! -d ../lua-yottadb ]; then \
+		git clone --depth 1 https://github.com/anet-be/lua-yottadb.git ../lua-yottadb; \
+		else (cd ../lua-yottadb && git pull); \
+	fi ;\
+    	cp ../lua-yottadb/docs/lua-yottadb-ydbdocs.rst ./MultiLangProgGuide/
 	@$(foreach dir, $(SOURCEDIRS), ln -s ../shared/LICENSE.rst ../shared/_static  ../shared/_templates  ../shared/favicon.png ../shared/logo.png "$(dir)";)
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O);)
