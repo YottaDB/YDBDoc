@@ -14154,17 +14154,32 @@ TOTALBLKMAX
 
 TOTALBLKMAX, Extension exceeds maximum total blocks, not extending
 
-Run Time Error: This indicates that the database file extension specified implicitly or explicitly (using MUPIP EXTEND) would cause the GDS file to exceed its maximum size. The maximum database size is:
+Run Time Error: This indicates that a database file extension, either implicit or explicit (using MUPIP EXTEND), would cause the GDS file to exceed its maximum size. Even though dataase files created by older versions of GT.M and YottaDB are usable by current releases of YottaDB, the maximum size of a database file is determined by its maximum number of blocks, which in turn is determined by the YottaDB release or GT.M version used to create the database file. Use the Master Bitmap Size reported by `DSE DUMP FILEHEADER <../AdminOpsGuide/dse.html#f-ileheader>`_ to determine the maximum size to which a database file can grow. The following table lists the maximum numbers of blocks for database files created by current and prior YottaDB releases and GT.M versions, along with the corresponding values of Master Bitmap Size and approximate maximum size of a database file that uses the popular 4KiB block size.
 
-+----------------------------------------------------------------+---------------------------------------------------------------+
-| Max blocks in a DB file (MiB)                                  | Max DB Size* (GiB)                                            |
-+================================================================+===============================================================+
-| 992                                                            | 4096                                                          |
-+----------------------------------------------------------------+---------------------------------------------------------------+
++--------------------+------------+----------------------+
+| Master Bitmap Size | Max blocks | Approx max file size |
++====================+============+======================+
+| 8176               | 3,968Mi    | 15,872TiB            |
++--------------------+------------+----------------------+
+| 496		     | 992Mi      | 3,968GiB             |
++--------------------+------------+----------------------+
+| 112		     | 228Mi      | 912GiB               |
++--------------------+------------+----------------------+
+		     					     
+Action(s):
 
-(for a database file with block size of 8192 bytes).
+- If the Master Bitmap Size is smaller than 112, use `MUPIP UPGRADE <../AdminOpsGuide/dbmgmt.html#mupip-upgrade>`_ to upgrade the database file header.
 
-Action: Modify the extension to use a smaller size. This may indicate that you should move some contents of the database file to another file.
+- If the database file is not already at its maximum size, modify the extension to use a smaller size.
+
+- If the database file is already at its maximum size, consider deleting (killing) global variable nodes, or migrating them to another database region.
+
+- By defragmenting the database file, a `MUPIP REORG <../AdminOpsGuide/dbmgmt.html#reorg>`_ might make space available.
+
+- For a database file that is already at its maximum size, and with no means to make space available:
+
+  - If the database file was created with an older GT.M version or YottaDB release, use `MUPIP EXTRACT <../AdminOpsGuide/dbmgmt.html#extract>`_ to extract the data, create a new database file with the current version of YottaDB and use `MUPIP LOAD <../AdminOpsGuide/dbmgmt.html#load>`_ to load the data into the new database file. If the database file is part of a replicated instance, after loading the data, set the Region Seqno in the new file to that of the prior database file.
+  - If the database file was created with a current release of YottaDB, create an additional database region with a new database file, and migrate some global variables or nodes to that region.
 
 ---------------------
 TPCALLBACKINVRETVAL
