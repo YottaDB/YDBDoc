@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2022 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2022-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -19,13 +19,13 @@ Programming in Node.js
 
 Programming YottaDB in `Node.js <https://nodejs.org/>`_ is provided by `Nodem <https://github.com/dlwicksell/nodem>`_ which is developed by `David Wicksell <https://github.com/dlwicksell>`_. We would like to acknowledge his contribution and thank him for the value it adds to the YottaDB community. It provides access to :ref:`global and local variables <lcl-gbl-var>` as well as the ability to call functions and procedures coded in M.
 
-Nodem wraps the YottaDB :ref:`c-simple-api` to provide a node.js API.
+Nodem wraps the YottaDB :ref:`c-simple-api` to provide a Node.js API.
 
 --------------
 Installation
 --------------
 
-The minimum required version of Nodem is 0.21.0. It should run on every version of Node.js starting with version 0.12.0, through the current release (v17.7.1 at this time), as well as every version of IO.js. However, in the future, both Node.js and the V8 JavaScript engine at its core could change their APIs in a non-backwards compatible way, which might break Nodem for that version.
+The minimum required version of Nodem is 0.20.4. It should run on every version of Node.js starting with version 0.12.0, through the current release (v20.6.0 at this time), as well as every version of IO.js. However, in the future, both Node.js and the V8 JavaScript engine at its core could change their APIs in a non-backwards compatible way, which might break Nodem for that version.
 
 In order to use Nodem, YottaDB must be installed and configured correctly, including setting up the required YottaDB environment variables, or setting the appropriate options in the :code:`open()` API. Make sure to have :code:`$ydb_dist` set to the root of the YottaDB instance before compiling Nodem, whether manually or via :code:`npm`. Node.js must be installed and working as well.
 
@@ -43,8 +43,8 @@ Update to the latest version using the following command;
 
 The following steps need to be performed in order for YottaDB to find the Call-In table and the :code:`v4wNode.m` routine that it maps to:
 
-* Copy :code:`v4wNode.m`, located in the :code:`/nodem/src` directory, into a directory that is specified in the :code:`$ydb_routines` path, or in the :code:`routinesPath` property in the call to the :code:`open()` API.
-* Set :code:`$ydb_ci` environment variable, or set the :code:`callinTable` property in the call to the :code:`open()` API, pointing to the file :code:`nodem.ci` located in the :code:`/nodem/resources` directory.
+* Copy :code:`v4wNode.m`, located in the :code:`nodem/src` directory, into a directory that is specified in the :code:`$ydb_routines` path, or in the :code:`routinesPath` property in the call to the :code:`open()` API.
+* Set the :code:`$ydb_ci` environment variable, or set the :code:`callinTable` property in the call to the :code:`open()` API, pointing to the file :code:`nodem.ci` located in the :code:`nodem/resources` directory.
 
 .. note::
    To build and install Nodem from scratch, use the instructions specified `here <https://github.com/dlwicksell/nodem#installation>`_.
@@ -53,7 +53,7 @@ The following steps need to be performed in order for YottaDB to find the Call-I
 Nodem API
 -----------
 
-Arguments can be passed to the API functions in two ways:
+Arguments can be passed to the API methods in two ways:
 
 #. using positional arguments, or
 #. using a single JavaScript object
@@ -61,7 +61,7 @@ Arguments can be passed to the API functions in two ways:
 The output format varies depending on which method is used.
 
 
-Before any of the API functions can be used, a YottaDB runtime instance needs to be created;
+Before any of the API methods can be used, a YottaDB runtime instance needs to be created;
 
 .. code-block:: javascript
 
@@ -75,7 +75,7 @@ Arguments as objects and the objects returned (on success or failure) described 
 * Any other values present in the comment specifies the domain of values.
 
 
-A function, taking two arguments (error and result), can be passed to an API function. This will call the API function asynchronously. Currently :code:`data()`, :code:`function()`, :code:`get()`, :code:`increment()`, :code:`kill()`, :code:`lock()`, :code:`merge()`, :code:`nextNode()`, :code:`order()`, :code:`previous()`, :code:`previousNode()`, :code:`procedure()`, :code:`set()`, :code:`unlock()`, and :code:`version()` are the only functions that support asynchronous operation in addition to synchronous operation.
+A function, taking two arguments (error and result), can be passed to an API method, as its last argument. This will call the API method asynchronously. Currently :code:`data()`, :code:`function()`, :code:`get()`, :code:`increment()`, :code:`kill()`, :code:`lock()`, :code:`merge()`, :code:`nextNode()`, :code:`order()`, :code:`previous()`, :code:`previousNode()`, :code:`procedure()`, :code:`set()`, :code:`unlock()`, and :code:`version()` are the only methods that support asynchronous operation in addition to synchronous operation.
 
 Example:
 
@@ -91,7 +91,7 @@ Example:
    > result: { ok: true, global: 'num', data: 1, defined: true }
 
 
-A full set of error codes and messages is in the `YottaDB Messages and Recovery Procedures Manual <../MessageRecovery/index.html>`_. An error code and error message are returned as part of the object when a call to an API function fails.
+A full set of error codes and messages is in the `YottaDB Messages and Recovery Procedures Manual <../MessageRecovery/index.html>`_. An error code and error message are returned as part of the object when a call to an API method fails.
 
 +++++++++++++++++++++++++
 Nodem Wrapper Functions
@@ -143,7 +143,7 @@ Example:
    > ydb.data({global: 'Population', subscripts: ["USA"]});
    { ok: true, global: 'Population', subscripts: [ 'USA' ], defined: 11 }
 
-To better understand the structure of the Population global variable node refer the :ref:`mlpg-concepts` section. The :code:`Population` global variable has been set as follows:
+To better understand the structure of the Population global variable node refer to the :ref:`mlpg-concepts` section. The :code:`Population` global variable has been set as follows:
 
 .. code-block:: javascript
 
@@ -206,7 +206,7 @@ Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
@@ -244,7 +244,7 @@ Returns the following object on success:
 	global|local: string,
 	subscripts:   string[]|number[],  // (optional)
 	data:         string|number,
-	defined:      boolean|number      // [false|true]|[0|1]
+	defined:      boolean
    }
 
 .. note::
@@ -308,7 +308,7 @@ Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
@@ -326,7 +326,7 @@ Example:
 increment()
 ~~~~~~~~~~~~~
 
-As a wrapper for the C function :ref:`ydb_incr_s() <ydb-incr-s-st-fn>`, :code:`increment()` increments the value in a global or local variable node.
+As a wrapper for the C function :ref:`ydb_incr_s() <ydb-incr-s-st-fn>`, :code:`increment()` atomically increments the value in a global or local variable node.
 
 Arguments as an object:
 
@@ -346,10 +346,11 @@ Returns the following object on success:
 	ok :          boolean,            // true
 	global|local: string,
 	subscripts:   string[]|number[],  // (optional)
+	increment:    number,
 	data:         string|number
    }
 
-The :code:`data` property is the string representation of a :ref:`canonical number <canonical-numbers>`.
+When the :code:`data` property is a string, it is the string representation of a :ref:`canonical number <canonical-numbers>`.
 
 Returns the following object on failure:
 
@@ -368,7 +369,7 @@ Example:
    > ydb.get({local:'num'});
    { ok: true, local: 'num', data: 4, defined: true }
    > ydb.increment({local:'num'});
-   { ok: true, local: 'num', data: 5 }
+   { ok: true, local: 'num', increment: 1, data: 5 }
    >
 
 Positional arguments:
@@ -387,7 +388,7 @@ Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
@@ -412,7 +413,7 @@ Arguments as an object:
    {
 	global|local: string,
 	subscripts:   string[]|number[],  // (optional)
-        nodeOnly:     boolean|number      // <false>|[<0>|1] (optional)
+        nodeOnly:     boolean             // <false> (optional)
    }
 
 If no arguments are passed to :code:`kill()`, then all of the local variable nodes will be deleted.
@@ -425,7 +426,7 @@ Returns the following object on success, if arguments are passed:
 	ok :          boolean,            // true
 	global|local: string,
 	subscripts:   string[]|number[],  // (optional)
-	result:       number              // 0 (optional)
+        nodeOnly:     boolean
    }
 
 Returns the following object on failure:
@@ -445,11 +446,11 @@ Example:
    > ydb.localDirectory();
    [ 'num', 'y' ]
    > ydb.kill();
-   true
+   undefined
    > ydb.localDirectory();
    []
    > ydb.kill({global:'z'});
-   { ok: true, global: 'z' }
+   { ok: true, global: 'z', nodeOnly: false }
 
 Positional arguments:
 
@@ -461,13 +462,13 @@ Returns the following on success:
 
 .. code-block:: javascript
 
-   {boolean} true
+   {undefined}
 
 Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
@@ -476,7 +477,7 @@ Example:
    > ydb.get('^Z');
    156
    > ydb.kill('^Z');
-   true
+   undefined
    > ydb.get('^Z');
    ''
 
@@ -504,7 +505,8 @@ Returns the following object on success:
 	ok :          boolean,            // true
 	global|local: string,
 	subscripts:   string[]|number[],  // (optional)
-	result:       number              // [0|1]
+	timeout:      number,
+	result:       boolean
    }
 
 Returns the following object on failure:
@@ -527,17 +529,17 @@ Returns the following on success:
 
 .. code-block:: javascript
 
-   {string|number} [0|1]
+   {boolean}
 
 Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
-~~~~~~~~~~~~~~~~~~~~~~~~
-nextNode()/next_node()
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+nextNode()
+~~~~~~~~~~~~
 
 :code:`nextNode()` returns the next global or local variable node. It wraps the C function :ref:`ydb_node_next_s() <ydb-node-next-s-st-fn>`, and then uses :ref:`ydb_get_s() <ydb-get-s-st-fn>` to get the value of the next node.
 
@@ -559,7 +561,7 @@ Returns the following object on success:
 	global|local: string,
 	subscripts:   string[]|number[],  // (optional)
 	data:         string|number,
-	defined:      boolean|number      // [false|true]|[0|1]
+	defined:      boolean
    }
 
 Returns the following object on failure:
@@ -634,7 +636,7 @@ Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
@@ -649,9 +651,9 @@ Example:
    > ydb.nextNode('^Population', 'USA', 20100401);
    []
 
-~~~~~~~~~
-order()
-~~~~~~~~~
+~~~~~~~~~~~~~~~~
+order()/next()
+~~~~~~~~~~~~~~~~
 
 As a wrapper for the C function :ref:`ydb_subscript_next_s() <ydb-subscript-next-s-st-fn>`, :code:`order()` returns the next global or local variable subscript at the same level.
 
@@ -729,7 +731,7 @@ Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
@@ -766,7 +768,7 @@ Returns the following object on success:
 	ok :          boolean,            // true
 	global|local: string,
 	subscripts:   string[]|number[],  // (optional)
-	result:       string|number,
+	result:       string|number
    }
 
 Returns the following object on failure:
@@ -815,7 +817,7 @@ Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
@@ -829,9 +831,9 @@ Example:
    'Thailand'
    >
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-previousNode()/previous_node()
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+previousNode()
+~~~~~~~~~~~~~~~~
 
 :code:`previousNode()` returns the previous global or local variable node. It wraps the C function :ref:`ydb_node_previous_s() <ydb-node-previous-s-st-fn>`, and then uses :ref:`ydb_get_s() <ydb-get-s-st-fn>` to get the value of the previous node.
 
@@ -853,7 +855,7 @@ Returns the following object on success:
 	global|local: string,
 	subscripts:   string[]|number[],  // (optional)
 	data:         string|number,
-	defined:      boolean|number      // [false|true]|[0|1]
+	defined:      boolean
    }
 
 Returns the following object on failure:
@@ -904,7 +906,7 @@ Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
@@ -944,8 +946,7 @@ Returns the following object on success:
 	ok :          boolean,            // true
 	global|local: string,
 	subscripts:   string[]|number[],  // (optional)
-	data:         string|number,
-	result:       number              // 0 (optional)
+	data:         string|number
    }
 
 Returns the following object on failure:
@@ -976,24 +977,24 @@ Returns the following on success:
 
 .. code-block:: javascript
 
-   {boolean} true
+   {undefined}
 
 Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
 .. code-block:: javascript
 
    > ydb.set('lclvar1',5);
-   true
+   undefined
    > ydb.get('lclvar1');
    5
    > ydb.set('lclvar1','first', 10);
-   true
+   undefined
    > ydb.get('lclvar1','first');
    10
    >
@@ -1015,7 +1016,7 @@ An optional second argument, with one or two properties, can be passed to :code:
 * The first property, :code:`variables`, is an array of local variables whose values are reset to their original values whenever the transaction is restarted. If :code:`variables` has :code:`*` as its only array item, then every local variable will be reset during a transaction restart.
 * The second property, :code:`type`, is a string which if set to :code:`Batch` (or :code:`batch` or :code:`BATCH`), will run the transaction in batch mode. Batch mode does not ensure Durability (but it always ensures Atomicity, Consistency, and Isolation).
 
-In order to restart a transaction pass the string :code:`Restart` (or :code:`restart` or :code:`RESTART`) as the argument to the return statement. Similarly, in order to rollback a transaction pass the string :code:`Rollback` (or :code:`rollback` or :code:`ROLLBACK`) as the argument to the return statement. Any other argument to the return statement will commit the transaction, including functions without a return statement.
+In order to restart a transaction pass the string :code:`Restart` (or :code:`restart`, :code:`RESTART`, or the :code:`tpRestart` property) as the argument to the return statement. Similarly, in order to rollback a transaction pass the string :code:`Rollback` (or :code:`rollback`, :code:`ROLLBACK`, or the :code:`tpRollback` property) as the argument to the return statement. Any other argument to the return statement will commit the transaction, including functions without a return statement.
 
 Returns the following on success:
 
@@ -1071,13 +1072,13 @@ Output:
    Value of ^num before transaction:  { ok: true, global: 'num', data: 0 }
    Starting transaction ...
 
-   Incrementing ^num:  { ok: true, global: 'num', data: 1 }
+   Incrementing ^num:  { ok: true, global: 'num', increment: 1, data: 1 }
    ^num:  { ok: true, global: 'num', data: 1, defined: true }
    Transaction exited ...
 
    Transaction output:  { ok: true, statusCode: 0, statusMessage: 'Commit' }
 
-Even though the :code:`transaction()` API runs synchronously, it is fully compatible with the Worker Threads API. By creating a new worker thread and running the :code:`transaction()` API, and any other APIs it calls in it, an asynchronous pattern can be emulated. Running the transaction will not block the main thread or any of the other worker threads. The `transaction.js <https://github.com/glwicksell/nodem/blob/master/examples/transaction.js>`_ example shows how the :code:`transaction()` API can be used with the Worker Threads API. See :ref:`worker-threads-api` for more information.
+Even though the :code:`transaction()` API runs synchronously, it is fully compatible with the Worker Threads API. By creating a new worker thread and running the :code:`transaction()` API, and any other APIs it calls in it, an asynchronous pattern can be emulated. Running the transaction will not block the main thread or any of the other worker threads. The `transaction.js <https://github.com/dlwicksell/nodem/blob/master/examples/transaction.js>`_ example shows how the :code:`transaction()` API can be used with the Worker Threads API. See :ref:`worker-threads-api` for more information.
 
 ~~~~~~~~~~
 unlock()
@@ -1101,9 +1102,10 @@ Returns the following object on success:
    {
 	ok :          boolean,            // true
 	global|local: string,
-	subscripts:   string[]|number[],  // (optional)
-	result:       number              // 0 (optional)
+	subscripts:   string[]|number[]   // (optional)
    }
+
+If no arguments are passed to :code:`unlock()`, then all of the currently held locks will be released.
 
 Returns the following object on failure:
 
@@ -1125,13 +1127,13 @@ Returns the following on success:
 
 .. code-block:: javascript
 
-   {boolean}|{string} true|0
+   {undefined}
 
 Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 +++++++++++++++++++++
 Other API Functions
@@ -1157,13 +1159,17 @@ Returns the following on success:
 
 .. code-block:: javascript
 
-   undefined|string  // 1
+   {undefined}
 
-Returns the following on failure:
+Returns the following object on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {
+        ok:           boolean,  // false
+	errorCode:    number,
+	errorMessage: string
+   }
 
 Example:
 
@@ -1196,10 +1202,9 @@ Returns the following on success:
 .. code-block:: javascript
 
    {
-	ok:     boolean,        // true
-	result: number,         // 1 (optional)
-	pid:    number|string,
-	tid:    number|string
+	ok:     boolean,  // true
+	pid:    number,
+	tid:    number
    }
 
 Example:
@@ -1243,10 +1248,11 @@ Returns the following on success:
 .. code-block:: javascript
 
    {
-	ok:        boolean,               // true
-	function:  string,
-	arguments: string[]|number[]|[],  // (optional)
-	result:    string|number
+	ok:         boolean,               // true
+	function:   string,
+	arguments:  string[]|number[]|[],  // (optional)
+	autoRelink: boolean,
+	result:     string|number
    }
 
 Returns the following on failure:
@@ -1264,7 +1270,12 @@ Example;
 .. code-block:: javascript
 
    > ydb.function({function: '^HELLOWORLD()'});
-   { ok: true, function: 'HELLOWORLD()', result: 'Hello World' }
+   {
+     ok: true,
+     function: 'HELLOWORLD()',
+     autoRelink: false,
+     result: 'Hello World'
+   }
 
 where :code:`HELLOWORLD` routine is defined as follows:
 
@@ -1290,7 +1301,7 @@ Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
@@ -1300,9 +1311,9 @@ Example:
    'Hello World'
    >
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-globalDirectory()/global_directory()
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+globalDirectory()
+~~~~~~~~~~~~~~~~~~~
 
 Lists all the global variables stored in the database.
 
@@ -1358,9 +1369,9 @@ Example:
    > ydb.globalDirectory({lo:'v', hi:'z'});
    [ 'v4wTest', 'x', 'y' ]
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-localDirectory()/local_directory()
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+localDirectory()
+~~~~~~~~~~~~~~~~~~
 
 Lists all the local variables defined in the current scope.
 
@@ -1439,27 +1450,15 @@ Returns the following on success:
 .. code-block:: javascript
 
    {
-	ok:     boolean,                           // true
-	from:   {
-		  global|local:	string,
-		  subscripts:	string[]|number[]  // (optional)
-	        },
-	to:     {
-		  global|local:	string,
-		  subscripts:	string[]|number[]  // (optional)
-       	        },
-	result:	number                             // 1
-   }
-
-OR:
-
-.. code-block:: javascript
-
-   {
-	ok:	       boolean,            // true
-	global|local:  string,
-	subscripts:    string[]|number[],  // (optional)
-	result:	       string              // 1
+	ok:   boolean,                           // true
+	from: {
+		global|local: string,
+		subscripts:   string[]|number[]  // (optional)
+	      },
+	to:   {
+		global|local: string,
+		subscripts:   string[]|number[]  // (optional)
+              }
    }
 
 Returns the following on failure:
@@ -1478,9 +1477,9 @@ Example:
 
    > ydb.merge({ from: {global: 'PopBelgium'}, to: { global: 'Population', subscripts: ['Belgium']}});
    {
+     ok: true,
      from: { global: 'PopBelgium' },
-     to: { global: 'Population', subscripts: [ 'Belgium' ] },
-     ok: true
+     to: { global: 'Population', subscripts: [ 'Belgium' ] }
    }
    > ydb.get({global:'Population', subscripts: ['Belgium',18000804]});
    {
@@ -1534,14 +1533,14 @@ Arguments as an object:
 	globalDirectory|namespace: string,                 // <none>
 	routinesPath:              string,                 // <none>
 	callinTable:               string,                 // <none>
-	ipAddress|ip_address:      string,                 // <none>
-	tcpPort|tcp_port:          number|string,          // <none>
+	ipAddress:                 string,                 // <none>
+	tcpPort:                   number|string,          // <none>
 	charset|encoding:          string,                 // [<utf8|utf-8>|m|binary|ascii]
 	mode:                      string,                 // [<canonical>|string]
 	autoRelink:                boolean,                // <false>
 	debug:                     boolean|string|number,  // <false>|[<off>|low|medium|high]|[<0>|1|2|3]
 	threadpoolSize:            number,                 // [1-1024] <4>
-	signalHandler:             boolean|object          // [<true>|false] [<1>|0]
+	signalHandler:             boolean|object          // <true>
    }
 
 where the :code:`signalHandler` object is as follows:
@@ -1549,9 +1548,9 @@ where the :code:`signalHandler` object is as follows:
 .. code-block:: javascript
 
    {
-	sigint|SIGINT:   boolean,  // [<true>|false] (optional)
-	sigterm|SIGTERM: boolean,  // [<true>|false] (optional)
-	sigquit|SIGQUIT: boolean   // [<true>|false] (optional)
+	sigint|SIGINT:   boolean,  // <true> (optional)
+	sigterm|SIGTERM: boolean,  // <true> (optional)
+	sigquit|SIGQUIT: boolean   // <true> (optional)
    }
 
 The :code:`ipAddress` and :code:`tcpPort` properties are used to configure Nodem as a GT.CM client. See :ref:`gt-cm-client` section for more information.
@@ -1562,7 +1561,6 @@ Returns the following on success:
 
    {
 	ok:     boolean  // true
-	result: number   // optional
 	pid:    number
 	tid:    number
    }
@@ -1584,9 +1582,9 @@ Example:
    > ydb.open();
    { ok: true, pid: 77379, tid: 77379 }
 
-~~~~~~~~~~~~~
-procedure()
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+procedure()/routine()
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Call a procedure or routine label in M code. It is similar to the :code:`function()` API, except that :code:`procedure()` is used to call M procedures or routines that do not return any values.
 
@@ -1608,7 +1606,7 @@ Returns the following on success:
 	ok:                boolean,               // true
 	procedure|routine: string,
 	arguments:         string[]|number[]|[],  // (optional)
-	result:            string                 // (optional)
+	autoRelink:        boolean
    }
 
 Returns the following on failure:
@@ -1626,7 +1624,12 @@ Example:
 .. code-block:: javascript
 
    > ydb.procedure({procedure: '^TESTPRCDR', arguments: [155]});
-   { ok: true, procedure: 'TESTPRCDR', arguments: [ 155 ] }
+   {
+     ok: true,
+     procedure: 'TESTPRCDR',
+     arguments: [ 155 ],
+     autoRelink: false
+   }
    > ydb.get({global: 'Z'})
    { ok: true, global: 'Z', data: 155, defined: true }
    >
@@ -1649,13 +1652,13 @@ Returns the following on success:
 
 .. code-block:: javascript
 
-   {undefined}|{string} ''
+   {undefined}
 
 Returns the following on failure:
 
 .. code-block:: javascript
 
-   {exception string}
+   {Error object}
 
 Example:
 
@@ -1669,17 +1672,25 @@ Example:
    175
    >
 
-~~~~~~~~~~~
-version()
-~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+version()/about()
+~~~~~~~~~~~~~~~~~~~
 
 Displays the version data. It includes the YottaDB version if the runtime has been initialized.
 
-Passing a function, taking two arguments (error and result), as the last argument calls the API asynchronously.
-
 No arguments are needed for :code:`version()`.
 
-It returns a string on success, and should never fail.
+Returns the following on success:
+
+.. code-block:: javascript
+
+   {string}
+
+Returns the following on failure:
+
+.. code-block:: javascript
+
+   {Error object}
 
 Example:
 
@@ -1690,11 +1701,11 @@ Example:
    > const ydb=require('nodem').Ydb();
    undefined
    > ydb.version();
-   'Node.js Adaptor for YottaDB: Version: 0.20.2 (ABI=72) [FWS]'
+   'Node.js Adaptor for YottaDB: Version: 0.20.4 (ABI=72) [FWS]'
    > ydb.open();
    { ok: true, pid: 20381, tid: 20381 }
    > ydb.version();
-   'Node.js Adaptor for YottaDB: Version: 0.20.2 (ABI=72) [FWS]; YottaDB Version: 1.34'
+   'Node.js Adaptor for YottaDB: Version: 0.20.4 (ABI=72) [FWS]; YottaDB Version: 1.34'
 
 -------------------
 Programming Notes
@@ -1704,18 +1715,18 @@ The :code:`open()` call does not require any arguments, and connects the YottaDB
 
 .. code-block:: javascript
 
-   > ydb.open({globalDirectory: process.env.HOME + '/g/db_utf.gld'});
+   > ydb.open({globalDirectory: process.env.HOME + '/g/db_utf8.gld'});
 
 ++++++++++++++++++++
 Calling M routines
 ++++++++++++++++++++
 
-Nodem supports setting up a custom routines path, for resolving calls to M functions and procedures, via the :code:`routinesPath` property. By controlling :code:`routinesPath` an application can control the M routines that node.js application code can call, e.g.,
+Nodem supports setting up a custom routines path, for resolving calls to M functions and procedures, via the :code:`routinesPath` property. By controlling :code:`routinesPath` an application can control the M routines that Node.js application code can call, e.g.,
 
 .. code-block:: javascript
 
    > const HOME = process.env.HOME;
-   > ydb.open({routinesPath: `${HOME}/p/r130(${HOME}/p)`});
+   > ydb.open({routinesPath: `${HOME}/p/r1.34_x86_64(${HOME}/p)`});
 
 Nodem also supports setting the Call-In path directly in the :code:`open()` call via the :code:`callinTable` property. This can be handy if Nodem is being run in an environment that has other software that uses the YottaDB Call-In Interface, thus not causing any namespace issues. There is no need to set the :code:`$ydb_ci` environment variable in order for Nodem to be fully functional, e.g.,
 
@@ -1729,7 +1740,7 @@ Nodem also supports setting the Call-In path directly in the :code:`open()` call
 GT.CM Client
 ++++++++++++++
 
-Nodem can be configured to function as a `GT.CM client <../AdminOpsGuide/gtcm.html#gt-cm-client>`_, allowing it to connect with a remote database. The :code:`ipAddress` and/or :code:`tcpPort` property can be set in the :code:`open()` method, allowing Nodem to set up the environment to connect with a YottaDB database on a remote sever that already has a GT.CM server listening at that address and port.
+Nodem can be configured to function as a `GT.CM client <../AdminOpsGuide/gtcm.html#gt-cm-client>`_, allowing it to connect with a remote database. The :code:`ipAddress` and/or :code:`tcpPort` property can be set in the :code:`open()` method, allowing Nodem to set up the environment to connect with a YottaDB database on a remote server that already has a GT.CM server listening at that address and port.
 If only :code:`ipAddress` or :code:`tcpPort` is defined, the other one will be set with a default value; 127.0.0.1 for :code:`ipAddress`, or 6789 for :code:`tcpPort`. Nodem will then set the :code:`$ydb_cm_NODEM` environment variable for that Nodem process only, with the address and port in the :code:`open()` call, e.g.,
 
 .. code-block:: javascript
@@ -1747,7 +1758,7 @@ A global directory file will need to be created or modified. It should map one o
 .. code-block:: bash
 
    $ $ydb_dist/mumps -run GDE
-   GDE> change -segment DEFAULT -file=NODEM:/home/dlw/g/gtm-server.dat
+   GDE> change -segment DEFAULT -file=NODEM:/home/ydbuser/g/gtm-server.dat
 
 Make sure to have the data file, on the remote server, set up to the same path as the :code:`-file=` option in the global directory of the GT.CM client configuration. Start the GT.CM server on the same IP address and port as configured in the :code:`open()` call in Nodem.
 
@@ -1779,11 +1790,11 @@ or
    > process.stdout.setDefaultEncoding('binary');
    > ydb.configure({charset: 'm'}); // For the current thread
 
-++++++++++++++++++++
-Subscript Handling
-++++++++++++++++++++
++++++++++++++++
+Data Handling
++++++++++++++++
 
-There are currently two different modes that Nodem supports for handling subscripts. The mode can be set to :code:`canonical` or :code:`string`. The default is :code:`canonical`, and interprets subscripts using the M canonical representation i.e., numeric subscripts will be represented numerically, rather than as strings, and numeric subscripts will collate before string subscripts. The other mode, :code:`string`, interprets all subscripts as strings, e.g.,
+There are currently two different modes that Nodem supports for handling data, both in subscripts and in nodes. The mode can be set to :code:`canonical` or :code:`string`. The default is :code:`canonical`, and interprets data using the M canonical representation i.e., numeric data will be represented numerically, rather than as strings, and numeric subscripts will collate before string subscripts. The other mode, :code:`string`, interprets all data as strings, e.g.,
 
 .. code-block:: javascript
 
@@ -1805,7 +1816,7 @@ Nodem also has a debug tracing mode, in case something doesn't seem to be workin
 
    > ydb.open({debug: 'low'}); // For all threads
    [C 32649] DEBUG>  Nodem::open enter
-   [C 32649] DEBUG>>   debug: low
+   [C 32649] DEBUG>  debug: low
    [C 32649] DEBUG>  Nodem::open exit
 
    { ok: true, pid: 32649, tid: 32649 }
@@ -1842,7 +1853,7 @@ or
 Auto-relinking
 ++++++++++++++++
 
-Nodem supports a feature called auto-relink, which will automatically relink a routine object containing any function or procedure called by the :code:`function()` or :code:`procedure()` API. By default auto-relink is off. It can be enabled in one of four ways. First, pass it as a property of the JavaScript object argument which is passed to the :code:`function()` or :code:`procedure()` API directly, with a value of true, or any non-zero number. This will turn on auto-relink just for that call. It can also be disabled, by setting :code:`autoRelink` to false, or 0, if it was already enabled by one of the global settings, e.g.,
+Nodem supports a feature called auto-relink, which will automatically relink a routine object containing any function or procedure called by the :code:`function()` or :code:`procedure()` API. By default auto-relink is off. It can be enabled in one of four ways. First, pass it as a property of the JavaScript object argument which is passed to the :code:`function()` or :code:`procedure()` API directly, with a value of true. This will turn on auto-relink just for that call. It can also be disabled, by setting :code:`autoRelink` to false if it was already enabled by one of the global settings, e.g.,
 
 .. code-block:: javascript
 
@@ -1892,7 +1903,7 @@ However, if the Node.js process executes any call asynchronously, from any API o
 Restoring Terminal Settings
 +++++++++++++++++++++++++++++
 
-YottaDB changes some settings of its controlling terminal device, and Nodem resets them when it closes the database connection. By default, Nodem will restore the terminal device to the state it was in when the :code:`open()` call was invoked. Normally this is the desired option; however, the :code:`close()` call allows setting the terminal to typically sane settings, by setting the :code:`resetTerminal` property to true, or any non-zero number, e.g.,
+YottaDB changes some settings of its controlling terminal device, and Nodem resets them when it closes the database connection. By default, Nodem will restore the terminal device to the state it was in when the :code:`open()` call was invoked. Normally this is the desired option; however, the :code:`close()` call allows setting the terminal to typically sane settings, by setting the :code:`resetTerminal` property to true, e.g.,
 
 .. code-block:: javascript
 
@@ -1904,6 +1915,6 @@ YottaDB changes some settings of its controlling terminal device, and Nodem rese
 Worker Threads API
 ++++++++++++++++++++
 
-Nodem now supports the `Worker Threads API <https://nodejs.org/api/worker_threads.html>`_, for both synchronous and asynchronous calls. Since YottaDB is single threaded, initializing and cleaning up the runtime environment (i.e., using :code:`open()` and :code:`close()`) should only be done once during the process lifetime. Nodem's :code:`open()` and :code:`close()` APIs will only work when called from the main thread of the process. In order to work with the worker threads API, :code:`open()` should be called in the main thread before creating any worker threads, and :code:`close()` should be called in the main thread after all the worker threads have exited. To have access to the Nodem API, Nodem should be required in each worker thread as well as the main thread.
+Nodem supports the `Worker Threads API <https://nodejs.org/api/worker_threads.html>`_, for both synchronous and asynchronous calls. Since YottaDB is single threaded, initializing and cleaning up the runtime environment (i.e., using :code:`open()` and :code:`close()`) should only be done once during the process lifetime. Nodem's :code:`open()` and :code:`close()` APIs will only work when called from the main thread of the process. In order to work with the worker threads API, :code:`open()` should be called in the main thread before creating any worker threads, and :code:`close()` should be called in the main thread after all the worker threads have exited. To have access to the Nodem API, Nodem should be required in each worker thread as well as the main thread.
 
 Nodem has the :code:`configure()` API which allows the worker threads to change the database configuration options of the current thread. There are four configuration options that can be set for the current thread: :code:`charset`, :code:`mode`, :code:`autoRelink`, and :code:`debug`. These options can be set in the :code:`open()` API, by the main thread, before any other Nodem calls are made, or they can be set in the :code:`configure()` API, in the main thread or worker threads, at any time.
