@@ -11,15 +11,25 @@
 .. ###############################################################
 
 =========================
-Programming in Node.js
+Programming in JavaScript
 =========================
 
 .. contents::
    :depth: 5
 
-Programming YottaDB in `Node.js <https://nodejs.org/>`_ is provided by `Nodem <https://github.com/dlwicksell/nodem>`_ which is developed by `David Wicksell <https://github.com/dlwicksell>`_. We would like to acknowledge his contribution and thank him for the value it adds to the YottaDB community. It provides access to :ref:`global and local variables <lcl-gbl-var>` as well as the ability to call functions and procedures coded in M.
+There are multiple wrappers for programming YottaDB in `JavaScript <https://en.wikipedia.org/wiki/JavaScript>`_.
 
-Nodem wraps the YottaDB :ref:`c-simple-api` to provide a Node.js API.
+- Access from `Bun <https://bun.sh/>`_ is provided by `mg_bun <https://github.com/chrisemunt/mg_bun>`_.
+
+- Access from `Deno <https://deno.com/>`_ is provided by `mg_deno <https://github.com/chrisemunt/mg_deno>`_.
+
+- There are two wrappers for `Node.js <https://nodejs.org/>`_, `Nodem <https://github.com/dlwicksell/nodem>`_ (documented below) and `mg-dbx <https://github.com/chrisemunt/mg-dbx>`_.
+
+Nodem is developed by `David Wicksell <https://github.com/dlwicksell>`_ of `Fourth Watch Business Continuity Services <https://fourthwatchbcs.com/>`_ and the mg interfaces are developed by `Chris Munt <https://github.com/chrisemunt/>`_ of `MGateway Ltd <https://www.mgateway.com/>`_. We would like to acknowledge their contributions and thank them for the value they add to the YottaDB community.
+
+The wrappers wrap the YottaDB :ref:`c-simple-api` to provide  access to :ref:`global and local variables <lcl-gbl-var>` as well as the ability to call functions and procedures coded in M.
+
+The documentation below is specific to Nodem. Please use the links to the MGateway wrappers to access their documentation.
 
 --------------
 Installation

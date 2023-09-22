@@ -17,7 +17,11 @@ Programming in Python
 .. contents::
    :depth: 5
 
-Programming YottaDB in the `Python language <https://www.python.org/>`_ is provided through a wrapper for non-threaded :ref:`c-simple-api` functions via a Python C extension created using the `Python C API <https://docs.python.org/3/c-api/index.html>`_. This extension provides a :code:`yottadb` module that may be imported into Python application code to enable programmatic access to YottaDB from within a Python programming environment. Note that the Python wrapper includes YottaDB as a dependency and so must be installed on a system *after* YottaDB is installed.
+There are two wrappers for programming YottaDB in `Python <https://www.python.org/>`_, `mg_python <https://github.com/chrisemunt/mg_python>`_ and the YottaDB Python wrapper (described below). mg_python is developed by `Chris Munt <https://github.com/chrisemunt/>`_ of `MGateway Ltd <https://www.mgateway.com/>`_. We would like to acknowledge his contribution and thank Chris for the value he adds to the YottaDB community.
+
+The documentation below is specific to the YottaDB Python wrapper. Please use the link to mg_python to access its documentation.
+
+The YottaDB Python wrapper wraps the non-threaded :ref:`c-simple-api` functions via a Python C extension created using the `Python C API <https://docs.python.org/3/c-api/index.html>`_. This extension provides a :code:`yottadb` module that may be imported into Python application code to enable programmatic access to YottaDB from within a Python programming environment. Note that the Python wrapper includes YottaDB as a dependency and so must be installed on a system *after* YottaDB is installed.
 
 Since Python is a dynamically typed, object oriented language whereas C is statically typed and lacks object orientation, YDBPython abstracts away all C-level constructs in favor of Pythonic representations. This approach spares Python developers from the labors of managing memory and dealing with other "C-isms".
 

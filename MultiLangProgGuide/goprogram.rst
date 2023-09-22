@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -17,9 +17,11 @@ Programming in Go
 .. contents::
    :depth: 5
 
-Programming YottaDB in the `Go language <https://golang.org/>`_ is accomplished through a wrapper for :ref:`c-simple-api` threaded functions that uses `cgo <https://golang.org/cmd/cgo/>`_ to provide a “yottadb” package for access from Go application code. The wrapper must be installed on a system after YottaDB is installed.
+There are two wrappers for programming YottaDB in `Go <https://golang.org/>`_, `mg_go <https://github.com/chrisemunt/mg_go>`_ and the YottaDB Go wrapper (described below). mg_go is developed by `Chris Munt <https://github.com/chrisemunt/>`_ of `MGateway Ltd <https://www.mgateway.com/>`_. We would like to acknowledge his contribution and thank Chris for the value he adds to the YottaDB community.
 
-There are two Go APIs:
+The documentation below is specific to the YottaDB Go wrapper. Please use the link to mg_go to access its documentation.
+
+The YottaDB Go wrapper wraps the :ref:`c-simple-api` threaded functions and uses `cgo <https://golang.org/cmd/cgo/>`_ to provide a “yottadb” package for access from Go application code. The wrapper must be installed on a system after YottaDB is installed. There are two Go APIs:
 
 - :ref:`go-easy-api` aims to be a straightforward, easy-to-use API to access YottaDB without limiting the functionality of YottaDB. The :ref:`go-easy-api` consists of :ref:`go-easy-api-funcs` that use standard Go data types and structures.
 - :ref:`go-simple-api` aims to improve performance by reducing copying between Go and YottaDB heaps by defining structures :code:`BufferT`, :code:`BufferTArray`, and :code:`KeyT` which contain pointers to structures and data in the YottaDB heap. :ref:`go-simple-api` functionality is provided by Go methods where a method can meaningfully be associated with a structure, and by Go functions where there is no meaningful association with a structure.

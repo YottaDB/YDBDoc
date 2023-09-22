@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -29,9 +29,10 @@ Index
    MultiLangProgGuide
    cprogram
    goprogram
+   jsprogram
    luaprogram
-   nodeprogram
    perlprogram
+   phpprogram
    pythonprogram
    rustprogram
    programmingnotes
