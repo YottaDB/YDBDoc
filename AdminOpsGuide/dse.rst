@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -106,6 +106,9 @@ Use the DSE EXIT, or QUIT command to leave DSE.
 
 .. note::
    DSE sends its output to stderr not stdout. On shells such as :code:`bash` stderr can be redirected to stdout by `specifying 2>&1 on the command line <https://www.gnu.org/software/bash/manual/bash.html#Redirecting-Standard-Output-and-Standard-Error>`_.
+
+.. note::
+   All command line parameters which accept decimal values as inputs also accept hexadecimal values. Hexadecimal values must be prefixed with ``0x`` or ``0X`` and digits greater than 9 are case insensitive. However, some command line parameters accept only hexadecimal values and prohibit decimal values.
 
 ----------------------------
 DSE Commands and Qualifiers

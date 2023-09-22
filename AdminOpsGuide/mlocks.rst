@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -111,6 +111,9 @@ The general format of LKE commands is:
    command [-qualifier[=qualifier-value]]
 
 LKE accepts command and qualifier abbreviations. The section describing each command provides the minimal abbreviation that can be used for that command, and the command qualifiers, if any. YottaDB recommends the use of a minimum of four characters for key words in scripts to ensure new keywords do not conflict with older scripts.
+
+.. note::
+   All command line parameters which accept decimal values as inputs also accept hexadecimal values. Hexadecimal values must be prefixed with ``0x`` or ``0X`` and digits greater than 9 are case insensitive. However, some command line parameters accept only hexadecimal values and prohibit decimal values.
 
 +++++++++++++
 CLEAR

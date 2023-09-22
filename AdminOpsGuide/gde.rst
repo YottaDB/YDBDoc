@@ -531,6 +531,8 @@ Comments on command lines start with an exclamation mark (!) and run to the end 
 .. note::
    An exclamation mark not enclosed in quotation marks ("")(for example in a subscript) causes GDE to ignore the rest of that input line.
 
+.. note::
+   All command line parameters which accept decimal values as inputs also accept hexadecimal values. Hexadecimal values must be prefixed with ``0x`` or ``0X`` and digits greater than 9 are case insensitive. However, some command line parameters accept only hexadecimal values and prohibit decimal values.
 
 ++++++++++++++++++++++++++++++++++++++
 Specifying File Names in Command Lines
@@ -1747,9 +1749,7 @@ Specifies the number of mutex slots for a database file. YottaDB uses mutex slot
 
 Specifies the size to be reserved in each database block. RESERVED_BYTES is generally used to reserve room for compatibility with other implementations of M or to observe communications protocol restrictions. RESERVED_BYTES may also be used as a user-managed fill factor.
 
-The minimum RESERVED_BYTES is zero bytes.
-
-The maximum Reserved_Bytes is the block size minus the size of the block header (which is 7 or 8 depending on your platform) minus the maximum record size.
+The minimum RESERVED_BYTES is 0 bytes. The maximum RESERVED_BYTES = Block Size - Key Size - 40 (Block/Record header overheads).
 
 By default, GDE uses a RESERVED_BYTES size of zero bytes.
 
