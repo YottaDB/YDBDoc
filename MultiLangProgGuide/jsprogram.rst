@@ -19,17 +19,19 @@ Programming in JavaScript
 
 There are multiple wrappers for programming YottaDB in `JavaScript <https://en.wikipedia.org/wiki/JavaScript>`_.
 
-- Access from `Bun <https://bun.sh/>`_ is provided by `mg_bun <https://github.com/chrisemunt/mg_bun>`_.
+- Access from `Bun <https://bun.sh/>`_ is provided by `mg-dbx-napi <https://github.com/chrisemunt/mg-dbx-napi>`_ and `mg_bun <https://github.com/chrisemunt/mg_bun>`_.
 
 - Access from `Deno <https://deno.com/>`_ is provided by `mg_deno <https://github.com/chrisemunt/mg_deno>`_.
 
-- There are two wrappers for `Node.js <https://nodejs.org/>`_, `Nodem <https://github.com/dlwicksell/nodem>`_ (documented below) and `mg-dbx <https://github.com/chrisemunt/mg-dbx>`_.
+- Access from `Node.js <https://nodejs.org/>`_, is provided by `Nodem <https://github.com/dlwicksell/nodem>`_ (documented below), `mg-dbx-napi <https://github.com/chrisemunt/mg-dbx-napi>`_, and `mg-dbx <https://github.com/chrisemunt/mg-dbx>`_.
+
+The newer technology `mg-dbx-napi <https://github.com/chrisemunt/mg-dbx-napi>`_ wrapper has a more modern design and higher performance than the `mg-dbx <https://github.com/chrisemunt/mg-dbx>`_ and `mg_bun <https://github.com/chrisemunt/mg_bun>`_ wrappers.
 
 Nodem is developed by `David Wicksell <https://github.com/dlwicksell>`_ of `Fourth Watch Business Continuity Services <https://fourthwatchbcs.com/>`_ and the mg interfaces are developed by `Chris Munt <https://github.com/chrisemunt/>`_ of `MGateway Ltd <https://www.mgateway.com/>`_. We would like to acknowledge their contributions and thank them for the value they add to the YottaDB community.
 
-The wrappers wrap the YottaDB :ref:`c-simple-api` to provide  access to :ref:`global and local variables <lcl-gbl-var>` as well as the ability to call functions and procedures coded in M.
+The wrappers wrap the YottaDB :ref:`c-simple-api` to provide  access to :ref:`global and local variables <lcl-gbl-var>` as well as the ability to call functions and procedures coded in M. They also provide the ability to connect to YottaDB remotely over a network.
 
-The documentation below is specific to Nodem. Please use the links to the MGateway wrappers to access their documentation.
+Please access documentation for the MGateway wrappers at `mg-dbx-napi <https://github.com/chrisemunt/mg-dbx-napi>`_, `mg_bun <https://github.com/chrisemunt/mg_bun>`_, `mg_deno <https://github.com/chrisemunt/mg_deno>`_, and `mg-dbx <https://github.com/chrisemunt/mg-dbx>`_. The documentation below is specific to Nodem.
 
 --------------
 Installation

@@ -17,9 +17,11 @@ Programming in Go
 .. contents::
    :depth: 5
 
-There are two wrappers for programming YottaDB in `Go <https://golang.org/>`_, `mg_go <https://github.com/chrisemunt/mg_go>`_ and the YottaDB Go wrapper (described below). mg_go is developed by `Chris Munt <https://github.com/chrisemunt/>`_ of `MGateway Ltd <https://www.mgateway.com/>`_. We would like to acknowledge his contribution and thank Chris for the value he adds to the YottaDB community.
+There are two wrappers for programming YottaDB in `Go <https://golang.org/>`_, `mg_go <https://github.com/chrisemunt/mg_go>`_ and the YottaDB Go wrapper (described below). `mg_go <https://github.com/chrisemunt/mg_go>`_ is developed by `Chris Munt <https://github.com/chrisemunt/>`_ of `MGateway Ltd <https://www.mgateway.com/>`_. We would like to acknowledge his contribution and thank Chris for the value he adds to the YottaDB community.
 
-The documentation below is specific to the YottaDB Go wrapper. Please use the link to mg_go to access its documentation.
+`mg_go <https://github.com/chrisemunt/mg_go>`_ provides the ability to access YottaDB locally as well as remotely over a network.
+
+The documentation below is specific to the YottaDB Go wrapper. Please use the link to `mg_go <https://github.com/chrisemunt/mg_go>`_ to access its documentation.
 
 The YottaDB Go wrapper wraps the :ref:`c-simple-api` threaded functions and uses `cgo <https://golang.org/cmd/cgo/>`_ to provide a “yottadb” package for access from Go application code. The wrapper must be installed on a system after YottaDB is installed. There are two Go APIs:
 
