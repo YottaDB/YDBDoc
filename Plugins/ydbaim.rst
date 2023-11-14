@@ -136,19 +136,19 @@ Example
 
 .. code:: bash
 
-   YDB> s x=$$XREFDATA^%YDBAIM("^USPresidents",2,"|","1:3",,,,2)
+   YDB>set x=$$XREFDATA^%YDBAIM("^USPresidents",2,"|","1:3",,,,2)
 
-   YDB> s z="" f i=1:1:5  s z=$o(@x@(-1,z)) zwr @x@(-1,z) ; count of each value
+   YDB>set z="" f i=1:1:5  s z=$o(@x@(-1,z)) zwr @x@(-1,z) ; count of each value
    ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-1,"Abraham")=1
    ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-1,"Andrew")=2
    ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-1,"Barack")=1
    ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-1,"Benjamin")=1
    ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-1,"Bill")=1
 
-   YDB> zwr %ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-3:-1),^(11) ; number of distinct values and number of total values
-   ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-3)=39 ; 39 distinct last names
-   ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-2)=14 ; 14 distinct middle names/initials
-   ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-1)=31 ; 31 distinct first names
+   YDB>zwrite %ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-3:-1),^(11) ; number of distinct values and number of total values
+   ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-3)=39  ; 39 distinct last names
+   ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-2)=14  ; 14 distinct middle names/initials
+   ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-1)=31  ; 31 distinct first names
    ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(11)=135 ; a total of 135 nodes maintained
 
    YDB>
@@ -181,6 +181,44 @@ If omitfix=1 (the default), the metadata omits that last empty string subscript.
 
 Metadata for nodes with that constant subscript that do exist have the same schema as metadata for the default type ("").
 
+.. _forcing:
+
+------------------------
+Forcing String Collation
+------------------------
+
+In AIM cross reference globals, the cross referenced application data are subscripts. This means that the cross references are ordered by M subscript collation: the empty string, followed by `canonic numbers <../MultiLangProgGuide/programmingnotes.html#canonical-numbers>`_, followed by other strings. While this is appropriate for the majority of applications, for applications whose data can include canonic numbers and strings, cross references should be ordered as strings. Examples include United States zip codes and international telephone numbers, e.g., with default collation, the M code:
+
+.. code::
+
+   YDB>set zip(1)="01801",zip(2)="19355",xref=$$UNXREFDATA^%YDBAIM("^zip",1,,,,,,,,)
+
+Creates the cross reference:
+
+.. code::
+
+   ^%ydbAIMDxYLWlHuPLdyPGfSMaZdn8B(0,19355,2)=""
+   ^%ydbAIMDxYLWlHuPLdyPGfSMaZdn8B(0,"01801",1)=""
+
+which is incorrect, as :code:`01801` should sort before :code:`19355`. Using the :code:`force` parameter:
+
+.. code::
+
+   YDB>set ^zip(1)="01801",^zip(2)="19355",xref=$$XREFDATA^%YDBAIM("^zip",1,,,,,,,,1)
+
+Each cross reference is prefixed with :code:`#` and the nodes are sorted correctly:
+
+.. code::
+
+   ^%ydbAIMDQ2cA8Z4cVwjtYEGFKYXY64(0,"#01801",1)=""
+   ^%ydbAIMDQ2cA8Z4cVwjtYEGFKYXY64(0,"#19355",2)=""
+
+Notes:
+
+* Applications using AIM globals, for example, `$ORDER() <../ProgrammersGuide/functions.html#order>`_, `ydb_subscript_next_s() / ydb_subscript_next_st() <../MultiLangProgGuide/cprogram.html#ydb-subscript-next-s-ydb-subscript-next-st>`_ and related functions in other languages should remove the leading :code:`"#"` from the subscripts reported by AIM when traversing application globals, and prepend a leading :code:`"#"` to locate cross referenced data.
+
+* YottaDB recommends using 1 as the :code:`force` parameter for forcing string collation, to allow other values to be used for other types of forcing.
+
 ------------
 Functions
 ------------
@@ -197,7 +235,7 @@ The format for XREFDATA() is as follows:
 
  .. code:: none
 
-   $$XREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type)
+   $$XREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force)
 
 where,
 
@@ -224,6 +262,8 @@ where,
 * **stat** if 1 or 2 says the metadata should include statistics, as described above under :ref:`statistics`.
 
 * **type**, defaulting to the empty string, specifies the application schema for which AIM is being asked to compute and maintain metadata.
+
+* **force**, defaulting to the empty string, specifies that AIM cross references should prepend a hash (:code:`#`) to the data being cross referenced if non-zero. See :ref:`forcing`. YottDB recommends using 1 for this purpose.
 
 +++++++++++++
 LSXREFDATA()
@@ -264,7 +304,7 @@ The format for UNXREFDATA() is as follows:
 
  .. code:: none
 
-   DO UNXREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type)
+   DO UNXREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force)
 
 where,
 
@@ -289,15 +329,15 @@ where,
 
 * **omitfix** and **stat** exist only to allow the parameters of UNXREFDATA() to match those of XREFDATA() and are ignored.
 
-* **type** is used to get the name of the global, and is optional. If used in the XREFDATA() call, it should be passed here.
+* **type** is used to get the name of the AIM global, and is optional. If used in the XREFDATA() call, it should be passed here.
 
+* **force** is used to get the name of the AIM global, and is optional. If used in the XREFDATA() call, it should be passed here.
 
 ----------------------------
 Operational Considerations
 ----------------------------
 
 * Any region to which :code:`^%ydbAIMD*` global variables are mapped should have NULL_SUBSCRIPTS set to ALWAYS.
-* Journaling and Replication are not necessary for AIM globals since they can be generated on demand as needed. Of course, you can always turn on journaling and replication if you so choose.
-* By default :code:`ydb_env_set` puts the AIM globals in a separate region and they get deleted upon recovering from a crash.
-* To avoid tuning and to maximize performance, AIM globals use the MM access method. It directly maps the cross reference into the address space of the process.
+* YottaDB recommends setting journaling and replication to the YDBAIM region to match the settings of the application database region(s) that AIM cross references. This is because AIM sets `triggers <../ProgrammersGuide/triggers.html#triggers>`_ in those regions to maintain AIM metadata in sync with application data.
+* If the YDBAIM region and application data become out of sync with each other, use UNXREFDATA() followed by XREFDATA() to resynchronize them.
 * If `ydb-treat-sigusr2-like-sigusr1 <../AdminOpsGuide/basicops.html#ydb-treat-sigusr2-like-sigusr1>`_ is set, on receipt of a SIGUSR2 %YDBAIM terminates indexing of data and returns to its caller; otherwise it ignores SIGUSR2. This facilitates use of %YDBAIM with Octo.
