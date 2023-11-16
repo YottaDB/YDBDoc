@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -69,11 +69,11 @@ The file header data elements are listed as follows in alphabetical order for ea
 |                                    | Block size should be a multiple of the native block size for the OS file system chosen to accommodate all but outlying large records.                         |
 |                                    | For additional information, see Ch 4: Global Directory Editor.                                                                                                |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Blocks to Upgrade                  | The count of the blocks in the database that are still in prior major version format. YottaDB uses this element during incremental upgrades.                  |
+| Blocks to Upgrade                  | This field should be ignored in r2.00.                                                                                                                        |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Cache freeze id                    | The process identification number (PID) of a process which has suspended updates to the segment.                                                              |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Certified for Upgrade to V5        | Count of blocks "pre-certified" (with the dbcertify utility) for an incremental upgrade. YottaDB uses this element during incremental upgrades.               |
+| Certified for Upgrade to           | This field should be ignored in r2.00.                                                                                                                        |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Create in progress                 | Create in progress is TRUE only during the MUPIP CREATE operation. The normal value is FALSE.                                                                 |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
