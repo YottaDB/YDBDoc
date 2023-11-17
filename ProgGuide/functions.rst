@@ -3333,7 +3333,7 @@ The format for the $ZSEARCH function is:
 * If a $ZSEARCH() stream has never been used or if the expression differs from the argument to the last $ZSEARCH() of the stream, the function resets the context and returns the first pathname matching the expression; otherwise, it returns the next matching file in collating sequence; if the last prior pathname returned for the same expression and same stream was the last one matching the argument, $ZSEARCH() returns a null string.
 * The special :code:`stream` number of :code:`-1` always resets the context and returns the first pathname matching the expression. That is, it starts a fresh sequence of matching files even if the same file name is used in repeated calls.
 
-$ZSEARCH() provides a tool for verifying that a file exists. For information to help determine the validity of a file name, see :ref:`zparse-function`.
+$ZSEARCH() provides a tool for verifying that a file exists. All files whose names match :code:`expr` are returned, including regular files, directories, symbolic links, etc. For information to help determine the validity of a file name, see :ref:`zparse-function`.
 
 .. note::
    You can call the POSIX stat() function to access metadata. The optional YottaDB POSIX plug-in packages the stat() function for easy access from M application code.
