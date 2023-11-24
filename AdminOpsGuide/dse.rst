@@ -380,7 +380,7 @@ Meaningful only with: [NO]FREEZE
 Resets the reference count field to 1 for all regions of the current global directory.
 
 * A Reference count is a file header element field that tracks how many processes are accessing the database with read/write permissions.
-* This qualifier is intended for use when DSE is the only process attached to the databases of the curent global directory. Using it when there are other users attached produces an incorrect value.
+* This qualifier is intended for use when DSE is the only process attached to the databases of the current global directory. Using it when there are other users attached produces an incorrect value.
 
 Incompatible with: -RENEW
 
