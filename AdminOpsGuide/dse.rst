@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -695,7 +695,7 @@ or
    -W[RITES_PER_FLUSH]=writes-per-flush
    -WAIT_DISK=wait-disk
    -Zqgblmod_S[EQNO]=sequence-number
-   -Zqgblmod_T[rans]=sequence-number
+   -Zqgblmod_TN=database-transaction-number
 
 ~~~~~~~~~~~~~~~~~~~~~~~~
 CHANGE -BLOCK Qualifiers
@@ -1234,8 +1234,7 @@ Example:
 
    DSE> change -fileheader -flush_time=00:00:02:00
 
-.. note::
-   This command changes the flush time field of the file header to 2 seconds.
+This command changes the flush time field of the file header to 2 seconds.
 
 Example:
 
@@ -1757,8 +1756,9 @@ Locates a given block or region. The format of the FIND command is:
    -F[REEBLOCK] -H[INT]
    -K[EY]=key
    -[NO]C[RIT]
-   -R[EGION][=region]
+   -R[EGION][=region] | -R[EGION] region-name
    -SI[BLINGS]
+   -ST[ATS]
    ]
 
 * At the beginning of a DSE session, use the FIND -REGION command to select the target region.
@@ -1834,13 +1834,13 @@ Allows FIND to work even if another process is holding a critical section.
 
 As results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally
 
-^^^^^^^^^^^^^^^^^^
--R[EGION][=region]
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-R[EGION][=region] | -R[EGION][ region]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Switches to the named Global Directory region.
 
--REGION without a specified region, or -REGION="*", displays all existing regions in the database.
+-REGION without a specified region, or "*", displays all existing regions in the database.
 
 The region name is case-insensitive.
 
@@ -1855,6 +1855,14 @@ Displays the block number of the specified block and its logical siblings in hex
 The logical siblings are the blocks, if any, that logically exist to the right and left of the given block in the database tree structure.
 
 Incompatible with: -FREEBLOCK, -HINT, -KEY, -REGION
+
+^^^^^^^^
+ST[ATS]
+^^^^^^^^
+
+Switches to the name Global Directory shadow for the region's shared gvstats.
+
+Compatible only with R[EGION].
 
 ~~~~~~~~~~~~~~~~~
 Examples for FIND
@@ -2447,7 +2455,7 @@ The RESTORE command restores saved versions of blocks.
    [
    -B[LOCK]=block-number
    -F[ROM]=from
-   -R[EGION]=region
+   -R[EGION]=region | -R[EGION] region
    -V[ERSION]=version-number
    ]
 
@@ -2477,9 +2485,9 @@ DSE restores the block specified with -BLOCK qualifier with the block specified 
 
 By default, RESTORE uses the target block number as the -FROM block number.
 
-^^^^^^^^^^^^^^^^
--R[EGION]=region
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-R[EGION]=region | -R[EGION] region
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the region of the saved buffer to restore.
 
@@ -2821,9 +2829,9 @@ DSE Command Summary
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -WAIT_DISK=wait disk                     | \-                                                                         |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -Zqgblmod_S[EQNO] = sequence number      | Use only with -FILEHEADER;hexa                                             |
+| \-                                       | -Zqgblmod_S[EQNO]=sequence number        | Use only with -FILEHEADER;hexa                                             |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -Zqgblmod_T[rans]=sequence_number        | Use only with -FILEHEADER;hexa                                             |
+| \-                                       | -Zqgblmod_TN=database-transaction_number | Use only with -FILEHEADER;hexa                                             |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | :ref:`dse-close`                         | \-                                       | \-                                                                         |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2873,7 +2881,7 @@ DSE Command Summary
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -K[EY]=key                               | Use alone                                                                  |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -R[EGION][=region]                       | Use alone                                                                  |
+| \-                                       | -R[EGION][=region] \| -R[EGION] region   | Use alone                                                                  |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -SI[BLINGS]                               | Incompatible with -FREEBLOCK, -HINT, -KEY, -REGION                        |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
@@ -2931,7 +2939,7 @@ DSE Command Summary
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -F[ROM]=block-number                     | \-                                                                         |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -R[EGION]=region                         | \-                                                                         |
+| \-                                       | -R[EGION]=region \| -R[EGION] region     | \-                                                                         |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -V[ERSION]=version-number                | Required; decimal                                                          |
 +------------------------------------------+------------------------------------------+----------------------------------------------------------------------------+

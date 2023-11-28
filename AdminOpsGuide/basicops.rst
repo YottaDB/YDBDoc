@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -33,7 +33,7 @@ Several environment variables control the operation of YottaDB. Some of them are
 
 A YottaDB distribution comes with many scripts that set up a default YottaDB environment for the shell of your choice. These scripts are as follows:
 
-* **ydb_env_set** (**gtmprofile**): uses reasonable defaults to set up a YottaDB application development environment that includes plugins conforming to the YottaDB standard (such as the POSIX plugin and Octo). The :code:`ydb_env_set` file when sourced sets default values for the environment variables ydb_dir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_log, ydb_rel, ydb_repl_instance, ydb_retention, ydb_routines, ydb_tmp, gtmdir, gtm_dist, gtm_etrap, gtmgbldir, gtm_log, gtm_repl_instance, gtm_retention, gtmroutines, gtm_tmp, and gtmver. Additionally, if $ydb_chset is not set, or set to a case independent "UTF-8", sourcing the file also sets ydb_icu_version and gtm_icu_version. The default environment is created under $ydb_dir, defaulting to :code:`$HOME/.yottadb` if ydb_dir is undefined. It also deletes prior generation journal and temporary files older than the number of days specified by the environment variable ydb_retention. It attempts to automatically recover the database when it runs and as such is suitable for "out of the box" usage of YottaDB. Although it will work for large multi-user environments, you may want to modify or replace it with custom scripting tailored to your specific needs. Sourcing :code:`ydb_env_set` saves environment variables that it sets such that subsequently sourcing :code:`ydb_env_unset` restores the saved values.
+* **ydb_env_set** (**gtmprofile**): uses reasonable defaults to set up a YottaDB application development environment that includes plugins conforming to the YottaDB standard (such as the POSIX plugin and Octo). The :code:`ydb_env_set` file when sourced sets default values for the environment variables ydb_dir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_log, ydb_readline, ydb_rel, ydb_repl_instance, ydb_retention, ydb_routines, ydb_tmp, gtmdir, gtm_dist, gtm_etrap, gtmgbldir, gtm_log, gtm_repl_instance, gtm_retention, gtmroutines, gtm_tmp, and gtmver. Additionally, if $ydb_chset is not set, or set to a case independent "UTF-8", sourcing the file also sets ydb_icu_version and gtm_icu_version. The default environment is created under $ydb_dir, defaulting to :code:`$HOME/.yottadb` if ydb_dir is undefined. It also deletes prior generation journal and temporary files older than the number of days specified by the environment variable ydb_retention. It attempts to automatically recover the database when it runs and as such is suitable for "out of the box" usage of YottaDB. Although it will work for large multi-user environments, you may want to modify or replace it with custom scripting tailored to your specific needs. Sourcing :code:`ydb_env_set` saves environment variables that it sets such that subsequently sourcing :code:`ydb_env_unset` restores the saved values.
 
 * **ydb_env_unset**: unsets environment variables set by a prior **ydb_env_set** in the same shell session, and restores prior values, if any.
 
@@ -49,11 +49,11 @@ These scripts are designed to give you a friendly out-of-the-box YottaDB experie
 ydb_env_set
 ++++++++++++
 
-On POSIX shells, :code:`ydb_env_set` manages a basic YottaDB environment, and sets reasonable values for environment variables for normal YottaDB operation:
+On POSIX shells, :code:`ydb_env_set` manages a basic YottaDB environment, and sets reasonable values for environment variables for YottaDB operation:
 
 .. code-block:: none
 
-   ydb_dir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_log, ydb_rel, ydb_repl_instance, ydb_retention, ydb_routines, ydb_tmp, gtmdir, gtm_dist, gtm_etrap, gtmgbldir, gtm_log, gtm_repl_instance, gtm_retention, gtmroutines, gtm_tmp, gtmver
+   ydb_dir, ydb_dist, ydb_etrap, ydb_gbldir, ydb_log, ydb_readline, ydb_rel, ydb_repl_instance, ydb_retention, ydb_routines, ydb_tmp, gtmdir, gtm_dist, gtm_etrap, gtmgbldir, gtm_log, gtm_repl_instance, gtm_retention, gtmroutines, gtm_tmp, gtmver
 
 You can set the following environment variables before sourcing :code:`ydb_env_set` or running the :code:`ydb` script;
 
@@ -680,7 +680,7 @@ ydb_nofflf was added to YottaDB effective release `r1.34 <https://gitlab.com/Yot
 ++++++++++++++++++++++++++++++++
 ydb_non_blocked_write_retries
 ++++++++++++++++++++++++++++++++
-**ydb_non_blocked_write_retries (gtm_non_blocked_write_retries)** modifies FIFO or PIPE write behavior. A WRITE which would block is retried up to the number specified with a 100 milliseconds delay between each retry. The default value is 10 times. If all retries block, the WRITE command issues a %SYSTEM-E-ENO11 (EAGAIN) error. For more details, refer to `PIPE Device Examples <../ProgrammersGuide/ioproc.html#pipe-device-ex>`_ in the Programmers Guide.
+**ydb_non_blocked_write_retries (gtm_non_blocked_write_retries)** modifies WRITE behavior for FIFO, PIPE, or non-blocking sockets. A WRITE which would block is retried up to the number specified with a 100 milliseconds delay between each retry. The default value is 10 times. If all retries block, the WRITE command issues a %SYSTEM-E-ENO11 (EAGAIN) error. For more details, refer to `PIPE Device Examples <../ProgrammersGuide/ioproc.html#pipe-device-ex>`_ in the Programmers Guide.
 
 .. _ydb-nontprestart-log-delta-env-var:
 
@@ -782,6 +782,47 @@ ydb_prompt
 ydb_quiet_halt
 +++++++++++++++++
 **ydb_quiet_halt (gtm_quiet_halt)** specifies whether YottaDB should disable the FORCEDHALT message when the process is stopped via MUPIP STOP or by a SIGTERM signal (as sent by some web servers).
+
++++++++++++++++++
+ydb_readline
++++++++++++++++++
+
+**ydb_readline** when set to 1 (recommended) or a case insensitive t[rue] or y[es], specifies that `M Direct Mode <../ProgrammersGuide/opdebug.html#operating-and-debugging-in-direct-mode>`_, LKE, DSE and MUPIP should use `GNU Readline <https://www.gnu.org/software/readline/>`_ if it is installed on the system. Otherwise, YottaDB direct mode uses a traditional implementation that is part of YottaDB, whereas LKE, DSE and MUPIP have no recall capability, and very basic line editing. A short summary of YottaDB use of Readline is provided here; refer to the `Readline documentation <https://tiswww.cwru.edu/php/chet/readline/rltop.html#Documentation>`_ for details. :ref:`ydb-env-set` sets ydb_readline to 1.
+
+Command history is saved in $HOME/.ydb_{YottaDB,DSE,LKE,MUPIP}_history. When Readline is enabled:
+
+- Direct mode RECALL displays Readline history when entered at the beginning of the line.
+- Recalling and editing prior commands with :code:`^` or :code:`!` work when they are entered at the beginning of the line. Ending the line with :code:`:p` prints the recalled and edited command, instead of executing it.
+- Recalling and editing commands also executes them, unlike the RECALL command implemented by YottaDB.
+- Entering UTF-8 mode characters works in M mode.
+- Settings are read from $HOME/.inputrc, whose location can be overridden by the INPUTRC environment variable. The application name for use in :code:`$if` statements in the settings file is :code:`YottaDB`.
+- If history-size is not set, it defaults to 1,000. The history file on disk is always limited to 1,000 entries, no matter the setting of history-size.
+- Signals are handled by YottaDB and not by Readline.
+
+Examples of history expansion:
+
+* :code:`!!`: Recall last command
+* :code:`!$`: Last argument of last command
+* :code:`!nnn`: Execute line in history number :code:`nnn`
+* :code:`!nnn:p`: Print line (but don't execute) :code:`nnn`, and add it to the history to the end. You can press up arrow to recall that command for editing.
+* :code:`!?xxxx`: Execute line containing text :code:`xxxx`. BE CAREFUL WITH THIS ONE. It can lead to unexpected items getting executed.
+* :code:`^string1^string2^`: In the last command, replace string1 with string2, and execute it.
+* :code:`!nnn:s/old/new/`: In history item :code:`nnn`, replace :code:`old` with :code:`new` and execute it.
+
+Limitations include:
+
+* DSE/LKE/MUPIP
+
+  * There is no history listing (equivalent to the direct mode RECALL command).
+  * History expansion module works only in direct mode.
+
+* Direct mode
+
+  * Only traditional characters terminate input lines (CR, LF, FF, and their UTF-8 variants); alternate terminators are not supported. (YottaDB direct mode has the ability to terminate input using the `TERMINATOR <../ProgrammersGuide/ioproc.html#terminator>`_ deviceparameter.)
+  * Wrap on device width (set using `WIDTH <../ProgrammersGuide/ioproc.html#width>`_ deviceparameter) is not supported.
+  * `MUPIP INTRPT <dbmgmt.html#intrpt>`_ (SIGUSR1) turns off line editing on the line being entered. You can still enter more characters or cancel the line using CTRL-C.
+
+* Readline is not supported for the `READ <../ProgrammersGuide/commands.html#read>`_ command.
 
 ++++++++++++++++++++++++++
 ydb_recompile_newer_src
@@ -932,7 +973,7 @@ ydb_zdate_form
 +++++++++++++++++
 ydb_zinterrupt
 +++++++++++++++++
-**ydb_zinterrupt (gtm_zinterrupt)** specifies the initial value of the `$ZINTERRUPT <../ProgrammersGuide/isv.html#zinterrupt>`_ intrinsic special variable which holds the code that YottaDB executes (as if it were the argument of an `XECUTE <../ProgrammersGuide/commands.html#xecute>`_ command) when a process receives a signal from a `MUPIP INTRPT <./dbmgmt.html#intrpt>`_ command.
+**ydb_zinterrupt (gtm_zinterrupt)** specifies the initial value of the `$ZINTERRUPT <../ProgrammersGuide/isv.html#zinterrupt>`_ intrinsic special variable which holds the code that YottaDB executes (as if it were the argument of an `XECUTE <../ProgrammersGuide/commands.html#xecute>`_ command) when a process receives a signal from a `MUPIP INTRPT <dbmgmt.html#intrpt>`_ command.
 
 +++++++++++++++++++++
 ydb_zlib_cmp_level
@@ -1155,7 +1196,7 @@ Restrictions apply as follows:
 |                                                         | YottaDB supports group names using the POSIX Portable Filename Character Set which includes           |
 |                                                         | characters from [A-Z], [a-z], [0-9], ., _ , and -.                                                    |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
-| ZBREAK                                                  | `ZBREAK <../ProgrammersGuide/commands.html#zbreak>`_ produces a RESTRICTEDOP error.                   |
+| ZBREAK                                                  | Any `ZBREAK <../ProgrammersGuide/commands.html#zbreak>`_ produces a RESTRICTEDOP error.               |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | ZCMDLINE                                                | YottaDB returns an empty string for all references to                                                 |
 |                                                         | `$ZCMDLINE <../ProgrammersGuide/isv.html#zcmdline>`_.                                                 |

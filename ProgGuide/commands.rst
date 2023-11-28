@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -1140,7 +1140,7 @@ The format of the NEW command is:
 * For the scope of the NEW, a NEW of a name suspends its alias association. The association is restored when the scope of the NEW ends. The array remains in existence - it can be modified through other alias variables with which it is associated and which remain in scope. If none of its alias variables is in scope, the array remains intact and again becomes visible when the scope is restored.
 * When a NEW argument is enclosed in parentheses, that NEW is considered "exclusive". An exclusive NEW creates a fresh data environment and effectively aliases the excluded variables with their original copies. This technique tends to improve performance and meets the M standard. However, it has two implications: The alias operation KILL \*, with no arguments, or naming an exclusively NEW'd variable, acts as a KILL in the current scope (has the same effect as a non-alias KILL), and ZWRITE, ZSHOW "V", $ZDATA() report any exclusively NEW'd variable as an alias. Refer to the section on the KILL command for a description of alternative behaviors for the interaction of KILL and exclusive NEW.
 * When the flow of execution terminates the scope of an argumentless or an exclusive NEW, YottaDB restores all stacked variables to their previous values, and deletes all other local variables.
-* The intrinsic special variables $ESTACK, $ETRAP, $TEST, $ZGBLDIR, and $ZYERROR can be an explicit argument of a NEW. For more information, refer to `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
+* The intrinsic special variables $ESTACK, $ETRAP, $TEST, $ZCMDLINE, $ZGBLDIR, and $ZYERROR can be an explicit argument of a NEW. For more information, refer to `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
 * The intrinsic special variable $ZTRAP can also be an explicit argument of a NEW; this stacks the current value of $ZTRAP and assigns $ZTRAP a null value ($ZTRAP="").
 * An indirection operator and an expression atom evaluating to a list of one or more NEW arguments form a legal argument for a NEW.
 
@@ -1415,6 +1415,8 @@ The format of the READ command is:
  Refer `ydb_principal_editing <../AdminOpsGuide/basicops.html#ydb-principal-editing-env-var>`_ for more information.
 
 For more information on READ, devices, input, output and format control characters, refer to `Chapter 9: “Input/Output Processing” <./ioproc.html>`_.
+
+The READ command does not use :code:`ydb_readline`.
 
 .. _set-command:
 

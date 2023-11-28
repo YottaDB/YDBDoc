@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -3996,7 +3996,7 @@ Specifies whether the replication server is permitted to fallback to plaintext c
 -RENEGotiate_interval=<minutes>
 *********************************
 
-Specifies the time in minutes to wait before attempting to perform a TLS renegotiation. The default -RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB to never attempt a renegotiation. The MUPIP REPLIC -SOURCE -JNLPOOL -SHOW [-DETAIL] command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in the replication backlog.
+Specifies the approximate time in minutes to wait before attempting to perform a TLS renegotiation. The default RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB to never attempt a renegotiation. The MUPIP REPLIC SOURCE JNLPOOL SHOW DETAIL command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in the replication backlog.
 
 ++++++++++++++++++++++++++++++++++++++++++++++
 Shutting Down the Source Server
@@ -4034,9 +4034,8 @@ After initiating shutdown of the Source Server, YottaDB waits up to 90 * number_
 
 Restricts Journal Pool in a way that only existing processes can complete their updates and shuts down the Source Server:
 
-with the REPL0BACKLOG message as soon as there is no backlog and the Source Server has received acknowledgement of all its updates from the Receiver Server.
-
-with the REPLBACKLOG message when the timeout expires while there was a backlog and/or unacknowledged updates from the Receiver Server.
+- with the REPL0BACKLOG message as soon as there is no backlog and the Source Server has received acknowledgement of all its updates from the Receiver Server.
+- with the REPLBACKLOG message when the timeout expires while there was a backlog and/or unacknowledged updates from the Receiver Server.
 
 The REPL0BACKLOG message helps confirm that two instances are in sync (seqno-wise) because all Source Server updates have reached the Receive Pool at the time of shutdown and there are no-inflight updates. The REPL0BACKLOG message also causes the timeout to expire prematurely. In planned switchover scenarios, the REPL0BACKLOG message assists in operationally preventing lost transaction file generation.
 
@@ -4151,6 +4150,8 @@ Specifies that the active Source Server is on originating instance.
 Specifies that the active Source Server is on a propagating instance.
 
 If neither -rootprimary nor -propagateprimary are specified, this command assumes -propagateprimary.
+
+.. _stopsourcefilter:
 
 +++++++++++++++++++++++++++++
 Stopping the Source Filter
@@ -4332,9 +4333,23 @@ Qualifiers:
 -showbacklog
 ^^^^^^^^^^^^
 
-Reports the current backlog of journal records (in terms of JNL_SEQNO) on the output device (normally the standard output device). This qualifier does not affect the statistics logged in the log file. The backlog is the difference between the last JNL_SEQNO written to the Journal Pool and the last JNL_SEQNO sent by the Source Server to the Receiver Server. In the WAS_ON state, -showbacklog reports the backlog information even if the Source Server is shut down.
+Reports four fields that help determine the backlog of updates on the Source Server. These fields are:
 
--showbacklog also reports the sequence number acknowledged from the Receiver Server. The acknowledged sequence number from the replicating (secondary) instance can also be accessed from the originating (primary) instance using the "gtmsource_local_struct.heartbeat_jnl_seqno" field of the %PEEKBYNAME utility function.
+#. Current backlog of journal records (in terms of the number of JNL_SEQNOs)
+
+#. Last JNL_SEQNO written to the Journal Pool
+
+#. Last JNL_SEQNO sent by the Source Server to the Receiver Server
+
+#. Last JNL_SEQNO acknowledged by the Receiver Server
+
+The backlog is the difference between the second and third fields. When backlog is 0 and the remaining three fields have the same value, it means that all Source Server updates have reached the Receiver Pool and there are no in-flight updates.
+
+In the WAS_ON state, SHOWBACKLOG reports the backlog information even if the Source Server is shut down.
+
+.. note::
+
+   A SHOWBACKLOG operation momentarily restricts access to the Journal Pool to determine the backlog. For frequent checking for replication backlogs, we recommend using the :code:`"gtmsource_local_struct.heartbeat_jnl_seqno"` field `^%PEEKBYNAME() <../ProgrammersGuide/utility.html#peekbyname>`_ function instead of performing a SHOWBACKLOG in a continuous loop.
 
 Example:
 
@@ -4430,86 +4445,176 @@ The first line of a lost transaction file looks like the following:
 Starting the Receiver Server
 ++++++++++++++++++++++++++++++++++++++++
 
-Command Syntax:
+The MUPIP REPLICATE RECEIVER START command starts a Receiver Server and the Update Process. The general syntax for starting a Receiver Server and the Update Process is:
 
 .. code-block:: bash
 
-   mupip replicate -receiver -start
-   -listenport=<port number>
-   -log=<log file name> [-log_interval="[integer1],[integer2]"]
-   [-autorollback[=verbose]]
-   [-buffsize=<Receive Pool size in bytes>]
-   [-filter=<filter command>]
-   [-noresync]
-   [-stopsourcefilter]
-   [-stopreceiverfilter]
-   [-updateresync=</path/to/bkup-orig-repl-inst-file>
-   {[-resume=<strm_num>|-reuse=<instname>]}
-   [-initialize] [-cmplvl=n]
-   [-tlsid=<label>]
+   mupip replicate -receiver -start 
+   [autorollback_qualifier]
+   connection_qualifiers 
+   logfile_management_qualifiers 
+   [operator_override_qualifiers]
+   [replication_filter_qualifers]
+   [si_replication_qualifiers]
+   [tls_replication_qualifier]
+
+The square brackets [] denote an optional qualifier group. The optional and mandatory qualifiers in each qualifier group are as follows:
+
++-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
+| Category                                                          | Qualifiers                                                                        |
++===================================================================+===================================================================================+
+| :ref:`autorollback-qual`                                          | -autorollback[=verbose]                                                           |
++-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
+| :ref:`connection-qual`                                            | `[-cmplvl=<compression_level>] <#cmplvl-n>`_                                      |
+|                                                                   |                                                                                   |
+|                                                                   | -listenport=<port number>                                                         |
++-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
+| :ref:`logfile-management-qual`                                    | -log=<log file name>                                                              |
+|                                                                   |                                                                                   |
+|                                                                   | [-log_interval="[integer1],[integer2]"]                                           |
++-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
+| :ref:`operator-override-qual`                                     | {-noresync | -updateresync=</path/to/bkup-orig-repl-inst-file>}                   |
++-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
+| Replication Filter Qualifier                                      | `-filter=<filter command> <#filter-filter-command>`_                              |
+|                                                                   |                                                                                   |
+|                                                                   | :ref:`-stopreceiverfilter <stopreceiverfilter>`                                   |
+|                                                                   |                                                                                   |
+|                                                                   | `-stopsourcefilter <#stopsourcefilter>`_                                          |
++-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
+| Receive Pool Setup Qualifiers                                     | `-buffsize=<Receiver Pool size in bytes> <#buffsize-journal-pool-size-in-bytes>`_ |
++-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
+| :ref:`si-repl-qual`                                               | [-initialize]                                                                     |
+|                                                                   |                                                                                   |
+|                                                                   | [{-resume=<strm_num>|-reuse=<instname>}]                                          |
++-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
+| :ref:`tls-repl-qual`                                              | -tlsid=<label>                                                                    |
++-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
 
 ~~~~~~~~~~~
 Qualifiers:
 ~~~~~~~~~~~
 
-^^^^^^^^^
--receiver
-^^^^^^^^^
+.. _autorollback-qual:
 
-Identifies the Receiver Server.
+^^^^^^^^^^^^^^^^^^^^^^
+Autorollback Qualifier
+^^^^^^^^^^^^^^^^^^^^^^
 
-^^^^^^
--start
-^^^^^^
+.. code-block:: bash
 
-Starts the Receiver Server and Update Process.
+   -autorollback[=verbose]
 
-^^^^^^^^^^^^^^^^^^^^^^^^^
--listenport=<port number>
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Specifies the TCP port number the Receiver Server will listen to for incoming connections from a Source Server. Note that the current implementation of the Receiver Server does not support machines with multiple IP addresses.
-
-^^^^^^^^^^^^^^^^^^^^^^^
--autorollback[=verbose]
-^^^^^^^^^^^^^^^^^^^^^^^
-
--AUTOROLLBACK in a Receiver Server startup command of a BC/SI replication instance performs an automatic MUPIP JOURNAL -ROLLBACK -BACKWARD -FETCHRESYNC=<portno>. Choosing between -AUTOROLLBACK and -FETCHRESYNC (with -[NO]LOSTTRANS and -[NO]BROKENTRANS) depends on your replicating configuration and how your application processes lost transaction files. Use a MUPIP JOURNAL -ROLLBACK command with -FETCHRESYNC when you need:
-
-* Control over the name and location of the lost/broken transaction files (by specifying -LOSTTRANS and -BROKENTRANS)
-* To disable lost transaction file processing if there is no need to apply lost transaction files (by specifying -LOSTTRANS=/dev/null or -NOLOSTTRANS), or
-* To disable broken transaction file processing if there is no need to research broken transaction (by specifying -BROKENTRANS=/dev/null or -NOBROKENTRANS), or
-* To enable operational intervention when there is a lost transaction file in order to capture, review or process it on the new originating/primary instance before starting the Receiver Server.
-
-Use -AUTOROLLBACK when there are no application side restraints on the timing/need of processing of the lost transaction file. With -AUTOROLLBACK, the Receiver Server performs a connection handshake with the originating/upstream Source Server. If the upstream Source Server sends the REPL_ROLLBACK_FIRST message during the handshake, the Receiver Server with -AUTOROLLBACK performs the following operations:
+AUTOROLLBACK in a Receiver Server startup command of a BC/SI replication instance performs an automatic MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC=<portno>.  With AUTOROLLBACK, the Receiver Server performs a connection handshake with the originating/upstream Source Server. If the upstream Source Server sends the REPL_ROLLBACK_FIRST message during the handshake, the Receiver Server started with AUTOROLLBACK performs the following operations:
 
 * Close its connection with the Source Server.
-* Uses the Source Server's connected port number stored in the memory to launch a separate MUPIP process for MUPIP JOURNAL -ROLLBACK -FETCHRESYNC which receives the rollback point (region sequence number) from the originating/upstream Source Server and rolls back the replicating instance to that rollback point and generates a lost transaction file in the default location.
+* Uses the Source Server's connected port number stored in the memory to launch a separate MUPIP process for MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC which receives the rollback point (region sequence number) from the originating/upstream Source Server and rolls back the replicating instance to that rollback point and generates a lost transaction file in the default location.
 * Once the rollback is complete, the Receiver Server re-establishes the replication connection and resumes receiving updates from the Source Server.
 * A Receiver Server started without AUTOROLLBACK shuts down with the message "Receiver was not started with -AUTOROLLBACK. Manual ROLLBACK required. Shutting down".
 
-.. note::
-   As autorollback uses mupip online rollback under the covers, it should be considered field test grade functionality as long as that function is considered field test grade functionality.
+Choosing between AUTOROLLBACK and FETCHRESYNC (with [NO]LOSTTRANS and [NO]BROKENTRANS) depends on your replicating configuration and how your application processes lost transaction files. Use a MUPIP JOURNAL ROLLBACK command with FETCHRESYNC when you need:
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--log=<recsrv_log_file_name >
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* Control over the name and location of the lost/broken transaction files (by specifying LOSTTRANS and BROKENTRANS);
+* to disable lost transaction file processing if there is no need to apply lost transaction files (by specifying :code:`-losttrans=/dev/null` or :code:`-nolosttrans`);
+* to disable broken transaction file processing if there is no need to research broken transaction (by specifying :code:`-brokentrans=/dev/null` or :code:`-nobrokentrans`); or
+* to enable operational intervention when there is a lost transaction file in order to capture, review or process it on the new originating/primary instance before starting the Receiver Server.
 
-Specifies the location of the log file of the Receiver Server. When -log is specified, the Update Process writes to a log file named <recsrv_log_file_name>.updproc. Note that the name of the Update Process log file name has .updproc at the end to distinguish it from the Receiver Server's log file name.
+For more information on MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC, refer to `Rolling Back a Replicated Database <#rolling-back-the-database-after-system-failures>`_.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--log_interval="[integer1],[integer2]"
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Use AUTOROLLBACK when there are no application side restraints on the timing/need of processing of the lost transaction file.
+
+.. _connection-qual:
+
+^^^^^^^^^^^^^^^^^^^^^
+Connection Qualifiers
+^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   -listenport=<port number>
+
+Specifies the TCP port number at which the Receiver Server will listen for incoming connections from a Source Server. Note that the current implementation of the Receiver Server does not support machines with multiple IP addresses.
+
+.. _logfile-management-qual:
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Logfile Management Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   -log=<recsrv_log_file_name>
+
+Specifies the location of the log file of the Receiver Server. When :code:`-log` is specified, the Update Process writes to a log file named :code:`<recsrv_log_file_name>.updproc`. Note that the name of the Update Process log file name has :code:`.updproc` at the end to distinguish it from the Receiver Server's log file name.
+
+.. code-block:: bash
+
+   -log_interval="[integer1],[integer2]"
 
 integer1 specifies the number of transactions for which the Receiver Server should wait before writing to its log file. integer2 specifies the number of transactions for which the Update Process should wait before writing to its log file. The default logging interval is 1000 transactions.
 
 If integer1 or integer2 is 0, the logging interval is set to the default value.
 
+.. _operator-override-qual:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Operator Override Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   -updateresync=</path/to/bkup-orig-repl-inst-file>
+
+UPDATERESYNC informs YottaDB that the replicating instance was, or is, in sync with the originating instance and it is now safe to resume replication. Use UPDATERESYNC only in the following situations:
+
+- To replace existing replication instance files when an upgrade to a YottaDB version changes the instance file format. Consult the release notes to determine whether this applies to your upgrade.
+- When a database and its replication instance file have been migrated from a platform with a different endianness. The database files are converted using `MUPIP ENDIANCVT <dbmgmt.html#endiancvt>`_ and a new instance file is created. Before starting replication, use UPDATERESYNC with a path to the replication instance file from the original platform.
+- When an existing replication instance file is unusable because it was damaged or deleted, and must be replaced by a new replication instance file.
+- Setting up an A→P configuration for the first time if P is an existing instance with existing updates that are not, and not expected to be, in the originating instance.
+- Setting up a new replicating instance from a backup of the originating instance (A->P only) or one of its replicating secondary instances.
+- If you are running an older YottaDB version and you have to set up a replicating instance from a backup of an originating instance.
+
+UPDATERESYNC uses the journal sequence number stored in the replicating instance's database and the history record available in the backup copy of the replication instance file of the originating instance (:code:`</path/to/bkup-orig-repl-inst-file>`) to determine the journal sequence number at which to start replication.
+
+When replication resumes after a suspension (due to network or maintenance issues), YottaDB compares the history records stored in the replication instance file of the replicating instance with the history records stored in the replication instance file of the originating instance to determine the point at which to resume replication. This mechanism ensures that two instances always remain in sync when a replication connection resumes after an interruption. UPDATERESYNC bypasses this mechanism by ignoring the replication history of the replicating instance and relying solely on the current journal sequence number and its history record in the originating instance's history to determine the point for resuming replication. As it overrides a safety check, use UPDATERESYNC only after careful consideration. You can check with your YottaDB support channel as to whether UPDATERESYNC is appropriate in your situation.
+
+To perform an updateresync, the originating instance must have at least one history record. You need to take a backup (e.g., with the `REPLINST <dbmgmt.html#replinstance>`_ qualifier) that includes the replication instance file of the original instance while the Source Server is running. This ensures that the instance file has at least one history record. Even though it is safe to use a copy (for example, an scp) of the replication instance file of the originating instance taken after shutting down its Source Server, MUPIP BACKUP REPLINST is recommended because it does not require Source Server to shutdown. You also need an empty instance file (`MUPIP REPLICATE INSTANCE_CREATE <#creating-the-replication-instance-file>`_) of the replicating instance to ensure that it bypasses the history information of the current and prior states.
+
+When started with UPDATERESYNC, the Receiver Server waits until it gets a successful update. Once an update goes through, subsequent connection restarts behave as if the receiver was started without UPDATERESYNC.
+
+For information on the procedures that use -updateresync, refer to :ref:`setup-new-repl-inst-orig-ab-pq-ap`, :ref:`replace-repl-inst-file-repl-ab-pq`, :ref:`replace-repl-inst-file-repl-ap`, and :ref:`setup-new-repl-inst-orig-ap`.
+
+.. code-block:: bash
+
+   -noresync
+
+NORESYNC instructs the Receiver Server to accept an SI replication stream even when the Receiver Server is ahead of the Source Server. In this case, the Source and Receiver Servers exchange history records from the replication instance file to determine the common journal stream sequence number and replication resumes from that point onwards. Specifying NORESYNC on a BC replication stream produces a `NORESYNCSUPPLONLY <../MessageRecovery/errors.html#noresyncsupplonly>`_ error. Specifying NORESYNC on an SI replication stream receiver server where the receiving instance was started with UPDNOTOK (updates are disabled) produces a `NORESYNCUPDATERONLY <../MessageRecovery/errors.html#noresyncupdateronly>`_ error. Note also that the noresync qualifier is not the opposite of the RESYNC qualifier of `MUPIP JOURNAL ROLLBACK RESYNC <#resync-jnl-seqno>`_, which is intended for use under the direction of your YottaDB support channel.
+
+.. _si-repl-qual:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^
+SI Replication Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   -initialize
+
+When starting a Receiver Server of an SI replication stream with UPDATERESYNC, INITIALIZE specifies that this is the first connection between the instances. MUPIP ignores these qualifiers when starting BC replication (that is, no updates permitted on the instance with the Receiver Server). This qualifier provides additional protection against inadvertent errors.
+
+.. code-block:: bash
+
+   -resume=<strm_num>
+
+When starting a Receiver Server of an SI replication stream with UPDATERESYNC, in case the receiver instance has previously received from the same source but has had its instance file recreated, but not its database files, the history of the source instance and the stream number is lost. In this case, the command :code:`mupip replicate -receiver -start -updateresync=<instfile> -resume=<strm_num>`, where strm_num is a number from 1 to 15, instructs the receiver server to use the database file headers to determine the current stream sequence number of the receiver instance for the stream number specified as <strm_num>, using the instance file from the source (specified with UPDATERESYNC) to locate the history record corresponding to this stream sequence number. It then exchanges history with the source to verify the two instances are in sync before resuming replication. In case RESUME is not specified and only UPDATERESYNC is specified for a SI replication stream, it uses the instance file name specified with UPDATERESYNC to determine the stream sequence number as well as provide history records to exchange with the source instance (and verify the two are in sync). Assuming that instance files are never recreated (unless they are also accompanied by a database recreate), this qualifier should not be required in normal usage situations.
+
 ^^^^^^^^^^^^^^^^^
--stopsourcefilter
+-reuse=<instname>
 ^^^^^^^^^^^^^^^^^
 
-Starting the Receiver Server with -stopsourcefilter turns off any active filter on the originating Source Server. Use this option at the time of restarting the Receiver Server after a rolling upgrade is complete.
+Used when starting a Receiver Server of an SI replication stream with -updateresync in case the receiver instance has previously received from fifteen (all architecturally allowed) different externally sourced streams and is now starting to receive from yet another source stream. The command mupip replic -receiv -start -updateresync=<instfile> -reuse=<instname>, where instname is the name of a replication instance, instructs the receiver server to look for an existing stream in the replication instance file header whose Group Instance Name (displayed by a mupip replic -editinstance -show command on the receiver replication instance file) matches the instance name specified and if one does, reuse that stream number for the current source connection (erasing any record of the older Group using the same stream number).
+
+.. _stopreceiverfilter:
 
 ^^^^^^^^^^^^^^^^^^^
 -stopreceiverfilter
@@ -4530,7 +4635,6 @@ Starting the Receiver Server with -stopreceiverfilter turns off any active filte
 - If you are running an older YottaDB version and you have to set up a replicating instance from a backup of an originating instance.
 
 -updateresync uses the journal sequence number stored in the replicating instance's database and the history record available in the backup copy of the replication instance file of the originating instance (</path/to/bkup-orig-repl-inst-file>) to determine the journal sequence number at which to start replication.
-
 
 When replication resumes after a suspension (due to network or maintenance issues), YottaDB compares the history records stored in the replication instance file of the replicating instance with the history records stored in the replication instance file of the originating instance to determine the point at which to resume replication. This mechanism ensures that two instances always remain in sync when a replication connection resumes after an interruption. -updateresync bypasses this mechanism by ignoring the replication history of the replicating instance and relying solely on the current journal sequence number and its history record in the originating instance's history to determine the point for resuming replication. As it overrides a safety check, use -updateresync only after careful consideration. You can check with your YottaDB support channel as to whether -updateresync is appropriate in your situation.
 
@@ -4566,9 +4670,15 @@ Used when starting a Receiver Server of an SI replication stream with -updateres
 
 Instructs the Receiver Server to accept an SI replication stream even when the receiver is ahead of the source. In this case, the source and receiver servers exchange history records from the replication instance file to determine the common journal stream sequence number and replication resumes from that point onwards. Specifying -noresync on a BC replication stream produces a NORESYNCSUPPLONLY error. Specifying -noresync on an SI replication stream receiver server where the receiving instance was started with -UPDNOTOK (updates are disabled) produces a NORESYNCUPDATERONLY error. Note also that the noresync qualifier is not the opposite of the resync qualifier of rollback (mupip journal -rollback -resync), which is intended for use under the direction of YottaDB support.
 
-^^^^^^^^^^^^^^
--tlsid=<label>
-^^^^^^^^^^^^^^
+.. _tls-repl-qual:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+TLS Replication Qualifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   -tlsid=<label>
 
 Instructs the Source or Receiver Server to use the TLS certificate and private key pairs having <label> as the TLSID in the configuration file pointed to by the ydb_crypt_config environment variable. TLSID is a required parameter if TLS/SSL is to be used to secure replication connection between instances. If private keys are encrypted, an environment variable of the form ydb_tls_passwd_<label> specifies their obfuscated password. You can obfuscate passwords using the 'maskpass' utility provided along with the encryption plugin. If you use unencrypted private keys, set the ydb_tls_passwd_<label> environment variable to a non-null dummy value; this prevents inappropriate prompting for a password.
 
@@ -4607,7 +4717,7 @@ Starts additional processes to help improve the rate at which updates from an in
 - With the HELPERS qualifier specified but neither m nor n specified, YottaDB starts the default number of helper processes with the default proportion of roles. The default number of aggregate helper processes is 8, of which 5 are reader helpers and 3 writers.
 - With only m specified, helper processes are started of which floor(5*m/8) processes are reader helpers.
 - With both m and n specified, YottaDB starts m helper processes of which n are reader helpers and m-n are writers. If m<n, mupip starts m readers, effectively reducing n to m and starting no writers.
-- YottaDB reports helper processes (for example, by the ps command and in /proc/<pid>/cmdline on platforms that implement a /proc filesystem) as mupip replicate -updhelper -reader and mupip replicate -updhelper -writer.
+- YottaDB reports helper processes (for example, by the :code:`ps` command and in :code:`/proc/<pid>/cmdline`) as :code:`mupip replicate -updhelper -reader` and :code:`mupip replicate -updhelper -writer`.
 
 Example:
 
@@ -4619,17 +4729,17 @@ This command starts the Receiver Server with Helper Processes. The following sam
 
 .. code-block:: bash
 
-   gtmuser1 11943 1     0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -receiver -start
+   ydbuser1 11943 1     0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -receiver -start
    -listenport=1234 -helpers -log=B2C.log -buff=$rec_pool_size
-   gtmuser1 11944 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updateproc
-   gtmuser1 11945 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
-   gtmuser1 11946 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
-   gtmuser1 11947 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
-   gtmuser1 11948 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
-   gtmuser1 11949 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
-   gtmuser1 11950 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -writer
-   gtmuser1 11951 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -writer
-   gtmuser1 11952 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -writer
+   ydbuser1 11944 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updateproc
+   ydbuser1 11945 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
+   ydbuser1 11946 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
+   ydbuser1 11947 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
+   ydbuser1 11948 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
+   ydbuser1 11949 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -reader
+   ydbuser1 11950 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -writer
+   ydbuser1 11951 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -writer
+   ydbuser1 11952 11943 0 06:42 ? 00:00:00 /usr/library/YDB/mupip replicate -updhelper -writer
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Stopping the Update Process and/or the Receiver Server

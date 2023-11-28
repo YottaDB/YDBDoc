@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -3487,7 +3487,7 @@ CENABLE
 
 Enables or disables the ability to force YottaDB into Direct Mode by entering <CTRL-C> at $PRINCIPAL.
 
-If CENABLE is set, <CTRL-C> interrupts process execution. For more information on interrupt handling, refer to `Interrupt Handling <./isv.html#interrupt-handling>`_.
+If CENABLE is set, <CTRL-C> interrupts process execution. For more information on interrupt handling, refer to `Interrupt Handling <./langfeat.html#interrupt-handling>`_.
 
 By default, CENABLE is set. If CTRAP contains $C(3), CENABLE is disabled.
 
@@ -4585,7 +4585,7 @@ RENAME
 
 RENAME=expr Applies to: SD
 
-Changes the file name to the name contained in the argument string. When the expression omits part of the pathname, YottaDB constructs the full pathname by applying the defaults discussed in the section on device specifications.
+Changes the file name to the name contained in the argument string. CLOSE ignores RENAME when it specifies the same file as that of the CLOSE file-specification. When the files are different, and the original file specified by the CLOSE no longer exists. RENAME gives an error if the specified file exists, while REPLACE does not. When the expression omits part of the pathname, YottaDB constructs the full pathname by applying the defaults discussed in the section on device specifications.
 
 If the process has sufficient access permissions, it may use RENAME to specify a different directory as well as file name. RENAME cannot move a file to a different filesystem.
 

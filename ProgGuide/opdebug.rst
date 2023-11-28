@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -65,6 +65,11 @@ Functionality Available in Direct Mode
 
 This section provides an overview of basic functionality and concepts that enhance your use of Direct Mode.
 
+.. note::
+   Direct mode has two implementations: a traditional, historical implementation that is included in the YottaDB code base, and a more modern mode that uses `GNU Readline <https://www.gnu.org/software/readline/>`_ if it is installed on the system. YottaDB uses Readline if, at process startup, the environment variable `ydb_readline <../AdminOpsGuide/basicops.html#ydb-readline>`_ is set to :code:`1` (recommended), or a case-insensitive :code:`T[RUE]` or :code:`Y[ES]`. The maximum history size is specified in the :code:`.inputrc` file (or other file specified by the :code:`INPUTRC` environment variable used by Readline), and recalled line numbers may be unintuitive the first time YottaDB is run after reducing the history size. If $ydb_readline is any other value or does not exist, YottaDB uses the traditional mode. Due to a limitation held over from older versions of readline, a recalled command is executed immediately without an opportunity to edit it. However, readline makes its own command recall and line editing available using keyboard shortcuts; refer to the `Readline documentation <https://tiswww.cwru.edu/php/chet/readline/rltop.html#Documentation>`_ for details.
+
+   The following descriptions of Command Recall and Line Editing apply to the traditional, historical implementation. As it is more modern and full-featured, we recommend the use of Readline for Direct Mode. While we continue to support the traditional implementation, and will fix bugs, YottaDB does not intend to enhance it in the future. A summary of YottaDB functionality with Readline is provided with the documentation of the environment variable `ydb_readline <../AdminOpsGuide/basicops.html#ydb-readline>`_.
+
 ~~~~~~~~~~~~~~~
 Command Recall
 ~~~~~~~~~~~~~~~
@@ -84,9 +89,6 @@ The format of the RECALL command is:
 * When the RECALL command has no argument, it displays the entire history of Direct Mode command entries up to a maximum (see note below).
 
 If the Direct Mode command history has just started, YottaDB may not have saved many lines and therefore you will not have many lines to look at. The first entered YottaDB command line has the number one (1), and more recent lines have higher numbers. YottaDB does not include the RECALL command in the saved command history. If the RECALL command is issued from a location other than the Direct Mode prompt, YottaDB issues a run-time error.
-
-.. note::
-   The RECALL command has two modes: a traditional, historical mode, and a more modern mode that can use `GNU Readline <https://www.gnu.org/software/readline/>`_ if it is installed on the system. YottaDB uses Readline if, at process startup, the environment variable :code:`ydb_readline` is set to :code:`1` (recommended), or a case-insensitive :code:`TRUE` or :code:`YES`. The maximum history size is specified in the :code:`.inputrc` file (or other file specified by the :code:`INPUTRC` environment variable used by Readline), and recalled line numbers may be unintuitive the first time time YottaDB is run after reducing the history size. If :code:`ydb_readline` is any other value or does not exist, YottaDB uses the traditional mode. Due to a limitation held over from older versions of readline, a recalled command is executed immediately without an opportunity to edit it. However, readline makes its own command recall and editing available using keyboard shortcuts; refer to the Readline documentation for details.
 
 Example:
 

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -165,7 +165,7 @@ The effect of a READ \*glvn on $KEY is unspecified.
 For terminals, $KEY and $ZB both have the terminator.
 
 .. note::
-   See the READ and WRITE commands in `Chapter 6: “Commands” <./commands.html>`_.
+   See the READ and WRITE commands in `Chapter 6: “Commands” <commands.html>`_.
 
 For SOCKET:
 
@@ -206,6 +206,24 @@ For TCP sockets, <address> is the numeric IP address for the remote end of the c
 For TCP LISTENING sockets, <portnumber> is the local port on which socket_handle is listening for incoming connections. For LOCAL LISTENING sockets, it is the path of the socket.
 
 If the WRITE /WAIT was timed, $KEY returns an empty value if the wait timed out or there was no established connection. $KEY only has the selected handle, if any, immediately after a WRITE /WAIT. $KEY is also used by other socket I/O commands such as READ which sets it to the delimiter or malformed Unicode® character, if any, which terminated the read.
+
+When a socket has enabled non-blocking WRITEs, additional values will show if it is possible to write at least one byte to the socket. If the second argument of WRITE /WAIT is omitted or specifies both "READ" and "WRITE" and the socket selected by WRITE /WAIT is ready for both READ and WRITE, $KEY contains:
+
+.. code-block:: none
+
+   "READWRITE|<socket handle>|<address>"
+
+If the socket selected by a WRITE /WAIT which implicitly or explicitly requests the write state would block on a READ but not block on WRITE, $KEY contains:
+
+.. code-block:: none
+
+   "WRITE|<socket handle>|<address>"
+
+If the socket selected by WRITE /WAIT which implicitly or explicitly requests the read state would not block on a READ but would block on a WRITE, $KEY contains:
+
+.. code-block:: none
+
+   "READ|<socket handle>|<address>"
 
 ---------------
 $PRINCIPAL
@@ -308,6 +326,8 @@ $SYSTEM
 $SY[STEM] contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes are assigned by the MDC (M Development Committee).
 
 $SYSTEM in YottaDB starts with "47" followed by a comma and the evaluation of the environment variable ydb_sysid or gtm_sysid. If neither of the names have any evaluation (i.e. both are undefined), the value after the comma is gtm_sysid.
+
+YottaDB accepts SET $SYSTEM=expr, where expr appends to the initial value; an empty string removes any current added value.
 
 .. _test-isv:
 
@@ -530,7 +550,7 @@ If positive, $ZCLOSE contains the exit status returned by the last PIPE co-proce
 $ZCMDLINE
 ------------
 
-$ZCM[DLINE] contains a string value specifying the "excess" portion of the command line that invoked the YottaDB process. By "excess" is meant the portion of the command line that is left after YottaDB has done all of its command line processing. For example, a command line yottadb -direct extra1 extra2 causes YottaDB to process the command line upto yottadb -direct and place the "excess" of the command line, that is "extra1 extra2" in $ZCMDLINE. $ZCMDLINE gives the M routine access to the shell command line input.
+$ZCM[DLINE] is a read-write ISV that initially contains a string value specifying the "excess" portion of the command line that invoked the YottaDB process. By "excess" is meant the portion of the command line that is left after YottaDB has done all of its command line processing. For example, a command line yottadb -direct extra1 extra2 causes YottaDB to process the command line upto yottadb -direct and place the "excess" of the command line, that is "extra1 extra2" in $ZCMDLINE. $ZCMDLINE gives the M routine access to the shell command line input.
 
 Note that the actual user input command line might have been transformed by the shell (for example, removing one level of quotes, filename, and wildcard substituion, and so on.), and it is this transformed command line that YottaDB processes.
 
@@ -538,30 +558,32 @@ Example:
 
 .. code-block:: bash
 
-   $ cat > test.m
-   write " $ZCMDLINE=",$ZCMDLINE,!
-   quit
+   $ cat test.m
+   test	write " $ZCMDLINE=",$ZCMDLINE,!
+   	quit
    $ yottadb -run test OTHER  information
    $ZCMDLINE=OTHER information
+   $ yottadb -run test 'OTHER  information'
+   $ZCMDLINE=OTHER  information
    $
 
-This creates the program test.m, which writes the value of $ZCMDLINE. Note how the two spaces specified in OTHER information in the command line gets transformed to just one space in OTHER information in $ZCMDLINE due to the shell's pre-processing.
+Note how the two spaces specified in OTHER information in the unquoted command line gets transformed to just one space in OTHER information in $ZCMDLINE due to the shell's pre-processing. However, the spaces are preserved when quoted.
 
 Example:
 
-.. code-block:: bash
+.. code-block:: none
 
-   $ cat foo.m
-   foo     ; a routine to invoke an arbitrary entry with or without parameters;
-   set $etrap="" ; exit if the input is not valid
-   if $length($zcmdline) do @$zcmdline quit
-   quit
-   $ yottadb -run foo 'BAR^FOOBAR("hello")'
+   $ yottadb -run %XCMD 'zprint %XCMD^%XCMD:CLIERR+-2'
+   %XCMD   ; Usage: mumps -run %XCMD '<string>'
+           ; If no $ETRAP defined, use CLIERR^%XCMD overriding a potential $ZTRAP error handler
+           if ""=$ETRAP new $ETRAP set $ETRAP="goto CLIERR^%XCMD"
+           new etrap,%cli set etrap=$ETRAP,%cli=$zcmdline
+           ; Protect %XCMD's error handler by NEWing and SETing $ETRAP at the beginning of the XECUTEd command
+           xecute "new $ETRAP,$zcmdline set $ETRAP=etrap "_%cli
+           quit
+   $
 
-In this example, YottaDB processes the shell command line up to foo and puts the rest in $ZCMDLINE. This mechanism allows yottadb -run to invoke an arbitrary entryref with or without parameters. Note that this example encloses the command line argument with single quotes to prevent inappropriate expansion in Bourne-type shells. Always remember to use the escaping and quoting conventions of the shell and YottaDB to prevent inappropriate expansion.
-
-.. note::
-   Use the ^%XCMD utility to XECUTEs code from the shell command line and return any error status (truncated to a single byte on UNIX) that the code generates. For more information, refer to “%XCMD”.
+This example shows how the utility program `%XCMD <./utility.html#xcmd>`_ takes a line of M code from a shell command and executes it. This mechanism allows shell scripts to run M commands. It is good practice to enclose the command line argument with single quotes to prevent inappropriate shell expansion. Note also how $zcmdline is NEW'd to protect the value from any changes by XECUTE'd M code.
 
 -------------
 $ZCOMPILE
@@ -601,7 +623,7 @@ This example uses the environment variable ydb_compile to set up $ZCOMPILE. Then
 $ZCSTATUS
 -----------------
 
-$ZC[STATUS] holds the value of the status code for the last compilation performed by a ZCOMPILE command.
+$ZC[STATUS] holds the value of the status code for the last compilation performed by a ZCOMPILE, ZLINK or auto-ZLINK. One (1) indicates a clean compilation, a positive number greater than one is an error code whose text you can ascertain using $ZMESSAGE(), and a negative number is a negated error code that indicates YottaDB was not able to produce an object file. The error details appear in the compilation output, so $ZCSTATUS typically contains the code for `ERRORSUMMARY <../MessageRecovery/errors.html#errorsummary>`_.
 
 YottaDB does not permit the SET command to modify $ZSTATUS.
 
@@ -803,42 +825,44 @@ YottaDB does not permit the SET or NEW commands to modify $ZININTERRUPT.
 $ZINTERRUPT
 ---------------------
 
-$ZINT[ERRUPT] specifies the code to be XECUTE'd when an interrupt (for example, through a MUPIP INTRPT) is processed. While a $ZINTERRUPT action is in process, any additional interrupt signals are discarded. When an interrupt handler is invoked, the current values of $REFERENCE is saved and restored when the interrupt handler returns. The current device ($IO) is neither saved nor restored.
+$ZINT[ERRUPT] specifies the code to be `XECUTE'd <commands.html#xecute>`_ when an interrupt (for example, through a `MUPIP INTRPT <../AdminOpsGuide/dbmgmt.html#intrpt>`_) is processed. While a $ZINTERRUPT action is in process, any additional interrupt signals are discarded. When an interrupt handler is invoked, the current values of `$REFERENCE <#reference>`_ is saved and restored when the interrupt handler returns. The current device (`$IO <isv.html#io>`_) is neither saved nor restored.
 
-YottaDB permits the SET command to modify the value of $ZINTERRUPT.
+$ZINTERRUPT can be modified by the `SET <commands.html#set>`_ command.
 
-If an interrupt handler changes the current IO device (via USE), it is the responsibility of the interrupt handler to restore the current IO device before returning. There are sufficient legitimate possibilities for why an interrupt routine would want to change the current IO device (for example; daily log switching), that this part of the process context is not saved and restored automatically.
+When YottaDB uses an interrupt handler, it saves and restores the current value of `$REFERENCE <#reference>`_.
 
-The initial value for $ZINTERRUPT is taken from the UNIX environment variable ydb_zinterrupt if it is specified, otherwise it defaults to the following string:
+If an interrupt handler changes the current IO device (via `USE <commands.html#use>`_), it is the responsibility of the interrupt handler to restore the current IO device before returning. There are sufficient legitimate possibilities for why an interrupt routine would want to change the current IO device (for example; log switching), that this part of the process context is not saved and restored automatically. To restore the device which was current when the interrupt handler began, specify USE without any deviceparameters. Any attempt to do IO on a device which was actively doing IO when the interrupt was recognized may cause a `ZINTRECURSEIO <../MessageRecovery/errors.html#zintrecurseio>`_ error.
+
+The initial value for $ZINTERRUPT is taken from the environment variable `ydb_zinterrupt <../AdminOpsGuide/basicops.html#ydb-zinterrupt>`_ if it is specified, otherwise from the environment variable gtm_zinterrupt, otherwise it defaults to the following string:
 
 .. code-block:: none
 
    IF $ZJOBEXAM()
 
-The IF statement executes the $ZJOBEXAM function but effectively discards the return value.
+The `IF <commands.html#if>`_ statement executes the `$ZJOBEXAM() <functions.html#zjobexam>`_ function but effectively discards the return value.
 
 .. note::
    If the default value for $ZINTERRUPT is modified, no $ZJOBEXAM() will occur unless the replacement value directly or indirectly invokes that function. In other words, while $ZJOBEXAM() is part of the interrupt handling by default, it is not an implicit part of the interrupt handling.
 
-+++++++++++++++++++++
-Interrupt Handling
-+++++++++++++++++++++
+The interrupt handler is executed by YottaDB at a statement boundary or at an appropriate boundary in a potentially long running COMMAND. If a process is in a long running external call (for example; waiting in a message queue) YottaDB does not have sufficient control of the process state to immediately drive the interrupt handler. It recognizes the interrupt request and drives the handler after the external call returns to YottaDB and the process reaches an appropriate execution boundary. See `Interrupting Execution Flow <langext.html#interrupting-execution-flow>`_.
 
-YottaDB process execution is interruptible with the following events:
+..  note::
+    The interrupt handler does not operate "outside" the current M environment but rather within the environment of the process.
 
-* Typing CTRL+C or getting SIGINT (if CENABLE). YottaDB ignores SIGINT (CTRL+C) if $PRINCIPAL is not a terminal.
-* Typing one of the CTRAP characters
-* Exceeding $ZMAXTPTIME in a transaction
-* Getting a MUPIP INTRPT (SIGUSR1)
-* +$ZTEXit evaluates to a truth value at the outermost TCOMMIT or TROLLBACK
+It is possible for the interrupt handler to be executed while the process executing a TP transaction holds the critical section for one or more regions. Use of this feature may create temporary hangs or pauses while the interrupt handler executes. For the default case where the interrupt handler uses $ZJOBEXAM() to create a dump, the pause duration depends on the number of local variables in the process at the time of the dump and on the speed of the secondary storage device. Such a dump is slower on a network-mounted secondary storage device than on a storage device directly connected to the local system. Design interrupt driven code to account for this issue.
 
-When YottaDB detects any of these events, it transfers control to a vector that depends on the event. For CTRAP characters and ZMAXTPTIME, YottaDB uses the $ETRAP or $ZTRAP vectors described in more detail in the Error Processing chapter. For INTRPT and $ZTEXit, it XECUTEs the interrupt handler code placed in $ZINTERRUPT. If $ZINTERRUPT is an empty string, nothing is done in response to a MUPIP INTRPT. The default value of $ZINTERRUPT is "IF $ZJOBEXAM()" which redirects a dump of ZSHOW "*" to a file and reports each such occasion to the operator log. For CTRL+C with CENABLE, it enters Direct Mode to give the programmer control.
+Code in $ZINTERRUPT must use routine names in any entryref argument to a `DO <commands.html#do>`_, `GOTO <commands.html#goto>`_, `JOB <commands.html#job>`_, `ZGOTO <commands.html#zgoto>`_ or any extrinsic as the arrival of the interrupt can activate the code while executing an arbitrary routine in the application.
 
-YottaDB recognizes most of these events when they occur but transfers control to the interrupt vector at the start of each M line, at each iteration of a FOR LOOP, at certain points during the execution of commands which may take a "long" time. For example, ZWRITE, HANG, LOCK, MERGE, ZSHOW "V", OPENs of disk files and FIFOs, OPENs of SOCKETs with the CONNECT parameter (unless zero timeout,) WRITE /WAIT for SOCKETs, and READ for terminals, SOCKETs, FIFOs, and PIPEs. If +$ZTEXIT evaluates to a truth value at the outermost TCOMMIT or TROLLBACK, YottaDB XECUTEs $ZINTERRUPT after completing the commit or rollback. CTRAP characters are recognized when they are read on UNIX.
+During the execution of the interrupt handling code, `$ZININTERRUPT <#zininterrupt>`_ evaluates to 1 (TRUE).
 
-If an interrupt event occurs in a long running external call (for example, waiting in a message queue), YottaDB recognizes the event but makes the vector transfer after the external call returns when it reaches the next appropriate execution boundary.
+If an error occurs while compiling the $ZINTERRUPT code, the error handler is not invoked. YottaDB sends the `ERRWZINTR <../MessageRecovery/errors.html#errwzintr>`_ message and the compiler error message to syslog. If the YottaDB process is at a direct mode prompt or is executing a direct mode command (for example, a FOR loop), YottaDB also sends the ERRWZINTR error message to the user console along with the compilation error. In both cases, the interrupted process resumes execution without performing any action specified by the defective $ZINTERRUPT vector.
 
-When an interrupt handler is invoked, YottaDB saves and restores the current values of $REFERENCE. However, the current device ($IO) is neither saved nor restored. If an interrupt handler changes $IO (via USE), ensure that the interrupt handler restores the current device before returning. To restore the device which was current when the interrupt handler began, specify USE without any deviceparameters. Any attempt to do IO on a device which was actively doing IO when the interrupt was recognized may result in a ZINTERCURSEIO error.
+The error handler is invoked if an error occurs while executing the $ZINTERRUPT code. If an error occurs during execution of the interrupt handler's stack frame (before it calls anything), that error is prefixed with the ERRWZINTR error. The error handler then executes normal error processing associated with the module that was interrupted. Any other errors that occur in code called by the interrupt handler are handled by normal error handling. See `Error Processing <errproc.html>`_.
+
+If a TP transaction is in progress (0<`$TLEVEL <#tlevel>`_), updates to globals are not safe since a TP restart can be signaled at any time prior to the transaction being committed - even after the interrupt handler returns. A TP restart reverses all global updates and unwinds the M stack so it is as if the interrupt never occurred. The interrupt handler is not redriven as part of a transaction restart. Referencing (reading) globals inside an interrupt handler can trigger a TP restart if a transaction is active. When programming interrupt handling, either discard interrupts when 0<$TLEVEL (forcing the interrupting party to try again), or use local variables that are not restored by a TRESTART to defer the interrupt action until after the final `TCOMMIT <commands.html#tcommit>`_.
+
+.. note::
+   Because sending an interrupt signal requires the sender to have appropriate permissions, the use of the job interrupt facility itself does not present any inherent security exposures. Nonetheless, because dump files created by the default action contain the values of every local variable in the context at the time they are made, inappropriate access to the dump files would constitute a security exposure. Make sure the design and implementation of any interrupt logic includes careful consideration to security issues.
 
 Example:
 
@@ -846,27 +870,9 @@ Example:
 
    set $zinterrupt="do ^interrupthandler($io)"
    interrupthandler(currentdev)
-          do ^handleinterrupt ; handle the interrupt
-          use currentdev      ; restore the device which was current when the interrupt was recognized
-          quit
-
-
-The use of the INTRPT facility may create a temporary hang or pause while the interrupt handler code is executed. For the default case where the interrupt handler uses IF $ZJOBEXAM() to create a dump, the pause duration depends on the number of local variables in the process at the time of the dump and on the speed of the disk being written to. The dumps are slower on a network-mounted disk than on a disk directly connected to the local system. Any interrupt driven code should be designed to account for this issue.
-
-.. note::
-   Because sending an interrupt signal requires the sender to have appropriate permissions, the use of the job interrupt facility itself does not present any inherent security exposures. Nonetheless, because the dump files created by the default action contain the values of every local variable in the context at the time they are made, inappropriate access to the dump files would constitute a security exposure. Make sure the design and implementation of any interrupt logic includes careful consideration to security issues.
-
-During the execution of the interrupt handling code, $ZINTERRUPT evaluates to 1 (TRUE).
-
-If an error occurs while compiling the $ZINTERRUPT code, the error handler is not invoked (the error handler is invoked if an error occurs while executing the $ZINTERRUPT code), YottaDB sends the YDB-ERRWZINTR message and the compiler error message to the operator log facility. If the YottaDB process is at a direct mode prompt or is executing a direct mode command (for example, a FOR loop), YottaDB also sends the YDB-ERRWZINTR error message to the user console along with the compilation error. In both cases, the interrupted process resumes execution without performing any action specified by the defective $ZINTERRUPT vector.
-
-If YottaDB encounters an error during creation of the interrupt handler's stack frame (before transferring control to the application code specified by the vector), that error is prefixed with a YDB-ERRWZINTR error. The error handler then executes normal error processing associated with the interrupted routine. Any other errors that occur in code called by the interrupt vector invoke error processing as described in `Chapter 13: “Error Processing” <./errproc.html>`_.
-
-.. code-block:: none
-
-   The interrupt handler does not operate "outside" the current M environment but rather within the environment of the process.
-
-TP transaction is in progress (0<$TLEVEL), updates to globals are not safe since a TP restart can be signaled at any time prior to the transaction being committed - even after the interrupt handler returns. A TP restart reverses all global updates and unwinds the M stack so it is as if the interrupt never occurred. The interrupt handler is not redriven as part of a transaction restart. Referencing (reading) globals inside an interrupt handler can trigger a TP restart if a transaction is active. When programming interrupt handling, either discard interrupts when 0<$TLEVEL (forcing the interrupting party to try again), or use local variables that are not restored by a TRESTART to defer the interrupt action until after the final TCOMMIT.
+	  do ^handleinterrupt ; handle the interrupt
+	  use currentdev      ; restore the device which was current when the interrupt was recognized
+	  quit
 
 ---------------
 $ZIO
@@ -925,9 +931,15 @@ $ZKEY contains any one of the following values:
 
    "READ|<socket_handle>|<address>"
 
+.. code-block:: none
+
+   "WRITE|<socket_handle>|<address>"
+
 If $ZKEY contains one or more "READ|<socket_handle>|<address>" entries, it means there are ready to READ sockets that were selected by WRITE/WAIT or were partially read and there is data left in their buffer. Each entry is delimited by a ";".
 
 If $ZKEY contains one or more "LISTENING|<listening_socket_handle>|{<portnumber|/path/to/LOCAL_socket>}" entries, it means that there are pending connections and a USE s:socket=listening_socket_handle will accept a pending connection and remove the LISTENING|<listening_socket_handle> entry from $ZKEY.
+
+If $ZKEY contains one or more "WRITE|<socket_handle>|<address>" entries, it means that the prior WRITE /WAIT considered the non-blocking sockets writeable. This is likely to be the case most of the time. If $ZKEY contains one WRITE and one READ entry, it means that the non-blocking socket is both readable and writeable.
 
 $ZKEY is empty if no sockets have data in the buffer and there are no unaccepted incoming sockets from previous WRITE/WAITs.
 
@@ -1313,7 +1325,7 @@ Establishing the value from $ydb_routines
 
 If the environment variable :code:`ydb_routines` is not set when the :code:`yottadb` process starts, or if it is set to the empty string (:code:`""`), YottaDB sets it in the environment to :code:`$ydb_dist/libyottadbutil.so` in M mode, if it exists, or to :code:`$ydb_dist/utf8/libyottadbutil.so` in UTF-8 mode, if it exists, and to :code:`$ydb_dist` if it does not, and then uses that value.
 
-Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <./devcycle.html>`_ and `“Commands” <./commands.html>`_ chapters.
+Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <./devcycle.html>`_ and `“Commands” <commands.html>`_ chapters.
 
 +++++++++++++++++++++++++++++++
 Setting a Value for $ZROUTINES

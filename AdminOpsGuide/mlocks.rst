@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -141,7 +141,7 @@ The optional qualifiers are:
    -[NO]I[NTERACTIVE]
    -O[UTPUT]="file-name"
    -P[ID]=pid
-   -R[EGION]=region-name
+   -R[EGION]=region-name | -R[EGION] region name
 
 By default, CLEAR operates interactively (-INTERACTIVE).
 
@@ -248,9 +248,9 @@ Specifies the process identification number that holds a LOCK on a resource name
 
 * The -PID qualifier is compatible with all other qualifiers.
 
-~~~~~~~~~~~~~~~~~~~~~~
--R[EGION]=region-name
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-R[EGION]=region-name | -R[EGION] region-name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 region-name specifies the region that holds the locked resource names. The region-name is case-insensitive.
 
@@ -373,7 +373,7 @@ The optional qualifiers are:
    -A[LL]
    -I[NTEG]
    -P[ERIODIC]=n
-   -R[EGION]=region-name
+   -R[EGION]=region-name | -R[EGION] region-name
 
 By default, CLNUP operates on all regions (-ALL).
 
@@ -424,7 +424,7 @@ The optional qualifiers are:
    -[NO]C[[RIT]ICAL]
    -O[UTPUT]="file-name"
    -P[ID]=pid
-   -R[EGION]=region-name
+   -R[EGION]=region-name | -R[EGION] region-name
    -W[AIT]
 
 * By default, SHOW displays -A[LL].
@@ -506,9 +506,9 @@ Specifies the process identification number that holds a LOCK on a resource name
 
 * By default, SHOW displays the LOCKs for all PIDs.
 
-~~~~~~~~~~~~~~~~~~~~~~
--R[EGION]=region-name
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-R[EGION]=region-name | -R[EGION] region-name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the region that holds the locked resource names. The region-name is case-insensitive.
 
@@ -674,14 +674,17 @@ Summary
 | Command                      | Qualifier                                                | Comments                                                |
 +==============================+==========================================================+=========================================================+
 | C[LEAR]                      | -ALL, -L[OCK], -[NO]EXACT, -[NO]I[NTERACTIVE],           | Use CLEAR with care and planning.                       |
-|                              | -O[UTPUT]=file-name, -P[ID]=pid, -R[EGION]=name          |                                                         |
+|                              | -O[UTPUT]=file-name, -P[ID]=pid,                         |                                                         |
+|                              | -R[EGION]=name \| -R[EGION] name                         |                                                         |
+|                              |                                                          |                                                         |
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
 | E[XIT]                       | None                                                     | \-                                                      |
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
 | H[ELP]                       | [option]                                                 | \-                                                      |
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
 | SH[OW]                       | -ALL, -L[OCK], -[NO]CRIT[ICAL], -N[OINTERACTIVE],        | \-                                                      |
-|                              | -O[UTPUT]=file-name, -P[ID]=pid, -R[EGION]=name, -W[AIT] |                                                         |
+|                              | -O[UTPUT]=file-name, -P[ID]=pid,                         |                                                         |
+|                              | -R[EGION]=name \| -R[EGION] name, -W[AIT]                |                                                         |
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+
 | SP[AWN]                      | none                                                     | shellcommand                                            |
 +------------------------------+----------------------------------------------------------+---------------------------------------------------------+

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -85,6 +85,8 @@ Specifies that the argument is a journal-file-name. The format of the JNLFILE qu
 
 Incompatible with: FILE, REGION and REPLICATION
 
+.. _regiondesc:
+
 ^^^^^^^^
 -REGION
 ^^^^^^^^
@@ -93,9 +95,9 @@ Specifies that the argument is a region-list which identifies database file(s) m
 
 .. code-block:: none
 
-   -R[EGION] region-list
+   -R[EGION] region-list | -R[EGION]=region-list
 
-The region-list identifies the target of SET. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wild-cards can be used to specify them. Any region-name may include the wild-card characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
+In other words, either a space or an equal sign can follow the qualifier. The region-list identifies the target of SET. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wild-cards can be used to specify them. Any region-name may include the wild-card characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order. Note that region-list must immediately follow the REGION qualifier. Older versions of YottaDB used only a space and permitted other qualifiers between the REGION qualified and region-list.
 
 Incompatible with: FILE, JNLFILE and REPLICATION
 

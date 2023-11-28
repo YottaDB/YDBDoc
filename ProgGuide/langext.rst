@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -27,6 +27,7 @@ The following sections describe the YottaDB language extensions listed below:
 * UNIX interface facilities
 * Debugging tools
 * Exception-handling extensions
+* Interrupting Execution Flow
 * Journaling extensions
 * Extensions providing additional capability
 * Device Handling Extensions
@@ -50,27 +51,30 @@ The following table summarizes the YottaDB operating system interface facilities
 
 **Operating System Interface Facilities**
 
-+---------------------------------+---------------------------------------------------------------------------------------------------------------------+
-| Extension                       | Explanation                                                                                                         |
-+=================================+=====================================================================================================================+
-| ZSYstem                         | Provides access to the shell.                                                                                       |
-+---------------------------------+---------------------------------------------------------------------------------------------------------------------+
-| $ZMessage()                     | Translates an error condition code into text form.                                                                  |
-+---------------------------------+---------------------------------------------------------------------------------------------------------------------+
-| $ZCMdline                       | Contains a string value specifying the "excess" portion of the command line that invoked the YottaDB process.       |
-+---------------------------------+---------------------------------------------------------------------------------------------------------------------+
-| $ZJob                           | Holds the pid of the process created by the last JOB command performed by the current process.                      |
-+---------------------------------+---------------------------------------------------------------------------------------------------------------------+
-| $ZPARSE()                       | Parses a UNIX filename.                                                                                             |
-+---------------------------------+---------------------------------------------------------------------------------------------------------------------+
-| $ZSEARCH()                      | Searches for one or more UNIX files.                                                                                |
-+---------------------------------+---------------------------------------------------------------------------------------------------------------------+
-| $ZSYstem                        | Contains the status code of the last ZSYSTEM.                                                                       |
-+---------------------------------+---------------------------------------------------------------------------------------------------------------------+
-| $ZTRNLNM()                      | Translates an environment variable.                                                                                 |
-+---------------------------------+---------------------------------------------------------------------------------------------------------------------+
-| $ZDIRectory                     | Contains current working directory.                                                                                 |
-+---------------------------------+---------------------------------------------------------------------------------------------------------------------+
++------------------------------------------+---------------------------------------------------------------------------------------------------------------+
+| Extension                                | Explanation                                                                                                   |
++==========================================+===============================================================================================================+
+| `ZSYstem <commands.html#zsystem>`_       | Provides access to the shell.                                                                                 |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------+
+| `$ZMessage() <functions.html#zmessage>`_ | Translates an error condition code into text form.                                                            |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------+
+| `$ZCMdline <isv.html#zcmdline>`_         | Contains a string value specifying the "excess" portion of the command line that invoked the YottaDB process. |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------+
+| `$ZJob <isv.html#zjob>`_                 | Holds the pid of the process created by the last JOB command performed by the current process.                |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------+
+| `$ZPARSE() <functions.html#zparse>`_     | Parses a UNIX filename.                                                                                       |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------+
+| `$ZSEARCH() <functions.html#zsearch>`_   | Searches for one or more UNIX files.                                                                          |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------+
+| `$ZSYstem <isv.html#zsystem>`_           | Contains the status code of the last ZSYSTEM.                                                                 |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------+
+| `$ZTRNLNM() <functions.html#ztrnlnm>`_   | Returns the value of an environment variable.                                                                 |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------+
+| `$ZDIRectory <isv.html#zdirectory>`_     | Contains current working directory.                                                                           |
++---------------------------------+------------------------------------------------------------------------------------------------------------------------+
+
+.. note::
+   Operating system services accessed by YottaDB commonly treat a NULL ($CHAR(0)) character as a terminator. Therefore embedded NULLs in strings that are passed to the OS as arguments may cause non-obvious behavior.
 
 -------------------------------------------
 Debugging Facilities
@@ -181,6 +185,25 @@ The following table summarizes the YottaDB language extensions that facilitate e
 |                                | related exception condition.                                                                                               |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 
+-----------------------------------
+Interrupting Execution Flow
+-----------------------------------
+
+YottaDB process execution is interruptible by the following events:
+
+* Typing CTRL+C or getting SIGINT (if `CENABLE <ioproc.html#cenable>`_ is on for a terminal `$PRINCIPAL <ioproc.html#principal>`_). YottaDB ignores SIGINT (CTRL+C) if $PRINCIPAL is not a terminal.
+* Typing one of the `CTRAP <ioproc.html#ctrap>`_ characters on a terminal $PRINCIPAL.
+* Exceeding `$ZMAXTPTIME <isv.html#zmaxtptime>`_ in a transaction.
+* Getting a `MUPIP INTRPT <../AdminOpsGuide/dbmgmt.html#intrpt>`_ (SIGUSR1).
+* `+$ZTEXIT <isv.html#ztexit>`_ evaluates to a truth value at the outermost `TCOMMIT <commands.html#tcommit>`_ or `TROLLBACK <commands.html#trollback>`_.
+
+When YottaDB detects any of these events, it transfers control to a vector that depends on the event. For CTRAP characters and $ZMAXTPTIME, YottaDB uses the `$ETRAP <isv.html#etrap>`_ or `$ZTRAP <isv.html#ztrap>`_ vectors described in more detail in `Error Processing <errproc.html>`_. For MUPIP INTRPT and $ZTEXIT, it `XECUTEs <commands.html#xecute>`_ the interrupt handler code placed in `$ZINTERRUPT <isv.html#zinterrupt>`_. If $ZINTERRUPT is an empty string, a the response to a MUPIP INTRPT ia a no-op.
+
+YottaDB recognizes most of these events when they occur but transfers control to the interrupt vector at the start of each M line, at each iteration of a `FOR <commands.html#for>`_ loop, at certain points during the execution of commands which may take a "long" time. For example, `ZWRITE <commands.html#zwrite>`_, `HANG <commands.html#hang>`_, `LOCK <commands.html#lock>`_, `MERGE <commands.html#merge>`_, `ZSHOW "V" <commands.html#zshow-information-codes>`_, `OPENs <commands.html#open>`_ of disk files and `FIFOs <ioproc.html#fifo-characteristics>`_, OPENs of `SOCKETs <ioproc.html#using-socket-devices>`_ with the `CONNECT <ioproc.html#connect>`_ deviceparameter (unless the timeout is zero), `WRITE /WAIT <ioproc.html#write-command>`_ for SOCKETs, and `READ <commands.html#read>`_ for terminals, SOCKETs, FIFOs, and `PIPEs <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#using-pipe-devices>`_. If +$ZTEXIT evaluates to a truth value at the outermost TCOMMIT or TROLLBACK, YottaDB XECUTEs $ZINTERRUPT after completing the commit or rollback. CTRAP characters are recognized when they are read by the operating system.
+
+If an interrupt event occurs in a long running external call (for example, waiting in a message queue), YottaDB recognizes the event but makes the vector transfer after the external call returns when it reaches the next appropriate execution boundary.
+
+When an interrupt handler is invoked, YottaDB saves and restores the current values of `$REFERENCE <isv.html#reference>`_. However, the current device (`$IO <isv.html#io>`_) is neither saved nor restored. If an interrupt handler changes $IO (via `USE <commands.html#use>`_), ensure that the interrupt handler restores the current device before returning. To restore the device which was current when the interrupt handler began, specify USE without any deviceparameters. Any attempt to do IO on a device which was actively doing IO when the interrupt was recognized may result in a `ZINTRECURSEIO <../MessageRecovery/errors.html#zintrecurseio>`_ error.
 
 -----------------------------------
 Journaling Extensions

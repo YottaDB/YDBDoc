@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -3445,6 +3445,8 @@ The second expression specifies a keyword identifying the type of information re
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | Keyword                    | Arguments                        | Returns                                                                                                                           |
 +============================+==================================+===================================================================================================================================+
+| BLOCKING                   | index                            | 1 (TRUE) for blocking otherwise 0 (FALSE) for non-blocking WRITEs                                                                 |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | CURRENTINDEX               |                                  | The index (starting at zero) of the current socket for the SOCKET device.                                                         |
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | DELIMITER                  | index[, delimiter]               | If only index is specified, the number of delimiters. If delimiter is also specified, selects which delimiter to return. The first|

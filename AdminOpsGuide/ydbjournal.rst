@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -500,9 +500,9 @@ REGION
 
 .. code-block:: none
 
-   -R[EGION]
+   -R[EGION] region-list | -R[EGION]=region-list
 
-Specifies that the argument to the SET is a list of one or more region-names, possibly including wildcards, which, through the mapping of the current Global Directory, identifies a set of database files. SET REGION modifies multiple files when the parameter contains more than one name.
+See description at :ref:`regiondesc`.
 
 The REGION qualifier is incompatible with the FILE and JNLFILE qualifiers.
 

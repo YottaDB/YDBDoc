@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -147,7 +147,12 @@ On some platforms, you may be able to use disk drives with built-in encryption, 
 Device IO
 +++++++++++++++
 
-The built-in interface to encryption is implemented only for data in database, journal, backup and certain formats of extract files. To encrypt IO (say for sequential disk files), you can use IO to PIPE devices. Alternatively, you can call encryption routines from YottaDB using the external call interface.
+The built-in interface to encryption is implemented only for data in database, journal, backup and certain formats of extract files. To encrypt IO
+
+- For `sequential files <../ProgrammersGuide/ioproc.html#using-sequential-files>`_, use a `PIPE device <../ProgrammersGuide/ioproc.html#using-pipe-devices>`_.
+- For `SOCKET devices <../ProgrammersGuide/ioproc.html#using-socket-devices>`_, use `TLS <../ProgrammersGuide/ioproc.html#tls-on-yottadb>`_.
+
+Alternatively, you can call `encryption routines <../ProgrammersGuide/encrypt.html>`_ from YottaDB using the `external call interface <../ProgrammersGuide/extrout.html#access-to-non-m-routines>`_.
 
 +++++++++++++
 GT.CM

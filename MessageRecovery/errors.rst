@@ -282,6 +282,26 @@ MUPIP Warning: This indicates that BACKUP terminated because of an operator <CTR
 Action: Do not rely on the result of this BACKUP. If appropriate, investigate whether any of the BACKUP output files are complete and therefore potentially useable.
 
 ------------
+BACKUPDBFILE
+------------
+
+BACKUPDBFILE, DB file dddd backed up in file bbbb
+
+MUPIP Information: This message indicates MUPIP BACKUP successfully backed up database file dddd to file bbbb.
+
+Action: None required.
+
+--------------------
+BACKUPFAIL
+--------------------
+
+BACKUPFAIL, MUPIP cannot start backup with the above errors
+
+MUPIP Error: This message indicates MUPIP BACKUP was unable to complete the backup.
+
+Action: Review accompanying messages for action guidance.
+
+------------
 BACKUPKILLIP
 ------------
 
@@ -290,6 +310,46 @@ BACKUPKILLIP, Kill in progress indicator is set for file ffff, backup database c
 MUPIP Warning: This indicates that one or more active process are performing a KILL cleanup in database file ffff. Generally, BACKUP can wait for this to finish in order to get a consistent copy of the database. However, this indicates that it waited several minutes and is now proceeding. The resulting backup will almost surely contain blocks incorrectly-marked-busy.
 
 Action: Wait and perform the BACKUP when there are no large KILL operations triggering extensive cleanup. If this is not desirable, fix the errors in the backup copy (reported by an INTEG NOMAP) with DSE MAP FREE. If there are many such blocks, you can edit the INTEG output to create a script to drive the DSE operations. Alternatively, if you can get standalone access to the database, you may use DSE MAP RESTORE. Do not use MAP RESTORE on an active database.
+
+--------------------
+BACKUPREPL
+--------------------
+
+BACKUPREPL, Replication Instance file iiii backed up in file rrrr
+
+MUPIP Information: This message indicates that MUPIP BACKUP was successful in backing up replication instance file iiii to file rrrr.
+
+Action: None required.
+
+--------------------
+BACKUPSEQNO
+--------------------
+
+BACKUPSEQNO, Journal Seqnos up to 0xhhhh are backed up
+
+MUPIP Information: This message indicates MUPIP BACKUP REPLINSTANCE backed up journal sequence numbers up to 0xhhhh to the specified replication instance file.
+
+Action: None required.
+
+--------------------
+BACKUPSUCCESS
+--------------------
+
+BACKUPSUCCESS, Backup completed successfully
+
+MUPIP Information: This message indicates the backup actions specified with MUPIP BACKUP command were successful. MUPIP does not display this message until all actions are complete.
+
+Action: None required.
+
+--------------------
+BACKUPTN
+--------------------
+
+BACKUPTN, Transactions from 0xbbbb to 0xeeee are backed up
+
+MUPIP Information: This information message indicates MUPIP BACKUP backed up transactions from 0xbbbb to 0xeeee.
+
+Action: None required.
 
 ----------
 BADACCMTHD
@@ -572,6 +632,36 @@ Run Time Error: This indicates that a database operation encountered a corrupt b
 
 Action: YottaDB uses bit maps in database files to determine whether a block is free or in use. Report this database structure error to the group responsible for database integrity at your operation.
 
+--------------------
+BKUPFILEPERM
+--------------------
+
+BKUPFILEPERM, Backup file dddd does not have write permission
+
+MUPIP Information: MUPIP BACKUP encountered an authorization issue with the target location while preparing to perform the BACKUP.
+
+Action: Ensure the target location has appropriate authorization and the appropriate user is properly configured.
+
+--------------------
+BKUPPROGRESS
+--------------------
+
+BKUPPROGRESS, Transfer : cccc / tttt (pppp%) ; Speed : zzzz MiB/sec ; Transactions : nnnn ; Estimated left : tt minutes
+
+MUPIP Information: MUPIP BACKUP -SHOWPROGRESS displays this message when the kernel supports copy progress monitoring. cccc is the size (MiB or GiB) of the copied database file and tttt is the total size of the database file. pppp is the progress percentage. Speed is always in MiB/sec and can vary based on the resources available for copy. Transactions includes the number of transaction (increments of current tn), applied to the region during MUPIP BACKUP. If the kernel does not support progress monitoring, MUPIP BACKUP -SHOWPROGRESS does not report this message. This message is expected to appear after about 25% completion of copy. Note that YottaDB instructs the kernel to copy as much data as possible in one go. If the kernel has available resources and the database file size is relatively small, you may only see one BKUPPROGRESS message followed by the BACKUP COMPLETED message.
+
+Action: None required.
+
+--------------------
+BKUPRETRY
+--------------------
+
+BKUPRETRY, Retrying MUPIP BACKUP for region: rrrr (database file: dddd). Attempt: #nnnn of mmmm
+
+MUPIP Information: This message appears when MUPIP BACKUP initiates a retry attempt because a prior backup attempt failed. #nnnn is the current retry attempt count and mmmm is the maximum number of retry attempts.
+
+Action: None required.
+
 -----------
 BKUPRUNNING
 -----------
@@ -692,9 +782,9 @@ Compile Time Warning: This optional message, accompanied by a line and column po
 
 Action: Revise the code to your standards and use the VIEW (arguments [NO]FULL_BOOLEAN or FULLBOOL_WARN) command and/or the environment variable (ydb_boolean) to select the appropriate setting for YottaDB handling of this construct.
 
--------------
+--------------------
 BOVTMGTEOVTM
--------------
+--------------------
 
 BOVTMGTEOVTM, Journal file xxxx has beginning timestamp aaaa greater than end timestamp bbbb
 
@@ -1135,6 +1225,16 @@ CMD, Command expected but not found
 Compile Time Error: This indicates that YottaDB encountered something other than a command- the next valid syntax element. This error can occur when there is an invalid character in the middle of a variable name or keyword, such as in the M line S X=Y_$B or in the command W "this is a tab <TAB>".
 
 Action: Verify the line syntax. Replace the line if it contains invisible (non-graphic) characters because diagnosing the line syntax may prove time consuming.
+
+--------------------
+CMDERR
+--------------------
+
+CMDERR, Error running command : cccc
+
+MUPIP Error: This message indicates MUPIP BACKUP received an error trying to execute the shell command cccc.
+
+Action: Look at the error message and preceding messages. Check for errors in paths, authorizations and/or other possibilities related to the specified MUPIP BACKUP actions.
 
 ------------
 CMEXCDASTLM
@@ -1606,15 +1706,15 @@ Run Time Error: An OPEN or USE command specifies a TRUNCATE deviceparameter on a
 
 Action: When using encryption, because encryption algorithms maintain state as they process text, a TRUNCATE is only permitted at the beginning or end of a file, the former deleting the entire contents, and the latter effectively a no-op.
 
--------------------
+--------------------
 CRYPTNOV4
--------------------
+--------------------
 
-CRYPTNOV4, ffff is an encrypted database. Cannot downgrade with Encryption option enabled
+CRYPTNOV4, ffff is an encrypted database. Cannot downgrade(to V4) with Encryption option enabled
 
-MUPIP Error: An attempt to downgrade ffff which is an encrypted database to the previous format failed because it does not support encrypted database files.
+MUPIP Error: An attempt to downgrade ffff which is an encrypted database to the V4 (GT.M version 4) format failed because the V4 format does not support encrypted database files.
 
-Action: Use the database in the current format. If an older format is required, extract the data in unencrypted ZWRite format with MUPIP EXTRACT and load it into a newly created database.
+Action: Use the database in the current format. If a V4 format is required, extract the data in unencrypted ZWRite format with MUPIP EXTRACT and load it into a newly created V4 database.
 
 --------------------
 CRYPTOPFAILED
@@ -1726,11 +1826,11 @@ Run Time Information: This indicates that a control structure in the database ca
 
 Action: None needed. YottaDB fixes this error as part of cache recovery, which follows cache verification. If this message shows up frequently or is reproducible, contact your YottaDB support channel.
 
-------------------
+--------------------
 DBADDRANGE
-------------------
+--------------------
 
-DBADDRANGE, Database file xxxx, element location yyyy: control zzzz was outside aaaa range bbbb to cccc
+DBADDRANGE, Database file rrrr element location aaaa: control vvvv was outside qqqq range bbbb to tttt
 
 Run Time Information: This indicates that a process was abnormally terminated while updating the database. Database control structures may be damaged.
 
@@ -1744,7 +1844,7 @@ DBADDRANGE8, Database file rrrr element location aaaa: control vvvv was outside 
 
 Run Time Error: This indicates a database control structure for database region rrrr at memory location aaaa contains a value vvvv outside range bbbb to tttt for quantity qqqq.This message is the same as a DBADDRANGE message except that vvvv, bbbb and tttt are 8-byte quantities (as opposed to 4-byte quantitites in DBADDRANGE).
 
-Action: This typically indicates a process terminated abnormally while updating the database. YottaDB often fixes such an error unless there is a serious problem causing this error. If YottaDB cannot correct the issue, the accompanying messages should expand on the situation. You are advised to report such a database error to the group responsible for database integrity at your operation.
+Action: This typically indicates a process terminated abnormally while updating the database. YottaDB often fixes such an error unless there is a serious problem causing this error. If YottaDB cannot correct the issue, the accompanying messages should expand on the situation; and you should report such database error to the group responsible for database integrity at your operation.
 
 ----------------------
 DBBADFREEBLKCTR
@@ -2818,16 +2918,15 @@ DBCERTIFY/MUPIP Error: DBCERTIFY and MUPIP UPGRADE report this error when the re
 
 Action: Increase the reserved bytes value with either MUPIP or DSE so that the value is at least 8 bytes. Note that the reserved bytes value is reduced by the above amounts by MUPIP UPGRADE.
 
-------------------
+--------------------
 DBMISALIGN
-------------------
+--------------------
 
 DBMISALIGN, Database file xxxx has yyyy blocks which does not match alignment rules. Reconstruct the database from a backup or extend it by at least zzzz blocks.
 
-MUPIP Error: This is an auxiliary message, and is preceded by a primary message.
+MUPIP Error: This error appears when YottaDB detects a mismatch between the total block count in the file header and the expected block count based on the database file size reported by the file system. This error may appear when you perform a MUPIP INTEG FILE after a YottaDB upgrade on a database file which has not yet been opened by a process using a normal database access (which performs an automatic database file header upgrade).
 
-Action: Follow the primary message description and action as specified in this manual.
-
+Action: If there are prior messages, address them first. Extend the database by at least one block, perform at least one $GET() operation or run MUPIP INTEG -REGION. If the error persists, reconstruct the database from a backup.
 
 ------------------
 DBMRKBUSY
@@ -3524,6 +3623,16 @@ DEVPARVALREQ, A value is required for this device parameter
 Compile Time Error: This indicates that an OPEN, USE, or CLOSE command specified a valid deviceparameter that requires a value; however, one was not provided.
 
 Action: Ensure that deviceparameters have values where required. For example, the deviceparameter WRAP is valid but must include a value for the wrap length.
+
+--------------------
+DIRACCESS
+--------------------
+
+DIRACCESS, Do not have full access to directory for temporary files: pppp
+
+MUPIP Error: The message indicates that MUPIP BACKUP does not have appropriate access to the temporary directory pppp.
+
+Action: Check the path and the directory permissions for the temporary directory. You can also set the gtm_baktmpdir environment variable to specify the location of the temporary directory.
 
 --------------------
 DIRONLY
@@ -7663,6 +7772,14 @@ Compile Time Information: This indicates that the YottaDB compiler encountered a
 
 Action: Use <CTRL>-Y to abort the process.
 
+--------------------
+LASTTRANS
+--------------------
+
+LASTTRANS, Last transaction sequence number SSSS : NNNN
+
+MUPIP Information: This message appears with the output of MUPIP REPLICATE -SOURCE -SHOWBACKLOG. SSSS denotes one of the three possible states of the latest transaction sequence number - posted, sent, and acknowledged. NNNN denotes the associated count for each state. A transaction is first "posted" on the Journal Pool, "sent" to the Receiver Server, and finally "acknowledged" once the Source Server receives confirmation that it has reached the Receiver Server.
+
 ------------------
 LASTWRITERBYPAS
 ------------------
@@ -10123,6 +10240,16 @@ Receiver Server log/MUPIP Error: Issued by a Receiver Server when started with -
 
 Action: Use this qualifier only in a valid context.
 
+--------------------
+NORTN
+--------------------
+
+NORTN, Routine name missing
+
+Run Time Error: This indicates the specification used to locate a routine for compilation and / or zlinking was missing the name.
+
+Action: Correct the routine specification.
+
 -------------------
 NOSELECT
 -------------------
@@ -11318,6 +11445,26 @@ Run Time Error: This indicates that a READ fixed length (#) specified a value of
 
 Action: Change the length (i.e., the portion of the READ argument that appears after the delimiter (#)) to a valid value, or add a postconditional to the READ command to suppress the length when it is less than or equal to zero.
 
+--------------------
+READLINEFILEPERM
+--------------------
+
+READLINEFILEPERM, Readline history file ffff could not be created
+
+Run Time Warning: When using Readline for managing command line history, the process does not have the needed permissions to create history file ffff. The process continues without a history file.
+
+Action: Check the path and directory permissions needed for the process to create file ffff.
+
+--------------------
+READLINELONGLINE
+--------------------
+
+READLINELONGLINE, Entered line is greater than 32Kb long and will be truncated
+
+Run Time Warning: Readline provided LKE, DSE, or MUPIP with a command line longer than 32KB. YottaDB truncates the line and executes the truncated line.
+
+Action: Provide YottaDB with a shorter command line.
+
 -------------------------
 READONLYLKFAIL
 -------------------------
@@ -11578,6 +11725,16 @@ MUPIP Error: This indicates a problem with the semaphore xxxx associated with th
 
 Action: Review the accompanying message(s) for details.
 
+--------------------
+REPLAHEAD
+--------------------
+
+REPLAHEAD, Replicating instance is ahead of the originating instance. aaaa
+
+MUPIP Error: The message appears on the Source and Receiver Server log files when the Receiver Server is ahead due to a possible rollback on the Source Server side. aaaa contains additional information or action that the user may have to perform.
+
+Action: Action: Acknowledge or perform the appropriate action suggested with aaaa.
+
 -----------
 REPLALERT
 -----------
@@ -11616,9 +11773,9 @@ REPLCOMM
 
 REPLCOMM, Replication subsystem communication failure
 
-MUPIP Error: This is a generic error indicating that there has been a communication error between the two systems performing replication.
+MUPIP Error: This is a generic error or message indicating that there has been a communication error between the two systems performing replication.
 
-Action: Review the accompanying message(s) for more information about the cause of this error.
+Action: Review the accompanying message(s) for more information about the cause of this error. When REPLCOMM has an error severity, it accompanys a shut down of the replicating server. When REPLCOMM has an information severity, it indicates a temporary pause in replication due to a situation described by accompanying messages.
 
 ----------------------
 REPLERR
@@ -12256,6 +12413,16 @@ RESRCWAIT
 RESRCWAIT, Waiting briefly for the tttt semaphore for region rrrr (ffff) was held by PID pppp (Sem. ID: ssss)
 
 Run Time Information: A process started a three (3) second wait for an FTOK or access control semaphore. If the process with PID pppp does not release the semaphore before the timeout expires, the waiting process bypasses acquiring the semaphore. tttt identifies the semaphore type: "FTOK" or "access control"; rrrr is the region; ffff is the database file corresponding to region rrrr; ssss is the semaphore ID.
+
+Action: None required.
+
+--------------------
+RESTORESUCCESS
+--------------------
+
+RESTORESUCCESS, Restore completed successfully
+
+MUPIP Information: This message indicates MUPIP RESTORE successfully completed all specified with command actions.
 
 Action: None required.
 
@@ -13209,6 +13376,16 @@ Run Time Error: This message indicates a problem binding a socket to a port or f
 
 Action: Check the associated ENO message for more details.
 
+--------------------
+SOCKBLOCKERR
+--------------------
+
+SOCKBLOCKERR, WRITE /BLOCK error: dddd
+
+Run Time Error: This indicates a format or usage error in a WRITE /BLOCK command. Specific details are provided by dddd.
+
+Action: Correct the format or usage of the WRITE /BLOCK command.
+
 -----------------
 SOCKETEXIST
 -----------------
@@ -13311,6 +13488,16 @@ Run Time Error: This indicates that the process of waiting for an event on a soc
 
 Action: Review the accompanying message(s) for additional information.
 
+--------------------
+SOCKWAITARG
+--------------------
+
+SOCKWAITARG, nnnn argument to WRITE /WAIT xxxx
+
+Run Time Error: This indicates an error with argument number nnnn of a WRITE /WAIT as described by xxxx.
+
+Action: Correct the specified argument.
+
 ---------------------
 SOCKWRITE
 ---------------------
@@ -13340,6 +13527,16 @@ SPOREOL, Either a space or an end-of-line was expected but not found
 Compile Time Error: This indicates that a command that required an argument did not specify one or that an ELSE attempted to specify an argument.
 
 Action: Look for and correct any typographical errors.
+
+--------------------
+SRCBACKLOGSTATUS
+--------------------
+
+SRCBACKLOGSTATUS, Instance RRRR SSSS NNNN transaction(s)
+
+MUPIP Information: This message appears with the output of MUPIP REPLICATE -SOURCE -SHOWBACKLOG. RRRR specifies the name of the replicating instance. SSSS denotes three possible stages of the replicating instance in relation to the originating instance - "is behind by", "has not acknowledged" and "is ahead by". A replicating instance is behind the originating instance when there is a backlog of unacknowledged transactions. A replicating instance is ahead of the originating instance when the Receiver Server is performing an online rollback. An instance has not yet acknowledged transaction when the originating instance has not received a response from the replicating instance. NNNN is the number of transactions. There are no in-flight updates when SRCBACKLOGSTAUS reports that the replicating instance is behind by 0 transactions and the LASTTRANS messages for "posted", "sent", and "acknowledged" have the same number of transaction count.
+
+Action: Use this message as an operational aid to determine the status of the replicating instance in relation to the originating instance.
 
 --------------------
 SRCFILERR
@@ -14159,7 +14356,7 @@ Run Time Error: This indicates that a database file extension, either implicit o
 +--------------------+------------+----------------------+
 | Master Bitmap Size | Max blocks | Approx max file size |
 +====================+============+======================+
-| 8176               | 3,968Mi    | 15,872TiB            |
+| 8176               | 16Gi       | 64TiB                |
 +--------------------+------------+----------------------+
 | 496		     | 992Mi      | 3,968GiB             |
 +--------------------+------------+----------------------+
@@ -15117,13 +15314,15 @@ MUPIP Error: This indicates that SET could not modify database characteristics f
 
 Action: Review the accompanying message(s) for additional information.
 
---------------
-WCSFLUFAILED
---------------
+--------------------
+WCSFLUFAIL
+--------------------
 
-WCSFLUFAILED, EEEE error while flushing buffers at transaction number TTTT for database file DDDD
+WCSFLUFAIL, Error flushing buffers -- called from module MMMM at line LLLL
 
-Run Time Error: For a BG database file, this means that a process attempting to flush modified global buffers to disk encountered an error. EEEE is the error it encountered, for database file DDDD when attempting to flush the blocks for database transaction number TTTT. This is usually accompanied by other messages that can together help provide more information and context. If you need further assistance and have purchased support, contact your YottaDB support channel.
+All YottaDB Components Error: This indicates that an attempt to flush a buffer to disk failed.
+
+Action: For a BG database file, this means that a process attempting to flush modified global buffers to disk encountered an error. EEEE is the error it encountered, for database file DDDD when attempting to flush the blocks for database transaction number TTTT. This is usually accompanied by other messages that can together help provide more information and context. If you need further assistance and have purchased support, contact your YottaDB support channel.
 
 Action: Refer to the description of error EEEE and take appropriate action.
 

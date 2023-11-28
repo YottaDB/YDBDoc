@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -91,24 +91,34 @@ As YottaDB includes a real-time database engine that resides within the address 
 
 When the YottaDB database engine initializes on the first call into the API, it initializes signal handling as follows:
 
-- :code:`SIGALRM` – YottaDB uses this signal extensively and sets its own signal handler for :code:`SIGALRM`. Application code should *not* use :code:`SIGALRM`, and must *never* replace YottaDB's handler. YottaDB provides an API for applications that need timing functionality (see :ref:`utility-funcs`).
-- :code:`SIGCHLD` (formerly :code:`SIGCLD`) – Set to :code:`SIG_DFL` for the default action.
-- :code:`SIGTSTP`, :code:`SIGTTIN`, and :code:`SIGTTOU` – As suspending a real-time database engine at an inopportune moment is undesirable, YottaDB sets a signal handler for these signals that defers process suspension until the engine is in a state where it is safe to suspend.
-- :code:`SIGCONT` - YottaDB sets a handler that continues a suspended process, and nothing if the process is not suspended.
-- :code:`SIGUSR1` – As YottaDB uses this signal to asynchronously execute the M code in the `$zinterrupt intrinsic special variable <../ProgrammersGuide/isv.html#zinterrupt-isv>`_, it sets an appropriate handler. If non-M code is currently active when the process receives a :code:`SIGUSR1`, the handler defers the signal till such time as M code is active. If an application uses no M code whatsoever, and does not intend to, it can change the :code:`SIGUSR1` handler after the first call to YottaDB. If an application has, or in the future may have, M code, it is best to leave the YottaDB handler in place.
-- :code:`SIGUSR2` – As YottaDB processes other than the servers for client/server operation do not use :code:`SIGUSR2`, YottaDB sets a :code:`SIG_IGN` handler. :code:`SIGUSR2` is available for applications to use. To do so, set a handler after the first call to YottaDB.
-- :code:`SIGINT` - When the main program is :code:`yottadb`, YottaDB sets a handler for SIGINT (aka Ctrl-C) and the behavior is as documented at `CENABLE <../ProgrammersGuide/ioproc.html#cenable>`_. When the main program is not :code:`yottadb` (i.e. a call-in, Simple API etc.) see next bullet.
-- :code:`SIGINT`, :code:`SIGQUIT` and :code:`SIGTERM` – YottaDB sets a signal handler to terminate the process without generating a core dump for SIGQUIT, SIGTERM and SIGINT (SIGINT is only applicable in case main program is not :code:`yottadb`).
-  - If the process is in the middle of a non-interruptible operation (for example, database commit logic) the signal handler will defer process termination until the operation finishes, in order to ensure database integrity.
-  - The signal handler makes a note of every successive signal that is sent.
-  - If 3 such signals are sent in succession (and the process has still not terminated), the signal handler proceeds to terminate the process immediately even if it is in the middle of a non-interruptible operation.
-  - In the case of a main program that is a call-in, Simple API etc.
+- SIGALRM – YottaDB uses this signal extensively and sets its own signal handler for SIGALRM. Application code should *not* use SIGALRM, and must *never* replace YottaDB's handler. YottaDB provides an API for applications that need timing functionality (see :ref:`utility-funcs`).
+- SIGCHLD (formerly SIGCLD) – Set to SIGDFL` for the default action.
+- SIGTSTP, SIGTTIN, and SIGTTOU – As suspending a real-time database engine at an inopportune moment is undesirable, YottaDB sets a signal handler for these signals that defers process suspension until the engine is in a state where it is safe to suspend.
+- SIGCONT - YottaDB sets a handler that continues a suspended process, and does nothing if the process is not suspended.
+- SIGUSR1 – As YottaDB uses this signal to asynchronously execute the M code in the `$zinterrupt <../ProgrammersGuide/isv.html#zinterrupt-isv>`_ intrinsic special variable, it sets an appropriate handler. If non-M code is currently active when the process receives a SIGUSR1, the handler defers the signal till such time as M code is active. If an application uses no M code whatsoever, and does not intend to, it can change the SIGUSR1 handler after the first call to YottaDB. If an application has, or in the future may have, M code, it is best to leave the YottaDB handler in place.
+- SIGUSR2 – If the environment variable `ydb_treat_sigusr2_like_sigusr1 <../AdminOpsGuide/basicops.html#ydb-treat-sigusr2-like-sigusr1>`_ is not set, YottaDB sets a SIG_IGN handler. SIGUSR2 is available for applications to use. To do so, set a handler after the first call to YottaDB. If the environment variable is set, YottaDB invokes $zinterrupt as described above, except that it also sets the `$zyintrsig <../ProgrammersGuide/isv.html#zyintrsig>`_ environment variable to 1 so that the code in $zinterrupt can determine which signal it is responding to.
+- SIGINT - When the main program is :code:`yottadb`, YottaDB sets a handler for SIGINT (aka Ctrl-C) and the behavior is as documented at `CENABLE <../ProgrammersGuide/ioproc.html#cenable>`_. When the main program is not :code:`yottadb` (i.e. a call-in or Simple API) see below.
+- SIGABRT, SIGBUS, SIGFPE, SIGILL, SIGIOT, SIGSEGV and SIGTRAP – These signals are fatal, and the YottaDB handler terminates the process with a core dump. See the discussion about core dumps in the description of :ref:`ydb-fork-n-core-fn`. Although YottaDB normally cleans up processes' interaction with databases on exit, these signals can indicate that the process is in a bad state and that its code and data cannot be trusted. The process therefore does not attempt to clean up before exit. After a fatal signal, *no* YottaDB functions can be called except :ref:`ydb-exit-fn`.  In the event an application *must* use its own handler for one of these signals, it must either save YottaDB's handler, and drive it before process termination or call :ref:`ydb-exit-fn` prior to process exit. [#]_
 
-    - The signal handler additionally checks if it is safe to interrupt the program and if so invokes any signal handlers, for the currently received signal, established by the main program.
-    - If the main program had not established a signal handler for these signals, the default signal handler (SIG_DFL) would be in effect and since these signals are considered fatal/terminating signals by YottaDB, the YottaDB signal handler terminates the process.
-    - If the main program had explicitly set these signals to be ignored (SIG_IGN), then the YottaDB signal handler does not drive any application signal handler for these signals.
-- :code:`SIGABRT`, :code:`SIGBUS`, :code:`SIGFPE`, :code:`SIGILL`, :code:`SIGIOT`, :code:`SIGSEGV` and :code:`SIGTRAP` – These signals are fatal, and the YottaDB handler terminates the process with a core dump. See the discussion about core dumps in the description of :ref:`ydb-fork-n-core-fn`. Although YottaDB normally cleans up processes' interaction with databases on exit, these signals can indicate that the process is in a bad state and that its code and data cannot be trusted. The process therefore does not attempt to clean up before exit. After a fatal signal, *no* YottaDB functions can be called except :ref:`ydb-exit-fn`.  In the event an application *must* use its own handler for one of these signals, it must either save YottaDB's handler, and drive it before process termination or call :ref:`ydb-exit-fn` prior to process exit. [#]_
-- YottaDB saves an application's signal handler during initialization and restores it if :code:`ydb_exit()` is explicitly called prior to process exit. YottaDB does not reset existing signal handlers for signals it does not handle but calls the saved signal handler if the YottaDB handler returns (and doesn't exit).
+In the case of a main program that calls YottaDB through the Simple API, YottaDB handles SIGINT, SIGQUIT. and SIGTERM as follows:
+
+- The first call by the main program into YottaDB establishes YottaDB signal handlers for these signals overriding any signal handlers established by the main program.
+- On subsequent receipt of one of these signals, the YottaDB signal handler checks if the database engine is in a state where it can be safely interrupted.
+
+  - If not safe (in the middle of a non-interruptible operation, like database commit logic), YottaDB defers handling the signal until the database engine is in a safe state, when the operation finishes.
+  - If safe, the YottaDB signal handler invokes the signal handler, if any, defined by the main program. There are two special cases:
+
+    * If the main program has not established a signal handler for these signals, the default signal handler (SIG_DFL) would be in effect. Since these signals are considered fatal/terminating signals by YottaDB, it terminates the process.
+    * If the main program has explicitly set these signals to be ignored (SIG_IGN), then YottaDB signal does not drive any application signal handler for these signals.
+
+  - However, if three such signals are sent in succession (and the process has still not terminated), the signal handler proceeds to terminate the process immediately even if it is in the middle of a non-interruptible operation. 
+
+A consequence of this behavior for `Flask <https://palletsprojects.com/p/flask/>`_ applications is that:
+
+- Ctrl-C on an interactive Flask application, that uses the YDBPython wrapper to make calls into YottaDB, stops the application because Flask sets up a signal handler for Ctrl-C (SIGINT) to terminate the process.
+- SIGTERM on a non-interactive Flask application, that uses the YDBPython wrapper to make calls into YottaDB, terminates the application because Flask sets the SIGTERM handler to SIG_DFL (the default signal handler).
+
+YottaDB saves an application's signal handler during initialization and restores it if :code:`ydb_exit()` is explicitly called prior to process exit. YottaDB does not reset existing signal handlers for signals it does not handle but calls the saved signal handler if the YottaDB handler returns (and doesn't exit).
 
 .. [#] Other YottaDB processes will attempt to automatically clean up
        after a process terminates abnormally. However, this is not
@@ -132,7 +142,7 @@ As database operations such as :ref:`ydb-set-s-st-fn` set timers, subsequent sys
 If YottaDB is used within a process with other code that cannot co-exist, or be made to co-exist, with YottaDB, for example, by safely saving and restoring handlers, separate the logic into multiple processes or use a client/server database configuration to place application logic and the database engine in separate processes (see :ref:`client-server-op`).
 
 .. note::
-   To reiterate because of its importance: **never** replace YottaDB's :code:`SIGALRM` handler.
+   To reiterate because of its importance: **never** replace YottaDB's SIGALRM handler.
 
 -------
 Forking

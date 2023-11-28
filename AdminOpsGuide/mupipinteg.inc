@@ -1,14 +1,14 @@
-.. ###############################################################
-.. #                                                             #
-.. # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
-.. # All rights reserved.                                        #
-.. #                                                             #
-.. #     This source code contains the intellectual property     #
-.. #     of its copyright holder(s), and is made available       #
-.. #     under a license.  If you do not know the terms of       #
-.. #     the license, please stop and do not read further.       #
-.. #                                                             #
-.. ###############################################################
+.. ################################################################
+.. #                                                              #
+.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries. #
+.. # All rights reserved.                                         #
+.. #                                                              #
+.. #     This source code contains the intellectual property      #
+.. #     of its copyright holder(s), and is made available        #
+.. #     under a license.  If you do not know the terms of        #
+.. #     the license, please stop and do not read further.        #
+.. #                                                              #
+.. ################################################################
 
 Performs an integrity check on a YottaDB database file. You can perform structural integrity checks on one or more regions in the current Global Directory without bringing down (suspending database updates) your application. However, a MUPIP INTEG on a single file database requires standalone access but does not need a Global Directory. The order in which the MUPIP INTEG command selects database regions is a function of the file system layout and may vary as files are moved or created. Execute MUPIP INTEG operations one database file at a time to generate an report where the output always lists database files in a predictable sequence. For example, to compare output with a reference file, run INTEG on one file at a time.
 
@@ -278,7 +278,7 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 .. code-block:: none
 
-   -R[EGION]=region-list
+   -R[EGION]=region-list | -R[EGION] region-list
 
 * The region-list identifies the target of INTEG. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 

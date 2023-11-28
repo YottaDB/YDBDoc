@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -178,11 +178,11 @@ The format of the CREATE command is:
 
 .. code-block:: none
 
-   CR[EATE] [-R[EGION]=region-name]
+   CR[EATE] [-R[EGION]=region-name | -R[EGION] region name]
 
 The single optional REGION qualifier specifies a region for which to create a database file.
 
-Note that one YottaDB database file grows to a maximum size of 17,179,869,184(16Gi) blocks. This means, for example, that with an 4KiB block size, the maximum single database file size is 131,072GiB (4KiB*16Gi). Also, this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files.
+Note that one YottaDB database file grows to a maximum size of 17,179,869,184(16Gi) blocks. This means, for example, that with an 4KiB block size, the maximum single database file size is 64TiB (4KiB*16Gi). Also, this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files.
 
 Note that a MUPIP CREATE command that explicitly specifies a region which is tagged as :ref:`AutoDB <region-no-autodb>`, creates the database file for that region if it does not exist.
 
@@ -196,7 +196,7 @@ The format of the REGION qualifier is:
 
 .. code-block:: none
 
-   -R[EGION]=region-name
+   -R[EGION]=region-name | -R[EGION] region-name
 
 The region-name is case-insensitive. The specified region name is converted into upper case before processing.
 
@@ -253,7 +253,7 @@ The MUPIP DUMPFHEAD command displays information about one or more database file
 
 .. code-block:: none
 
-   DU[MPFHEAD] {-F[ILE] file-name | -R[EGION] region-list}
+   DU[MPFHEAD] {-F[ILE] file-name | -R[EGION]=region-list | -R[EGION] region-list}
 
 
 ~~~~~~~~~~~~~~~~
@@ -278,7 +278,7 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 .. code-block:: none
 
-   -R[EGION] region-list
+   -R[EGION]=region-list | -R[EGION] region-list
 
 * The region-list identifies the target of DUMPFHEAD. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
@@ -440,7 +440,7 @@ Backs up certain globals or extracts data from the database for use by another s
     -LA[BEL]=text
     -[NO]L[OG]
     -[NO]NULL_IV
-    -R[EGION]=region-list
+    -R[EGION]=region-list | -R[EGION] region-list
     -SE[LECT]=global-name-list]
    ]
    {-ST[DOUT]|file-name}
@@ -584,7 +584,7 @@ Restricts MUPIP EXTRACT to a set of regions. The format of the REGION qualifier 
 
 .. code-block:: none
 
-   -R[EGION]=region-list
+   -R[EGION]=region-list | -R[EGION] region-list
 
 region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
@@ -1592,7 +1592,7 @@ The format of the REGION qualifier is:
 
 .. code-block:: none
 
-   -R[EGION] region-list
+   -R[EGION=region-list | -R[EGION] region-list
 
 region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
@@ -1954,10 +1954,10 @@ The RUNDOWN command may include one of the following qualifiers:
 
 .. code-block:: none
 
-   -F[ile]
-   -R[egion]=region-list
-   -RELinkctl [dir1]
-   -Override
+   -F[ILE]
+   -R[EGION]=region-list | -R[EGION] region-list
+   -REL[INKCTL] [dir1]
+   -O[VERRIDE]
 
 If the RUNDOWN command does not specify either FILE or REGION, it checks all the IPC resources (shared memory) on the system and if they are associated with a YottaDB database, attempts to rundown that file. MUPIP RUNDOWN with no argument removes any statistics database file resources associated with actual database file resources it can remove.
 
@@ -2025,7 +2025,7 @@ Estimates and reports the size of global variables using a format that is simila
 
 .. code-block:: none
 
-   MUPIP SI[ZE] [-h[euristic]=estimation_technique] [-s[elect]=global-name-list] [-r[egion]=region-list] [-a[djacency]=integer] [-su[bscript]]=global-list
+   MUPIP SI[ZE] [-h[euristic]=estimation_technique] [-s[elect]=global-name-list] [-a[djacency]=integer] [-su[bscript]]=global-list [-r[egion]=region-list | r[egion] region-list]
 
 The optional qualifiers of MUPIP SIZE are:
 
@@ -2093,7 +2093,7 @@ Specifies the region on which MUPIP SIZE runs. If REGION is not specified, MUPIP
 
 .. code-block:: none
 
-   -R[EGION]=region-list
+   -R[EGION]=region-list | -R[EGION] region-list
 
 The regions in the region-list are case-insensitive. The specified region-list is converted into upper case before processing.
 
@@ -2493,7 +2493,7 @@ MUPIP Command Summary
 |                                      |                                             | * S[INCE]={DATABASE|BYTESTREAM|RECORD}                                                   | N                 |
 |                                      |                                             | * T[RANSACTION=hexa;transaction_number]                                                  | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| CR[EATE]                             | \-                                          | * R[EGION]=region-name                                                                   | N.A.              |
+| CR[EATE]                             | \-                                          | * R[EGION]=region-name \| R[EGION] region-name                                           | N.A.              |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | DO[WNGRADE]                          | file-name                                   | * V[ERSION]={V4|V5}                                                                      | Y                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
@@ -2513,7 +2513,7 @@ MUPIP Command Summary
 |                                      |                                             | * NU[LL_IV]                                                                              | N                 |
 |                                      |                                             | * S[ELECT]=global-name-list                                                              | N                 |
 |                                      |                                             | * O[CHSET]=character-set                                                                 | N                 |
-|                                      |                                             | * R[EGION]=region-list                                                                   | N                 |
+|                                      |                                             | * R[EGION]=region-list \| [R[EGION] region-name                                          | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | F[REEZE]                             | region-list                                 | * DBG                                                                                    | N                 |
 |                                      |                                             | * OF[F] [OV[ERRIDE]]                                                                     | N                 |
@@ -2622,7 +2622,7 @@ MUPIP Command Summary
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | SI[ZE]                               | global-name-list region-list                | * H[EURISTIC]=estimation_technique                                                       | N                 |
 |                                      |                                             | * S[ELECT]=global-name-list                                                              | N                 |
-|                                      |                                             | * R[EGION]=region-list                                                                   | N                 |
+|                                      |                                             | * R[EGION]=region-list  \| [R[EGION] region-name                                         | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | ST[OP]                               | process-id                                  | * process-id                                                                             | N.A.              |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
