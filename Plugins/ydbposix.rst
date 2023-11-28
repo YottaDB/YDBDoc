@@ -79,6 +79,8 @@ The expected output of :code:`yottadb -run %ydbposixtest` is as below; manually 
     Daylight Savings Time is not in effect
     PASS mktime()
     PASS Microsecond resolution
+    PASS GETRLIMIT
+    PASS GETUID
     PASS regmatch^%ydbposix 1
     PASS regfree^%ydbposix
     PASS REGMATCH^%ydbposix 1
@@ -377,11 +379,23 @@ Takes a symbolic regular file mode constant in fmsymconst and returns the numeri
 	"S_ISGID",  "S_ISUID", "S_ISVTX", "S_IWGRP", "S_IWOTH", "S_IWUSR", "S_IXGRP",
 	"S_IXOTH",  "S_IXUSR"
 
++++++++++++++++++++++++++++++++++++++++
+$&ydbposix.getrlimit(rlimit,.cv,.errno)
++++++++++++++++++++++++++++++++++++++++
+
+Provides the current "soft" limit of the resource for the process.  See man getrlimit on your POSIX system for more information.
+
 ++++++++++++++++++++++++++++++++++++++++++++++
 $&ydbposix.gettimeofday(.tvsec,.tvusec,.errno)
 ++++++++++++++++++++++++++++++++++++++++++++++
 
 Returns the current time as the number of seconds since the UNIX epoch (00:00:00 UTC on 1 January 1970) and the number of microseconds within the current second. See :code:`man gettimeofday` on your POSIX system for more information.
+
++++++++++++++++++++++++
+$&ydbposix.getuid(.uid)
++++++++++++++++++++++++
+
+Provides the uid for the current process.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 $&ydbposix.localtime(tvsec,.sec,.min,.hour,.mday,.mon,.year,.wday,.yday,.isdst,.errno)
