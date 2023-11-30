@@ -118,6 +118,7 @@ The expected output of :code:`yottadb -run %ydbposixtest` is as below; manually 
     PASS CP
     PASS Nanosecond resolution
     PASS SYSCONF
+    PASS LIBM
 
 ---
 Use
@@ -293,6 +294,137 @@ $$zhorolog^%ydbposix
 
 Provides the time in $horolog format, but with microsecond resolution of the number of seconds since midnight. Note that microsecond resolution does not mean microsecond accuracy. This function is deprecated and retained for backward compatibility. Consider using `$ZHOROLOG <https://docs.yottadb.com/ProgrammersGuide/isv.html#zhorolog>`_ instead.
 
+--------------------------------------
+(High level) ^%ydbposix Math Functions
+--------------------------------------
+These functions are wrappers around the low level Libm functions, described in the next section.
+
+All functions return the output, and the error is in an reference variable. If error is 0, it was successful; if error < 0, an error occurred.
+
+.. code-block:: none
+
+	YDB>set output=$$exp^%ydbposix(x,.error)
+
+++++++++++++++++++++++++++++++
+$$exp^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++
+
+The exp function returns the exponential value of the number x, x if it is executed
+successfully. That is, the result is e^x.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$$log^%ydbposix(x,.error), $$log10^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The log function returns the logarithm of a number (base e).
+The log10 function returns the logarithm of a number (based 10).
+If x<0, these functions will return an error.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$$cos^%ydbposix(x,.error), $$sin^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The sin/cos functions return the sine/cosine of the number x.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$$arcsin^%ydbposix(x,.error), $$arccos^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The acos function returns the arccosine of the number x.
+The asin function returns the arcsin of the number x.
+If x<-1 or x>1, acos/asin returns an error (success==-1)
+
+
+++++++++++++++++++++++++++++++
+$$tan^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++
+
+The tan function returns the tangent of the number x.
+
+++++++++++++++++++++++++++++++
+$$arctan^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++
+
+The function calculates the arctangent of the number x.
+
+++++++++++++++++++++++++++++++
+$$sqrt^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++
+
+Calculates the square root of the number x.
+If the value of x<0, returns an error.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$$cosh^%ydbposix(x,.error), $$sinh^%ydbposix(x,.error), $$tanh^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Calculates the hyperbolic cosine of the number x.
+Calculates the hyperbolic sine of the number x.
+Calculates the hyperbolic tangent of the number x.
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$$acosh^%ydbposix(x,.error), $$asinh^%ydbposix(x,.error), $$atanh^%ydbposix(x,.error)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Calculates the inverse hyperbolic cosine, sine, tangent.
+For acosh, if the value x<1 returns an error.
+For atanh, if x<-1 or x>1 will return an error.
+
+++++++++++++++++++++++++++++++
+$$ceil^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++
+
+Calculates the upper limit of the value.
+
+++++++++++++++++++++++++++++++
+$$fabs^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++
+
+Calculates the absolute value of the number x.
+
+++++++++++++++++++++++++++++++
+$$floor^%ydbposix(x,.error)
+++++++++++++++++++++++++++++++
+
+Rounds the value down to an integer.
+
+++++++++++++++++++++++++++++++
+$$pow^%ydbposix(x,y,.error)
+++++++++++++++++++++++++++++++
+
+Calculates the value of x raised to the power of y.
+
+++++++++++++++++++++++++++++++
+$$fmod^%ydbposix(x,y,.error)
+++++++++++++++++++++++++++++++
+
+Calculates the remainder of the number.
+
+++++++++++++++++++++++++++++++
+$$fdim^%ydbposix(x,y,.error)
+++++++++++++++++++++++++++++++
+
+Defines the positive difference between the numbers x and y.
+
+++++++++++++++++++++++++++++++
+$$fmax^%ydbposix(x,y,.error)
+++++++++++++++++++++++++++++++
+
+Defines the larger value of x and y.
+
+++++++++++++++++++++++++++++++
+$$fmin^%ydbposix(x,y,.error)
+++++++++++++++++++++++++++++++
+
+Defines the smallest value of x and y.
+
+++++++++++++++++++++++++++++++
+$$fma^%ydbposix(x,y,z,.error)
+++++++++++++++++++++++++++++++
+
+Multiplies x and y and adds z.
+
 ----------------------------
 Examples of ^%ydbposix usage
 ----------------------------
@@ -331,6 +463,7 @@ Below are examples of usage of high level entryrefs in ^%ydbposix. The file _ydb
     YDB>write $$version^%ydbposix
     v4.0.0
     YDB>
+
 
 --------------------------
 (Low Level) ydbposix calls
@@ -557,6 +690,136 @@ $&ydbposix.utimes(file,.errno)
 Updates the access and modification timestamps of a file. See :code:`man utimes` for more information.
 
 :code:`_ydbposixtest.m` contains examples of use of the low level ydbposix interfaces.
+
+-----------------------------------
+(Low Level) ydbposix Math Functions
+-----------------------------------
+
+All functions return the success value. If 0, it was successful; if success < 0, an error occurred.
+
+.. code-block:: none
+
+	YDB>set success=$&ydbposix.log10(1,.output)
+
+++++++++++++++++++++++++++++++
+$&ydbposix.exp(x,.out)
+++++++++++++++++++++++++++++++
+
+The exp function returns the exponential value of the number x, x if it is executed
+successfully. That is, the result is e^x.
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+$&ydbposix.log(x,.out), $&ydbposix.log10(x,.out)
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+The log function returns the logarithm of a number (base e).
+The log10 function returns the logarithm of a number (based 10).
+If x<0, these functions will return an error.
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+$&ydbposix.cos(x,.out), $&ydbposix.sin(x,.out)
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+The sin/cos functions return the sine/cosine of the number x.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+$&ydbposix.arcsin(x,.out), $&ydbposix.arccos(x,.out)
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The acos function returns the arccosine of the number x.
+The asin function returns the arcsin of the number x.
+If x<-1 or x>1, acos/asin returns an error (success==-1)
+
+
+++++++++++++++++++++++++++++++
+$&ydbposix.tan(x,.out)
+++++++++++++++++++++++++++++++
+
+The tan function returns the tangent of the number x.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.arctan(x,.out)
+++++++++++++++++++++++++++++++
+
+The function calculates the arctangent of the number x.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.sqrt(x,.out)
+++++++++++++++++++++++++++++++
+
+Calculates the square root of the number x.
+If the value of x<0, returns an error.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$&ydbposix.cosh(x,.out), $&ydbposix.sinh(x,.out), $&ydbposix.tanh(x,.out)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Calculates the hyperbolic cosine of the number x.
+Calculates the hyperbolic sine of the number x.
+Calculates the hyperbolic tangent of the number x.
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+$&ydbposix.acosh(x,.out), $&ydbposix.asinh(x,.out), $&ydbposix.atanh(x,.out)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Calculates the inverse hyperbolic cosine, sine, tangent.
+For acosh, if the value x<1 returns an error.
+For atanh, if x<-1 or x>1 will return an error.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.ceil(x,.out)
+++++++++++++++++++++++++++++++
+
+Calculates the upper limit of the value.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.fabs(x,.out)
+++++++++++++++++++++++++++++++
+
+Calculates the absolute value of the number x.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.floor(x,.out)
+++++++++++++++++++++++++++++++
+
+Rounds the value down to an integer.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.pow(x,y,.out)
+++++++++++++++++++++++++++++++
+
+Calculates the value of x raised to the power of y.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.fmod(x,y,.out)
+++++++++++++++++++++++++++++++
+
+Calculates the remainder of the number.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.fdim(x,y,.out)
+++++++++++++++++++++++++++++++
+
+Defines the positive difference between the numbers x and y.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.fmax(x,y,.out)
+++++++++++++++++++++++++++++++
+
+Defines the larger value of x and y.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.fmin(x,y,.out)
+++++++++++++++++++++++++++++++
+
+Defines the smallest value of x and y.
+
+++++++++++++++++++++++++++++++
+$&ydbposix.fma(x,y,z,.out)
+++++++++++++++++++++++++++++++
+
+Multiplies x and y and adds z.
 
 ----------------------------
 The %ydbposix local variable
