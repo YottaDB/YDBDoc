@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -77,16 +77,13 @@ The format of the RECALL command is:
 
 .. code-block:: none
 
-   REC[ALL] [intlit|string]
+   REC[ALL] [intlit|strlit]
 
 * The optional integer literal specifies a previously entered command by counting back from the present.
-* The optional string specifies the most recently entered command line that starts with characters matching the (case-sensitive) string. Note that this specification string is the rest of the line after "RECALL ", and is specified without quotes.
-* When the RECALL command has no argument, it displays the entire history of Direct Mode command entries up to a maximum (see note below).
+* The optional string literal specifies the most recently entered command line that starts with characters matching the (case-sensitive) literal.
+* When the RECALL command has no argument, it displays up to a maximum of 99 available previous Direct Mode entries.
 
-If the Direct Mode command history has just started, YottaDB may not have saved many lines and therefore you will not have many lines to look at. The first entered YottaDB command line has the number one (1), and more recent lines have higher numbers. YottaDB does not include the RECALL command in the saved command history. If the RECALL command is issued from a location other than the Direct Mode prompt, YottaDB issues a run-time error.
-
-.. note::
-   The RECALL command has two modes: a traditional, historical mode, and a more modern mode that can use `GNU Readline <https://www.gnu.org/software/readline/>`_ if it is installed on the system. YottaDB uses Readline if, at process startup, the environment variable :code:`ydb_readline` is set to :code:`1` (recommended), or a case-insensitive :code:`TRUE` or :code:`YES`. The maximum history size is specified in the :code:`.inputrc` file (or other file specified by the :code:`INPUTRC` environment variable used by Readline), and recalled line numbers may be unintuitive the first time time YottaDB is run after reducing the history size. If :code:`ydb_readline` is any other value or does not exist, YottaDB uses the traditional mode. Due to a limitation held over from older versions of readline, a recalled command is executed immediately without an opportunity to edit it. However, readline makes its own command recall and editing available using keyboard shortcuts; refer to the Readline documentation for details.
+If the session in Direct Mode has just started, you may not have entered 99 lines for YottaDB to save and therefore you will not have 99 lines to look at. The most recently entered YottaDB command line has the number one (1), older lines have higher numbers. YottaDB does not include the RECALL command in the listing. If the RECALL command is issued from a location other than the Direct Mode prompt, YottaDB issues a run-time error.
 
 Example:
 
@@ -126,7 +123,7 @@ Example:
    YDB>recall write
    YDB>write $zgbldir
 
-This RECALLs "write", the most recent command beginning with this text. Note that although the RECALL command itself may be entered in upper or lower case, its operation is case sensitive: it treats the text argument :code:`WRITE` and :code:`write` differently, that is, it treats them case-sensitively. If you first type the WRITE command in lower-case and then enter :code:`WRITE` in upper-case as the RECALL string, the RECALL command does not find a match.
+This RECALLs "WRITE", the command most recently beginning with this text. Note that the RECALL command text is case sensitive. The RECALL command with a text argument treats WRITE and write differently, that is, it treats them case sensitively. If you first type the WRITE command in lower-case and then type WRITE in upper-case to recall it, the RECALL command does not find a match.
 
 ~~~~~~~~~~~~~
 Line Editing
