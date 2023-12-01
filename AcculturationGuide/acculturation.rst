@@ -603,11 +603,11 @@ You can now query the Northwind database from within the VM using the ``octo`` c
 
 .. code-block:: sql
 
-select * from employees inner join orders on employees.employeeid = orders.employeeid;
+    select * from employees inner join nwOrders on employees.employeeid = nwOrders.employeeid;
 
 If Octo was correctly installed and the data correctly loaded, then Octo will output a number of SQL data rows for this query. To exit the Octo prompt, you can enter the command ``\q``, or just use CTRL-C.
 
-You can also connect to the Octo installation the virtual machine from your host machine by using the ``rocto`` remote Octo server. To do this, first create a new remote user using the ``%ydboctoAdmin`` Octo administration tool, e.g.:
+You can also connect to the Octo installation on the virtual machine from your host machine by using the ``rocto`` remote Octo server. To do this, first create a new remote user using the ``%ydboctoAdmin`` Octo administration tool, e.g.:
 
 .. code-block:: bash
 
