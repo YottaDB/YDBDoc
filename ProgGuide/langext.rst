@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -788,13 +788,13 @@ Example:
 Extensions for Unicode® standard support
 -----------------------------------------------------
 
-To represent and process strings that use international characters, YottaDB processes can use Unicode.
+To represent and process strings that use international characters, YottaDB processes can use the UTF-8 encoding defined by the Unicode standard. YottaDB Unicode support is optional, and the :code:`--utf8` option of the `ydbinstall / ydbinstall.sh script <../AdminOpsGuide/installydb.html#ydbinstall-script>`_ installs YottaDB with Unicode support.
 
-If the environment variable ydb_chset has a value of UTF-8 and either LC_ALL or LC_CTYPE is set to a locale with UTF-8 support (for example, zh_CN.utf8), a YottaDB process interprets strings as containing characters encoded in the UTF-8 representation. In the UTF-8 mode, YottaDB no longer assumes that one character is one byte, or that the glyph display width of a character is one. Depending on how ICU is built on a computer system, in order to operate in UTF-8 mode, a YottaDB process may well also need a third environment variable, ydb_icu_version set appropriately.
+If the environment variable `ydb_chset <../AdminOpsGuide/basicops.html#ydb-chset>`_ has a value of UTF-8 and the locale is one with UTF-8 support (for example, zh_CN.utf8), a YottaDB process interprets strings as containing characters encoded in the UTF-8 encoding. The locale is determined by the locale setting LC_CTYPE as reported by the :code:`locale` command. In UTF-8 mode, YottaDB no longer assumes that one character is one byte, or that the glyph display width of a character is one. Depending on how ICU is built on a computer system, in order to operate in UTF-8 mode, a YottaDB process may well also need a third environment variable, `ydb_icu_version <../AdminOpsGuide/basicops.html#ydb-icu-version>`_ set appropriately.
 
 If the environment variable ydb_chset has no value, the string "M", or any value other than "UTF-8", YottaDB treats each 8-bit byte as a character, which suffices for English, and many single-language applications.
 
-All YottaDB components related to M mode reside in the top level directory in which a YottaDB release is installed and the environment variable ydb_dist should point to that directory for M mode processes. All Unicode-related components reside in the utf8 subdirectory and the environment variable ydb_dist should point to that subdirectory for UTF-8 mode processes. So, in addition to the values of the environment variables ydb_chset and LC_ALL/LC_CTYPE, ydb_dist for a UTF-8 process should also point to the utf8 subdirectory.
+Object code for routines written in M and which are part of YottaDB reside in a :code:`libyottadbutil.so` shared library. As object code for routines compiled in M mode differs from object code compiled in UTF-8 mode, when UTF-8 support is installed. The former reside in :code:`$ydb_dist/libyottadbutil.so` and the latter in :code:`$ydb_dist/utf8/libyottadbutil.so`. The environment variable `ydb_routines <../AdminOpsGuide/basicops.html#ydb-routines>`_ should therefore include the shared library that matches ydb_chset. Attempting to execute a routine compiled in a mode that does not match ydb_chset results in a `DLLCHSETM <../MessageRecovery/errors.html#dllchsetm>`_ or `DLLCHSETUTF8 <../MessageRecovery/errors.html#dllchsetutf8>`_ error.
 
 M mode and UTF-8 mode are set for the process, not for the database. As a subset of Unicode, ASCII characters ($CHAR() values 0 through 127) are interpreted identically by processes in M and UTF-8 modes. The indices and values in the database are simply sequences of bytes and therefore it is possible for one process to interpret a global node as encoded in UTF-8 and for another to interpret the same node as bytecodes. Note that such an application configuration would be extremely unusual, except perhaps during a transition phase or in connection with data import/export.
 

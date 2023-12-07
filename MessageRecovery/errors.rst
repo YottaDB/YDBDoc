@@ -3569,21 +3569,21 @@ Action: Report the error to your YottaDB support channel with complete operator 
 DLLCHSETM
 -----------------
 
-DLLCHSETM, Routine XXX in library YYY was compiled with CHSET=M which is different from $ZCHSET. Recompile with CHSET=UTF-8 and re-link.
+DLLCHSETM, Routine XXX in library YYY was compiled with CHSET=M which is different from $ZCHSET.
 
 Run Time Error: This error is triggered when a UTF-8 mode process attempts to execute a shared library's routine that was compiled in M-mode.
 
-Action: Recompile and relink the routine using UTF-8-mode settings or switch to M mode.
+Action: Change ydb_routines to include the routine compiled in UTF-8 mode. For example, in UTF-8 mode, `$ydb_routines <../AdminOpsGuide/basicops.html#ydb-routines>`_ would typically include the shared library :code:`$ydb_dist/utf8/libyottadbutil.so`. If instead it includes the shared library :code:`$ydb_dist/libyottadbutil.so`, the process would get a DLLCHSETM error when attempt to execute code from the latter.
 
 --------------
 DLLCHSETUTF8
 --------------
 
-DLLCHSETUTF8, Routine XXX in library YYY was compiled with CHSET=UTF-8 which is different from $ZCHSET. Recompile with CHSET=M and re-link.
+DLLCHSETUTF8, Routine XXX in library YYY was compiled with CHSET=UTF-8 which is different from $ZCHSET.
 
 Run Time Error: This error is triggered when an M mode process attempts to execute a shared library's routine that was compiled in UTF-8 mode.
 
-Action: Recompile and relink the routine using M-mode settings or switch to UTF-8 mode.
+Action: Change ydb_routines to include the routine compiled in M mode. For example, in M mode, `$ydb_routines <../AdminOpsGuide/basicops.html#ydb-routines>`_ would typically include the shared library :code:`$ydb_dist/libyottadbutil.so`. If instead it includes the shared library :code:`$ydb_dist/utf8/libyottadbutil.so`, the process would get a DLLCHSETUTF8 error when attempt to execute code from the latter.
 
 ------------------
 DLLNOCLOSE
@@ -10013,15 +10013,15 @@ NONUTF8LOCALE
 
 NONUTF8LOCALE, Locale has character encoding (cccc) which is not compatible with UTF-8 character set
 
-Run Time Error: This error is reported by YottaDB when it recognizes that the LC_CTYPE locale category cccc (as shown by the UNIX locale command) does not use UTF-8 character encoding when ydb_chset is "UTF-8".
+Run Time Error: This error is reported by a YottaDB process in UTF-8 mode when the LC_CTYPE locale category cccc (as reported by the :code:`locale` command) does not use UTF-8 character encoding.
 
-Action: Set the environment variable LC_CTYPE to a Unicode locale name with UTF-8 character encoding. Note that LC_ALL, if defined, overrides LC_CTYPE. The name of the locale varies between different UNIX platforms, but mostly in the form of <lang>_<country>.<charset>, where each element (without the angular brackets) has the form shown below:
+Action: Set the locale to one whose locale setting LC_CTYPE is a Unicode locale name with UTF-8 character encoding. The name of the locale varies between different UNIX platforms, but mostly in the form of <lang>_<country>.<charset>, where each element (without the angular brackets) has the form shown below:
 
 - <lang> is the language code in lower case (such as en, or de).
 - <country> is the country name in upper case (such as US, GB)
 - <charset> is the character set encoding (such as UTF-8, ISO8859-1)
 
-Refer to the operating system manuals for the specific details of available locale names on the system.
+Refer to the operating system manuals for the specific details of locales available on the system.
 
 -----------------
 NOPERCENTY

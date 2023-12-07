@@ -57,7 +57,7 @@ On POSIX shells, :code:`ydb_env_set` manages a basic YottaDB environment, and se
 
 You can set the following environment variables before sourcing :code:`ydb_env_set` or running the :code:`ydb` script;
 
-* **ydb_chset** - set it to "M" to run YottaDB in M mode and "UTF-8" to run YottaDB in UTF-8 mode. The default when sourcing :code:`ydb_env_set` is UTF-8 mode. YottaDB natively (i.e., without sourcing :code:`ydb_env_set`) defaults to M mode. Since UTF-8 mode requires a UTF-8 locale to be set in LC_CTYPE or LC_ALL, if a locale is not specified, :code:`ydb_env_set` also attempts to set a UTF-8 locale. Since YottaDB in UTF-8 mode often requires ydb_icu_version to be set, if it is not set, :code:`ydb_env_set` attempts to determine the ICU version on the system and set it.
+* **ydb_chset** - set it to "M" to run YottaDB in M mode and "UTF-8" to run YottaDB in UTF-8 mode. The default when sourcing :code:`ydb_env_set` is UTF-8 mode. YottaDB natively (i.e., without sourcing :code:`ydb_env_set`) defaults to M mode. Since UTF-8 mode requires the locale setting LC_CTYPE (as reported by the :code:`locale` command) to specify a character set with UTF-8 encoding, if a locale is not specified, :code:`ydb_env_set` also attempts to set an available UTF-8 locale. As YottaDB in UTF-8 mode may require ydb_icu_version to be set, if it is not set, :code:`ydb_env_set` attempts to set the environment variable to the version installed on the system.
 
 * **ydb_dir** - set this to define a directory for the environment set and managed by :code:`ydb_env_set`. If it is not set, :code:`ydb_env_set` uses :code:`$HOME/.yottadb`.
 
@@ -181,7 +181,7 @@ Additionally:
 
 - The default mode is UTF-8 if YottaDB was installed with UTF-8 support.
 
-- For UTF-8 mode, sourcing :code:`ydb_env_set` checks whether a locale is set in the LC_ALL or LC_CTYPE environment variables. If not, it uses the first UTF-8 locale in the :code:`locale -a` output, and terminates with an error if one is not found.
+- For UTF-8 mode, sourcing :code:`ydb_env_set` checks whether a locale is specified in the LC_ALL or LC_CTYPE environment variables. If not, it uses the first UTF-8 locale in the :code:`locale -a` output, and terminates with an error if one is not found.
 
 - In case of error, the location of the error file is output.
 
@@ -259,12 +259,12 @@ EDITOR
 +++++++++++
 LC_CTYPE
 +++++++++++
-**LC_CTYPE** is a standard system environment variable used to specify a locale. When $ydb_chset has the value "UTF-8", $LC_CTYPE must specify a UTF-8 locale (e.g., "en_US.utf8").
+**LC_CTYPE** is a standard locale setting reported by the :code:`locale` command, and which can be explicitly set through the LC_ALL or LC_CTYPE environment variables. When $ydb_chset has the value "UTF-8", LC_CTYPE reported by the :code:`locale` command must specify a UTF-8 locale (e.g., "en_US.utf8").
 
 +++++++++
 LC_ALL
 +++++++++
-**LC_ALL** is a standard system environment variable used to select a locale with UTF-8 support. LC_ALL is an alternative to LC_TYPE, which overrides LC_TYPE and has a more pervasive effect on other aspects of the environment beyond YottaDB.
+**LC_ALL** is a standard locale setting reported by the :code:`locale` command, and which can be explicitly set in the environment. Setting LC_ALL also sets LC_TYPE and has a more pervasive effec than just setting LC_CTYPE.
 
 ++++++++++++++++++
 LD_LIBRARY_PATH
