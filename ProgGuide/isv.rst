@@ -1790,32 +1790,44 @@ $ZTIMEOUT controls a single process wide timer. The format of the $ZTIMEOUT ISV 
 
 .. code-block:: none
 
-   $ZTIMeout=([timeout][:labelref])
+   $ZTIMeout=([timeout][:expr])
 
-* The optional timeout in seconds specifies with millisecond accuracy how long from the current time the timer interrupts the process. If the specified timeout is negative, YottaDB cancels the timer. If the timeout is zero, YottaDB treats it as it would a DO of the vector.
-* The optional labelref specifies a code vector defining a fragment of M code to which YottaDB transfers control as if with a DO when the timeout expires. If the timeout is missing, the assignment must start with a colon and only changes the vector, and in this case, if the timeout is the empty string, YottaDB removes any current vector.
+For SET of $ZTIMEOUT:
 
-Note that YottaDB only recognizes interrupts such as from $ZTIMEOUT at points where it can properly resume operation, such as the beginning of a line, when waiting for a command with a timeout, or when starting a FOR iteration. When a timeout occurs, if the last assignment specified no vector, YottaDB uses the current $ETRAP or $ZTRAP. YottaDB rejects an attempted KILL of $ZTIMeout with the VAREXPECTED error and an attempted NEW of $ZTIMeout with the SVNONEW error.
+* If the optional timeout is specified:
+
+  * A positive value specifies a time in seconds, with millisecond resolution, how long from the current time, the timer interrupts the process. When the timer interrupts the process, it XECUTEs the vector.
+  * A negative value cancels the timer.
+  * A zero value causes the vector to be XECUTEd immediately.
+
+* If the timeout is not specified, a colon (:) must precede an expr. If the optional expr is specified, it is a vector to be XECUTEd when a pending or subsequently set timer interrupts the process.
+
+* If neither the timeout nor the expr are specified, the SET of $ZTIMEOUT to an empty string is a no-op.
+
+Interrupts are only XECUTEd at safe points, such as the beginning of a line, when waiting for a command with a timeout, or when starting a FOR iteration. When an interrupt occurs, if the vector is not valid M code (an empty string vector is not valid M code), YottaDB invokes the current $ETRAP or $ZTRAP. YottaDB rejects an attempted KILL of $ZTIMeout with the `VAREXPECTED <../MessageRecovery/errors.html#varexpected>`_ error and an attempted NEW of $ZTIMeout with the `SVNONEW <../MessageRecovery/errors.html#svnonew>`_ error.
+
+When accessed, the timeout in $ZTIMEOUT is the remaining time of any pending interrupt, and zero otherwise.
 
 Example:
 
 .. code-block:: bash
 
-   YDB>zprint ^ztimeout
-   ztimeout
-     ; Display $ztimeout
-       write !,$ztimeout               ; display $ZTIMeout - in this case the initial value -1
-                                       ; set with a vector (do ^TIMEOUT)
-       set $ztimeout="60:do ^TIMEOUT"  ; timeout of 1 minute. After timeout expires, XECUTEs do ^TIMEOUT
-       write !,$ztimeout               ; displays the remaining time:vector until timeout
-     ; set without a vector
-       set $ztimeout=120               ; set the timeout to 2 minutes without changing the vector
-       set $ztimeout="1234do ^TIMEOUT" ; missing colon creates a timeout for 1234 seconds
-       set $ztimeout="10:"             ; set the timeout to 10 seconds and vector to current etrap or ztrap
-       set $ztimeout=-1                ; set cancels the timeout
-     ; Note that set to 0 triggers an immediate timeout
-       set $ztimeout=0                 ; triggers the current vector
-       set $ztimeout="0:DO FOO"        ; this has the same effect as DO FOO
+   YDB>write $ztimeout ; Initial value is -1 and there is no vector
+   -1
+   YDB>set $ztimeout="2:write $zpiece($horolog,"","",2)" write $zpiece($horolog,",",2),!,$ztimeout ; Set the timeout and wait for it
+   61243
+   1.999:write $zpiece($horolog,",",2)
+   YDB>61245
+   YDB>; Note the timer interrupted after two seconds
+
+   YDB>write $zpiece($horolog,",",2) set $ztimeout=1 ; Omitting expr uses the previously set vector
+   61321
+   YDB>61322
+   YDB>write $zpiece($horolog,",",2) set $ztimeout=0 ; Setting to 0 executes the vector immediately
+   61365
+   61365
+   YDB>write $zpiece($horolog,",",2) set $ztimeout=-1 ; Setting to a negative number cancels the timer
+   61392
    YDB>
 
 .. _ztrap-isv:
