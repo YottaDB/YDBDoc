@@ -556,7 +556,7 @@ ydb_gdscert
 +++++++++++++++
 ydb_hupenable
 +++++++++++++++
-**ydb_hupenable (gtm_hupenable)** specifies the initial value that determines whether a YottaDB process should recognize a disconnect signal from a PRINCIPAL device that is a terminal. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has disconnected. Within a running process, `USE $PRINCIPAL:[NO]HUP[ENABLE] <../ProgrammersGuide/ioproc.html#hupenable>`_ controls this behavior. By default, YottaDB ignores such a signal, but a process that ignores the signal may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the operator log.
+**ydb_hupenable (gtm_hupenable)** specifies the initial value that determines whether a YottaDB process should recognize a disconnect signal from a PRINCIPAL device that is a terminal. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has disconnected. Within a running process, `USE $PRINCIPAL:[NO]HUP[ENABLE] <../ProgrammersGuide/ioproc.html#hupenable>`_ controls this behavior. By default, YottaDB ignores such a signal, but a process that ignores the signal may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the syslog.
 
 ydb_hupenable was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
 
@@ -687,12 +687,14 @@ ydb_non_blocked_write_retries
 +++++++++++++++++++++++++++++
 ydb_nontprestart_log_delta
 +++++++++++++++++++++++++++++
-**ydb_nontprestart_log_delta (gtm_nontprestart_log_delta)** specifies the number of non-transaction restarts for which YottaDB should wait before reporting a non-transaction restart to the operator logging facility. If ydb_nontprestart_log_delta is not defined, YottaDB initializes ydb_nontprestart_log_delta to 0.
+**ydb_nontprestart_log_delta (gtm_nontprestart_log_delta)** specifies the frequency with which YottaDB reports non-transaction restarts to the syslog. A value of 1 means that every non-transaction restart is to be reported. If ydb_nontprestart_log_delta is not defined, YottaDB initializes ydb_nontprestart_log_delta to 0, meaning that no restarts are to be reported, regardless of the value of :ref:`ydb-nontprestart-log-first-env-var`.
+
+.. _ydb-nontprestart-log-first-env-var:
 
 +++++++++++++++++++++++++++++
 ydb_nontprestart_log_first
 +++++++++++++++++++++++++++++
-**ydb_nontprestart_log_first (gtm_nontprestart_log_first)** specifies the initial number of non-transaction restarts which YottaDB should report before placing non-transaction restart reports to the operator logging facility using the :ref:`ydb-nontprestart-log-delta-env-var` value. If :ref:`ydb-nontprestart-log-delta-env-var` is defined and ydb_nontprestart_log_first is not defined, YottaDB initializes ydb_nontprestart_log_first to 1.
+**ydb_nontprestart_log_first (gtm_nontprestart_log_first)** specifies the initial number of non-transaction restarts which YottaDB should report before pacing subsequent non-transaction restart reports to the syslog using the :ref:`ydb-nontprestart-log-delta-env-var` value. If :ref:`ydb-nontprestart-log-delta-env-var` is defined and ydb_nontprestart_log_first is not defined, YottaDB initializes ydb_nontprestart_log_first to 0.
 
 ++++++++++++++
 ydb_noundef
@@ -752,7 +754,7 @@ ydb_procstuckexec
 
 * MUPIP actions find kill_in_prog (KILLs in progress) to be non-zero after a one minute wait on a region. Note that YottaDB internally maintains a list of PIDs (up to a maximum of 8 PIDs) currently doing a KILL operation.
 
-* A process encounters conditions that produce the following operator log messages: BUFOWNERSTUCK, INTERLOCK_FAIL, JNLPROCSTUCK, SHUTDOWN, WRITERSTUCK, MAXJNLQIOLOCKWAIT, MUTEXLCKALERT, SEMWT2LONG, and COMMITWAITPID.
+* A process encounters conditions that produce the following syslog messages: BUFOWNERSTUCK, INTERLOCK_FAIL, JNLPROCSTUCK, SHUTDOWN, WRITERSTUCK, MAXJNLQIOLOCKWAIT, MUTEXLCKALERT, SEMWT2LONG, and COMMITWAITPID.
 
 You can use this as a monitoring facility for processes holding a resource for an unexpected amount of time. Typically, for the shell script or command pointed to by ydb_procstuckexec, you would write corrective actions or obtain the stack trace of the troublesome processes (using their PIDs). YottaDB passes arguments to the shell command/script in the order specified as follows:
 
@@ -764,7 +766,7 @@ You can use this as a monitoring facility for processes holding a resource for a
 
 * *count* is the number of times the script has been invoked for the current condition (1 for the first occurrence).
 
-Each invocation generates an operator log message and if the invocation fails, an error message to the operator log. The shell script should start with a line beginning with #! that designates the shell.
+Each invocation generates an syslog message and if the invocation fails, an error message to the syslog. The shell script should start with a line beginning with #! that designates the shell.
 
 Instead of creating your own custom script, we recommend that you use the `%YDBPROCSTUCEXEC <../ProgrammersGuide/utility.html#ydbprocstuckexec>`_ utility program included with YottaDB. Set :code:`$ydb_procstuckexec` / :code:`$gtm_procstuckexec` to :code:`"$ydb_dist/yottadb -run %YDBPROCSTUCKEXEC"` to use this standard utility program. In this case, ensure that all processes have the same value for :code:`$ydb_tmp` / :code:`$gtm_tmp`.
 
@@ -887,12 +889,14 @@ ydb_tpnotacidtime
 ++++++++++++++++++++++++++
 ydb_tprestart_log_delta
 ++++++++++++++++++++++++++
-**ydb_tprestart_log_delta (gtm_tprestart_log_delta)** specifies the number of transaction restarts for which YottaDB should wait before reporting a transaction restart to the operator logging facility. If ydb_tprestart_log_delta is not defined, YottaDB initializes ydb_tprestart_log_delta to 0.
+**ydb_tprestart_log_delta (gtm_tprestart_log_delta)** specifies the frequency with which YottaDB reports transaction restarts to the syslog. A value of 1 means that every transaction restart is to be reported. If ydb_tprestart_log_delta is not defined, YottaDB initializes ydb_tprestart_log_delta to 0, meaning that no restarts are to be reported, regardless of the value of :ref:`ydb-tprestart-log-first-env-var`.
+
+.. _ydb-tprestart-log-first-env-var:
 
 ++++++++++++++++++++++++++
 ydb_tprestart_log_first
 ++++++++++++++++++++++++++
-**ydb_tprestart_log_first (gtm_tprestart_log_first)** specifies the initial number of transaction restarts which YottaDB should report before pacing transaction restart reports to the operator logging facility using the :ref:`ydb-tprestart-log-delta-env-var` value. If :ref:`ydb-tprestart-log-delta-env-var` is defined and ydb_tprestart_log_first is not defined, YottaDB initializes ydb_tprestart_log_first to 0.
+**ydb_tprestart_log_first (gtm_tprestart_log_first)** specifies the initial number of transaction restarts which YottaDB should report before pacing subsequent transaction restart reports to the syslog using the :ref:`ydb-tprestart-log-delta-env-var` value. If :ref:`ydb-tprestart-log-delta-env-var` is defined and ydb_tprestart_log_first is not defined, YottaDB initializes ydb_tprestart_log_first to 0.
 
 +++++++++++++++++++++
 ydb_trace_gbl_name
@@ -1194,7 +1198,7 @@ The YottaDB restriction mechanism recognizes the following lines:
    ZSYSTEM_FILTER[:M labelref]
    PIPE_FILTER[:M labelref]
 
-The labelref must include a routine name. If a process is restricted by a ZSYSTEM or PIPE_OPEN line in the restrictions file, that restriction takes precedence over the corresponding filter restriction. Otherwise when a process is subject to these restrictions, YottaDB inserts an invocation of the labelref prior to the restricted command, passing a string containing the argument to the ZSYSTEM command or the command deviceparameter of the PIPE OPEN. The path to the filter routine must be included in `$zroutines <../ProgrammersGuide/isv.html#zroutines>`_. YottaDB recommends that the filter routine be placed in a location with restricted access such as $ydb_dist. If the filter invocation return is -1, YottaDB produces a RESTRICTEDOP error, otherwise, it executes the command using the returned string via output parameters as a possibly identical replacement for the original string. Note that because ZSYSTEM and OPEN are not Isolated actions, YottaDB recommends against their use within a TP transaction. Filters will also increment the nested level of call-ins. A recursive filter invocation produces a `NOFILTERNEST <../MessageRecovery/errors.html#nofilternest>`_ error. YottaDB reports all filter errors to the operator log accompanied by a `COMMFILTERERR <../MessageRecovery/errors.html#commfiltererr>`_.
+The labelref must include a routine name. If a process is restricted by a ZSYSTEM or PIPE_OPEN line in the restrictions file, that restriction takes precedence over the corresponding filter restriction. Otherwise when a process is subject to these restrictions, YottaDB inserts an invocation of the labelref prior to the restricted command, passing a string containing the argument to the ZSYSTEM command or the command deviceparameter of the PIPE OPEN. The path to the filter routine must be included in `$zroutines <../ProgrammersGuide/isv.html#zroutines>`_. YottaDB recommends that the filter routine be placed in a location with restricted access such as $ydb_dist. If the filter invocation return is -1, YottaDB produces a RESTRICTEDOP error, otherwise, it executes the command using the returned string via output parameters as a possibly identical replacement for the original string. Note that because ZSYSTEM and OPEN are not Isolated actions, YottaDB recommends against their use within a TP transaction. Filters will also increment the nested level of call-ins. A recursive filter invocation produces a `NOFILTERNEST <../MessageRecovery/errors.html#nofilternest>`_ error. YottaDB reports all filter errors to the syslog accompanied by a `COMMFILTERERR <../MessageRecovery/errors.html#commfiltererr>`_.
 
 An example restrict file for this:
 
