@@ -82,6 +82,88 @@ Historical Background
 
 YottaDB's codebase originated in the 1980s as an implementation of the ISO standard scripting & application development language M, commonly known as `MUMPS <https://en.wikipedia.org/wiki/MUMPS>`_. While YottaDB continues to support M (we are fastidious about backward compatibility, to allow existing applications to run on newer versions of YottaDB), the codebase has been continuously used and evolved over the last 30+ years, so that YottaDB today supports APIs in multiple languages. In the Acculturation Workshop, you will see code from `Go <https://golang.org>`_, `C <https://en.wikipedia.org/wiki/C_(programming_language)>`_, `M <../ProgrammersGuide/langfeat.html>`_, `Perl <https://www.perl.org/>`_, and `Rust <https://www.rust-lang.org/>`_ all accessing the same database. Between YottaDB and its upstream predecessor GT.M, the codebase is live at several of the largest real time core processing systems at any bank anywhere in the world, as well as increasingly in large electronic medical record systems. The implementation of YottaDB on the GNU/Linux operating system on x86_64 and ARM hardware is the basis of the FOSS stack for `VistA <http://worldvista.org/AboutVistA>`_.
 
++++++++++++++++++++++++++++
+Database Storage Philosophy
++++++++++++++++++++++++++++
+
+One of the most important features of NoSQL databases is how they organize and store data, and the interface they provide to user applications. Programmers need to consider this when designing the database and the programs that use it.
+
+In the YottaDB database there is only one universal variable type: tree node with string value. A node can contain a value and additional sub-nodes, any depth. If a variable name is preceded by a "^", it is called a Global, and means that the value resides in the database, so it's available for all clients; if a variable name is not preceeded by a "^", then it's called a local variable, and is only available for current process instantiating the variable. See `Local and Global Variables <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#local-and-global-variables>`_ for more details.
+
+The database storage philosophy is presented below with Python examples (for other languages and complete API documentation, check `Multi-Language Programming Guide <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html>`_).
+
+~~~~~~
+Create
+~~~~~~
+
+You can create a Global or add a new element to it by simply specifying the Global's name, the indices and the value:
+
+.. code-block:: python3
+
+    >>> yottadb.set("^cmd", ("list", "linux",), "ls")
+    >>> yottadb.set("^cmd", ("list", "windows",), "dir")
+    >>> yottadb.set("^cmd", ("rename", "linux",), "mv")
+    >>> yottadb.set("^cmd", ("rename", "windows",), "ren")
+
+Notice `autovivification <https://en.wikipedia.org/wiki/Autovivification>`_: the creation of a lower level elements did not require the creation of parent elements.
+
+~~~~
+Read
+~~~~
+
+To retrieve data, the node's path should be specified:
+
+.. code-block:: python3
+
+    >>> value = yottadb.get("^cmd", ("list", "linux"))
+    >>> print(value.decode("utf-8"))
+    ls
+
+~~~~~~
+Update
+~~~~~~
+
+A data item can be modified by simply overwriting an existing item:
+
+.. code-block:: python3
+
+    >>> yottadb.set("^cmd", ("list", "linux",), "ls -lF")
+
+~~~~~
+Check
+~~~~~
+
+For a specified node, it can be queried whether it has data content (1), whether it has any children (10), both (11), or neither (0).
+
+.. code-block:: python3
+
+    >>> print( yottadb.data("^cmd", ("list",)) )  
+    10
+    >>> print( yottadb.data("^cmd", ("list", "linux",)) )
+    1
+
+~~~~~~~~
+Traverse
+~~~~~~~~
+
+At a given hierarchy level, you can query the first element, or the sibling of a specified element:
+
+.. code-block:: python3
+
+    >>> next = yottadb.subscript_next("^cmd", ("list", "linux",))
+    >>> print(next.decode("utf-8"))  
+    windows
+
+~~~~~~
+Delete
+~~~~~~
+
+To delete data, a node should be specified. It deletes the node's content and all its children:
+
+.. code-block:: python3
+
+    >>> yottadb.delete_node("^cmd", ("list", "linux"))
+
 ------------------
 User Documentation
 ------------------
