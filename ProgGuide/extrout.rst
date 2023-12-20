@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -96,7 +96,7 @@ Using External Calls
 
 The functions in programs increment and decrement are now available to YottaDB through the shareable library libcrement.so.
 
-YottaDB uses an "external call table" to map the typeless data of M into the typed data of C, and vice versa. The external call table has a first line containing the pathname of the shareable library file followed by one or more specification lines in the following format:
+YottaDB uses an :ref:`external call table <example-external-call-table>` to map the typeless data of M into the typed data of C, and vice versa. The external call table has a first line containing the pathname of the shareable library file followed by one or more specification lines in the following format:
 
 .. code-block:: none
 
@@ -110,64 +110,82 @@ entryref is an M entryref, return-value is one of the legal types listed below, 
 
    direction:type [num]
 
-where [num] indicates a pre-allocation value explained later in this chapter.
+where:
 
-Legal directions are I, O, or IO for input, output, or input/output, respectively.
+* *direction* may be I, O, or IO for input, output, or input/output, respectively.
+* *type* may be any of the types defined in the table below. These are also defined in the C header file $ydb_dist/libyottadb.h for use by the external routine in C.
+* *[num]* indicates a pre-allocation value explained :ref:`later in this chapter <preallocation>`.
 
-The following table describes the legal types defined in the C header file $ydb_dist/libyottadb.h. The Allocated by Caller column indicates whether the function making an external call to YottaDB must allocate parameters of the given type using ydb_malloc(), *not* the system malloc(). For an example of allocating parameters like this, see `sodium_plugin.c <https://gitlab.com/YottaDB/Util/YDBsodium/-/blob/master/src/sodium_plugin.c>`_ from the YDBSodium utility.
+YottaDB preallocates space for data returned by means of pointer-type output parameters (direction O), but does not preallocate space for data returned by a pointer-type return value. The external C function must allocate its own space for such data. It must do so using ydb_malloc() because YottaDB will call ydb_free() when it has processed the data. In the case of ydb_char_t\*\*, ydb_buffer_t\* and ydb_string_t\*, the C function must separately allocate both the string and the pointer to it because YottaDB separately frees each one. This is spelled out in table below in the column "Returned space to be allocated by C using ydb_malloc".
 
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| Type                  | Legal Return Type | Allocated by Caller                                         | Usage                                                                                     |
-+=======================+===================+=============================================================+===========================================================================================+
-| ydb_char_t*           | Yes               | Yes                                                         | For passing a "C" style string - null terminated.                                         |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_char_t**          | Yes               | Yes, both the ydb_char_t** and the ydb_char_t* it points to | For passing a pointer to a "C" style string.                                              |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_buffer_t*         | Yes               | Yes, both the ydb_buffer_t* and its buf_addr field          | For passing string values to and from YottaDB.                                            |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_double_t          | No                | No                                                          | Double-precision floating point number on 64-bit platforms.                               |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_double_t*         | Yes               | Yes                                                         | For passing a pointer to double-precision floating point numbers.                         |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_float_t           | No                | No                                                          | Floating point number.                                                                    |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_float_t*          | Yes               | Yes                                                         | For passing a pointer to floating point numbers.                                          |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_int_t             | Yes               | No                                                          | 32-bit signed integer.                                                                    |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_int_t*            | Yes               | Yes                                                         | For passing a pointer to signed integers.                                                 |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_long_t            | Yes               | No                                                          | 32-bit signed integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.  |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_long_t*           | Yes               | Yes                                                         | For passing a pointer to signed long [integers].                                          |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_pointertofunc_t   | Yes               | No                                                          | For passing callback function pointers. For details see :ref:`callback-mech`.             |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_pointertofunc_t*  | Yes               | No                                                          | For passing a pointer to callback function pointers.                                      |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_status_t          | Yes               | No                                                          | Type int. If the function returns zero (0), then the call was successful.                 |
-|                       |                   |                                                             | If it returns a non-zero value YottaDB will signal an error upon returning to M.          |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_string_t*         | Yes               | Yes, both the ydb_string_t* and its address field           | For passing a structure in the form {int length;char \*address}. Useful for moving        |
-|                       |                   |                                                             | blocks of memory to or from YottaDB.                                                      |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_uint_t            | Yes               | No                                                          | 32-bit unsigned integer.                                                                  |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_uint_t*           | Yes               | Yes                                                         | For passing a pointer to unsigned integers.                                               |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_ulong_t           | Yes               | No                                                          | 32-bit unsigned integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.|
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| ydb_ulong_t*          | Yes               | Yes                                                         | For passing a pointer to unsigned long [integers].                                        |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
-| void                  | Yes               | No                                                          | Specifies that the function does not return a value.                                      |
-+-----------------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+..
+  Remember to update the other tables in this doc and the table in MessageRecovery/errors.rst when you update this table
+
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| YDB type              | Also accepted | Legal Return Type | Returned space to be allocated by C using ydb_malloc        | Usage                                                                                     |
++=======================+===============+===================+=============================================================+===========================================================================================+
+| ydb_char_t*           | char*         | Yes               | Yes                                                         | For passing a "C" style string - null terminated.                                         |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_char_t**          | char**        | Yes :sup:`Note2`  | Yes, both the ydb_char_t** and the ydb_char_t* it points to | For passing a pointer to a "C" style string.                                              |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_buffer_t*         |               | Yes               | Yes, both the ydb_buffer_t* and its buf_addr field          | For passing strings or binary data to and from YottaDB.                                   |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_string_t*         | string*       | Yes               | Yes, both the ydb_string_t* and its address field           | For passing a structure in the form {int length; char \*address}. Useful for moving       |
+|                       |               |                   |                                                             | blocks of memory to or from YottaDB.                                                      |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_double_t*         | double*       | Yes               | Yes                                                         | A pointer to 64-bit precision floating pointer numbers (both 32 and 64 bit platforms).    |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_float_t*          | float*        | Yes               | Yes                                                         | For passing a pointer to floating point numbers.                                          |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_int_t             | int           | Yes               | No                                                          | 32-bit signed integer.                                                                    |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_int_t*            | int*          | Yes               | Yes                                                         | For passing a pointer to signed integers.                                                 |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_uint_t            | uint          | Yes               | No                                                          | 32-bit unsigned integer.                                                                  |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_uint_t*           | uint*         | Yes               | Yes                                                         | For passing a pointer to unsigned integers.                                               |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_long_t            | long          | Yes               | No                                                          | 32-bit signed integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.  |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_long_t*           | long*         | Yes               | Yes                                                         | For passing a pointer to signed long [integers].                                          |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_ulong_t           | ulong         | Yes               | No                                                          | 32-bit unsigned integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.|
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_ulong_t*          | ulong*        | Yes               | Yes                                                         | For passing a pointer to unsigned long [integers].                                        |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_int64_t           | int64         | Yes               | No                                                          | 64-bit signed integer. Supported only on 64-bit platforms (but see ydb_int64_t*).         |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_int64_t*          | int64*        | Yes               | Yes                                                         | For passing a pointer to 64-bit signed integers. Supported on all platforms.              |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_uint64_t          | uint64        | Yes               | No                                                          | 64-bit unsigned integer. Supported only on 64-bit platforms (but see ydb_int64_t*).       |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_uint64_t*         | uint64*       | Yes               | Yes                                                         | For passing a pointer to 64-bit unsigned integers. Supported on all platforms.            |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| ydb_status_t          |               | Yes               | No                                                          | Type int. If the function returns zero (0), then the call was successful.                 |
+|                       |               |                   |                                                             | If it returns a non-zero value YottaDB will signal an error upon returning to M.          |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| void                  |               | Yes               | No                                                          | Specifies that the function does not return a value.                                      |
++-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
 
 .. note::
    If an external call's function argument is defined in the external call table, YottaDB allows invoking that function without specifying a value of the argument. All non-trailing and output-only arguments which do not specify a value translate to the following default values in C:
 
    * All numeric types: 0
    * :code:`ydb_char_t *` and :code:`ydb_char_t **`: Empty string
-   * :code:`ydb_string_t *`: A structure with 'length' field matching the preallocation size and 'address' field being a NULL pointer.
+   * :code:`ydb_string_t *`: A structure with 'length' field matching the pre-allocation size and 'address' field being a NULL pointer.
+
+.. note::
+   ydb_char_t\*\* is typically used as a parameter, not a return type. As a parameter it may return a pointer to a literal or static C string. As a return type this is impossible because YottaDB will free the returned address, as noted in the table. The ability to return ydb_char_t\*\* is retained purely for backward compatibility since no practical use is envisaged.
+
+..
+  For background to the above note, see the thread here: https://gitlab.com/YottaDB/DB/YDB/-/issues/1057#note_1709824200
+
+
+.. _example-external-call-table:
+
++++++++++++++++++++++++++++
+Example External Call Table
++++++++++++++++++++++++++++
 
 Here is an example of an external call table:
 
@@ -196,34 +214,34 @@ The first parameter of each called routine is an int (for example, int argc in d
 
 There may be only a single occurrence of the type ydb_status_t for each entryref.
 
+.. _preallocation:
+
 ++++++++++++++++++++++++++++++++++++
 Pre-allocation of Output Parameters
 ++++++++++++++++++++++++++++++++++++
 
-The definition of parameters passed by reference with direction output can include specification of a pre-allocation value. This is the number of units of memory that the user wants YottaDB to allocate before passing the parameter to the external routine. For example, in the case of type ydb_char_t \*, the pre-allocation value would be the number of bytes to be allocated before the call to the external routine.
+The definition of parameters passed by reference with direction output can include specification of a pre-allocation value. This is the number of bytes of memory that the user wants YottaDB to allocate before passing the parameter to the external routine. For example, :code:`ydb_char_t *[1000]` would allocate a block of 1000 bytes and pass its address to the external routine.
 
 Specification of a pre-allocation value should follow these rules:
 
 * Pre-allocation is an unsigned integer value specifying the number of bytes to be allocated on the system heap with a pointer passed into the external call.
-* Pre-allocating on a type with a direction of input or input/output results in a YottaDB error.
-* Pre-allocation is meaningful only on types ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*. On all other types the pre-allocation value specified will be ignored and the parameter will be allocated a default value for that type. Make sure to set the 'length' field for ydb_string_t \* arguments and 'len_alloc' field for ydb_buffer_t * appropriately before returning control to YottaDB. On return from the external call, YottaDB uses the value in the length field as the length of the returned value, in bytes.
-* If the user does not specify any value, then the default pre-allocation value would be assigned to the parameter.
-* Specification of pre-allocation for "scalar" types (parameters which are passed by value) is an error.
+* Pre-allocating on a type with a direction of input (I) or input/output (IO) results in a YottaDB error.
+* Input-output (IO) parameters are pre-allocated only the space required to pass the input string.
+* Pre-allocation is meaningful only on types ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*. On all other types the pre-allocation value specified will be ignored and the parameter will be allocated enough space for its type. Make sure to set the 'length' field for ydb_string_t \* arguments and 'len_used' field for ydb_buffer_t * appropriately before returning control to YottaDB. On return from the external call, YottaDB uses the value in the length field as the length of the returned value, in bytes.
+* Specification of pre-allocation of non-pointer types is an error.
 
 .. note::
-   Pre-allocation is optional for all output-only parameters except ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*. Pre-allocation yields better management of memory for the external call. When an external call exceeds its specified preallocation (ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*), YottaDB produces the EXCEEDSPREALLOC error. In the case that the user allocates space for the character pointer inside a ydb_string_t * type output parameter, a length field longer than the specified preallocated size for the output parameter does not cause an EXCEEDSPREALLOC error.
+   Pre-allocation is optional for all output-only parameters except ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*. Pre-allocation yields better management of memory for the external call. When an external call exceeds its specified pre-allocation (ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*), YottaDB produces the EXCEEDSPREALLOC error. In the case that the user allocates space for the character pointer inside a ydb_string_t * type output parameter, a length field longer than the specified preallocated size for the output parameter does not cause an EXCEEDSPREALLOC error.
 
- .. _callback-mech:
+.. _callback-mechanism:
 
 +++++++++++++++++++++++++++++
-Callback Mechanism
+Callback Functions
 +++++++++++++++++++++++++++++
 
-YottaDB exposes certain functions that are internal to the YottaDB runtime library for the external calls via a callback mechanism. While making an external call, YottaDB populates and exposes a table of function pointers containing addresses to call-back functions.
+Certain functions necessary as call-back functions can be accessed during compile-time, either by including libyottadb.h, or using a deprecated callback mechanism. Access by means of libyottadb.h is preferred and will be explained first.
 
-Some of these callbacks (not all) can be linked at compilation time by including libyottadb.h. A fuller set can be discovered at runtime by a mechanism described after the table below.
-
-libyottadb.h includes definitions for the following entry points exported from libyottadb:
+New external functions should use the first mechanism by simply linking these functions at compilation time by including libyottadb.h. This file incorporates definitions for the following entry points which are exported by the libyottadb shared library:
 
 .. code-block:: C
 
@@ -231,6 +249,8 @@ libyottadb.h includes definitions for the following entry points exported from l
    void ydb_hiber_start_wait_any(ydb_uint_t mssleep)
    void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (*handler)(), ydb_int_t hdata_len, void *hdata);
    void ydb_cancel_timer(ydb_tid_t tid);
+   void *ydb_malloc(size_t size);
+   void ydb_free(void *ptr);
 
 where:
 
@@ -240,6 +260,8 @@ where:
 * handler - function pointer to handler to be driven
 * hdata_len - 0 or length of data to pass to handler as a parameter
 * hdata - NULL or address of data to pass to handler as a parameter
+* size - number of bytes of data to allocate using YottaDB's allocation mechanism
+* ptr - address of data to free; data must have been allocated using ydb_malloc
 
 ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any() sleeps until the time expires or an interrupt by any signal (including another timer). ydb_start_timer() starts a timer but returns immediately (no sleeping) and drives the given handler when time expires unless the timer is canceled.
 
@@ -287,10 +309,10 @@ ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any
 |          |                     | free_address       | pointer to void    | address of the previously allocated space                                                 |
 +----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
 
-The external routine can access and invoke a call-back function in any of the following mechanisms:
+Alternatively, external routines can access and invoke these same functions using the following deprecated callback mechanism. While making an external call, YottaDB populates the table of function pointers above as follows:
 
 * While making an external call, YottaDB sets the environment variable GTM_CALLIN_START to point to a string containing the start address (decimal integer value) of the table described above. The external routine needs to read this environment variable, convert the string into an integer value and should index into the appropriate entry to call the appropriate YottaDB function.
-* YottaDB also provides an input-only parameter type ydb_pointertofunc_t that can be used to obtain call-back function pointers via parameters in the external routine. If a parameter is specified as I:ydb_pointertofunc_t and if a numeric value (between 0-5) is passed for this parameter in M, YottaDB interprets this value as the index into the callback table and passes the appropriate callback function pointer to the external routine.
+* YottaDB also provides an input-only parameter type ydb_pointertofunc_t that can be used to obtain call-back function pointers via parameters in the external routine. If a parameter is specified as I:ydb_pointertofunc_t and if a numeric value (between 0-5) is passed from M to the external C function, YottaDB interprets this value as the index into the callback table above and, instead, passes the appropriate callback function pointer to the external routine.
 
 .. note::
    YottaDB strongly discourages the use of signals, especially SIGALARM, in user written C functions. YottaDB assumes that it has complete control over any signals that occur and depends on that behavior for recovery if anything should go wrong. The use of exposed timer APIs should be considered for timer needs.
@@ -345,7 +367,7 @@ Example:
    YDB>d &mathpak.exp(inval,.outval)
    YDB>
 
-Example : For preallocation:
+Example : For pre-allocation:
 
 .. code-block:: none
 
@@ -364,7 +386,7 @@ Example : For preallocation:
     return;
    }
 
-Example : for call-back mechanism
+Example : for :ref:`callback mechanism <callback-mechanism>`
 
 .. code-block:: none
 
@@ -499,38 +521,58 @@ The header file provides signatures of all Call-In interface functions and defin
 
 libyottadb.h defines the following types that can be used in Call-Ins.
 
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| Type                  | Usage                                                                                                    |
-+=======================+==========================================================================================================+
-| void                  | Used to express that there is no function return value                                                   |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_int_t             | ydb_int_t has 32-bit length on all platforms.                                                            |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_int64_t           | ydb_int64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.               |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_uint_t            | ydb_uint_t has 32-bit length on all platforms                                                            |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_uint64_t          | ydb_uint64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.              |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_long_t            | ydb_long_t has 32-bit length on 32-bit platforms and 64-bit length on 64-bit platforms.                  |
-|                       | It is much the same as the C language long type.                                                         |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_ulong_t           | ydb_ulong_t is much the same as the C language unsigned long type.                                       |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_float_t           | floating point number                                                                                    |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_double_t          | Same as above but double precision.                                                                      |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_long_t*           | Pointer to ydb_long_t. Good for returning integers.                                                      |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_ulong_t*          | Pointer to ydb_ulong_t. Good for returning unsigned integers.                                            |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_string_t*         | Pointer to ydb_string_t described below. Used to move binary data in and out (in spite of its name).     |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_char_t*           | Alias for char*. Useful for passing strings to and from YottaDB                                          |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
-| ydb_buffer_t*         | Pointer to ydb_buffer_t described below. Used to pass strings.                                           |
-+-----------------------+----------------------------------------------------------------------------------------------------------+
+..
+  Remember to update the other tables in this doc and the table in MessageRecovery/errors.rst when you update this table
+
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| YDB Type      | Also accepted | Usage                                                                                                    |
++===============+===============+==========================================================================================================+
+| ydb_char_t*   | char*         | Alias for char*. Useful for passing strings to and from YottaDB.                                         |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_buffer_t* |               | Pointer to ydb_buffer_t described below. Used to pass strings.                                           |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_string_t* | string*       | Pointer to ydb_string_t described below. May be used to transfer binary data (in spite of its name).     |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_double_t  | double        | Same as above but double precision.                                                                      |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_double_t* | double*       | Pointer to ydb_double_t and supported on 32-bit platforms. Good for passing or returning 64-bit doubles. |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_float_t   | float         | floating point number                                                                                    |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_float_t*  | float*        | Pointer to ydb_float_t. Good for passing or returning floats.                                            |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_int_t     | int           | Signed, with 32-bit length on all platforms.                                                             |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_int_t*    | int*          | Pointer to ydb_int_t. Good for passing or returning 32-bit signed integers.                              |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_uint_t    | uint          | Unsigned, with 32-bit length on all platforms.                                                           |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_uint_t*   | uint*         | Pointer to ydb_uint_t. Good for passing or returning 32-bit unsigned integers.                           |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_long_t    | long          | Signed, with 32-bit length on 32-bit platforms, and 64-bit length on 64-bit platforms.                   |
+|               |               | It is much the same as the C language long type.                                                         |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_ulong_t   | ulong         | Like ydb_long_t but unsigned.                                                                            |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_long_t*   | long*         | Pointer to ydb_long_t. Good for passing or returning integers.                                           |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_ulong_t*  | ulong*        | Pointer to ydb_ulong_t. Good for passing or returning unsigned integers.                                 |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_int64_t   | int64         | Signed, with 64-bit length on 64-bit platforms, and not supported on 32-bit platforms                    |
+|               |               | (but see ydb_int64_t*).                                                                                  |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_int64_t*  | int64*        | Pointer to ydb_int64_t and supported on 32-bit platforms. Good for passing or returning 64-bit integers. |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_uint64_t  | uint64        | Unsigned, with 64-bit length on 64-bit platforms, and not supported on 32-bit platforms                  |
+|               |               | (but see ydb_uint64_t*).                                                                                 |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| ydb_uint64_t* | uint64*       | Like ydb_int64_t* but unsigned. Supported on 32-bit platforms.                                           |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+| void          |               | Used to express that there is no function return value.                                                  |
++---------------+---------------+----------------------------------------------------------------------------------------------------------+
+
+.. note::
+   Not all of these types are available to developers of third-party wrappers. See note on using `ydb_call_variadic_plist_func() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-call-variadic-plist-func>`_ to invoking ydb_ci() or ydb_cip().
 
 .. code-block:: C
 
@@ -551,7 +593,7 @@ libyottadb.h defines the following types that can be used in Call-Ins.
        ydb_char_t* buf_addr;
    } ydb_buffer_t;
 
-The pointer types defined above are 32-bit addresses on all 32-bit platforms. For 64-bit platforms, ydb_string_t* is a 64-bit address.
+The pointer types defined above are 32-bit addresses on all 32-bit platforms. For 64-bit platforms, ydb_string_t\* is a 64-bit address.
 
 libyottadb.h also provides an input-only parameter type ydb_pointertofunc_t that can be used to obtain call-back function pointers via parameters in the external routine. If a parameter is specified as I:ydb_pointertofunc_t and if a numeric value (between 0-5) is passed for this parameter in M, YottaDB interprets this value as the index into the callback table and passes the appropriate callback function pointer to the external routine.
 
@@ -581,7 +623,7 @@ ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any
 .. note::
    libyottadb.h continues to be upward compatible with gtmxc_types.h. gtmxc_types.h explicitly marks the xc_* equivalent types as deprecated.
 
-ydb_int64_6 and ydb_uint64_t are supported on 64-bit platforms effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ and have no corresponding gtm_* type.
+ydb_int64_t and ydb_uint64_t are supported on 64-bit platforms effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ and have no corresponding gtm_* type. Additionally, ydb_int64_t\* and ydb_uint64_t\* are supported on all platforms effective release `r2.00 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r2.00>`_
 
 .. _call-in-table:
 
@@ -614,16 +656,24 @@ where,
 
 The <direction> indicates the type of operation that YottaDB performs on the parameter read-only (I), write-only (O), or read-write (IO). All O and IO parameters must be passed by reference, that is, as pointers since YottaDB writes to these locations. All pointers that are being passed to YottaDB must be pre-allocated. The following table details valid type specifications for each direction.
 
-+-------------------+--------------------------------------------------------------------------------------------------------------+
-| Directions        | Allowed Parameter Types                                                                                      |
-+===================+==============================================================================================================+
-| I                 | ydb_int_t, ydb_int64_t, ydb_uint_t, ydb_uint64_t, ydb_long_t, ydb_ulong_t, ydb_float_t, ydb_double_t,        |
-|                   | ydb_int_t*, ydb_int64_t*, ydb_uint_t*, ydb_uint64_t*, ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,|
-|                   | ydb_char_t*, ydb_string_t*, ydb_buffer_t*                                                                    |
-+-------------------+--------------------------------------------------------------------------------------------------------------+
-| O/IO              | ydb_int_t*, ydb_int64_t*, ydb_uint_t*, ydb_uint64_t*                                                         |
-|                   | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*,ydb_buffer_t*             |
-+-------------------+--------------------------------------------------------------------------------------------------------------+
+..
+  Remember to update the other tables in this doc and its duplicate table in MessageRecovery/errors.rst when you update this table
+
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| Parameter | Language      | Allowed Parameter Types                                                                                                                |
+| direction | direction     |                                                                                                                                        |
++===========+===============+========================================================================================================================================+
+| I/O/IO    | both          | ydb_int_t*, ydb_uint_t*, ydb_long_t*, ydb_ulong_t*, ydb_int64_t*, ydb_uint64_t*, ydb_float_t*, ydb_double_t*,                          |
+|           |               | ydb_char_t*, ydb_string_t*, ydb_buffer_t*                                                                                              |
+|           |               | (common alternates: int*, uint*, long*, ulong*, int64*, uint64*, float*, double*,                                                      |
+|           |               | char*, string*)                                                                                                                        |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| I/O/IO    | call-outs only| ydb_char_t** (alternate: char**)                                                                                                       |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| I only    | both          | ydb_int_t, ydb_uint_t, ydb_long_t, ydb_ulong_t, ydb_int64_t, ydb_uint64_t (alternates: int, uint, long, ulong, int64, uint64)          |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| I only    | call-ins only | ydb_float_t, ydb_double_t (alternates: float, double)                                                                                  |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
 Call-In tables support comments effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ YottaDB ignores text from a double slash (//) on a line to the end of the line.
 
@@ -959,55 +1009,48 @@ Rules to Follow in Call-Ins
 Type Limits for Call-Ins and Call-Outs
 --------------------------------------
 
-Depending on the direction (I, O, or IO) of a particular type, both call-ins and call-outs may transfer a value in two directions as follows:
-
-.. code-block:: none
-
-   Call-out: YottaDB -> C -> YottaDB       Call-in:     C -> YottaDB -> C
-               |        |       |                        |      |       |
-               '--------'-------'                        '------'-------'
-                  1     2                                   2     1
-
-In the following table, the YottaDB->C limit applies to 1 and the C->YottaDB limit applies to 2. In other words, YottaDB->C applies to I direction for call-outs and O direction for call-ins and C->YottaDB applies to I direction for call-ins and O direction for call-outs.
+The following table shows limits on precision in the call-in and call-out interface. The limits on some types depend on the direction (in or out of YottaDB).
 
 +----------------------------------------------------+---------------------------------------------------+----------------------------------------------------------------------+
 |                                                    | YottaDB->C                                        | C->YottaDB                                                           |
 +====================================================+====================+==============================+============================+=========================================+
 | **Type**                                           | **Precision**      | **Range**                    | **Precision**              | **Range**                               |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_int_t, ydb_int_t *                             | Full               | [-2^31+1, 2^31-1]            | Full                       | [-2^31, 2^31-1]                         |
+| ydb_int_t, ydb_int_t*                              | Full               | [-2^31+1, 2^31-1]            | Full                       | [-2^31, 2^31-1]                         |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_uint_t, ydb_uint_t *                           | Full               | [0, 2^32-1]                  | Full                       | [0, 2^32-1]                             |
+| ydb_uint_t, ydb_uint_t*                            | Full               | [0, 2^32-1]                  | Full                       | [0, 2^32-1]                             |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_long_t, ydb_long_t * (64-bit)                  | 18 digits          | [-2^63+1, 2^63-1]            | 18 digits                  | [-2^63, 2^63-1]                         |
+| ydb_long_t, ydb_long_t* (64-bit)                   | 18 digits          | [-2^63+1, 2^63-1]            | 18 digits                  | [-2^63, 2^63-1]                         |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_long_t, ydb_long_t * (32-bit)                  | Full               | [-2^31+1, 2^31-1]            | Full                       | [-2^31, 2^31-1]                         |
+| ydb_long_t, ydb_long_t* (32-bit)                   | Full               | [-2^31+1, 2^31-1]            | Full                       | [-2^31, 2^31-1]                         |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_ulong_t, ydb_ulong_t * (64-bit)                | 18 digits          | [0, 2^64-1]                  | 18 digits                  | [0, 2^64-1]                             |
+| ydb_ulong_t, ydb_ulong_t* (64-bit)                 | 18 digits          | [0, 2^64-1]                  | 18 digits                  | [0, 2^64-1]                             |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_ulong_t, ydb_ulong_t * (32-bit)                | Full               | [0, 2^32-1]                  | Full                       | [0, 2^32-1]                             |
+| ydb_ulong_t, ydb_ulong_t* (32-bit)                 | Full               | [0, 2^32-1]                  | Full                       | [0, 2^32-1]                             |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_float_t, ydb_float_t *                         | 6-9 digits         | [1E-43, 3.4028235E38]        | 6 digits                   | [1E-43, 3.4028235E38]                   |
+| ydb_int64_t, ydb_int64_t* (64-bit)                 | 18 digits          | [-2^63+1, 2^63-1]            | 18 digits                  | [-2^63, 2^63-1]                         |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_double_t, ydb_double_t *                       | 15-17 digits       | [1E-43, 1E47]                | 15 digits                  | [1E-43, 1E47]                           |
+| ydb_float_t, ydb_float_t*                          | 6-9 digits         | [1E-43, 3.4028235E38]        | 6 digits                   | [1E-43, 3.4028235E38]                   |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_char_t *                                       | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
+| ydb_double_t, ydb_double_t*                        | 15-17 digits       | [1E-43, 1E47]                | 15 digits                  | [1E-43, 1E47]                           |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_char_t **                                      | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
+| ydb_char_t*                                        | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_string_t *                                     | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
+| ydb_char_t**                                       | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
-| ydb_buffer_t *                                     | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
+| ydb_string_t*                                      | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
++----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
+| ydb_buffer_t*                                      | N/A                | ["", 1MiB]                   | N/A                        | ["", 1MiB]                              |
 +----------------------------------------------------+--------------------+------------------------------+----------------------------+-----------------------------------------+
 
 .. note::
-   ydb_char_t ** is not supported for call-ins but they are included for IO and O direction usage with call-outs. For call-out use of ydb_char_t \* and ydb_string_t \*, the specification in the interface definition for preallocation sets the range for IO and O, with a maximum of 1MiB.
+   ydb_char_t\*\* is not supported for call-ins but it is supported for IO and O direction usage with call-outs. For call-out use of ydb_char_t\* and ydb_string_t\*, the pre-allocation size specified in the :ref:`external call table <example-external-call-table>` sets the maximum data size, with a limit of 1MiB.
 
 .. note::
    Call-ins where the return value is a string check for buffer overflows (where possible) and return an error if the return area is not large enough. Note that for string parameters, use of the :code:`ydb_buffer_t*` type is highly recommended as it enables checking for buffer overflows. A :code:`char *` type does not enable such checks and is best avoided.
 
 -------------------------------
-Error cases for ydb_buffer_t *
+Error cases for ydb_buffer_t\*
 -------------------------------
 
 .. list-table:: Error cases for ydb_buffer_t usage in call-ins
@@ -1053,11 +1096,11 @@ Error cases for ydb_buffer_t *
 
    * - Scenario
      - Result
-   * - No preallocation specified for O parameter of type ydb_buffer_t * using the default external call package
+   * - No pre-allocation specified for O parameter of type ydb_buffer_t * using the default external call package
      - Default-package ZCNOPREALLOUTPAR error
-   * - No preallocation specified for O parameter of type ydb_buffer_t * using a custom external call package
+   * - No pre-allocation specified for O parameter of type ydb_buffer_t * using a custom external call package
      - Custom-package ZCNOPREALLOUTPAR error
-   * - IO parameter of type ydb_buffer_t * has no preallocation specified
+   * - IO parameter of type ydb_buffer_t * has no pre-allocation specified
      - No ZCNOPREALLOUTPAR error
    * - RETURN value of type ydb_buffer_t * is NULL
      - M string returned is an empty string

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -1169,7 +1169,7 @@ ydb_call_variadic_plist_func()
 
    int ydb_call_variadic_plist_func(ydb_vplist_func cgfunc, gparam_list *cvplist)
 
-:code:`ydb_call_variadic_plist_func` allows a language wrapper to make pseudo variadic calls to routines if the wrapper doesn't support variadic calls. Since some variadic calls are required to interface properly with YottaDB interfaces (e.g., :code:`ydb_ci()`, :code:`ydb_cip`, and :code:`ydb_lock_st()` etc.) this routine is needed. The return value is the same as the return value from the function, if any, with a 0 return value indicating successful completion.
+:code:`ydb_call_variadic_plist_func` allows a language wrapper to make pseudo variadic calls to routines if the wrapper doesn't support variadic calls. Since some variadic calls are required to interface properly with YottaDB interfaces (e.g., :code:`ydb_ci()`, :code:`ydb_cip`, and :code:`ydb_lock_st()` etc.) this routine is needed. The return value is the same as the return value from the function. For example, if :code:`ydb_call_variadic_plist_func()` is used to call :code:`ydb_cip()` then a :code:`0` return value indicates successful completion.
 
 The :code:`ydb_vplist_func` type is defined as follows:
 
@@ -1192,8 +1192,12 @@ The first field :code:`n` is the count of valid parameters, which can have a max
 To use :code:`ydb_call_variadic_plist_func()`, the :code:`cvplist` array needs to be filled in. Each element in the array is sized to hold a pointer. The :code:`arg` array holds all of the parameters (a maximum of 36 entries at this time) to be passed to the function. If a parameter does not fit as a single element, multiple elements can be used but this must be done in accordance with the calling API of the particular system.
 
 .. note::
+   On a 32 bit machine, each argument is only 32 bits wide. To pass a 64 bit value like a :code:`ydb_double_t` in a portable way, you should instead pass a pointer to it using :code:`ydb_double_t *`. For this reason, :code:`ydb_double_t` and :code:`ydb_int64_t` have been disabled on 32 bit machines, but you can still use :code:`ydb_double_t*` and :code:`ydb_int64_t*`
 
-   On a 32 bit machine, each argument is only 32 bits wide so to pass a 64 bit value like a :code:`ydb_double_t`, the value will have to be split across two parameter slots. Alternatively, it may be easier to use a :code:`ydb_double_t *` type instead of :code:`ydb_double_t` so the parameter only takes one slot.
+.. note::
+
+   Third-party language wrappers that use ydb_call_variadic_plist_func() to implement call-ins need to respect the limitations of the calling convention (ABI), as not all types can be passed via ydb_call_variadic_plist_func(). For example, some ABIs pass floating point types in FPU registers rather than in a memory array, or cannot pass 64-bit types in one parameter slot, so these types cannot be passed to ydb_call_variadic_plist_func(). It is always safe to pass and return these types as pointer types like :code:`ydb_double_t*` and :code:`ydb_int64_t*`. If desired, the language wrapper can automatically translate the user's call-in table from :code:`ydb_float_t` and :code:`ydb_int64_t` types to :code:`ydb_float_t*` and :code:`ydb_int64_t*` types, as the called M code will be the same.
+
 
 ++++++++++++++++
 ydb_child_init()

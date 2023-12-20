@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -14165,7 +14165,7 @@ Run Time Error: This indicates that a database file extension, either implicit o
 +--------------------+------------+----------------------+
 | 112		     | 228Mi      | 912GiB               |
 +--------------------+------------+----------------------+
-		     					     
+
 Action(s):
 
 - If the Master Bitmap Size is smaller than 112, use `MUPIP UPGRADE <../AdminOpsGuide/dbmgmt.html#mupip-upgrade>`_ to upgrade the database file header.
@@ -14712,15 +14712,26 @@ UNIMPLOP, Unimplemented construct encountered
 
 Run Time Error: This indicates that YottaDB encountered an unsupported data type while passing arguments between typed C and type-less M.
 
-Action: Review the call-in table and ensure that the parameter types match the following table:
+Action: Review the relevant call-in or call-out table to ensure that the parameter types match the following table:
 
-+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| Directions                    |  Allowed Parameter Types                                                                                                               |
-+===============================+========================================================================================================================================+
-| I                             | ydb_long_t, ydb_ulong_t, ydb_float_t, ydb_double_t,_ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t* |
-+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| O/IO                          | ydb_long_t*, ydb_ulong_t*, ydb_float_t*, ydb_double_t*,_ydb_char_t*, ydb_string_t*                                                     |
-+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+..
+  Remember to update the tables in ProgGuide/extrout.rst when you update this table.
+
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| Parameter | Language      | Allowed Parameter Types                                                                                                                |
+| direction | direction     |                                                                                                                                        |
++===========+===============+========================================================================================================================================+
+| I/O/IO    | both          | ydb_int_t*, ydb_uint_t*, ydb_long_t*, ydb_ulong_t*, ydb_int64_t*, ydb_uint64_t*, ydb_float_t*, ydb_double_t*,                          |
+|           |               | ydb_char_t*, ydb_string_t*, ydb_buffer_t*                                                                                              |
+|           |               | (common alternates: int*, uint*, long*, ulong*, int64*, uint64*, float*, double*,                                                      |
+|           |               | char*, string*)                                                                                                                        |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| I/O/IO    | call-outs only| ydb_char_t** (alternate: char**)                                                                                                       |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| I only    | both          | ydb_int_t, ydb_uint_t, ydb_long_t, ydb_ulong_t, ydb_int64_t, ydb_uint64_t (alternates: int, uint, long, ulong, int64, uint64)          |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| I only    | call-ins only | ydb_float_t, ydb_double_t (alternates: float, double)                                                                                  |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
 -----------------
 UNIQNAME
