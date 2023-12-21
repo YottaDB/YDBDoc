@@ -986,9 +986,9 @@ ZMessage Codes
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379738 | DLCKAVOIDANCE, Possible deadlock detected: Database pppp: Dbtn qqqq: t_tries rrrr: dollar_trestart ssss: now_crit tttt: TP transaction restarted                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381114 | DLLCHSETM, Routine XXX in library YYY was compiled with CHSET=M which is different from $ZCHSET. Recompile with CHSET=UTF-8 and re-link.                               |
+| 150381114 | DLLCHSETM, Routine XXX in library YYY was compiled with CHSET=M which is different from $ZCHSET                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381122 | DLLCHSETUTF8, Routine XXX in library YYY was compiled with CHSET=UTF-8 which is different from $ZCHSET. Recompile with CHSET=M and re-link.                            |
+| 150381122 | DLLCHSETUTF8, Routine XXX in library YYY was compiled with CHSET=UTF-8 which is different from $ZCHSET                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379266 | DLLNOCLOSE, Failed to unload external dynamic library                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
