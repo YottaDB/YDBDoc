@@ -31,15 +31,8 @@ pages:
   interruptible: true
   script:
     - apt-get update
-    - apt-get install -y --no-install-recommends git make jq python3-sphinx-rtd-theme python3-sphinx-copybutton rsync sphinx-common tcsh wget luarocks lua-ldoc pkg-config
-    - if [ ! -d ../YDBOcto ]; then git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto.git ../YDBOcto; else (cd ../YDBOcto && git pull); fi
-    - make html
-    - ./buildall.sh public
-    - touch public/AcculturationGuide/Debian-Hybrid_yottadbworkshop15.zip
-    - export DEADLINKS_VERSION=$(wget -q -O - https://api.github.com/repos/deadlinks/cargo-deadlinks/releases/latest | jq --raw-output .tag_name)
-    - wget https://github.com/deadlinks/cargo-deadlinks/releases/download/$DEADLINKS_VERSION/deadlinks-linux -O deadlinks
-    - chmod +x ./deadlinks
-    - ./deadlinks -v public
+    - apt-get install -y --no-install-recommends git make jq python3-sphinx-rtd-theme python3-sphinx-copybutton rsync sphinx-common tcsh wget pkg-config
+    - make test
   artifacts:
     paths:
       - public
