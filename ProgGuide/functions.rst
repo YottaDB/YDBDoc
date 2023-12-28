@@ -1707,7 +1707,7 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 | "TRANSACTIONID"  | NULL or          | Transaction ID specified in the particular level (when the transaction level is specified). The first level TSTART is returned if the level is not specified as     |
 |                  | transaction level| second argument. A NULL string is returned if the specified level (explicitly or implicitly) is greater than the current value of $TLEVEL.                          |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "UNDEF"          | none             | Truth value showing whether undefined variables should be treated as having a null value (1 for "UNDEF"; 0 for "NOUNDEF"); YottaDB defaults to 0.                   |
+| "UNDEF"          | none             | Truth value showing whether undefined variables should be treated as having a null value (1 for "UNDEF"; 0 for "NOUNDEF"); YottaDB defaults to 1.                   |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "YGVN2GDS"       | string           | When string is the name of a global variable node, e.g., "^ACN(""NAME"",""TYPE"")", returns the bytes in a database block that store the name,                      |
 |                  | [,<collation>]   | e.g., "ACN"_$C(0,255)_"NAME"_$C(0,255)_"TYPE"_$C(0,0). An optional additional parameter is an alternative collation sequence number, which specifies the type of    |
