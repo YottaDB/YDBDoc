@@ -226,7 +226,7 @@ Removes a directory. For the call to succeed, the directory must be empty.
 setenv^%ydbposix(name,value,overwrite)
 ++++++++++++++++++++++++++++++++++++++
 
-Sets an environment variable to the specified value, overwriting or preserving the existing value as indicated. Note that this function is deprecated and retained for backward compatibility. Use `VIEW SETENV <https://docs.yottadb.com/ProgrammersGuide/commands.html#key-words-in-view-command>`_ instead.
+Sets an environment variable to the specified value, overwriting or preserving the existing value as indicated. Note that this function is deprecated and retained for backward compatibility. Use `VIEW SETENV <https://docs.yottadb.com/ProgrammersGuide/commands.html#keywords-in-view-command>`_ instead.
 
 ++++++++++++++++++++++++
 statfile^%ydbposix(f,.s)
@@ -268,7 +268,7 @@ Given a symbolic syslog priority as a string,, e.g., "LOG_ALERT", returns the nu
 unsetenv^%ydbposix(name)
 ++++++++++++++++++++++++
 
-Unsets an environment variable. Note that this function is deprecated and retained for backward compatibility. Use `VIEW UNSETENV <https://docs.yottadb.com/ProgrammersGuide/commands.html#key-words-in-view-command>`_ instead.
+Unsets an environment variable. Note that this function is deprecated and retained for backward compatibility. Use `VIEW UNSETENV <https://docs.yottadb.com/ProgrammersGuide/commands.html#keywords-in-view-command>`_ instead.
 
 ++++++++++++++++++++++++++++++
 umask^%ydbposix(mode,.oldMode)

@@ -824,11 +824,11 @@ Python open_ci_table()
 
     def open_ci_table(filename: AnyStr) -> int
 
-As a wrapper for the C function `ydb_ci_tab_open() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-ci-tab-open-ydb-ci-tab-open-t>`_, the :code:`open_ci_table()` function can be used to open an initial call-in table if the environment variable :code:`ydb_ci` does not specify an `M code call-in table <../ProgrammersGuide/extrout.html#calls-ext-rt-call-ins>`_ at process startup. :code:`filename` is the filename of a call-in table, and the function opens the file and initializes an internal structure representing the call-in table and returns an integer representing a handle for later reference to this call-in table.
+As a wrapper for the C function `ydb_ci_tab_open() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#call-in-intf>`_, the :code:`open_ci_table()` function can be used to open an initial call-in table if the environment variable :code:`ydb_ci` does not specify an `M code call-in table <../ProgrammersGuide/extrout.html#calls-ext-rt-call-ins>`_ at process startup. :code:`filename` is the filename of a call-in table, and the function opens the file and initializes an internal structure representing the call-in table and returns an integer representing a handle for later reference to this call-in table.
 
 After a successful call to :code:`open_ci_table()`, YottaDB processes may then use the `zroutines intrinsic special variable <../ProgrammersGuide/isv.html#zroutines-isv>`_ to locate M routines to execute. :code:`$zroutines` is initialized at process startup from the :code:`ydb_routines` environment variable.
 
-If the underlying `ydb_ci_tab_open() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-ci-tab-open-ydb-ci-tab-open-t>`_ call returns an error, the function raises an exception containing the error code and message.
+If the underlying `ydb_ci_tab_open() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#call-in-intf>`_ call returns an error, the function raises an exception containing the error code and message.
 
 For an example of how to use :code:`open_ci_table`, see the entry for `Python ci()`_ or `Python cip()`_.
 
@@ -1021,11 +1021,11 @@ Python switch_ci_table()
 
     def switch_ci_table(handle: int) -> int
 
-As a wrapper for the C function `ydb_ci_tab_open() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-ci-tab-open-ydb-ci-tab-open-t>`_, the :code:`switch_ci_table()` function enables switching of call-in tables by allowing users to switch to a call-in table previously opened by :code:`open_ci_table()`, as specified through an integer :code:`handle` argument. This argument should be the return value of a previous call to :code:`open_ci_table()`.
+As a wrapper for the C function `ydb_ci_tab_open() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#call-in-intf>`_, the :code:`switch_ci_table()` function enables switching of call-in tables by allowing users to switch to a call-in table previously opened by :code:`open_ci_table()`, as specified through an integer :code:`handle` argument. This argument should be the return value of a previous call to :code:`open_ci_table()`.
 
 :code:`switch_ci_table()` returns an integer handle to the previously active call-in table, :code:`None` if there was none. Switching the call-in table does not change :code:`$zroutines`, so application code will need to change :code:`$zroutines` appropriately if the new call-in table requires a different M routine search path.
 
-If the underlying `ydb_ci_tab_open() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-ci-tab-open-ydb-ci-tab-open-t>`_ call returns an error, the function raises an exception containing the error code and message.
+If the underlying `ydb_ci_tab_open() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#call-in-intf>`_ call returns an error, the function raises an exception containing the error code and message.
 
 For an example of how to use :code:`switch_ci_table()`, see the entry for `Python ci()`_ or `Python cip()`_.
 

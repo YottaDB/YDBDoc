@@ -20,6 +20,7 @@ SPHINXPROJ    = GTMAdminOps
 SOURCEDIRS    = AcculturationGuide AdminOpsGuide ApplicationsManual MessageRecovery MultiLangProgGuide ProgGuide StyleGuide Plugins
 SOURCEDIR     = .
 BUILDDIR      = _build
+LINKCHECKDIR  = _build/linkcheck
 # newline used in the foreach statements to make "make" stop at an erroring step.
 define newline
 
@@ -71,3 +72,7 @@ test: html
     	cp ../lua-yottadb/docs/lua-yottadb-ydbdocs.rst ./MultiLangProgGuide/
 	@$(foreach dir, $(SOURCEDIRS), ln -sf ../shared/LICENSE.rst ../shared/_static  ../shared/_templates  ../shared/favicon.png ../shared/logo.png "$(dir)" $(newline))
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O) $(newline))
+
+.PHONY: checklinks
+checklinks: html
+	$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -b linkcheck "$(dir)" "$(dir)/$(BUILDDIR)";)

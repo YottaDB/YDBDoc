@@ -165,7 +165,7 @@ FIPS Mode
 
 For database encryption, the plugin reference implementation also provides an option to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode" removing a need to modify the plugin for sites that require certification for compliance with FIPS 140-2. When the environment variable $ydb_crypt_fips is set to 1 (or evaluates to a non-zero integer, or any case-independent string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2.
 
-Before using FIPS mode on these platforms, ensure that your OpenSSL or Libgcrypt installation provides a validated FIPS 140-2 implementation (see http://www.openssl.org/docs/fips/).
+Before using FIPS mode on these platforms, ensure that your OpenSSL or Libgcrypt installation provides a validated FIPS 140-2 implementation (see https://www.openssl.org/docs/fips.html).
 
 .. note::
    Achieving FIPS 140-2 certification requires actions and controls well beyond the purview of YottaDB, including underlying cryptographic libraries that are certifiably FIPS compliant, administrative controls, and so on. YottaDB neither provides cryptographic libraries with YottaDB nor recommends the use of any specific library.

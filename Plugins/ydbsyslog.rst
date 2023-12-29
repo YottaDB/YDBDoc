@@ -135,7 +135,7 @@ Should you find additional entries not identified by the :code:`_YDBSYSLOG.m` so
 Syslog from multiple systems
 ++++++++++++++++++++++++++++++
 
-Although there are many ways to script gathering data from multiple systems using %YDBSYSLOG, the program UseYDBSyslog is a sample script you can use. After reading the comments in the file `UseYDBSyslog.txt <https://gitlab.com/YottaDB/YDBSyslog/UseYDBSyslog.txt>`_:
+Although there are many ways to script gathering data from multiple systems using %YDBSYSLOG, the program UseYDBSyslog is a sample script you can use. After reading the comments in the file `UseYDBSyslog.txt <https://gitlab.com/YottaDB/Util/YDBSyslog/-/raw/master/UseYDBSyslog.txt>`_:
 
 #. Edit the file :code:`UseYDBSyslog.txt` to replace the sample loghost name, server names, and starting TCP port with the specific values for your environment.
 #. Save the file as :code:`UseYDBSyslog.m` on the loghost and on each server in a location where YottaDB can execute it.

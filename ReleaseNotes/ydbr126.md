@@ -1,7 +1,7 @@
 <!---
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -194,7 +194,7 @@ YottaDB r1.26 includes the following changes from [YottaDB r1.24](https://gitlab
 
 ### Language
 
-* <a name="x370"></a>The Simple API Utility Functions [ydb\_ci\_tab\_open() / ydb\_ci\_tab\_open\_t()](https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-ci-tab-open-ydb-ci-tab-open-t>) and [ydb\_ci\_switch() / ydb\_ci\_switch\_t()](https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-ci-tab-switch-ydb-ci-tab-switch-t) provide a mechanism for a process to switch between different call-in tables. This allows for more modular applications by allowing each plugin or library to have its own call-in table; previously, a process had a single call-in table. The call-in table specified by the environment variable `ydb_ci` is available at process startup without the need to explicitly open it (i.e., its behavior is unchanged). ([YDB#370](https://gitlab.com/YottaDB/DB/YDB/-/issues/370))
+* <a name="x370"></a>The Simple API Utility Functions [ydb\_ci\_tab\_open() / ydb\_ci\_tab\_open\_t()](https://docs.yottadb.com/ProgrammersGuide/extrout.html#call-in-intf) and [ydb\_ci\_switch() / ydb\_ci\_switch\_t()](https://docs.yottadb.com/ProgrammersGuide/extrout.html#call-in-intf) provide a mechanism for a process to switch between different call-in tables. This allows for more modular applications by allowing each plugin or library to have its own call-in table; previously, a process had a single call-in table. The call-in table specified by the environment variable `ydb_ci` is available at process startup without the need to explicitly open it (i.e., its behavior is unchanged). ([YDB#370](https://gitlab.com/YottaDB/DB/YDB/-/issues/370))
 
 * <a name="x417"></a>`ydb_subscript_next_s()`, `ydb_subscript_next_st()`, `ydb_subscript_previous_s()`, and `ydb_subscript_previous_st()` return YDB\_ERR\_NODEEND and leave `*ret_value` unmodified when provided with a subscripted local variable as input, and there is no successor or predecessor node. In YottaDB r1.24, the functions could sometimes return YDB\_ERR\_LVUNDEF incorrectly or YDB\_OK, and could set `*ret_value` to the empty string.([YDB#417](https://gitlab.com/YottaDB/DB/YDB/-/issues/417))
 

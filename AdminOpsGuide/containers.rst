@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -35,7 +35,7 @@ Quick Start
 Pre-requisites
 ~~~~~~~~~~~~~~~
 
-A working `Docker <https://www.docker.com/community-edition#/download>`_ installation on your platform of choice.
+A working `Docker <https://www.docker.com/community-edition>`_ installation on your platform of choice.
 
 NOTE: You must have at least docker 17.05 as `multi-stage <https://docs.docker.com/v17.09/engine/userguide/eng-image/multistage-build/>`_ builds are used within the docker file.
 
