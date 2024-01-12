@@ -10120,9 +10120,31 @@ NONTPRESTART
 
 NONTPRESTART, Database dddd; code: cccc; blk: bbbb in glbl: ^gggg; blklvl: llll, type: tttt, zpos: pppp
 
-Run Time Information: This is an informational message for non-TP transaction messages. The frequency of this message can be set by $ydb_nontprestart_log_delta and $ydb_nontprestart_log_first environment variables. dddd is the database where the restart occurred; cccc is the code described in the `Maintaining Database Integrity chapter of the Administration and Operations Guide <../AdminOpsGuide/integrity.html>`_; bbbb is the block where YottaDB detected a concurrency conflict that caused the restart; gggg shows the global reference within that block; llll is the level of that block; tttt indicates the type of activity that detected the conflict; pppp is the source line where restart ocurred on.
+Run Time Information: This is an informational message that indicates a non-TP transaction restart.
 
-Action: None required in most cases. If the messages are too frequent, either investigate the processes that reference to that particular global and its block, or reduce the number of messages by tweaking the $ydb_nontprestart_log_delta and $ydb_nontprestart_log_first environment variables.
+- The environment variables ``ydb_nontprestart_log_first`` and ``ydb_nontprestart_log_delta`` control the frequency of NONTPRESTART messages that get logged to the system logger.
+
+- ydb_nontprestart_log_first indicates the number of non-TP restarts to log since the YottaDB process started. Once those many have been logged, every ydb_nontprestart_log_delta TP restarts, YottaDB logs a restart message. If ydb_tprestart_log_delta is undefined, YottaDB performs no logging.
+
+- The default value for ydb_nontprestart_log_first is 0 (zero), which leaves the control completely with ydb_nontprestart_log_delta.
+
+- These messages can serve as a diagnostic tool in developmental environments for investigating contention due to global reads or updates in non-TP transactions.
+
+- dddd is the database where the restart occurred
+
+- cccc is the restart code described in more detail at `Run-time Database Failure Codes <../AdminOpsGuide/integrity.html#runtime-db-failure-codes>`_. Non-graphic restart codes are reported with their numeric values in hexadecimal notation as :code:`0xnn`.
+
+- bbbb is the block where YottaDB detected a concurrency conflict that caused the restart
+
+- gggg shows the global reference within that block
+
+- llll is meaningful only if the restart code cccc is ``L``. It is the level of the block (``blk: ...``) where the non-TP restart occurred. This is similar to the ``blklvl`` bullet under `TP Performance <../ProgrammersGuide/langfeat.html#tp-performance>`_ except that the latter is for TP transactions.
+
+- tttt is meaningful only if the restart code xxxx is ``L``.  A value of 7, 8, 9 or 10 shows the restart occurred in the non-TP transaction BEFORE reading the commit phase of the update (for example, SET/KILL command). These values would typically be used for debugging by your YottaDB support channel. A value of 11, 12, 13, or 14 shows the restart occurred in the commit phase of the update. A value of 15, 16, 17, 18 or 19 shows the restart occurred during a ``mupip reorg`` operation. This is similar to the ``type`` bullet under `TP Performance <../ProgrammersGuide/langfeat.html#tp-performance>`_ except that the latter is for TP transactions and the numeric value that ``type`` can take there is different compared to that for non-TP transactions.
+
+- pppp is the $ZPOSITION of the line of M code that caused the restart of the non-TP transaction; utilities leave this field blank.
+
+Action: If the messages are too frequent, investigate the processes that reference the indicated global and block number. Consider changes to the global structure or varying the time when work is scheduled. Or reduce the number of messages by tweaking the ``ydb_nontprestart_log_delta`` and ``ydb_nontprestart_log_first`` environment variables.
 
 --------------------
 NONUTF8LOCALE
@@ -14471,9 +14493,41 @@ TPRESTART
 
 TPRESTART, Database mmmm; code: xxxx; blk: yyyy in glbl: zzzz; pvtmods: aaaa, blkmods: bbbb, blklvl: cccc, type: dddd, readset: eeee, writeset: ffff, local_tn: gggg, zpos: hhhh
 
-Run Time Information: The UNIX environment variables GTM_TPRESTART_LOG_FIRST and GTM_TPRESTART_LOG_DELTA control the logging of TPRESTART messages. GTM_TPRESTART_LOG_FIRST indicates the number of TP restarts to log from a YottaDB invocation. Once that many have been logged, every GTM_TPRESTART_LOG_DELTA TP restarts, YottaDB logs a restart message. If GTM_TPRESTART_LOG_DELTA is undefined, YottaDB performs no operator logging. The default value for GTM_TPRESTART_LOG_FIRST is 0 (zero), which leaves the control completely with GTM_TPRESTART_LOG_DELTA. The facility that produces this message can serve as a diagnostic tool in developmental environments for investigating contention due to global updates. A zzzz of "\*BITMAP" indicates contention in block allocation which might involve multiple globals. hhhh is the $ZPOSITION of the line of M code that caused the restart of the transaction; utilities leave this field blank. Non-graphic codes are reported as :code:`0xnn`.
+Run Time Information: This is an informational message that indicates a TP transaction restart.
 
-Action: Disable, or adjust the frequency of, these messages with the mechanism described above. To reduce the number of restarts, consider changes to the global structure, or varying the time when work is scheduled. Consider whether the business and program logic permits the use of NOISOLATION.
+- The environment variables ``ydb_tprestart_log_first`` and ``ydb_tprestart_log_delta`` control the logging frequency of TPRESTART messages that get logged to the system logger.
+
+- ydb_tprestart_log_first indicates the number of TP restarts to log since the YottaDB process started. Once those many have been logged, every ydb_tprestart_log_delta TP restarts, YottaDB logs a restart message. If ydb_tprestart_log_delta is undefined, YottaDB performs no operator logging.
+
+- The default value for ydb_tprestart_log_first is 0 (zero), which leaves the control completely with ydb_tprestart_log_delta.
+
+- These messages can serve as a diagnostic tool in developmental environments for investigating contention due to global reads or updates in TP transactions.
+
+- mmmm is the database where the restart occurred
+
+- xxxx is the restart code described in more detail at `Run-time Database Failure Codes <../AdminOpsGuide/integrity.html#runtime-db-failure-codes>`_. Non-graphic restart codes are reported with their numeric values in hexadecimal notation as :code:`0xnn`.
+
+- yyyy is the block where YottaDB detected a concurrency conflict that caused the restart
+
+- zzzz shows the global reference within that block. A value of ``\*BITMAP`` indicates contention in local bitmap block allocation and could involve multiple globals.
+
+- aaaa is meaningful only if the restart code xxxx is ``L``. See ``pvtmods`` bullet under `TP Performance <../ProgrammersGuide/langfeat.html#tp-performance>`_ for more details on this.
+
+- bbbb is meaningful only if the restart code xxxx is ``L``. See ``blkmods`` bullet under `TP Performance <../ProgrammersGuide/langfeat.html#tp-performance>`_ for more details on this.
+
+- cccc is meaningful only if the restart code xxxx is ``L``. See ``blklvl`` bullet under `TP Performance <../ProgrammersGuide/langfeat.html#tp-performance>`_ for more details on this.
+
+- dddd is meaningful only if the restart code xxxx is ``L``. See ``type`` bullet under `TP Performance <../ProgrammersGuide/langfeat.html#tp-performance>`_ for more details on this.
+
+- eeee is the number of blocks that were READ in this TP transaction. See ``readset`` bullet under `TP Performance <../ProgrammersGuide/langfeat.html#tp-performance>`_ for more details on this.
+
+- ffff is the number of blocks that were UPDATED in this TP transaction. See ``writeset`` bullet under `TP Performance <../ProgrammersGuide/langfeat.html#tp-performance>`_ for more details on this.
+
+- gggg is a local transaction counter. See ``local_tn`` bullet under `TP Performance <../ProgrammersGuide/langfeat.html#tp-performance>`_ for more details on this.
+
+- hhhh is the $ZPOSITION of the line of M code that caused the restart of the transaction; utilities leave this field blank.
+
+Action: Disable, or adjust the frequency of, these messages with the mechanism described above. To reduce the number of restarts, consider changes to the global structure, or varying the time when work is scheduled. Consider whether the business and program logic permits the use of `NOISOLATION <../ProgrammersGuide/commands.html#view-noisolation>`_.
 
 ---------------------
 TPRESTNESTERR

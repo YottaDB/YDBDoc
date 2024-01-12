@@ -1301,7 +1301,7 @@ Example:
    0
    YDB>SET x="123.4" WRITE $ZLENGTH(x)&($CHAR(0)]]x)
    1
-   YDB>SET x=".123" WRITE $ZLENGTH(x)&($CHAR(0)]]x) 
+   YDB>SET x=".123" WRITE $ZLENGTH(x)&($CHAR(0)]]x)
    1
    YDB>SET x="0.123" WRITE $ZLENGTH(x)&($CHAR(0)]]x)
    0
@@ -2035,6 +2035,8 @@ In YottaDB the Durability aspect of the ACID properties relies on the journaling
 
 Attempting to QUIT (implicitly or explicitly) from code invoked by a DO, XECUTE, or extrinsic after that code issued a TSTART not yet matched by a TCOMMIT, produces an error. Although this is a consequence of the RESTART capability, it is true even when that capability is disabled. For example, this means that an XECUTE containing only a TSTART fails, while an XECUTE that performs a complete transaction succeeds.
 
+.. _tp-performance:
+
 ++++++++++++++++++++++++++
 TP Performance
 ++++++++++++++++++++++++++
@@ -2085,9 +2087,9 @@ Here is an example message:
 
 * blkmods - Is either 1 or 0. 1 implies the transaction restarted because this process (P1) is attempting to READ/UPDATE a block that has concurrently been updated by another process (P2) since P1 access the block as part of its TP transaction. This means the "code: ..." output in the TPRESTART message will have L as the last letter. 0 implies the restart occurred because of a different reason. The "code: ..." then has something other than "L" as the last letter. Note that each letter in "code: ..." corresponds to the failure code in each try/retry in the order of occurrence.
 
-* blklvl - Is the level in the GDS structure of the block ("blk: ..." field in the TPRESTART message) that caused the TP restart.
+* blklvl - Is the level of the block (``blk: ...`` field in the TPRESTART message) where the TP restart occurred.
 
-* type - A value of 0,1,2,4 shows the restart occurred in the TP transaction BEFORE executing TCOMMIT; whether it is a 0 or 1 or 2 or 4 should not matter to the user. These values would typically be used for debugging by your YottaDB support channel. A value of 3 shows the restart occurred at TCOMMIT time.
+* type - A value of 0,1,2,4 shows the restart occurred in the TP transaction BEFORE executing TCOMMIT. These values would typically be used for debugging by your YottaDB support channel. A value of 3 or 5 shows the restart occurred at TCOMMIT time.
 
 * readset - The number of GDS blocks that are accessed as part of this TP transaction in the region containing the global ("glbl: ..." in the TPRESTART message).
 
