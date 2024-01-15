@@ -1,6 +1,6 @@
  ###############################################################
  #                                                             #
- # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+ # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
  # All rights reserved.                                        #
  #                                                             #
  #     This source code contains the intellectual property     #
@@ -40,6 +40,7 @@ help:
 clean:
 	@$(foreach dir, $(SOURCEDIRS), rm -rf "$(dir)/favicon.png" "$(dir)/_static" "$(dir)/_templates" "$(dir)/LICENSE.rst" "$(dir)/logo.png" $(newline))
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O) $(newline))
+	@rm -f MultiLangProgGuide/lua-yottadb-ydbdocs.rst
 	@rm -rf ./public/
 
 # Test target: Create the "tarball" directory and run deadlinks on it
@@ -48,7 +49,7 @@ test: html
 	@if [ ! -d ../YDBOcto ]; then \
 		git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto.git ../YDBOcto; \
 		else (cd ../YDBOcto && git pull); \
-	fi 
+	fi
 	@./buildall.sh public
 	@if [ ! -f ./deadlinks ]; then \
 		echo "Downloading deadlinks..."; \
