@@ -98,7 +98,7 @@ YottaDB r2.00 is upward compatible from YottaDB [r1.38](https://gitlab.com/Yotta
 If the database has triggers defined with non-canonical numbers, or numbers specified as strings with any version prior to [r1.28](https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.28), or if you are unsure, extract the trigger definitions, delete existing triggers, and reload the trigger definitions. Issue [[#430](https://gitlab.com/YottaDB/DB/YDB/-/issues/430)] from [r1.28](https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.28) has a series of steps you can copy and execute. There is no need to do this if upgrading from [r1.28](https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.28) or later.
 
 To upgrade from older GT.M releases, first upgrade to GT.M V6.0-000 or later and follow the steps above, or contact your YottaDB support channel for assistance and guidance.
-	
+
 A more sophisticated upgrade technique is:
 
 * Install YottaDB r2.00.
@@ -152,7 +152,7 @@ YottaDB r2.00 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 
 | ID                      | Category              | Summary                                                                                                                                                   |
 |-------------------------|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ([GTM-6952](#GTM-6952)) | System Administration | Utilites accept decimal or hexidecimal input in many places                                                                                               |
+| ([GTM-6952](#GTM-6952)) | System Administration | Utilites accept decimal or hexadecimal input in many places                                                                                               |
 | ([GTM-8262](#GTM-8262)) | System Administration | The installation script prints proper error messages if UTF-8 dependencies are not met                                                                    |
 | ([GTM-8263](#GTM-8263)) | System Administration | UTF8 installation simplifications                                                                                                                         |
 | ([GTM-8288](#GTM-8288)) | System Administration | Install configuration leaves clean file authorizations                                                                                                    |
@@ -497,7 +497,7 @@ When enabled, interactive use of YottaDB [Direct Mode](https://docs.yottadb.com/
 	* Settings are read from `$HOME/.inputrc`, whose location can be overridden by the `INPUTRC` environment variable. The application name for use in `$if` statements in the settings file is `YottaDB`.
 	* If `history-size` is not set, it defaults to 1,000. The history file on disk is always limited to 1,000 entries, no matter the setting of history-size.
 	* Signals are handled by YottaDB and not by Readline.
-  
+
 Examples of history expansion:
 
   * `!!`: Recall last command
@@ -752,7 +752,7 @@ Action: Correct the routine specification.
 
 **NUM64ERR**, Error: cannot convert VVVV value to 64 bit decimal or hexadecimal number
 
-All YottaDB Components Error: The entered value does not correspond to a valid decimal or hexidecimal representation of a 64-bit number.
+All YottaDB Components Error: The entered value does not correspond to a valid decimal or hexadecimal representation of a 64-bit number.
 
 Action: Enter an appropriate decimal value or hexadecimal value starting with 0X.
 
@@ -832,7 +832,7 @@ Action: Use this message as an operational aid to determine the status of the re
 
 **UNUM64ERR**, Error: cannot convert VVVV value to 64 bit unsigned decimal or hexadecimal number
 
-All YottaDB Components Error: The entered value does not correspond to a valid unsigned decimal or hexidecimal representation of a 64-bit number.
+All YottaDB Components Error: The entered value does not correspond to a valid unsigned decimal or hexadecimal representation of a 64-bit number.
 
 Action: Enter an appropriate decimal value or hexadecimal value starting with 0X.
 

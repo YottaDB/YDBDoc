@@ -10598,7 +10598,7 @@ NUM64ERR
 
 NUM64ERR, Error: cannot convert VVVV value to 64 bit decimal or hexadecimal number
 
-All YottaDB Components Error: The entered value does not correspond to a valid decimal or hexidecimal representation of a 64-bit number.
+All YottaDB Components Error: The entered value does not correspond to a valid decimal or hexadecimal representation of a 64-bit number.
 
 Action: Enter an appropriate decimal value or hexadecimal value starting with 0X.
 
@@ -10608,7 +10608,7 @@ NUMERR
 
 NUMERR, Error: cannot convert VVVV value to 64 bit decimal or hexadecimal number
 
-All YottaDB Components Error: The entered value does not correspond to a valid decimal or hexidecimal number.
+All YottaDB Components Error: The entered value does not correspond to a valid decimal or hexadecimal number.
 
 Action: Enter an appropriate decimal value or hexadecimal value starting with 0X.
 
@@ -12484,7 +12484,7 @@ RESYNCSEQLOW
 
 RESYNCSEQLOW, MUPIP JOURNAL -ROLLBACK -FORWARD -RESYNC=NNNN [0xXXXX] requested is lower than LLLL which is the starting sequence number for the instance
 
-MUPIP Error: The MUPIP JOURNAL -ROLLBACK -FORWARD command has a -RESYNC qualifier value (NNNN in decimal or XXXX in hexidecimal) lower than that (LLLL) of the instance to the target instance.
+MUPIP Error: The MUPIP JOURNAL -ROLLBACK -FORWARD command has a -RESYNC qualifier value (NNNN in decimal or XXXX in hexadecimal) lower than that (LLLL) of the instance to the target instance.
 
 Action: Reissue the command after adjusting the resync value and/or adopting a different target instance.
 
@@ -15060,7 +15060,7 @@ UNUM64ERR
 
 UNUM64ERR, Error: cannot convert VVVV value to 64 bit unsigned decimal or hexadecimal number
 
-All YottaDB Components Error: The entered value does not correspond to a valid unsigned decimal or hexidecimal representation of a 64-bit number.
+All YottaDB Components Error: The entered value does not correspond to a valid unsigned decimal or hexadecimal representation of a 64-bit number.
 
 Action: Enter an appropriate decimal value or hexadecimal value starting with 0X.
 
