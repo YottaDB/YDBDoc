@@ -1378,7 +1378,7 @@ Example:
 
 This example uses a pattern match with implicit minimums to determine that an "account number" is actually a name, and to trigger a look-up of the corresponding account number in the ^ACX cross index.
 
-The pattern match operator accepts the alteration syntax. Alteration consists of a repeat count followed by a comma-delimited list of patatoms enclosed in parentheses "()". This is to check if any of the listed patterns matches the operand string. For example, ?1(2N1"-"7N,3N1"-"2N1"-"4N).1U might be a way to match either a social security number or a taxpayer ID. Since alteration is defined as one of the ways of constructing a patatom, alteration can nest (be used recursively).
+The pattern match operator accepts the alternation syntax. Alternation consists of a repeat count followed by a comma-delimited list of patatoms enclosed in parentheses "()". This is to check if any of the listed patterns matches the operand string. For example, ?1(2N1"-"7N,3N1"-"2N1"-"4N).1U might be a way to match either a social security number or a taxpayer ID. Since alternation is defined as one of the ways of constructing a patatom, alternation can nest (be used recursively).
 
 .. note::
    Complex pattern matches may not be efficient to evaluate, so every effort should be made to simplify any commonly used pattern and to determine if more efficient alternative logic would be more appropriate.
