@@ -163,6 +163,7 @@ YottaDB preallocates space for data returned by means of pointer-type output par
 +-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
 | ydb_status_t          |               | Yes               | No                                                          | Type int. If the function returns zero (0), then the call was successful.                 |
 |                       |               |                   |                                                             | If it returns a non-zero value YottaDB will signal an error upon returning to M.          |
+|                       |               |                   |                                                             | Only accepted as a return type, not a parameter type.                                     |
 +-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
 | void                  |               | Yes               | No                                                          | Specifies that the function does not return a value.                                      |
 +-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
@@ -211,8 +212,6 @@ If an external call's function argument is defined in the external call table an
 * If your interface uses ydb_long_t or ydb_ulong_t types but your interface code uses int or signed int types, failure to revise the types so they match on a 64-bit platform will cause the code to fail in unpleasant, potentially dangerous and hard to diagnose ways.
 
 The first parameter of each called routine is an int (for example, int argc in decrement.c and increment.c) that specifies the number of parameters passed. This parameter is implicit and only appears in the called routine. It does not appear in the call table specification, or in the M invocation. If there are no explicit parameters, the call table specification will have a zero (0) value because this value does not include itself in the count. If there are fewer actual parameters than formal parameters, the call is determined from the parameters specified by the values supplied by the M program. The remaining parameters are undefined. If there are more actual parameters than formal parameters, YottaDB reports an error.
-
-There may be only a single occurrence of the type ydb_status_t for each entryref.
 
 .. _preallocation:
 
