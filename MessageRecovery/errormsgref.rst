@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -3315,8 +3315,6 @@ ZMessage Codes
 | 150382010 | ZCINVALIDKEYWORD, External call: Invalid keyword found. Cannot continue. Invalid keyword encountered in the ext call config file.                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376826 | ZCMAXPARAM, Exceeded maximum number of external call parameters                                                                                                        |
-+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376810 | ZCMLTSTATUS, Multiple entries of xc_status in a single entry in external call table                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381162 | ZCNOPREALLOUTPAR, Parameter xxxx in external call yyyy.zzzz is an output only parameter requiring pre-allocation.                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

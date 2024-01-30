@@ -15703,16 +15703,6 @@ Run Time Error: YottaDB allows a maximum of 31 parameters for a single external 
 
 Action: Break up the external call into two or more external calls or rewrite the program to pass a valid number of parameters.
 
------------------
-ZCMLTSTATUS
------------------
-
-ZCMLTSTATUS, Multiple entries of xc_status in a single entry in external call table
-
-Run Time Error: This indicates that a call definition contains more than one XC_STATUS.
-
-Action: Check parameters for multiple occurences of TYPE XC_STATUS.
-
 ------------------
 ZCNOPREALLOUTPAR
 ------------------
