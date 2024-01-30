@@ -90,9 +90,11 @@ Use the following commands to create a shareable library:
    % gcc -c -fPIC -I$ydb_dist increment.c decrement.c
    % gcc -o libcrement.so -shared increment.o decrement.o
 
---------------------------
-Using External Calls
---------------------------
+.. _using-external-calls:
+
+-------------------------------
+Using External Calls: Call-Outs
+-------------------------------
 
 The functions in programs increment and decrement are now available to YottaDB through the shareable library libcrement.so.
 
@@ -115,6 +117,27 @@ where:
 * *direction* may be I, O, or IO for input, output, or input/output, respectively.
 * *type* may be any of the types defined in the table below. These are also defined in the C header file $ydb_dist/libyottadb.h for use by the external routine in C.
 * *[num]* indicates a pre-allocation value explained :ref:`later in this chapter <preallocation>`.
+
+The <direction> indicates the type of operation that YottaDB performs on the parameter read-only (I), write-only (O), or read-write (IO). All O and IO parameters must be passed by reference, that is, as pointers since YottaDB writes to these locations. All pointers that are being passed to YottaDB must be pre-allocated. The following table details valid type specifications for each direction.
+
+..
+  Remember to update the other tables in this doc and its duplicate tables in both this doc and in MessageRecovery/errors.rst when you update this table
+
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| Parameter | Language      | Allowed Parameter Types                                                                                                                |
+| direction | direction     |                                                                                                                                        |
++===========+===============+========================================================================================================================================+
+| I/O/IO    | both          | ydb_int_t*, ydb_uint_t*, ydb_long_t*, ydb_ulong_t*, ydb_int64_t*, ydb_uint64_t*, ydb_float_t*, ydb_double_t*,                          |
+|           |               | ydb_char_t*, ydb_string_t*, ydb_buffer_t*                                                                                              |
+|           |               | (common alternates: int*, uint*, long*, ulong*, int64*, uint64*, float*, double*,                                                      |
+|           |               | char*, string*)                                                                                                                        |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| I/O/IO    | call-outs only| ydb_char_t** (alternate: char**)                                                                                                       |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| I only    | both          | ydb_int_t, ydb_uint_t, ydb_long_t, ydb_ulong_t, ydb_int64_t, ydb_uint64_t (alternates: int, uint, long, ulong, int64, uint64)          |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| I only    | call-ins only | ydb_float_t, ydb_double_t (alternates: float, double)                                                                                  |
++-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
 YottaDB preallocates space for data returned by means of pointer-type output parameters (direction O), but does not preallocate space for data returned by a pointer-type return value. The external C function must allocate its own space for such data. It must do so using ydb_malloc() because YottaDB will call ydb_free() when it has processed the data. In the case of ydb_char_t\*\*, ydb_buffer_t\* and ydb_string_t\*, the C function must separately allocate both the string and the pointer to it because YottaDB separately frees each one. This is spelled out in table below in the column "Returned space to be allocated by C using ydb_malloc".
 
@@ -656,7 +679,7 @@ where,
 The <direction> indicates the type of operation that YottaDB performs on the parameter read-only (I), write-only (O), or read-write (IO). All O and IO parameters must be passed by reference, that is, as pointers since YottaDB writes to these locations. All pointers that are being passed to YottaDB must be pre-allocated. The following table details valid type specifications for each direction.
 
 ..
-  Remember to update the other tables in this doc and its duplicate table in MessageRecovery/errors.rst when you update this table
+  Remember to update the other tables in this doc and its duplicate tables in both this doc and in MessageRecovery/errors.rst when you update this table
 
 +-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | Parameter | Language      | Allowed Parameter Types                                                                                                                |
