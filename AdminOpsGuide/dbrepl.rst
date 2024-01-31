@@ -3561,12 +3561,6 @@ The CHANGE qualifier is intended only for use under the guidance of YottaDB and 
 
 Changes the instance name in the replication instance file header to the new-name. Note that changing an instance name preserves the instance history.
 
-^^^^^
--show
-^^^^^
-
-Displays File Header, Source Server slots, and History Records from the Replication Instance file.
-
 ^^^^^^^
 -detail
 ^^^^^^^
@@ -3594,11 +3588,13 @@ Specifies the new hexadecimal value of the field having the specified -offset an
 .. note::
    Change the instance file or the journal pool only on explicit instructions from YottaDB.
 
+.. _mupip-replic-show:
+
 ^^^^^
 -show
 ^^^^^
 
-The SHOW qualifier serves two purposes. When used with -editinstance, it displays the content of the replication instance file. When used with -jnlpool, it displays the content of the journal pool.
+The SHOW qualifier serves two purposes. When used with -editinstance, it displays the content of the replication instance file (instance file header, source server slots and history records). When used with -jnlpool, it displays the contents of the journal pool (journal pool control structure, instance file header, source server slots and detailed source server structure contents).
 
 ^^^^^^^^^^^^^^^
 -[no]qdbrundown
@@ -3620,7 +3616,7 @@ Example:
 
    $ mupip replicate -editinstance -change -offset=0x00000410 -size=0x0008 -value=0x010 multisite.repl
 
-This command sets the value of the field having the specified offset and size to 16. Note that mupip replicate -editinstance -show -detail command displays the offset and size of all fields in an instance file.
+This command sets the value of the field having the specified offset and size to 16. Note that `MUPIP REPLICATE EDITINSTANCE SHOW DETAIL <#detail>`_ command displays the offset and size of all fields in an instance file.
 
 .. _start-source-server:
 
@@ -3996,7 +3992,7 @@ Specifies whether the replication server is permitted to fallback to plaintext c
 -RENEGotiate_interval=<minutes>
 *********************************
 
-Specifies the approximate time in minutes to wait before attempting to perform a TLS renegotiation. The default RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB to never attempt a renegotiation. The MUPIP REPLIC SOURCE JNLPOOL SHOW DETAIL command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in the replication backlog.
+Specifies the approximate time in minutes to wait before attempting to perform a TLS renegotiation. The default RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB to never attempt a renegotiation. The `MUPIP REPLICATE SOURCE JNLPOOL SHOW <#mupip-replic-show>`_ command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in the replication backlog.
 
 ++++++++++++++++++++++++++++++++++++++++++++++
 Shutting Down the Source Server
@@ -4449,10 +4445,10 @@ The MUPIP REPLICATE RECEIVER START command starts a Receiver Server and the Upda
 
 .. code-block:: bash
 
-   mupip replicate -receiver -start 
+   mupip replicate -receiver -start
    [autorollback_qualifier]
-   connection_qualifiers 
-   logfile_management_qualifiers 
+   connection_qualifiers
+   logfile_management_qualifiers
    [operator_override_qualifiers]
    [replication_filter_qualifers]
    [si_replication_qualifiers]
@@ -4612,7 +4608,7 @@ When starting a Receiver Server of an SI replication stream with UPDATERESYNC, i
 -reuse=<instname>
 ^^^^^^^^^^^^^^^^^
 
-Used when starting a Receiver Server of an SI replication stream with -updateresync in case the receiver instance has previously received from fifteen (all architecturally allowed) different externally sourced streams and is now starting to receive from yet another source stream. The command mupip replic -receiv -start -updateresync=<instfile> -reuse=<instname>, where instname is the name of a replication instance, instructs the receiver server to look for an existing stream in the replication instance file header whose Group Instance Name (displayed by a mupip replic -editinstance -show command on the receiver replication instance file) matches the instance name specified and if one does, reuse that stream number for the current source connection (erasing any record of the older Group using the same stream number).
+Used when starting a Receiver Server of an SI replication stream with -updateresync in case the receiver instance has previously received from fifteen (all architecturally allowed) different externally sourced streams and is now starting to receive from yet another source stream. The command :code:`mupip replic -receiv -start -updateresync=<instfile> -reuse=<instname>`, where instname is the name of a replication instance, instructs the receiver server to look for an existing stream in the replication instance file header whose Group Instance Name (displayed by a mupip replic -editinstance -show command on the receiver replication instance file) matches the instance name specified and if one does, reuse that stream number for the current source connection (erasing any record of the older Group using the same stream number).
 
 .. _stopreceiverfilter:
 
@@ -4662,7 +4658,7 @@ Used when starting a Receiver Server of an SI replication stream with -updateres
 -reuse=<instname>
 ^^^^^^^^^^^^^^^^^
 
-Used when starting a Receiver Server of an SI replication stream with -updateresync in case the receiver instance has previously received from fifteen (all architecturally allowed) different externally sourced streams and is now starting to receive from yet another source stream. The command mupip replic -receiv -start -updateresync=<instfile> -reuse=<instname>, where instname is the name of a replication instance, instructs the receiver server to look for an existing stream in the replication instance file header whose Group Instance Name (displayed by a mupip replic -editinstance -show command on the receiver replication instance file) matches the instance name specified and if one does, reuse that stream number for the current source connection (erasing any record of the older Group using the same stream number).
+Used when starting a Receiver Server of an SI replication stream with -updateresync in case the receiver instance has previously received from fifteen (all architecturally allowed) different externally sourced streams and is now starting to receive from yet another source stream. The command mupip replic -receiv -start -updateresync=<instfile> -reuse=<instname>, where instname is the name of a replication instance, instructs the receiver server to look for an existing stream in the replication instance file header whose Group Instance Name (displayed by a `MUPIP REPLICATE EDITINSTANCE SHOW <#mupip-replic-show>`_ command on the receiver replication instance file) matches the instance name specified and if one does, reuse that stream number for the current source connection (erasing any record of the older Group using the same stream number).
 
 ^^^^^^^^^
 -noresync
