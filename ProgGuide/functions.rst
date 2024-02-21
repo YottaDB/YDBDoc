@@ -1695,10 +1695,10 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |                  |                  | The reserved space is used to reduce the active memory usage, for example, when a process uses a large amount of memory then subsequently uses a significantly      |
 |                  |                  | reduced amount.                                                                                                                                                     |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "STATSHARE"      | region           | Returns 0 when the process has sharing disabled, 1 when it has sharing enabled, and 2 when sharing is enabled selectively for regions. For a process to store       |
+| "STATSHARE"      | none or region   | Returns 0 when the process has sharing disabled, 1 when it has sharing enabled, and 2 when sharing is enabled selectively for regions. For a process to store       |
 |                  |                  | statistics in the stats db, the database must be enabled for sharing and the process must have opted in to share. VIEW "STATSHARE" with no region argument enables  |
-|                  |                  | sharing for all regions and VIEW "STATSHARE":"REGION_NAME" enables sharing selectively for a region. $VIEW("STATSHARE","REGION_NAME") returns whether a process has |
-|                  |                  | opted to share statistics for a region.                                                                                                                             |
+|                  |                  | sharing for all regions and VIEW "STATSHARE":"REGION_NAME" enables sharing selectively for a region. $VIEW("STATSHARE") returns whether all regions opted to share  |
+|                  |                  | statistics; $VIEW("STATSHARE","REGION_NAME") returns whether a process has opted to share statistics for a region.                                                  |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "STKSIZ"         | none             | Returns the YottaDB stack size in bytes.                                                                                                                            |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
