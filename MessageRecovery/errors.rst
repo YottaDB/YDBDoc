@@ -1470,7 +1470,7 @@ Action: Refer to the topic MUPIP LOAD Errors in `"About This Manual" section <./
 CORRUPTNODE
 --------------------------
 
-CORRUPTNODE, Corrupt input in Record # rrrr, Key #yyyy; resuming with next global node
+CORRUPTNODE, Corrupt input in Record #rrrr, Key #yyyy; resuming with next global node
 
 MUPIP Error: This message reports that record rrrr with apparent key kkkk does not have a valid format for MUPIP LOAD.
 
@@ -1832,7 +1832,7 @@ DBADDRANGE
 
 DBADDRANGE, Database file rrrr element location aaaa: control vvvv was outside qqqq range bbbb to tttt
 
-Run Time Information: This indicates that a process was abnormally terminated while updating the database. Database control structures may be damaged.
+Run Time Error: This indicates a database control structure for database region rrrr at memory location aaaa contains a value vvvv outside range bbbb to tttt for quantity qqqq.
 
 Action: This typically indicates a process terminated abnormally while updating the database. YottaDB often fixes such an error unless there is a serious problem causing this error. If YottaDB cannot correct the issue, the accompanying messages should expand on the situation. You are advised to report such a database error to the group responsible for database integrity at your operation.
 
@@ -1842,7 +1842,7 @@ DBADDRANGE8
 
 DBADDRANGE8, Database file rrrr element location aaaa: control vvvv was outside qqqq range bbbb to tttt
 
-Run Time Error: This indicates a database control structure for database region rrrr at memory location aaaa contains a value vvvv outside range bbbb to tttt for quantity qqqq.This message is the same as a DBADDRANGE message except that vvvv, bbbb and tttt are 8-byte quantities (as opposed to 4-byte quantitites in DBADDRANGE).
+Run Time Error: This indicates a database control structure for database region rrrr at memory location aaaa contains a value vvvv outside range bbbb to tttt for quantity qqqq. This message is the same as a DBADDRANGE message except that vvvv, bbbb and tttt are 8-byte quantities (as opposed to 4-byte quantitites in DBADDRANGE).
 
 Action: This typically indicates a process terminated abnormally while updating the database. YottaDB often fixes such an error unless there is a serious problem causing this error. If YottaDB cannot correct the issue, the accompanying messages should expand on the situation; and you should report such database error to the group responsible for database integrity at your operation.
 
@@ -2944,16 +2944,6 @@ DBMRKFREE
 ------------------
 
 DBMRKFREE, xxxx Block incorrectly marked free
-
-MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
-
-Action: -
-
------------------
-DBMXRSEXCMIN
------------------
-
-DBMXRSEXCMIN, xxxx Maximum record size for database exceeds what the block size can support
 
 MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
@@ -6570,7 +6560,7 @@ Action: None required.
 JNLBADLABEL
 -------------------------
 
-JNLBADLABEL, Specified File xxxx fdoes not have a YottaDB Journal File Label
+JNLBADLABEL, Journal file xxxx has a bad YottaDB Journal File Label. Expected yyyy. Found zzzz
 
 MUPIP Error: This indicates that the journal file indicated in the accompanying previous message does not match the expected format.
 
@@ -12817,16 +12807,6 @@ SECNOTSUPPLEMENTARY, ssss is a Supplementary Instance and so cannot act as a sou
 Source Server log/MUPIP Error: Issued by a Source Server on a Supplementary Instance. ssss attempted to connect to a Replicating Instance iiii, but found that iiii is not configured as a Supplementary Instance.
 
 Action: Reconfigure the instances to a supported configuration.
-
----------------------
-SECONDAHEAD
----------------------
-
-SECONDAHEAD, Secondary ahead of Primary: Secondary db possibly updated by process other than Update process. Do rollback first.
-
-Run Time Error: The update process issues this error on finding that the Secondary database contains more updates than the Primary.
-
-Action: If you allow database updates on Secondary, no action is needed. If not, investigate the cause. Make sure the database on secondary and primary are consistent.
 
 ---------------------
 SEFCTNEEDSFULLB

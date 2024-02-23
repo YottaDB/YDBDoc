@@ -14,21 +14,33 @@
 
 # YottaDB r2.00
 
-### Release Note Revision History
+## Binary Distributions
 
-| Revision  | Date              | Summary               |
-| --------- | ----------------- | --------------------- |
-| 1.00      |                   | r2.00 Initial Release |
+| sha256sum                                                          | file                                                                                                                     |
+|--------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `45703de102b99d1fc2bd40e8d8436bf244d7a7bdaa08bbb77d2d8ceb49c799d2` | [yottadb_r200_aarch64_debian12_pro.tgz](/uploads/6e053c63d627671963a6ac9940613aef/yottadb_r200_aarch64_debian12_pro.tgz) |
+| `6354378fe0ba74337ef40c2a59f43a7b43a7bee4ab4ded916dad2122ed0a8282` | [yottadb_r200_armv6l_debian12_pro.tgz](/uploads/da3ecebeea5de4d06b6b99ce214ff632/yottadb_r200_armv6l_debian12_pro.tgz)   |
+| `4114ed640ed7cf8c60e05d3569001fa0277e43932e6fbdbe3502d0243b826147` | [yottadb_r200_x8664_debian12_pro.tgz](/uploads/170f0bf0932017d21d7aae0b0513be7d/yottadb_r200_x8664_debian12_pro.tgz)     |
+| `7e793cb9215f9746e790c8025943c2213193cd34dd13b498f258b7690431ac79` | [yottadb_r200_x8664_rhel8_pro.tgz](/uploads/a601efd2a23b818313d6298c2cfff039/yottadb_r200_x8664_rhel8_pro.tgz)           |
+| `767f7e03754680700150c75acf0a4d5cccce92ea90b9b2a1b4d42bf8f357b162` | [yottadb_r200_x8664_rhel9_pro.tgz](/uploads/aeffdc2e50c64f80f9ca8851cae4d92a/yottadb_r200_x8664_rhel9_pro.tgz)           |
+| `1c164538c8f0d7167c41a8cdcc33d2aa618a76f80499abc07763fe566d9df8e6` | [yottadb_r200_x8664_sle15_pro.tgz](/uploads/39b5073e5ab016ccca4f6e84aa9cc1a7/yottadb_r200_x8664_sle15_pro.tgz)           |
+| `41f970bd8350ab27d7eee364e3e0b3308545e6c480f15eba235e6dc79b93e56c` | [yottadb_r200_x8664_ubuntu2204_pro.tgz](/uploads/d92e847a97516185185b1c363034fd5c/yottadb_r200_x8664_ubuntu2204_pro.tgz) |
 
-### Contact Information
-#### YottaDB LLC
+## Release Note Revision History
+
+| Revision | Date              | Summary               |
+|----------|-------------------|-----------------------|
+| 1.00     | February 23, 2024 | r2.00 Initial Release |
+
+## Contact Information
+### YottaDB LLC
 https://yottadb.com /  <info@yottadb.com>
 
-#### Support
-##### Customers
+### Support
+#### Customers
 Contact YottaDB or your YottaDB support channel for support with assured service levels from knowledgeable staff.
 
-##### Others
+#### Others
 For free (to you) support from members of communities who run widely available applications on YottaDB, please use an application-specific list where appropriate.
 
  - For access from node.js via [Nodem](https://github.com/dlwicksell/nodem), [post an Issue on the Nodem project](https://github.com/dlwicksell/nodem/issues/new/).
@@ -39,8 +51,8 @@ For free (to you) support from members of communities who run widely available a
    - [Join the YottaDB Discord server](https://discord.gg/bFHmDdzcqY) and post to one of the channels.
    - [Post an Issue](https://gitlab.com/YottaDB/DB/YDB/-/issues) and include the words "Help Wanted" in the Title.
 
-### r2.00
-#### Overview
+## r2.00
+### Overview
 YottaDB r2.00 is a major new release with substantial new functionality and database format enhancements.
 
 * Inherited from the upstream GT.M V7.0-000, YottaDB r2.00 creates database files of up to 16Gi blocks. For example, the maximum size of a database file with 4KiB blocks is 64TiB, which means you can use fewer regions for extremely large databases. With YottaDB r2.00, you can continue to use database files created by r1.x releases, except that the maximum size of a database file created with prior YottaDB releases remains unchanged.
@@ -50,7 +62,7 @@ YottaDB r2.00 is a major new release with substantial new functionality and data
 
 In addition to enhancements and fixes made by YottaDB, r2.00 inherits numerous other enhancements and fixes from GT.M V7.0-000 and V7.0-001, all described in the [Change History](#change-history).
 
-#### Platforms
+### Platforms
 A platform is a combination of a CPU architecture and an operating system. A platform is Supported, Supportable, or Unsupported.
 
 * Supported means that we have the platform in our development environment, test each release on that platform, and provide a binary distribution for it.
@@ -69,12 +81,12 @@ Recent releases of major GNU/Linux distributions with contemporary kernels, glib
 - On [Arch Linux](https://www.archlinux.org/) and other leading edge distributions such as [OpenSUSE Tumbleweed](https://www.opensuse.org/#Tumbleweed), and newer OS versions such as Red Hat Enterprise Linux 9.x, YottaDB will need to be recompiled from source code owing to library and tool chain versions newer than those used in building Supported distributions. The `--from-source` option of [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) simplifies the process.
 - While YottaDB is Supportable on other ARMv6, [ARMv7-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv7-A_cores), and [ARMv8-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv8-A_cores) CPUs, owing to variations in the implementations of ARM microarchitectures, we recommend that you ensure the software runs correctly before committing to any specific hardware other than those listed above. Please [contact us](mailto:info@yottadb.com) if you want a specific combination of OS and CPU microarchitecture to be Supported.
 
-#### Installation
+### Installation
 See our [Get Started page](https://yottadb.com/product/get-started) to use YottaDB.
 
 We **strongly recommend** that you install YottaDB r2.00 in a newly created directory, different from those of prior YottaDB releases and any GT.M versions you may have installed on the system.
 
-#### Removing an installed YottaDB release
+### Removing an installed YottaDB release
 Assuming `$ydb_dist` points to the directory where YottaDB is installed:
 
  - Cleanly shut down all application processes using that release.
@@ -84,7 +96,7 @@ Assuming `$ydb_dist` points to the directory where YottaDB is installed:
    - If there are links to files in `$ydb_dist`, e.g., from `/usr/local/bin/` or `/usr/local/etc/`, remove the links.
  - Delete the directory with `sudo rm -rf $ydb_dist`
 
-### Upgrading to YottaDB r2.00
+## Upgrading to YottaDB r2.00
 YottaDB r2.00 is upward compatible from YottaDB [r1.38](https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.38), GT.M [V7.0-000](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-000_Release_Notes.html) and [V7.0-001](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-001_Release_Notes.html). The minimal upgrade steps are:
 
 * Install YottaDB r2.00. Use `ydbinstall` / `ydbinstall.sh` to install plugins you use.
@@ -110,9 +122,9 @@ A more sophisticated upgrade technique is:
 As discussed [below](#GTM-8913), in the event you need database files that need to grow beyond the 992Mi block limit of database files created with r1.x / GT.M V6.x, you should extract data from r1.x database files and load the extracted data into database files created using r2.00.
 
 
-### Change History
+## Change History
 
-#### r2.00
+### r2.00
 
 YottaDB r2.00 includes the following enhancements and fixes beyond YottaDB [r1.38](https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.38).
 
@@ -143,10 +155,16 @@ YottaDB r2.00 includes the following enhancements and fixes beyond YottaDB [r1.3
 | ([1041](#x1041)) | Database              | MUPIP REORG TRUNCATE operates correctly with concurrent database file extensions                             |
 | ([1043](#x1043)) | Other                 | ydbinstall uses ld.gold to build libyottadbutil.so                                                           |
 | ([1047](#x1047)) | System Administration | MUPIP INTEG STATS with VIEW "STATSHARE" and ydb_app_ensures_isolation works                                  |
+| ([1049](#x1049)) | Langunages            | All 64 bits of int64/uint64 return values from external calls are returned                                   |
+| ([1050](#x1050)) | Languages             | Type int* accepted as a return value or parameter by call-in table                                           |
 | ([1051](#x1051)) | System Administration | MUPIP BACKUP DBG cleans up temporary files after error exit                                                  |
+| ([1054](#x1054)) | Languages             | Call-in/out support 64-bit integer pointer types on 32-bit architectures                                     |
+| ([1058](#x1058)) | Languages             | Raise error for illegal call-out parameter output (O) types                                                  |
+| ([1062](#x1062)) | System Administration | MUPIP TRIGGER STDIN prints correct line numbers                                                              |
+| ([1063](#x1063)) | Languages             | Improve accuracy of issuing EXTCALLBOUNDS error                                                              |
 
 <a name="gtmv70000"></a>
-#### GT.M V7.0-000
+### GT.M V7.0-000
 
 YottaDB r2.00 incorporates enhancements and fixes from [GT.M V7.0-000](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-000_Release_Notes.html).
 
@@ -175,7 +193,7 @@ YottaDB r2.00 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 | ([GTM-9371](#GTM-9371)) | Languages             | Ensure appropriate compilation of +<literal><nonrelational-Boolean-operator><gvn|@>                                                                       |
 
 <a name="gtmv70001"></a>
-#### GT.M V7.0-001
+### GT.M V7.0-001
 
 | ID                      | Category              | Summary                                                                                                        |
 |-------------------------|-----------------------|----------------------------------------------------------------------------------------------------------------|
@@ -217,7 +235,7 @@ YottaDB r2.00 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 | ([GTM-9451](#GTM-9451)) | Database              | TPNOACID releases database critical sections for LOCK operations that hang for lack of LOCKSPACE               |
 | ([GTM-9452](#GTM-9452)) | Languages             | CLOSE deviceparameter REPLACE overwrites an existing file, which RENAME does not                               |
 
-#### Database
+### Database
 
 * <a name="x998"></a> [TSTART](https://docs.yottadb.com/ProgrammersGuide/commands.html#tstart) does not open the default process global directory. Previously, it did, causing problems when the process only accessed globals by extended reference or not accessing globals at all. [#998](https://gitlab.com/YottaDB/DB/YDB/-/issues/998)
 
@@ -237,7 +255,7 @@ YottaDB r2.00 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 
 * <a name="GTM-9451"></a> YottaDB issues a TPNOTACID message and releases all database critical sections it owns during any LOCK operation in the final retry that could result in an indefinite hang, e.g. LOCKSPACE full. Previously, LOCK operations with a timeout less than [$ydb_tpnotacidtime](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-tpnotacidtime) (or the default of 2 seconds), would not generate such an action. As a result, a process could hang in the final transaction processing retry. [GTM-9451](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-001_Release_Notes.html#GTM-9451)
 
-#### Languages
+### Languages
 
 * <a name="x996"></a> WRITE /PASS and WRITE /ACCEPT allow also LISTENING TCP sockets to be passed from one process to another. Previously, only CONNECTED TCP sockets could be passed, and an attempt to pass a LISTENING TCP socket resulted in the WRITE /ACCEPT command raising a [GETSOCKNAMERR](https://docs.yottadb.com/MessageRecovery/errors.html#getsocknamerr) error. [#996](https://gitlab.com/YottaDB/DB/YDB/-/issues/996)
 
@@ -264,6 +282,24 @@ YottaDB r2.00 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 * <a name="x1033"></a> The [$ZCMDLINE](https://docs.yottadb.com/ProgrammersGuide/isv.html#zcmdline) environment variable can be stacked with the [NEW](https://docs.yottadb.com/ProgrammersGuide/commands.html#new) command and updated with the [SET](https://docs.yottadb.com/ProgrammersGuide/commands.html#set) command. [#1033](https://gitlab.com/YottaDB/DB/YDB/-/issues/1033)
 
 * <a name="x1037"></a> Repeated invocation of the [$ZTRAP](https://docs.yottadb.com/ProgrammersGuide/isv.html#ztrap) error handler does not result in a [STACKCRIT](https://docs.yottadb.com/MessageRecovery/errors.html#stackcrit) error. Previously, it could. [#1037](https://gitlab.com/YottaDB/DB/YDB/-/issues/1037)
+
+* <a name="x1050"></a> `int*` is accepted as a parameter to call-in table, and is equivalent to `ydb_int_t*`. [#1050](https://gitlab.com/YottaDB/DB/YDB/-/issues/1050)
+
+* <a name="x1049"></a> All 64 bits of `int64` and `uint64` return values are returned to YottaDB from external calls. Previously they were truncated to 32 bits. Note that YottaDB itself is limited to 18 significant digits of numerical resolution. [#1049](https://gitlab.com/YottaDB/DB/YDB/-/issues/1049)
+
+* <a name="x1054"></a> Call-ins and call-outs on 32-bit architectures support pointers to 64-bit integer parameters, i.e., `ydb_int64_t*` and `ydb_uint64_t*`. Note that `ydb_int64_t` and `ydb_uint64_t` remain supported only on 64-bit architectures and produce an error on 32-bit architectures. [#1054](https://gitlab.com/YottaDB/DB/YDB/-/issues/1054)
+
+* <a name="x1058"></a> YottaDB raises an [UNIMPLOP](https://docs.yottadb.com/MessageRecovery/errors.html#unimplop) error for unsupported call-out parameter types in an [external call table](https://docs.yottadb.com/ProgrammersGuide/extrout.html#using-external-calls-call-outs).
+
+  - Non-pointer types used as output types generate an error, since the C calling convention does not allow them to receive output data.
+  - `ydb_pointertofunc_t`, `ydb_pointertofunc_t*` and `ydb_jbig_decimal_t` raise an error if declared as outputs since the first two types [make no sense as outputs](https://docs.yottadb.com/ProgrammersGuide/extrout.html#callback-functions), and `ydb_jbig_decimal_t` is [implemented as input-only](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTMJI_Technical_Bulletin.html#:~:text=BigDecimal-,gtm_jbig_decimal_t,-I).
+  - `ydb_float_t`, `ydb_double_t`, `float`, and `double` produce an error in both directions. Use the pointer versions of of these types instead.
+
+  A parameter of type `ydb_status_t` now raises a [ZCUNTYPE](https://docs.yottadb.com/MessageRecovery/errors.html#zcuntype) error. Previously, it raised a ZCMLTSTATUS error, a confusing error message which has been removed.
+
+  [#1058](https://gitlab.com/YottaDB/DB/YDB/-/issues/1058)
+  
+* <a name="x1063"></a> The [call-out interface](https://docs.yottadb.com/ProgrammersGuide/extrout.html#using-external-calls-call-outs) allocates the appropriate amount of memory required to pass parameters. Previously, it allocated twice as much memory as required, which was wasteful, especially when large pre-allocation values are specified for strings. This also improves the detection of string overrun errors in the called external function which would previously have been silently permitted, provided they did not overrun the double space allocated. [#1063](https://gitlab.com/YottaDB/DB/YDB/-/issues/1063)
 
 * <a name="GTM-4814"></a> YottaDB restores [VIEW "TRACE"](https://docs.yottadb.com/ProgrammersGuide/commands.html#trace-value-expr) operation (M-Profiling) after [ZSTEP](https://docs.yottadb.com/ProgrammersGuide/commands.html#zstep) operations. However, issuing a VIEW "[NO]TRACE" may interfere with ZSTEP operations. Note that using ZSTEP materially impacts M-Profiling times, so using these two facilities together may be problematic. Previously, ZSTEP usage usually turned off M-Profiling. [GTM-4814](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-001_Release_Notes.html#GTM-4814)
 
@@ -313,7 +349,7 @@ YottaDB r2.00 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 
 * <a name="GTM-9452"></a> [CLOSE](https://docs.yottadb.com/ProgrammersGuide/commands.html#close) accepts REPLACE=<file-name> as a deviceparameter, to overwrite an existing file. RENAME or REPLACE that specifies the original name simply closes the file. Previously YottaDB only provided RENAME on CLOSE which intentionally protected against accidental replacement, including of itself. [GTM-9452](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-001_Release_Notes.html#GTM-9452)
 
-#### System Administration
+### System Administration
 
 * <a name="x851"></a> MUPIP commands accept either a space or an equal sign (`=`) after the `-region` qualifier. Previously they were inconsistent (e.g., MUPIP INTEG expected a space, whereas MUPIP CREATE expected an equal). However, this additional consistency of use causes several edge cases to behave differently, e.g.
 
@@ -329,6 +365,8 @@ YottaDB r2.00 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 * <a name="x1047"></a> [MUPIP INTEG STATS](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#stats) works correctly when the environment variable [ydb_statshare](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-statshare)is set to 1 and the [ydb_app_ensures_isolation](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-app-ensures-isolation) environment variable is set to a list of global names. Previously, this used to terminate abnormally with a SIG-11. Additionally, applications using the Simple API or Simple Threaded API correctly record [database statistics](https://docs.yottadb.com/ProgrammersGuide/commands.html#no-statshare-region-list). Previously, it was possible for child processes, created by a `fork()` call for example in a Simple API application, to record its database statistics as if it was done by the parent process. [#1047](https://gitlab.com/YottaDB/DB/YDB/-/issues/1047)
 
 * <a name="x1051"></a> [MUPIP BACKUP DBG](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#dbg) performs appropriate cleanup before exiting the BACKUP command in case of errors. Previously, it was possible for it to leave temporary directories/files around in case of errors. The workaround was to not use the DBG qualifier as that did the proper cleanup, and to manually cleanup temporary files. [#1051](https://gitlab.com/YottaDB/DB/YDB/-/issues/1051)
+
+* <a namme="x1062"></a> [MUPIP TRIGGER STDIN](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#id43) reports accurate line numbers. Previously, it was possible for reported line numbers to be incorrectly large, especially if MUPIP had to wait for input to be available. [#1062](https://gitlab.com/YottaDB/DB/YDB/-/issues/1062)
 
 * <a name="GTM-4272"></a> [MUPIP BACKUP](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#backup) and [RESTORE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#restore) display information in standard message format. The messages display the full path when they include a file context. Please refer to the [Messages](#messages) section of these release notes for details on the standard messages. Previously, certain MUPIP BACKUP and RESTORE messages did not follow the standard message format and/or did not display the full path when there was a file context. [GTM-4272](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-001_Release_Notes.html#GTM-4272)
 
@@ -404,7 +442,7 @@ YottaDB r2.00 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 
 * <a name="GTM-9443"></a> When [MUPIP SET JOURNAL](https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#journal) encounters a temporary journal file that is an artifact of the renaming process which YottaDB uses to create a chain of journal files, it only deletes it after concluding that has been abandoned by seeing that it persists for an interval longer than the renaming process should take. Previously when MUPIP encountered a temporary journal file, it assumed the file was an abandoned artifact and immediately deleted it potentially inappropriately breaking the chain. [GTM-9443](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-001_Release_Notes.html#GTM-9443)
 
-#### Other
+### Other
 
 * <a name="x88"></a> YottaDB can optionally use [GNU Readline](https://tiswww.case.edu/php/chet/readline/) if it is installed on the system. It is enabled by setting the environment variable `ydb_readline` to a nonzero numeric value (typically 1) or a case-independent string which is, or whose leading substring is, `YES` or `TRUE`. See [Additional Information for YDB#88](#addlydb88)
 
@@ -480,10 +518,10 @@ YottaDB r2.00 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 
 * <a name="GTM-9422"></a> YottaDB provides counter statistics designated DEXA, GLB, JNL, MLK, PRC, TRX, ZAD, JOPA, AFRA, BREA, MLBA & TRGA, which accumulate counts when a process waits for a critical code section in various cases. These counters are documented in the [ZSHOW](https://docs.yottadb.com/ProgrammersGuide/commands.html#zshow) section of the [M Programmers Guide](https://docs.yottadb.com/ProgrammersGuide/). Previously, YottaDB provided toggle statistics to indicate when a process was waiting for a critical code section. [GTM-9422](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-001_Release_Notes.html#GTM-9422)
 
-### Additional Information
+## Additional Information
 
 <a name="addlydb88"></a>
-#### Additional Information for YDB#88 - GNU Readline
+### Additional Information for YDB#88 - GNU Readline
 
 YottaDB can optionally use [GNU Readline](https://tiswww.case.edu/php/chet/readline/) if it is installed on the system. It is enabled by setting the environment variable `ydb_readline` to a nonzero numeric value (typically 1) or a case-independent string which is, or whose leading substring is, `YES` or `TRUE`.
 
@@ -530,7 +568,7 @@ Limitations include:
 [#88](https://gitlab.com/YottaDB/DB/YDB/-/issues/88)
 
 <a name="addlgtm8843"></a>
-#### Additional Information for GTM-8843 - Non-blocking WRITE to SOCKET devices
+### Additional Information for GTM-8843 - Non-blocking WRITE to SOCKET devices
 
 [SOCKET](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#using-socket-devices) devices default to blocking [WRITE](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#write)s. WRITE /BLOCK("OFF") enables non blocking WRITEs for the current socket of the current SOCKET device. A socket must be enabled for non blocking WRITEs before enabling it for TLS if both features are desired. For non blocking sockets, YottaDB retries a WRITE that blocks up to the number of times specified by the value of the environment variable `ydb_non-blocked_write_retries`, and if that is not set, `gtm_non_blocked_write_retries` with a 100 millisecond delay between each retry, defaulting to 10 attempts.
 
@@ -559,7 +597,7 @@ The optional third argument to WRITE /WAIT can be used to check only a single so
 Whether a socket is enabled for non blocking WRITEs may be determined by: [$ZSOCKET(device,"BLOCKING",index)](https://docs.yottadb.com/ProgrammersGuide/functions.html#zsocket) which returns either 1 (TRUE) for blocking, or 0 (FALSE) for non blocking.
 
 <a name="addlgtm9302"></a>
-#### Additional Information for GTM-9302 - gtmsource_local_struct.heartbeat_jnl_seqno
+### Additional Information for GTM-9302 - gtmsource_local_struct.heartbeat_jnl_seqno
 
 Here are some examples of the `"gtmsource_local_struct.heartbeat_jnl_seqno"` %PEEKBYNAME() field. This routine returns the replication speed, that is the number of seqno updates per second acknowledged by the replicating instance during heartbeat intervals.
 
@@ -644,9 +682,9 @@ and
 	quit
   ```
 
-### Messages
+## Messages
 
-#### New messages
+### New messages
 
 The following new messages have been added:
 
@@ -852,7 +890,7 @@ Action: For a BG database file, this means that a process attempting to flush mo
 
 Action: Refer to the description of error EEEE and take appropriate action.
 
-#### Revised messages
+### Revised messages
 
 The following messages have been modified for correctness and/or clarity:
 
@@ -904,7 +942,31 @@ MUPIP Error: This is a generic error or message indicating that there has been a
 
 Action: Review the accompanying message(s) for more information about the cause of this error. When REPLCOMM has an error severity, it accompanys a shut down of the replicating server. When REPLCOMM has an information severity, it indicates a temporary pause in replication due to a situation described by accompanying messages.
 
-### Legal Stuff
+### Obsolete Messages
+
+The following messages are no longer used:
+
+- DBCBADFILE
+- DBCCMDFAIL
+- DBCDBCERTIFIED
+- DBCDBNOCERTIFY
+- DBCINTEGERR
+- DBCKILLIP
+- DBCMODBLK2BIG
+- DBCNOEXTND
+ -DBCNOFINISH
+- DBCNOTSAMEDB
+- DBCREC2BIG
+- DBCREC2BIGINBLK
+- DBCSCNNOTCMPLT
+- DBMXRSEXCMIN
+- DEFEREVENT
+- SECONDAHEAD
+- SRCLOCUNKNOWN
+- VARRECBLKSZ
+- ZCMLTSTATUS
+
+## Legal Stuff
 
 Copyright © 2024 YottaDB LLC
 
