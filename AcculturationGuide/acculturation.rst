@@ -19,7 +19,7 @@ Acculturation Workshop
 
 Welcome to the YottaDB Acculturation Workshop!
 
-Copyright © 2017-2023 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
+Copyright © 2017-2024 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
 
 Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsidiaries. All Rights Reserved.
 
@@ -70,7 +70,7 @@ YottaDB provides:
 - Throughput that scales to the needs of the largest applications
 - Unique functionality for creating logical multi-site configurations for mission critical applications that must always be available - including availability during upgrades that involve changes to the database schema.
 
-At the time of writing of this edition of the Acculturation Workshop, the latest YottaDB release is r1.36. The text and exercises are based on earlier releases of YottaDB. While there is no material difference between the YottaDB releases of the exercises and the latest YottaDB release, the output messages you see may vary slightly from the text here.
+At the time of writing of this edition of the Acculturation Workshop, the latest YottaDB release is r2.00. The text and exercises are based on multiple releases of YottaDB. While there is no material difference between the YottaDB releases used in the exercises shown below and the latest YottaDB release, the output messages you see may vary slightly from the text here.
 
 .. note::
 
@@ -80,7 +80,7 @@ At the time of writing of this edition of the Acculturation Workshop, the latest
 Historical Background
 +++++++++++++++++++++
 
-YottaDB's codebase originated in the 1980s as an implementation of the ISO standard scripting & application development language M, commonly known as `MUMPS <https://en.wikipedia.org/wiki/MUMPS>`_. While YottaDB continues to support M (we are fastidious about backward compatibility, to allow existing applications to run on newer versions of YottaDB), the codebase has been continuously used and evolved over the last 30+ years, so that YottaDB today supports APIs in multiple languages. In the Acculturation Workshop, you will see code from `Go <https://golang.org>`_, `C <https://en.wikipedia.org/wiki/C_(programming_language)>`_, `M <../ProgrammersGuide/langfeat.html>`_, `Perl <https://www.perl.org/>`_, and `Rust <https://www.rust-lang.org/>`_ all accessing the same database. Between YottaDB and its upstream predecessor GT.M, the codebase is live at several of the largest real time core processing systems at any bank anywhere in the world, as well as increasingly in large electronic medical record systems. The implementation of YottaDB on the GNU/Linux operating system on x86_64 and ARM hardware is the basis of the FOSS stack for `VistA <http://worldvista.org/AboutVistA>`_.
+YottaDB's codebase originated in the 1980s as an implementation of the ISO standard scripting & application development language M, commonly known as `MUMPS <https://en.wikipedia.org/wiki/MUMPS>`_. While YottaDB continues to support M (we are fastidious about backward compatibility, to allow existing applications to run on newer versions of YottaDB), the codebase has been continuously used and evolved over the last 30+ years, so that YottaDB today supports APIs in multiple languages. In the Acculturation Workshop, you will see code from `Go <https://golang.org>`_, `C <https://en.wikipedia.org/wiki/C_(programming_language)>`_, `Lua <https://www.lua.org>`_, `M <../ProgrammersGuide/langfeat.html>`_, `node.js <https://nodejs.org>`_, `Perl <https://www.perl.org/>`_, `Python <https://www.python.org/>`_, and `Rust <https://www.rust-lang.org/>`_ all accessing the same database. Between YottaDB and its upstream predecessor GT.M, the codebase is live at several of the largest real time core processing systems at any bank anywhere in the world, as well as increasingly in large electronic medical record systems. The implementation of YottaDB on the GNU/Linux operating system on x86_64 and ARM hardware is the basis of the FOSS stack for `VistA <http://worldvista.org/AboutVistA>`_.
 
 +++++++++++++++++++++++++++
 Database Storage Philosophy
@@ -213,7 +213,7 @@ The Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedi
 Virtual Machine Download
 ++++++++++++++++++++++++
 
-Download `Debian-11_yottadbworkshop.zip <https://docs.yottadb.com/AcculturationGuide/Debian-11_yottadbworkshop.zip>`_ and unzip it to access the disk image file Debian-11_yottadbworkshop.vmdk.
+Download `Debian-12_yottadbworkshop.zip <https://docs.yottadb.com/AcculturationGuide/Debian-12_yottadbworkshop.zip>`_ and unzip it to access the disk image file Debian-12_yottadbworkshop.vmdk.
 
 .. _vm-config:
 
@@ -225,17 +225,17 @@ Virtualization software configures virtual machines either with their own IP add
 
 You will need to configure your virtual machine for outbound and inbound network access. While outbound access should require no configuration to work with either type of virtual machine network connection, inbound network access in a NAT'd environment will require a TCP port on the host to be forwarded to the virtual machine for each port at which a service on the virtual machine needs to respond. For example, each virtual machine has a secure shell (ssh) server listening at port 22 for incoming connections, and you might choose to forward port 2222 on the host to port 22 on your virtual machine.
 
-Refer to the user documentation for your virtualization software to set up virtual machine networking so that :code:`Debian-11_yottadbworkshop.vmdk` is the disk image of the virtual machine, and port 2222 on the host is forwarded to port 22 on the guest. For example, using qemu-system-x86_64 on a Linux host, one of the following commands should work:
+Refer to the user documentation for your virtualization software to set up virtual machine networking so that :code:`Debian-12_yottadbworkshop.vmdk` is the disk image of the virtual machine, and port 2222 on the host is forwarded to port 22 on the guest. For example, using qemu-system-x86_64 on a Linux host, one of the following commands should work:
 
 .. code-block:: bash
 
-   qemu-system-x86_64 -enable-kvm -cpu host -m 256 -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::9080-:9080,hostfwd=tcp::1337-:1337 -hda Debian-11_yottadbworkshop.vmdk
+   qemu-system-x86_64 -enable-kvm -cpu host -m 256 -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::9080-:9080,hostfwd=tcp::1337-:1337 -hda Debian-12_yottadbworkshop.vmdk
 
 Using kvm on a Linux host, the following command boots the vmdk image with port 2222 on the host forwarded to port 22 on the guest for ssh sessions:
 
 .. code-block:: bash
 
-    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::9080-:9080,hostfwd=tcp::1337-:1337 -hda Debian-11_yottadbworkshop.vmdk
+    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::9080-:9080,hostfwd=tcp::1337-:1337 -hda Debian-12_yottadbworkshop.vmdk
 
 +++++++++++++++++++++++++++++++
 Control of the Keyboard & Mouse
@@ -259,17 +259,17 @@ With a terminal emulator, initiate an ssh connection to port 2222 on localhost a
 
 .. code-block:: bash
 
-    $ ssh -p 2222 ydbuser@localhost
-    Linux ydbdev 5.10.0-13-amd64 #1 SMP Debian 5.10.106-1 (2022-03-17) x86_64
+   $ ssh -p 2222 ydbuser@localhost
+   Linux ydbdev 6.1.0-18-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.76-1 (2024-02-01) x86_64
 
-    The programs included with the Debian GNU/Linux system are free software;
-    the exact distribution terms for each program are described in the
-    individual files in /usr/share/doc/*/copyright.
+   The programs included with the Debian GNU/Linux system are free software;
+   the exact distribution terms for each program are described in the
+   individual files in /usr/share/doc/*/copyright.
 
-    Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-    permitted by applicable law.
-    Last login: Mon Apr 11 17:17:04 2022 from 10.0.2.2
-    ydbuser@ydbdev:~$
+   Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+   permitted by applicable law.
+   Last login: Fri Feb 23 17:19:42 2024 from 10.0.2.2
+   ydbuser@ydbdev:~$ 
 
 As newer versions of packages are likely to have been released after the Acculturation Workshop virtual machine was released, run the following command once before using the virtual machine, to update to current versions of packages, remove old versions, and reboot to use the new packages.
 
@@ -288,16 +288,16 @@ Install YottaDB
 - Make it executable: :code:`chmod +x ydbinstall.sh`
 - Run it (omit the :code:`--verbose` option if you want less output): :code:`sudo ./ydbinstall.sh --verbose --utf8 --gui --octo` (This command installs YottaDB under :code:`/usr/local/lib/`.)
 - The script has a plethora of installation options, which you will not use in the Acculturation Workshop. You can query it to list the options with the :code:`--help` option, e.g., :code:`./ydbinstall.sh --help`.
-- :code:`yottadb -version` provides a detailed report on the YottaDB build, e.g.,
+- :code:`ydb -version` provides a detailed report on the YottaDB build, e.g.,
 
   .. code-block:: bash
 
-     $ yottadb -version
-     YottaDB release:         r1.36
-     Upstream base version:   GT.M V6.3-014
+     $ /usr/local/bin/ydb -version
+     YottaDB release:         r2.00
+     Upstream base version:   GT.M V7.0-001
      Platform:                Linux x86_64
-     Build date/time:         2022-12-19 14:04
-     Build commit SHA:        31b5a92f2122b81fae315c2a59f4b3d1c975942d
+     Build date/time:         2024-02-19 17:22
+     Build commit SHA:        d87c9140bf6c3928925d4c842a396676f1f48989
      $
 
 +++++++++++
@@ -312,10 +312,10 @@ As YottaDB needs a working environment and several environment variables to be s
 
 .. code-block:: bash
 
- ydbuser@ydbdev:~$ source /usr/local/etc/ydb_env_set
- ydbuser@ydbdev:~$ yottadb -run %xcmd 'write $zyrelease,!'
- YottaDB r1.34 Linux x86_64
- ydbuser@ydbdev:~$
+   ydbuser@ydbdev:~$ source /usr/local/etc/ydb_env_set
+   ydbuser@ydbdev:~$ yottadb -run %xcmd 'write $zyrelease,!'
+   YottaDB r2.00 Linux x86_64
+   ydbuser@ydbdev:~$ 
 
 When you set up environments in YottaDB, you will set up your own scripting, but the default is a good place to start.
 
@@ -323,23 +323,25 @@ The :code:`tree` program shows the environment sourcing :code:`ydb_env_set` crea
 
 .. code-block:: bash
 
-   ydbuser@ydbdev:~$ tree .yottadb/
-    .yottadb/
-    ├── V6.3-011_x86_64 -> r1.34_x86_64
-    ├── r
-    └── r1.34_x86_64
-	├── g
-	│   ├── %ydbocto.dat
-	│   ├── %ydbocto.mjl
-	│   ├── yottadb.dat
-	│   ├── yottadb.gld
-	│   └── yottadb.mjl
-	├── o
-	│   └── utf8
-	└── r
+   ydbuser@ydbdev:~$ tree .yottadb
+   .yottadb
+   ├── V7.0-001_x86_64 -> r2.00_x86_64
+   ├── r
+   └── r2.00_x86_64
+       ├── g
+       │   ├── %ydbaim.dat
+       │   ├── %ydbaim.mjl
+       │   ├── %ydbocto.dat
+       │   ├── %ydbocto.mjl
+       │   ├── yottadb.dat
+       │   ├── yottadb.gld
+       │   └── yottadb.mjl
+       ├── o
+       │   └── utf8
+       └── r
 
-    7 directories, 5 files
-    ydbuser@ydbdev:~$
+   8 directories, 7 files
+   ydbuser@ydbdev:~$ 
 
 We will explore the environment in more detail below.
 
@@ -351,10 +353,9 @@ Now that YottaDB is installed and configured, change to the :code:`$ydb_dir` dir
 
 .. code-block:: bash
 
-    ydbuser@ydbdev:~$ cd $ydb_dir
-    ydbuser@ydbdev:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
-    %YDB-W-NOSELECT, None of the selected variables exist -- halting
-    ydbuser@ydbdev:~/.yottadb$
+   ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
+   %YDB-W-NOSELECT, None of the selected variables exist -- halting
+   ydbuser@ydbdev:~$
 
 ~~~~~~~~~~~~~
 Access from C
@@ -364,24 +365,22 @@ YottaDB comes with a `C API <../MultiLangProgGuide/cprogram.html>`_ and all you 
 
 .. code-block:: bash
 
-    ydbuser@ydbdev:~$ ls -l
-    total 68
-    -rw-r--r-- 1 ydbuser ydbuser   262 May  6 17:24 sayhelloC.c
-    -rwxr-xr-x 1 ydbuser ydbuser 61779 May 10 08:53 ydbinstall.sh
-    ydbuser@ydbdev:~$ gcc $(pkg-config --libs --cflags yottadb) -o sayhelloC sayhelloC.c -lyottadb
-    ydbuser@ydbdev:~$ ls -l
-    total 88
-    -rwxr-xr-x 1 ydbuser ydbuser 16608 May 10 08:59 sayhelloC
-    -rw-r--r-- 1 ydbuser ydbuser   262 May  6 17:24 sayhelloC.c
-    -rwxr-xr-x 1 ydbuser ydbuser 61779 May 10 08:53 ydbinstall.sh
-    ydbuser@ydbdev:~$ ./sayhelloC
-    ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
-    Hello label UTF-8
-    13-JUN-2022  11:07:05 ZWR
-    ^hello("C")="Hello, world!"
-    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
-    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
-    ydbuser@ydbdev:~$
+   ydbuser@ydbdev:~$ ls -l
+   total 4
+   -rw-r--r-- 1 ydbuser ydbuser 262 Feb 23 05:10 sayhelloC.c
+   ydbuser@ydbdev:~$ gcc $(pkg-config --libs --cflags yottadb) -o sayhelloC sayhelloC.c -lyottadb
+   ydbuser@ydbdev:~$ ls -l
+   total 20
+   -rwxr-xr-x 1 ydbuser ydbuser 15952 Feb 24 18:22 sayhelloC
+   -rw-r--r-- 1 ydbuser ydbuser   262 Feb 23 05:10 sayhelloC.c
+   ydbuser@ydbdev:~$ ./sayhelloC
+   ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
+   Hello label UTF-8
+   24-FEB-2024  18:22:29 ZWR
+   ^hello("C")="Hello, world!"
+   %YDB-I-RECORDSTAT, ^hello:	  Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
+   %YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 1  max subsc len: 10  max rec len: 13  max node len: 27
+   ydbuser@ydbdev:~$
 
 ~~~~~~~~~~~~~~
 Access from Go
@@ -391,27 +390,26 @@ Access from Go
 
 .. code-block:: bash
 
-    ydbuser@ydbdev:~$ go get lang.yottadb.com/go/yottadb
-    ydbuser@ydbdev:~$ go build lang.yottadb.com/go/yottadb
-    ydbuser@ydbdev:~$ go get -t lang.yottadb.com/go/yottadb
-    ydbuser@ydbdev:~$ go test lang.yottadb.com/go/yottadb
-    ok      lang.yottadb.com/go/yottadb     5.259s
-    ydbuser@ydbdev:~$
+   ydbuser@ydbdev:~$ export GO111MODULE=off
+   ydbuser@ydbdev:~$ go get -t lang.yottadb.com/go/yottadb
+   ydbuser@ydbdev:~$ go test lang.yottadb.com/go/yottadb
+   ok  	lang.yottadb.com/go/yottadb	5.275s
+   ydbuser@ydbdev:~$
 
 Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the :code:`ydbuser` directory, compile it and run it. Notice that it too has set a node in the database:
 
 .. code-block:: bash
 
-    ydbuser@ydbdev:~$ go build sayhelloGo.go
-    ydbuser@ydbdev:~$ ./sayhelloGo
-    ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
-    Hello UTF-8
-    13-JUN-2022  11:10:39 ZWR
-    ^hello("C")="Hello, world!"
-    ^hello("Go")="สวัสดีชาวโลก"
-    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
-    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
-    ydbuser@ydbdev:~$
+   ydbuser@ydbdev:~$ go build sayhelloGo.go
+   ydbuser@ydbdev:~$ ./sayhelloGo
+   ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
+   Hello label UTF-8
+   24-FEB-2024  18:31:58 ZWR
+   ^hello("C")="Hello, world!"
+   ^hello("Go")="สวัสดีชาวโลก"
+   %YDB-I-RECORDSTAT, ^hello:	  Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
+   %YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
+   ydbuser@ydbdev:~$ 
 
 ~~~~~~~~~~~~~~~~
 Access from Lua
@@ -421,9 +419,10 @@ YottaDB can be accessed from Lua using `lua-yottadb <https://github.com/orbitalq
 
 .. code-block:: bash
 
-   ydbuser@ydbdev:~$ git clone https://github.com/orbitalquark/lua-yottadb.git
+   ydbuser@ydbdev:~$ git clone --quiet https://github.com/anet-be/lua-yottadb.git
    ydbuser@ydbdev:~$ cd lua-yottadb/
    ydbuser@ydbdev:~/lua-yottadb$ sudo make install
+   ...
    ydbuser@ydbdev:~/lua-yottadb$ make test
    ...
    ydbuser@ydbdev:~/lua-yottadb$ cd ..
@@ -433,16 +432,16 @@ Download the `sayhelloLua.lua <./sayhelloLua.lua>`_ program into the :code:`ydbu
 
 .. code-block:: bash
 
-   ydbuser@ydbdev:~$ lua sayhelloLua.lua
-   ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
-   Hello UTF-8
-   13-JUN-2022  11:13:08 ZWR
+   ydbuser@ydbdev:~$ lua sayhelloLua.lua 
+   ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
+   Hello label UTF-8
+   24-FEB-2024  18:37:05 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("Lua")="Hallo Wereld"
-   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 3  max subsc len: 12  max rec len: 36  max node len: 44
-   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 3  max subsc len: 12  max rec len: 36  max node len: 44
-   ydbuser@ydbdev:~$
+   %YDB-I-RECORDSTAT, ^hello:	  Key cnt: 3  max subsc len: 12  max rec len: 36  max node len: 44
+   %YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 3  max subsc len: 12  max rec len: 36  max node len: 44
+   ydbuser@ydbdev:~$ 
 
 ~~~~~~~~~~~~~
 Access from M
@@ -452,44 +451,28 @@ YottaDB includes a complete language implementation for M. Download the `sayhell
 
 .. code-block:: bash
 
-    ydbuser@ydbdev:~/.yottadb$ ls -l r
-    total 4
-    -rw-r--r-- 1 ydbuser ydbuser 57 May  6 17:24 sayhelloM.m
-    ydbuser@ydbdev:~/.yottadb$ yottadb -run sayhelloM
-    ydbuser@ydbdev:~/.yottadb$ mupip extract -format=zwr -label="Hello" -select=hello -stdout
-    Hello UTF-8
-    13-JUN-2022  11:15:28 ZWR
-    ^hello("C")="Hello, world!"
-    ^hello("Go")="สวัสดีชาวโลก"
-    ^hello("Lua")="Hallo Wereld"
-    ^hello("M")="Привіт Світ"
-    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 4  max subsc len: 12  max rec len: 36  max node len: 44
-    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 4  max subsc len: 12  max rec len: 36  max node len: 44
-    ydbuser@ydbdev:~/.yottadb$
+   ydbuser@ydbdev:~$ ls -l .yottadb/r
+   total 4
+   -rw-r--r-- 1 ydbuser ydbuser 57 Feb 23 05:10 sayhelloM.m
+   ydbuser@ydbdev:~$ yottadb -run sayhelloM
+   ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
+   Hello label UTF-8
+   24-FEB-2024  18:38:43 ZWR
+   ^hello("C")="Hello, world!"
+   ^hello("Go")="สวัสดีชาวโลก"
+   ^hello("Lua")="Hallo Wereld"
+   ^hello("M")="Привіт Світ"
+   %YDB-I-RECORDSTAT, ^hello:	  Key cnt: 4  max subsc len: 12  max rec len: 36  max node len: 44
+   %YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 4  max subsc len: 12  max rec len: 36  max node len: 44
+   ydbuser@ydbdev:~$
 
 Notice that after running it, YottaDB has automatically compiled the source code (:code:`sayhelloM.m`) and created a file with object code (:code:`sayhelloM.o`) which it dynamically links and runs.
 
 .. code-block:: bash
 
-    ydbuser@ydbdev:~/.yottadb$ tree
-    .
-    ├── V6.3-011_x86_64 -> r1.34_x86_64
-    ├── r
-    │   └── sayhelloM.m
-    └── r1.34_x86_64
-	├── g
-	│   ├── %ydbocto.dat
-	│   ├── %ydbocto.mjl
-	│   ├── yottadb.dat
-	│   ├── yottadb.gld
-	│   └── yottadb.mjl
-	├── o
-	│   └── utf8
-	│       └── sayhelloM.o
-	└── r
-
-    7 directories, 7 files
-    ydbuser@ydbdev:~/.yottadb$
+   ydbuser@ydbdev:~$ find .yottadb -name \*.o -exec ls -l {} \;
+   -rw-r--r-- 1 ydbuser ydbuser 1200 Feb 24 18:38 .yottadb/r2.00_x86_64/o/utf8/sayhelloM.o
+   ydbuser@ydbdev:~$
 
 ~~~~~~~~~~~~~~~~~~~~
 Access from Node.js
@@ -500,26 +483,12 @@ YottaDB can be accessed from Node.js using `Nodem <https://github.com/dlwicksell
 .. code-block:: bash
 
    ydbuser@ydbdev:~$ npm install nodem
+   ydbuser@ydbdev:~$ export ydb_ci=node_modules/nodem/resources/nodem.ci
 
 Download the `sayhelloNode.js <./sayhelloNode.js>`_ example into the :code:`ydbuser` directory and run it. It will add another node in the database.
 
 .. code-block:: bash
 
-
-   ydbuser@ydbdev:~$ ls -l
-   total 3152
-   drwxr-xr-x 4 ydbuser ydbuser    4096 May 10 09:00 go
-   drwxr-xr-x 5 ydbuser ydbuser    4096 Jun 13 10:43 lua-yottadb
-   drwxr-xr-x 3 ydbuser ydbuser    4096 May 10 09:07 node_modules
-   -rw-r--r-- 1 ydbuser ydbuser     805 May 10 09:07 package-lock.json
-   -rw-r--r-- 1 ydbuser ydbuser      51 May 10 09:07 package.json
-   -rwxr-xr-x 1 ydbuser ydbuser   16608 May 10 08:59 sayhelloC
-   -rw-r--r-- 1 ydbuser ydbuser     262 May  6 17:24 sayhelloC.c
-   -rwxr-xr-x 1 ydbuser ydbuser 3100712 May 10 09:02 sayhelloGo
-   -rw-r--r-- 1 ydbuser ydbuser      74 Jun 13 11:11 sayhelloLua.lua
-   -rw-r--r-- 1 ydbuser ydbuser     203 May  6 17:24 sayhelloGo.go
-   -rw-r--r-- 1 ydbuser ydbuser     121 May 10 09:11 sayhelloNode.js
-   -rwxr-xr-x 1 ydbuser ydbuser   61779 May 10 08:53 ydbinstall.sh
    ydbuser@ydbdev:~$ node sayhelloNode.js
    ydbuser@ydbdev:~$ mupip extract -format=zwr -select=hello -stdout
    YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
@@ -547,32 +516,17 @@ YottaDB can also be accessed from Perl, which requires the Perl :code:`yottadb` 
    $ make
    $ make test TEST_DB=1 # optional, accesses database
    $ sudo make install
+   $ cd
 
 Download the `sayhelloPerl.pl <./sayhelloPerl.pl>`_ program into the :code:`ydbuser` directory, change its access permissions to make it executable and run it.
 
 .. code-block:: bash
 
-   ydbuser@ydbdev:~$ ls -l
-   total 3160
-   drwxr-xr-x 4 ydbuser ydbuser    4096 May 10 09:00 go
-   drwxr-xr-x 5 ydbuser ydbuser    4096 Jun 13 10:43 lua-yottadb
-   drwxr-xr-x 3 ydbuser ydbuser    4096 May 10 09:07 node_modules
-   -rw-r--r-- 1 ydbuser ydbuser     805 May 10 09:07 package-lock.json
-   -rw-r--r-- 1 ydbuser ydbuser      51 May 10 09:07 package.json
-   -rwxr-xr-x 1 ydbuser ydbuser   16608 May 10 08:59 sayhelloC
-   -rw-r--r-- 1 ydbuser ydbuser     262 May  6 17:24 sayhelloC.c
-   -rwxr-xr-x 1 ydbuser ydbuser 3100712 May 10 09:02 sayhelloGo
-   -rw-r--r-- 1 ydbuser ydbuser     203 May  6 17:24 sayhelloGo.go
-   -rw-r--r-- 1 ydbuser ydbuser      74 Jun 13 11:11 sayhelloLua.lua
-   -rw-r--r-- 1 ydbuser ydbuser     121 May 10 09:11 sayhelloNode.js
-   -rw-r--r-- 1 ydbuser ydbuser      86 May  6 17:24 sayhelloPerl.pl
-   -rwxr-xr-x 1 ydbuser ydbuser   61779 May 10 08:53 ydbinstall.sh
-   drwxr-xr-x 7 ydbuser ydbuser    4096 May 10 09:13 yottadb-perl
    ydbuser@ydbdev:~$ chmod +x sayhelloPerl.pl
    ydbuser@ydbdev:~$ ./sayhelloPerl.pl
    ydbuser@ydbdev:~$ mupip extract -format=zwr -select=hello -stdout
-   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
-   13-JUN-2022  11:24:59 ZWR
+   Hello label UTF-8
+   24-FEB-2024  21:52:30 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("Lua")="Hallo Wereld"
@@ -591,33 +545,33 @@ YottaDB can be accessed from Python, by downloading and installing the YottaDB w
 
 .. code-block:: bash
 
-   ydbuser@ydbdev:~$ pip3 install yottadb --user
+   ydbuser@ydbdev:~$ python3 -m venv .venv
+   ydbuser@ydbdev:~$ source .venv/bin/activate
+   (.venv) ydbuser@ydbdev:~$ pip install yottadb
+
+   Collecting yottadb
+     Downloading yottadb-1.0.0.tar.gz (39 kB)
+     Installing build dependencies ... done
+     Getting requirements to build wheel ... done
+     Installing backend dependencies ... done
+     Preparing metadata (pyproject.toml) ... done
+   Building wheels for collected packages: yottadb
+     Building wheel for yottadb (pyproject.toml) ... done
+     Created wheel for yottadb: filename=yottadb-1.0.0-cp311-cp311-linux_x86_64.whl size=131183 sha256=1ce0d985cc253df3d882f072df245dec3b6954b67c8808631734dc89262f6aff
+     Stored in directory: /home/ydbuser/.cache/pip/wheels/a9/3c/07/0b03e4d3b850e42b4686efa8abb8bdf62b6643fb55a06c4212
+   Successfully built yottadb
+   Installing collected packages: yottadb
+   Successfully installed yottadb-1.0.0
+   (.venv) ydbuser@ydbdev:~$
 
 Download the `sayhelloPython.py <./sayhelloPython.py>`_ program into the :code:`ydbuser` directory and run it.
 
 .. code-block:: bash
 
-   ydbuser@ydbdev:~$ ls -l
-   total 3164
-   drwxr-xr-x 4 ydbuser ydbuser    4096 May 10 09:00 go
-   drwxr-xr-x 5 ydbuser ydbuser    4096 Jun 13 10:43 lua-yottadb
-   drwxr-xr-x 3 ydbuser ydbuser    4096 May 10 09:07 node_modules
-   -rw-r--r-- 1 ydbuser ydbuser     805 May 10 09:07 package-lock.json
-   -rw-r--r-- 1 ydbuser ydbuser      51 May 10 09:07 package.json
-   -rwxr-xr-x 1 ydbuser ydbuser   16608 May 10 08:59 sayhelloC
-   -rw-r--r-- 1 ydbuser ydbuser     262 May  6 17:24 sayhelloC.c
-   -rwxr-xr-x 1 ydbuser ydbuser 3100712 May 10 09:02 sayhelloGo
-   -rw-r--r-- 1 ydbuser ydbuser     203 May  6 17:24 sayhelloGo.go
-   -rw-r--r-- 1 ydbuser ydbuser      74 Jun 13 11:11 sayhelloLua.lua
-   -rw-r--r-- 1 ydbuser ydbuser     121 May 10 09:11 sayhelloNode.js
-   -rwxr-xr-x 1 ydbuser ydbuser      86 May  6 17:24 sayhelloPerl.pl
-   -rw-r--r-- 1 ydbuser ydbuser     128 May  6 17:24 sayhelloPython.py
-   -rwxr-xr-x 1 ydbuser ydbuser   61779 May 10 08:53 ydbinstall.sh
-   drwxr-xr-x 7 ydbuser ydbuser    4096 May 10 09:13 yottadb-perl
-   ydbuser@ydbdev:~$ python3 sayhelloPython.py
-   ydbuser@ydbdev:~$ mupip extract -format=zwr -select=hello -stdout
-   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
-   13-JUN-2022  11:28:09 ZWR
+   (.venv) ydbuser@ydbdev:~$ python3 sayhelloPython.py
+   (.venv) ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
+   Hello label UTF-8
+   24-FEB-2024  22:01:10 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("Lua")="Hallo Wereld"
@@ -627,27 +581,33 @@ Download the `sayhelloPython.py <./sayhelloPython.py>`_ program into the :code:`
    ^hello("Python")="नमस्ते दुनिया"
    %YDB-I-RECORDSTAT, ^hello:        Key cnt: 7  max subsc len: 16  max rec len: 37  max node len: 48
    %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 7  max subsc len: 16  max rec len: 37  max node len: 48
-   ydbuser@ydbdev:~$
+   (.venv) ydbuser@ydbdev:~$
 
 ~~~~~~~~~~~~~~~~~~
 Access from Rust
 ~~~~~~~~~~~~~~~~~~
 
-YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_. Download the `sayhello_rust.rs <./sayhello_rust.rs>`_ example, which will add another node in the database:
+YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBRust <https://gitlab.com/YottaDB/Lang/YDBRust>`_. Download the `sayhello_rust.rs <./sayhello_rust.rs>`_ example, which will add another node in the database (the :code:`.venv` part of the prompt is leftover from the previous example):
 
 .. code-block:: bash
 
-   ydbuser@ydbdev:~$ cargo new sayhello_rust
-   ydbuser@ydbdev:~$ cd sayhello_rust
-   ydbuser@ydbdev:~/sayhello_rust$ echo 'yottadb = "2.0.0"' >> Cargo.toml
-   ydbuser@ydbdev:~/sayhello_rust$ # Place the downloaded sayhello_rust.rs program as src/main.rs
-   ydbuser@ydbdev:~/sayhello_rust$ export LD_LIBRARY_PATH=$ydb_dist
-   ydbuser@ydbdev:~/sayhello_rust$ cargo run
+   (.venv) ydbuser@ydbdev:~$ cargo new sayhello_rust
+	Created binary (application) `sayhello_rust` package
+   (.venv) ydbuser@ydbdev:~$ cd sayhello_rust/
+   (.venv) ydbuser@ydbdev:~/sayhello_rust$ echo 'yottadb = "2.0.0"' >> Cargo.toml
+   (.venv) ydbuser@ydbdev:~/sayhello_rust$ curl -o src/main.rs https://docs.yottadb.com/AcculturationGuide/sayhello_rust.rs
    ...
-   ydbuser@ydbdev:~/sayhello_rust$ cd ..
-   ydbuser@ydbdev:~$ mupip extract -format=zwr -select=hello -stdout
-   YottaDB MUPIP EXTRACT /usr/local/lib/yottadb/r134/mupip extract -format=zwr -select=hello -stdout UTF-8
-   13-JUN-2022  11:38:17 ZWR
+   (.venv) ydbuser@ydbdev:~/sayhello_rust$ export LD_LIBRARY_PATH=$ydb_dist
+   (.venv) ydbuser@ydbdev:~/sayhello_rust$ cargo run
+       Updating crates.io index
+   ...
+      Compiling sayhello_rust v0.1.0 (/home/ydbuser/sayhello_rust)
+       Finished dev [unoptimized + debuginfo] target(s) in 38.58s
+	Running `target/debug/sayhello_rust`
+   (.venv) ydbuser@ydbdev:~/sayhello_rust$ cd ..
+   (.venv) ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
+   Hello label UTF-8
+   26-FEB-2024  11:11:31 ZWR
    ^hello("C")="Hello, world!"
    ^hello("Go")="สวัสดีชาวโลก"
    ^hello("Lua")="Hallo Wereld"
@@ -656,36 +616,62 @@ YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBR
    ^hello("Perl")="Grüẞ Gott Welt"
    ^hello("Python")="नमस्ते दुनिया"
    ^hello("Rust")="ハローワールド"
-   %YDB-I-RECORDSTAT, ^hello:        Key cnt: 8  max subsc len: 16  max rec len: 37  max node len: 48
-   %YDB-I-RECORDSTAT, TOTAL:         Key cnt: 8  max subsc len: 16  max rec len: 37  max node len: 48
-   ydbuser@ydbdev:~$
+   %YDB-I-RECORDSTAT, ^hello:	  Key cnt: 8  max subsc len: 16  max rec len: 37  max node len: 48
+   %YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 8  max subsc len: 16  max rec len: 37  max node len: 48
+   (.venv) ydbuser@ydbdev:~$ 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Many Languages, One Database
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As you can see from the above, the same database has been updated by native code in different languages. Multiple concurrent processes written in different languages can share a single database.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Access from SQL via Octo®
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can access YottaDB using SQL syntax by using the Octo SQL engine `YDBOcto <https://gitlab.com/YottaDB/DBMS/YDBOcto>`_.
+You can also access YottaDB using SQL by using the Octo SQL engine `YDBOcto <https://gitlab.com/YottaDB/DBMS/YDBOcto>`_.
 
-To install Octo within the YottaDB virtual machine and use it from the host machine, follow the instructions in the :ref:`vm-config` and :ref:`acculturation-quickstart` sections.
+The :code:`--octo` option of the :code:`ydbinstall` / :code:`ydbinstall.sh` script used above installs, or updates, Octo and any needed dependencies. :code:`source /usr/local/etc/ydb_env_set` also sets up the YottaDB environment variables required by Octo, if Octo is installed.
 
-Next, if you haven't already, ``source`` the ``ydb_env_set`` file with ``source /usr/local/etc/ydb_env_set`` to setup the YottaDB environment variables required by Octo.
+You can run Octo from the terminal with the :code:`octo` command.
 
-Now, you can run Octo from the terminal with the ``octo`` command.
-
-To load some dummy data to play around with, you can use the Northwind dataset, available in the YDBOcto repository. You can get this dataset by downloading it to a temporary directory within the YottaDB virtual machine and loading it into Octo:
+Northwind dataset, available in the YDBOcto repository, has dummy data you can use. You can get this dataset by downloading and loading it into Octo. The :code:`northwind.zwr` file has the raw data, and the :code:`northwind.sql` file maps the raw data to SQL tables.
 
 .. code-block:: bash
 
-    wget -O northwind.sql https://gitlab.com/YottaDB/DBMS/YDBOcto/-/raw/master/tests/fixtures/northwind.sql?inline=false
-    wget -O northwind.zwr https://gitlab.com/YottaDB/DBMS/YDBOcto/-/raw/master/tests/fixtures/northwind.zwr?inline=false
-    octo -f northwind.sql
-    mupip load northwind.zwr
+   ydbuser@ydbdev:~$ source /usr/local/etc/ydb_env_set 
+   ydbuser@ydbdev:~$ curl -o northwind.zwr https://gitlab.com/YottaDB/DBMS/YDBOcto/-/raw/master/tests/fixtures/northwind.zwr?inline=false
+     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+				    Dload  Upload   Total   Spent    Left  Speed
+   100 43924  100 43924    0     0   196k      0 --:--:-- --:--:-- --:--:--  196k
+   ydbuser@ydbdev:~$ mupip load northwind.zwr 
+   YottaDB MUPIP EXTRACT UTF-8
+   21-SEP-2018  14:55:45 ZWR
+   Beginning LOAD at record number: 3
+
+   LOAD TOTAL		Key Cnt: 932  Max Subsc Len: 18  Max Data Len: 458
+   %YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 942
+   ydbuser@ydbdev:~$ curl -o northwind.sql https://gitlab.com/YottaDB/DBMS/YDBOcto/-/raw/master/tests/fixtures/northwind.sql?inline=false
+     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+				    Dload  Upload   Total   Spent    Left  Speed
+   100  1824  100  1824    0     0   8397      0 --:--:-- --:--:-- --:--:--  8405
+   ydbuser@ydbdev:~$ octo -f northwind.sql
+   CREATE TABLE
+   CREATE TABLE
+   CREATE TABLE
+   CREATE TABLE
+   CREATE TABLE
+   CREATE TABLE
+   CREATE TABLE
+   CREATE TABLE
+   ydbuser@ydbdev:~$ 
 
 You can now query the Northwind database from within the VM using the ``octo`` command from your terminal. Here is a sample query you can run in Octo to confirm that the data was correctly loaded:
 
 .. code-block:: sql
 
-    select * from employees inner join nwOrders on employees.employeeid = nwOrders.employeeid;
+   select * from employees inner join nwOrders on employees.employeeid = nwOrders.employeeid;
 
 If Octo was correctly installed and the data correctly loaded, then Octo will output a number of SQL data rows for this query. To exit the Octo prompt, you can enter the command ``\q``, or just use CTRL-C.
 
@@ -693,7 +679,7 @@ You can also connect to the Octo installation on the virtual machine from your h
 
 .. code-block:: bash
 
-    $ydb_dist/yottadb -r %ydboctoAdmin add user ydbuser
+    yottadb -r %ydboctoAdmin add user ydbuser
 
 You will be prompted to enter a password for the new user.
 
@@ -703,27 +689,29 @@ Then, from the host machine, connect to the ``rocto`` server using the PostgreSQ
 
 .. code-block:: bash
 
-    psql -U ydbuser -h localhost -p 1337
+   $ psql -U ydbuser -h localhost -p 1337
+   Password for user ydbuser: 
+   psql (16.1, server 13.0.0)
+   Type "help" for help.
 
-You should then enter an interactive ``psql`` prompt, where you can enter SQL queries against the YottaDB database, as mediated through the Octo SQL engine. Try querying the Northwind dataset again to confirm everything is working correctly.
+   ydbuser=# yottadb -r %ydboctoAdmin add user ydbuser^C
+   ydbuser=# select * from employees inner join nwOrders on employees.employeeid = nwOrders.employeeid;
+
+A query gives the same results from :code:`octo` and :code:`psql`.
 
 ~~~~~~~~~~~~~~~~~~~~~~~
 GUI Access from the Web
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-You can access and manage YottaDB using a graphical user interface (GUI) via the `YDBGUI <https://gitlab.com/YottaDB/UI/YDBGUI>`_ web application. The simplest way to get started with YDBGUI is to install it using the YottaDB installation script, ``ydbinstall``.
+You can access and manage YottaDB using a graphical user interface (GUI) via the `YDBGUI <https://gitlab.com/YottaDB/UI/YDBGUI>`_ web application. The :code:`--gui` option of the :code:`ydbinstall` / :code:`ydbinstall.sh` script installs, or updates, the GUI and needed dependencies. :code:`source /usr/local/etc/ydb_env_set` sets up the YottaDB environment variables required by the GUI, if it is installed.
 
-To install the GUI within the YottaDB virtual machine and use it from the host machine, follow the instructions in the :ref:`vm-config` and :ref:`acculturation-quickstart` sections.
-
-Next, if you haven't already, ``source`` the ``ydb_env_set`` file with ``source /usr/local/etc/ydb_env_set`` to setup the YottaDB environment variables required by YDBGUI.
-
-Then start YDBGUI with:
+Start YDBGUI with:
 
 .. code-block:: bash
 
-    $ydb_dist/yottadb -run %ydbgui
+    yottadb -run %ydbgui
 
-This will run YDBGUI at the default port of 9080, with TLS disabled. Since the VM was instructed to forward this port to port 9080 on the host machine, you can now access YDBGUI from the host machine by navigating your web browser to ``http://localhost:9080/`` You should see something like this:
+This will run YDBGUI at the default port of 9080. Since the VM was instructed to forward this port to port 9080 on the host machine, you can now access YDBGUI from the host machine by navigating your web browser to `http://localhost:9080 <http://localhost:9080/>`_. You should see something like this:
 
 .. image:: main-screen.png
 
@@ -889,7 +877,7 @@ The GDE utility program (invoked from the shell with :code:`yottadb -run ^GDE`) 
 
    The input to GDE can be a text file. In a production environment, YottaDB recommends that text files be used to define database configurations, and that these text files be put under version control.
 
-Although there is a `GUI for GDE <https://gitlab.com/YottaDB/UI/YDBGDEGUI>`_, for the Acculturation Workshop we will use text files as the workshop is intended to develop low-level YottaDB skills.
+Although there is a `GUI <https://gitlab.com/YottaDB/UI/YDBGUI>`_, for the Acculturation Workshop we will use text files as the workshop is intended to develop low-level YottaDB skills.
 
 In YottaDB, sets of M global variables (Names or Name spaces) are mapped to Regions that define properties relating to the M global. Each Region is mapped to a Segment that defines properties relating to the file system. Consider the example in the figure below:
 
@@ -1540,20 +1528,20 @@ Delete the prior generation journal files, to keep the directory clean, and make
    ydbuser@ydbdev:~/jnlex$
 
 
-Shut down the Acculturation Workshop virtual machine cleanly and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original Debian-11_yottadbworkshop.vmdk file.
+Shut down the Acculturation Workshop virtual machine cleanly and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original Debian-12_yottadbworkshop.vmdk file.
 
 If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a feature that allows a disk image to be created off a base image so that the base image does not change and all changes go to the new disk image. Check with your virtualization software to determine whether it supports this feature. Execute commands such as the following on the host (with the guest shut down) – depending on the version of QEMU/kvm on your PC, the exact command may vary.
 
 .. code-block:: bash
 
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-11_yottadbworkshop.vmdk Melbourne.vmdk
-   Formatting 'Melbourne.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-11_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-11_yottadbworkshop.vmdk Paris.vmdk
-   Formatting 'Paris.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-11_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-11_yottadbworkshop.vmdk Santiago.vmdk
-   Formatting 'Santiago.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-11_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
+   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-12_yottadbworkshop.vmdk Melbourne.vmdk
+   Formatting 'Melbourne.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-12_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
+   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-12_yottadbworkshop.vmdk Paris.vmdk
+   Formatting 'Paris.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-12_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
+   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-12_yottadbworkshop.vmdk Santiago.vmdk
+   Formatting 'Santiago.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-12_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
    $ ls -l *.vmdk
-   -rw-r--r-- 1 bhaskar gtc 9320071168 Apr 12 17:22 Debian-11_yottadbworkshop.vmdk
+   -rw-r--r-- 1 bhaskar gtc 9320071268 Apr 12 17:22 Debian-12_yottadbworkshop.vmdk
    -rw-r--r-- 1 bhaskar gtc   13172736 Apr 12 17:24 Melbourne.vmdk
    -rw-r--r-- 1 bhaskar gtc   13172736 Apr 12 17:24 Paris.vmdk
    -rw-r--r-- 1 bhaskar gtc   13172736 Apr 12 17:24 Santiago.vmdk
