@@ -3,12 +3,19 @@
 .. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
+.. # Portions copyright (c) 2011-2021 Fidelity National          #
+.. # Information Services, Inc. and/or its subsidiaries.         #
+.. # All rights reserved.                                        #
+.. #                                                             #
 .. #     This document contains the intellectual property        #
 .. #     of its copyright holder(s), and is made available       #
 .. #     under a license.  If you do not know the terms of       #
 .. #     the license, please stop and do not read further.       #
 .. #                                                             #
 .. ###############################################################
+.. Although this document was not created by FIS, it contains text
+.. from FIS GT.M user documentation. Therefore, it carries an FIS
+.. copyright.
 
 .. index::
    Input/Output Processing
@@ -1828,9 +1835,9 @@ WRITE Command
 
 The WRITE command sends data to a socket.
 
-``WRITE !`` inserts the character(s) of the first I/O delimiter (if any) to the sending buffer. If ``"ZFF=expr"`` has been specified, ``WRITE #`` inserts the characters of ``expr``. Otherwise ``WRITE #`` has no effect. ``WRITE !`` and ``WRITE #`` always maintain ``$X`` and ``$Y`` in a fashion that emulates a terminal cursor position except when the device is ``OPEN``ed with a UTF ``CHSET`` because the units for ``$X`` and ``$Y`` for terminals are in display columns while for sockets they are in codepoints.
+``WRITE !`` inserts the character(s) of the first I/O delimiter (if any) to the sending buffer. If ``"ZFF=expr"`` has been specified, ``WRITE #`` inserts the characters of ``expr``. Otherwise ``WRITE #`` has no effect. ``WRITE !`` and ``WRITE #`` always maintain ``$X`` and ``$Y`` in a fashion that emulates a terminal cursor position except when the device has one of the UTF character sets specified on the ``OPEN``, because the units for ``$X`` and ``$Y`` for terminals are in display columns while for sockets they are in codepoints.
 
-Both ``WRITE !`` and ``WRITE #`` flush the data from the buffer. Normally when writing TCP socket code, data may be sent with e.g. ``WRITE MYDATA,!``.
+Both ``WRITE !`` and ``WRITE #`` flush the data from the buffer. Normally when writing TCP socket code, data may be included, e.g. ``WRITE MYDATA,!``.
 
 The WRITE command for SOCKET devices accepts the following control mnemonics:
 
@@ -1838,15 +1845,27 @@ The WRITE command for SOCKET devices accepts the following control mnemonics:
 
    /L[ISTEN][(numexpr)]
 
-where numexpr specifies the listen queue depth for a listening socket. The value will be between 1 and the system-enforced maximum. By default, an OPEN or USE with LISTEN immediately sets the listen queue size to 1. For vendor-specific information on how to change your system's maximum queue length, refer to the listen manpage..
+where ``numexpr`` specifies the listen queue depth for a listening socket. The value can be 1 through a maximum determined by the operating system. By default, an OPEN or USE with LISTEN immediately sets the listen queue size to 1. For vendor-specific information on how to change your system's maximum queue length, refer to the ``listen(2)`` manpage..
 
 .. code-block:: none
 
-   /W[AIT][(timeout)]
+   /W[AIT][(timeout[,[what][,handle]])]
 
-where timeout is a numeric expression that specifies how long in seconds a server waits for a connection or data to become available on one of the sockets in the current Socket Device.
+where:
+
+- ``timeout`` is a numeric expression that specifies how long in seconds the WRITE command waits for a condition to be met in the current SOCKET device.
+- The optional ``what`` specifies the condition that the command waits for.
+
+  - if ``what`` is omitted, the command waits for an incoming connection at a listening socket.
+  - if ``what`` is just ``"WRITE"``, the command waits till a socket is not blocked for a WRITE.
+  - if ``what`` is just ``"READ"``, the command waits till data is available to read.
+  - if ``what`` includes both ``READ`` and ``WRITE`` substrings, the command waits till either data becomes available to read, or a socket is not blocked for a WRITE.
+
+- If ``handle`` is specified, the command waits for the condition to occur at a specific socket in the current SOCKET device. Otherwise, it waits till the condition is satisfied for any socket in tne current SOCKET device.
 
 .. note::
+   In most circumstances, ``WRITE /WAIT(timeout[,"WRITE"])`` for non-blocking sockets returns immediately, because non-blocking sockets are usually ready for writing. See ``WRITE /BLOCK("OFF")`` below.
+   
    If the current Socket Device is $PRINCIPAL and input and output are different SOCKETs, WRITE /WAIT applies to the input side of the device.
 
 .. code-block:: none
@@ -1892,7 +1911,7 @@ SOCKET devices support encrypted connections with TLS using an encryption plugin
 .. note::
    Note that SOCKET device actions may produce the following errors: TLSDLLOPEN, TLSINIT, TLSCONVSOCK, TLSHANDSHAKE, TLSCONNINFO, TLSIOERROR, and TLSRENEGOTIATE.
 
-The TLS plugin uses OpenSSL options in the configuration file specified under the tls: label as the default for all TLS connections and under the specific labels to override the defaults for corresponding connections.
+The TLS plugin uses OpenSSL options in the configuration file specified under the ``tls:`` label as the default for all TLS connections and under the specific labels to override the defaults for corresponding connections.
 
 YottaDB buffers WRITEs to TLS enabled sockets until a subsequent USE :FLUSH, WRITE !, WRITE #, or an internal 400 millisecond timer expires.
 
@@ -1900,7 +1919,42 @@ YottaDB buffers WRITEs to TLS enabled sockets until a subsequent USE :FLUSH, WRI
    Because this functionality has a wide variety of user stories (use cases) and has substantial complexity, although the code appears robust, we are not confident that we have exercised a sufficient breadth of use cases in testing. Also we may make changes in future releases that are not entirely backwards compatible. We encourage you to use with this facility in development and testing, and to provide us with feedback. If you are a YottaDB customer and wish to use this in production, please contact us beforehand to discuss your use case(s).
 
 .. note::
-   Owing to the range of OpenSSL versions in use across the breadth of platforms and versions supported by YottaDB, on all platforms, but especially on non-Linux UNIX platforms, YottaDB recommends rebuilding the plugin from sources included with the YottaDB binary distribution with the specific version of OpenSSL installed on your systems for any production or production staging environments that use TLS. For more information on recompiling the reference implementation, refer to the `Installing YottaDB chapter of the Administration and Operations Guide <../AdminOpsGuide/installydb.html>`_.
+   YDBEncrypt, the encryption plugin <https://gitlab.com/YottaDB/Util/YDBEncrypt>`_ is released as source code, and is built with the specific version of `OpenSSL <https://www.openssl.org/>`_ installed on your system. If the OpenSSL API changes, e.g., after a software upgrade, you may have to rebuild YDBEncrypt. YottaDB recomemnds installing or upgrading YDBEncrypt with `ydbinstall <../AdminOpsGuide/installydb.html#ydbinstall-script>`_.
+
+.. code-block:: none
+
+   WRITE /BLOCK("OFF")
+
+``WRITE /BLOCK("OFF")`` enables non-blocking WRITEs for the current socket of the current SOCKET device. Sockets default to blocking WRITEs.
+
+For sockets where both TLS and non-blocking WRITEs are to be used, non-blocking WRITEs must be enabled first.
+
+For non-blocking sockets, YottaDB retries a WRITE that blocks up to the number of times specified by the `ydb_non_blocked_write_retries <../AdminOpsGuide/basicops.html#ydb-non-blocked-write-retries>`_ environment variable (or $gtm_non_blocked_write_retries if $ydb_non_blocked_write_retries is not defined), defaulting to 10 WRITE attempts with a 100 millisecond delay between each retry.
+
+If WRITE remains blocked after the specified retries, the WRITE sets `$DEVICE <isv.html#device>`_ to ``"1,Resource temporarily unavailable"`` and issues an error if `IOERROR <ioproc.html#ioerr-devparm>`_ is ``"TRAP"``.
+
+If IOERROR is not ``"TRAP"``, the application should check $DEVICE after each WRITE. An attempt to WRITE to a socket after it has been blocked is an error which sets $DEVICE to ``"1,Non blocking WRITE blocked - no further WRITEs allowed"``. The only operation permitted on a blocked socket is a CLOSE.
+
+.. note::
+   Multi-argument WRITEs are equivalent to a series of single-argument WRITEs. YottaDB turns unparenthesized concatenation within a WRITE argument into multiple arguments. Format control characters such as "!" and "#" are each considered as an argument.
+
+   A significant delay between bytes for any reason, including blocking, especially within a multibyte character when CHSET is UTF-8, may be considered an error by the receiving end of a connection. If the application is unable to handle such a delay, it may result in an application error.
+
+A WRITE to a non-blocking socket, which is not enabled for TLS, may terminate early on the following events: <CTRL-C>; exceeding `$ZMAXTPTIME <isv.html#zmaxtptime>`_, or `$ZTIMEOUT <isv.html#ztimeout>`_ expiring. These events result in a transfer to the interrupt vector or error handler at the next execution boundary as described in `Interrupt Handling <langfeat.html#interrupt-handling>`_.
+
+When non-blocking WRITEs are enabled for a socket, WRITE /WAIT can check if that socket would not block on WRITE and/or a READ. The optional second argument can be a string containing ``"READ"`` and/or ``"WRITE"``.
+
+- If the second argument is omitted or specifies both ``"READ"`` and ``"WRITE"`` (e.g., ``"READWRITE"`` or ``"WRITEREAD"``) and the socket selected by WRITE /WAIT is ready for both READ and WRITE, $KEY contains ``READWRITE|<socket handle>|<address>``.
+
+  - If the socket selected by a WRITE /WAIT implicitly or explicitly requests the state for writing would block on a READ but not block on WRITE, $KEY contains ``WRITE|<socket handle>|<address>``. Note that a WRITE may still be unable to complete if it tries to write more bytes than the system is ready to accept.
+
+ - If the socket selected by WRITE /WAIT which implicitly or explicitly requests the state for reading would not block on a READ but would block on a WRITE, $KEY contains ``READ|<socket handle>|<address>``.
+
+- If the second argument is omitted or contains ``"WRITE"`` but not ``"READ"``, WRITE /WAIT checks for readiness for WRITE on non-blocking sockets, but never checks readiness to WRITE on blocking sockets, even if explicitly requested.
+
+`$ZKEY <isv.html#zkey>`_ after a prior WRITE /WAIT will contain a piece of the form ``"WRITE|sockethandle|ipaddress"`` if a non-blocking socket was considered writable, which we expect to be typical. If a socket was also readable, there will be two pieces in $ZKEY for the socket, one for WRITE and the other for READ.
+
+An application can determine whether a socket is enabled for non-blocking WRITEs with `$ZSOCKET(device,"BLOCKING",index) <functions.html#zsocket>`_ which returns either 1 (TRUE) for blocking, or 0 (FALSE) for non-blocking.
 
 ++++++++++++++++++++++++++
 Socket Device Operation
@@ -2562,6 +2616,8 @@ IKEY="key_name [IV]"
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
 For more information, refer to the description of KEY deviceparameter of OPEN or USE.
+
+.. _ioerr-devparm:
 
 ~~~~~~~~
 IOERROR
@@ -3487,7 +3543,7 @@ CENABLE
 
 Enables or disables the ability to force YottaDB into Direct Mode by entering <CTRL-C> at $PRINCIPAL.
 
-If CENABLE is set, <CTRL-C> interrupts process execution. For more information on interrupt handling, refer to `Interrupt Handling <./langfeat.html#interrupt-handling>`_.
+If CENABLE is set, <CTRL-C> interrupts process execution. For more information on interrupt handling, refer to `Interrupt Handling <langfeat.html#interrupt-handling>`_.
 
 By default, CENABLE is set. If CTRAP contains $C(3), CENABLE is disabled.
 

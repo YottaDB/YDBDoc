@@ -4,12 +4,19 @@
 .. # Copyright (c) 2024 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
+.. # Portions copyright (c) 2021 Fidelity National Information   #
+.. # Services, Inc. and/or its subsidiaries.                     #
+.. # All rights reserved.                                        #
+.. #                                                             #
 .. #     This document contains the intellectual property        #
 .. #     of its copyright holder(s), and is made available       #
 .. #     under a license.  If you do not know the terms of       #
 .. #     the license, please stop and do not read further.       #
 .. #                                                             #
 .. ###############################################################
+.. Although this document was not created by FIS, it contains text
+.. from FIS GT.M user documentation. Therefore, it carries an FIS
+.. copyright.
 -->
 
 # YottaDB r2.00
@@ -28,9 +35,10 @@
 
 ## Release Note Revision History
 
-| Revision | Date              | Summary               |
-|----------|-------------------|-----------------------|
-| 1.00     | February 23, 2024 | r2.00 Initial Release |
+| Revision | Date              | Summary                                            |
+|----------|-------------------|----------------------------------------------------|
+| 1.00     | February 23, 2024 | r2.00 Initial Release                              |
+| 1.01     | February 29, 2024 | Update information for non-blocking SOCKET devices |
 
 ## Contact Information
 ### YottaDB LLC
@@ -570,31 +578,51 @@ Limitations include:
 <a name="addlgtm8843"></a>
 ### Additional Information for GTM-8843 - Non-blocking WRITE to SOCKET devices
 
-[SOCKET](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#using-socket-devices) devices default to blocking [WRITE](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#write)s. WRITE /BLOCK("OFF") enables non blocking WRITEs for the current socket of the current SOCKET device. A socket must be enabled for non blocking WRITEs before enabling it for TLS if both features are desired. For non blocking sockets, YottaDB retries a WRITE that blocks up to the number of times specified by the value of the environment variable `ydb_non-blocked_write_retries`, and if that is not set, `gtm_non_blocked_write_retries` with a 100 millisecond delay between each retry, defaulting to 10 attempts.
+[SOCKET](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#using-socket-devices) devices default to blocking [WRITE](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#write)s. ``WRITE /BLOCK("OFF")`` enables non blocking WRITEs for the current socket of the current SOCKET device. A socket must be enabled for non blocking WRITEs before enabling it for TLS if both features are desired. For non blocking sockets, YottaDB retries a WRITE that blocks up to the number of times specified by the value of the environment variable `ydb_non-blocked_write_retries`, and if that is not set, `gtm_non_blocked_write_retries`, with a 100 millisecond delay between each retry, defaulting to 10 attempts.
 
 If WRITE remains blocked after the specified retries, the WRITE sets [$DEVICE](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#device) to `"1,Resource temporarily unavailable"` and issues an error if deviceparameter [IOERROR](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#deviceparameter-summary-table) is `"TRAP"`. If IOERROR is not `"TRAP"`, $DEVICE must be checked after each WRITE. An attempt to WRITE to a socket after it has been blocked is an error which sets $DEVICE to `"1,Non blocking WRITE blocked - no further WRITEs allowed"`. Thus the only operation permitted on a blocked socket is to [CLOSE](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#close) it.
 
+``WRITE /W[AIT][(timeout[,[what][,handle]])]`` where:
+
+- ``timeout`` is a numeric expression that specifies how long in seconds the WRITE command waits for a condition to be met in the current SOCKET device.
+
+- The optional ``what`` specifies the condition that the command waits for.
+
+  - if ``what`` is omitted, the command waits for an incoming connection at a listening socket.
+
+  - if ``what`` is just ``"WRITE"``, the command waits till a socket is not blocked for a WRITE.
+
+  - if ``what`` is just ``"READ"``, the command waits till data is available to read.
+
+  - if what includes both ``"READ"`` and ``"WRITE"`` substrings, the command waits till either data becomes available to read, or a socket is not blocked for a WRITE.
+
+- If ``handle`` is specified, the command waits for the condition to occur at a specific socket in the current SOCKET device. Otherwise, it waits till the condition is satisfied for any socket in tne current SOCKET device.
+
+A WRITE to a non-blocking socket, which is not enabled for TLS, may terminate early on the following events: <CTRL-C>; exceeding [$ZMAXTPTIME](https://docs.yottadb.com/YDBDoc/ProgGuide/_build/html/isv.html#zmaxtptime), or [$ZTIMEOUT](https://docs.yottadb.com/YDBDoc/ProgGuide/_build/html/isv.html#ztimeout) expiring. These events result in a transfer to the interrupt vector or error handler at the next execution boundary as described in [Interrupt Handling](https://docs.yottadb.com/YDBDoc/ProgGuide/_build/html/langfeat.html#interrupt-handling).
+
+When non-blocking WRITEs are enabled for a socket, WRITE /WAIT can check if that socket would not block on WRITE and/or a READ. The optional second argument can be a string containing ``"READ"`` and/or ``"WRITE"``.
+
+- If the second argument is omitted or specifies both ``"READ"`` and ``"WRITE"`` (e.g., ``"READWRITE"`` or ``"WRITEREAD"``) and the socket selected by WRITE /WAIT is ready for both READ and WRITE, $KEY contains ``READWRITE|<socket handle>|<address>``.
+
+  - If the socket selected by a WRITE /WAIT implicitly or explicitly requests the state for writing would block on a READ but not block on WRITE, $KEY contains ``WRITE|<socket handle>|<address>``. Note that a WRITE may still be unable to complete if it tries to write more bytes than the system is ready to accept.
+
+  - If the socket selected by WRITE /WAIT which implicitly or explicitly requests the state for reading would not block on a READ but would block on a WRITE, $KEY contains ``READ|<socket handle>|<address>``.
+
+- If the second argument is omitted or contains ``"WRITE"`` but not ``"READ"``, WRITE /WAIT checks for readiness for WRITE on non-blocking sockets, but never checks readiness to WRITE on blocking sockets, even if explicitly requested.
+
+[$ZKEY](https://docs.yottadb.com/YDBDoc/ProgGuide/_build/html/isv.html#zkey) after a prior WRITE /WAIT will contain a piece of the form ``"WRITE|sockethandle|ipaddress"`` if a non-blocking socket was considered writable, which we expect to be typical. If a socket was also readable, there will be two pieces in $ZKEY for the socket, one for WRITE and the other for READ.
+
+An application can determine whether a socket is enabled for non-blocking WRITEs with ``$ZSOCKET(device,"BLOCKING",index)`` which returns either 1 (TRUE) for blocking, or 0 (FALSE) for non-blocking.
+
 **Notes**
 
-* Multi-argument WRITEs are equivalent to a series of one argument WRITEs, and that YottaDB turns unparenthesized concatenation within a write argument into multi-argument WRITEs. Format control characters such as "!" and "#" are each considered as an argument.
-* A significant delay between bytes for any reason, including blocking, especially within a multibyte character when CHSET is UTF-8, may be considered an error by the receiving end of a connection. If the application is unable to handle such a delay, it may result in an application error.
+- In most circumstances, WRITE /WAIT(timeout[,"WRITE"]) for non-blocking sockets returns immediately, because non-blocking sockets are usually ready for writing. See WRITE /BLOCK("OFF") below.
 
-A WRITE to a non blocking socket, which is not enabled for TLS, may terminate early on the following events:
+- If the current Socket Device is $PRINCIPAL and input and output are different SOCKETs, WRITE /WAIT applies to the input side of the device.
 
-* CTRL-C, exceeding $ZMAXTPTIME, or $ZTIMEOUT expiring. These events result in a transfer to the interrupt vector or error handler at the next execution boundary as described in the [Interrupt Handling](https://docs.yottadb.com/ProgrammersGuide/isv.html#interrupt-handling) section of the YottaDB M Programmer's Guide.
+- Multi-argument WRITEs are equivalent to a series of single-argument WRITEs. YottaDB turns unparenthesized concatenation within a WRITE argument into multiple arguments. Format control characters such as "!" and "#" are each considered as an argument.
 
-When non blocking WRITEs are enabled for a socket, WRITE /WAIT may check if that socket would not block on WRITE in addition to READ. The optional second argument may contain a string containing "READ" and/or "WRITE". If the second argument is omitted or specifies both "READ" and "WRITE" and the socket selected by WRITE /WAIT is ready for both READ and WRITE, [$KEY](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#key) contains: READWRITE|<socket handle>|<address>. If the second argument is omitted or contains "WRITE", WRITE /WAIT checks readiness for WRITE on non blocking sockets, but never checks readiness to WRITE on blocking sockets, even if explicitly requested.
-
-If the socket selected by a WRITE /WAIT which implicitly or explicitly requests the write state would block on a READ but not block on WRITE, $KEY contains: WRITE|<socket handle>|<address>. Note that a WRITE may still not be able to complete if it tries to write more bytes than the system is ready to accept.
-
-**Note**
-* In most circumstances, WRITE /WAIT or WRITE /WAIT(timeout,"WRITE") for SOCKET devices which contain a non blocking socket returns immediately because non blocking sockets are usually ready for writing.
-
-If the socket selected by WRITE /WAIT which implicitly or explicitly requests the read state would not block on a READ but would block on a WRITE, $KEY contains: READ|<socket handle>|<address>. If the second argument only specifies "WRITE", WRITE /WAIT does not check incoming connections for listening sockets.
-
-The optional third argument to WRITE /WAIT can be used to check only a single socket instead of all sockets in the current SOCKET device by specifying the handle name of a socket: WRITE /WAIT[(timeout[,[what][,handle]])]. [$ZKEY](https://docs.yottadb.com/ProgrammersGuide/isv.html#zkey) after a prior WRITE /WAIT will contain a piece of the format "WRITE|sockethandle|ipaddress" if a non blocking socket was considered writable which will be the case most of the time. If a socket was also readable, there will be two pieces in $ZKEY for the socket, one for WRITE and the other for READ.
-
-Whether a socket is enabled for non blocking WRITEs may be determined by: [$ZSOCKET(device,"BLOCKING",index)](https://docs.yottadb.com/ProgrammersGuide/functions.html#zsocket) which returns either 1 (TRUE) for blocking, or 0 (FALSE) for non blocking.
+- A significant delay between bytes for any reason, including blocking, especially within a multibyte character when CHSET is UTF-8, may be considered an error by the receiving end of a connection. If the application is unable to handle such a delay, it may result in an application error.A WRITE to a non blocking socket, which is not enabled for TLS, may terminate early on the following events:
 
 <a name="addlgtm9302"></a>
 ### Additional Information for GTM-9302 - gtmsource_local_struct.heartbeat_jnl_seqno
