@@ -3,9 +3,8 @@
 .. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
-.. # Portions copyright (c) 2011-2021 Fidelity National          #
+.. # Portions Copyright (c) Fidelity National                    #
 .. # Information Services, Inc. and/or its subsidiaries.         #
-.. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
 .. #     of its copyright holder(s), and is made available       #
@@ -13,9 +12,6 @@
 .. #     the license, please stop and do not read further.       #
 .. #                                                             #
 .. ###############################################################
-.. Although this document was not created by FIS, it contains text
-.. from FIS GT.M user documentation. Therefore, it carries an FIS
-.. copyright.
 
 .. index::
    Input/Output Processing
