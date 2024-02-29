@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2023 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -48,7 +48,6 @@ The :ref:`go-quick-start` assumes that YottaDB has already been installed as des
 
 .. code-block:: bash
 
-        $ go mod init myprogram
         $ go get lang.yottadb.com/go/yottadb
         $ go build lang.yottadb.com/go/yottadb
         $ source /usr/local/etc/ydb_env_set
