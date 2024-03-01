@@ -1,7 +1,10 @@
 #################################################################
 #                                                               #
-# Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
+#                                                               #
+# Portions Copyright (c) Fidelity National                      #
+# Information Services, Inc. and/or its subsidiaries.           #
 #                                                               #
 #       This source code contains the intellectual property     #
 #       of its copyright holder(s), and is made available       #
@@ -33,7 +36,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = "Messages and Recovery Manual"
-copyright = "2017-2022, YottaDB LLC"
+copyright = "2017-2024, YottaDB LLC. Portions Copyright Fidelity National Information Services, Inc"
 author = "YottaDB LLC"
 
 # The short X.Y version
