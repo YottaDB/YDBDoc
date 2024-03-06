@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -48,15 +48,17 @@ The :ref:`go-quick-start` assumes that YottaDB has already been installed as des
 
 .. code-block:: bash
 
+        $ go mod init myprogram
         $ go get lang.yottadb.com/go/yottadb
         $ go build lang.yottadb.com/go/yottadb
         $ source /usr/local/etc/ydb_env_set
         $ go get -t lang.yottadb.com/go/yottadb
+        $ chmod +w  ~/go/pkg/mod/lang.yottadb.com/go/yottadb\@v*/m_routines/
         $ go test lang.yottadb.com/go/yottadb
         ok      lang.yottadb.com/go/yottadb     0.194s
         $
 
-There are a number of programs in the :code:`go/src/lang.yottadb.com/go/yottadb` directory that you can look at.
+There are a number of programs in the :code:`go/pkg/mod/lang.yottadb.com/go/yottadb\@v*` directory that you can look at.
 
 #. Put your GO program in a directory of your choice, e.g., :code:`$ydb_dir` directory and change to that directory.
    As a sample program, you can download the `wordfreq.go program <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/go/inref/wordfreq.go>`_,   with a `reference input file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_input.txt>`_ and `corresponding reference output file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_output.txt>`_. Compile it thus: :code:`go build wordfreq.go`.
