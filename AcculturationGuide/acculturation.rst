@@ -395,7 +395,7 @@ Access from Go
 
    ydbuser@ydbdev:~$ go mod init myprogram
    ydbuser@ydbdev:~$ go get -t lang.yottadb.com/go/yottadb
-   ydbuser@ydbdev:~$ chmod +w  ~/go/pkg/mod/lang.yottadb.com/go/yottadb\@v*/m_routines/
+   ydbuser@ydbdev:~$ chmod +w  go/pkg/mod/lang.yottadb.com/go/yottadb\@v*/m_routines/
    ydbuser@ydbdev:~$ go test lang.yottadb.com/go/yottadb
    ok  	lang.yottadb.com/go/yottadb	5.275s
    ydbuser@ydbdev:~$
