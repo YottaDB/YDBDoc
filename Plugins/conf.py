@@ -1,6 +1,6 @@
 #################################################################
 #                                                               #
-# Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 # Portions Copyright (c) Fidelity National                      #
@@ -36,7 +36,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = "Plugins"
-copyright = "2017-2023, YottaDB LLC. Portions Copyright Fidelity National Information Services, Inc"
+copyright = "2017-2024, YottaDB LLC. Portions Copyright Fidelity National Information Services, Inc"
 author = "YottaDB LLC"
 
 # The short X.Y version

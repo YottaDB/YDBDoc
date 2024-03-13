@@ -1,8 +1,8 @@
-#!/usr/local/bin/tcsh -f
+#!/bin/tcsh -f
 #
 #################################################################
 #                                                               #
-# Copyright (c) 2021-2022 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -85,5 +85,14 @@ foreach file ($filelist)
 		endif
 	endif
 end
+
+# ------------------------------------------------------------------------------------------
+# 3) Verify that the shared files have updated copyrights
+# ------------------------------------------------------------------------------------------
+./ci/verify_shared_copyright.sh
+if ($status) then
+	@ exitstatus = 1
+	echo "Shared files don't have updated copyrights. Run ./ci/verify_shared_copyright.sh --verbose manually."
+endif
 
 exit $exitstatus

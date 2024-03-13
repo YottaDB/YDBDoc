@@ -1,6 +1,6 @@
 #################################################################
 #                                                               #
-# Copyright (c) 2020-2023 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2020-2024 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -33,7 +33,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = "StyleGuide"
-copyright = "2020-2023, YottaDB LLC"
+copyright = "2020-2024, YottaDB LLC"
 author = "YottaDB LLC"
 
 # The short X.Y version

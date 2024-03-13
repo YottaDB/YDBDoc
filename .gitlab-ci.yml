@@ -1,6 +1,6 @@
 #################################################################
 #                                                               #
-# Copyright (c) 2020-2023 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2020-2024 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -24,6 +24,13 @@ commit-verify:
     - wget https://gitlab.com/YottaDB/DB/YDB/-/raw/master/ci/commit_verify.sh
     - chmod +x commit_verify.sh
     - ./commit_verify.sh ./ci/needs_copyright.sh https://gitlab.com/YottaDB/DB/YDBDoc.git
+
+shared-copyrights-verify:
+  stage: build
+  image: alpine
+  interruptible: true
+  script:
+    - ./ci/verify_shared_copyright.sh --verbose
 
 pages:
   stage: build
