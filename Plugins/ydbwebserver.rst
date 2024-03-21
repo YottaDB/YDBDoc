@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2023 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2023-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -476,6 +476,11 @@ To transfer a large amount of data, a YottaDB global variable may be preferable,
         set @httprsp@(3)="lamb"
         ; Set more array entries...
         set @httprsp@("mime")="text/plain; charset=utf-8"
+
+.. note::
+        
+    If ``httprsp`` begins with a ``^``, it's interpreted as a global. If you want to send a literal ``^`` in your data, you can do 
+    that by setting ``httprsp(1)`` to ``^rest_of_data`` and not setting ``httprsp``.
 
 For example, consider the ``xml`` label in the ``%ydbwebapi`` routine, which uses a global variable:
 
