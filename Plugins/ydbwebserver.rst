@@ -28,36 +28,41 @@ Prerequisites
 * Knowledge of the `HyperText Transfer Protocol <http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol>`_, especially `request methods <http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods>`_.
 * Passing familiarity with the `M programming language <https://en.wikipedia.org/wiki/MUMPS>`_.
 
++++++++++++++
+Quickstart
++++++++++++++
+
+As a YottaDB plugin, the YDB Web Server requires YottaDB. Install YottaDB and the Web Server together:
+
+.. code:: bash
+
+   mkdir /tmp/tmp ; wget -P /tmp/tmp https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
+   cd /tmp/tmp ; chmod +x ydbinstall.sh
+   sudo ./ydbinstall.sh --utf8 --webserver
+
+Omit the ``--utf8`` option if you do not want UTF-8 support installed. If you already have YottaDB installed, use ``sudo $ydb_dist/ydbinstall --webserver --plugins-only --overwrite-existing`` to install or reinstall the web server without reinstalling YottaDB.
+
 ++++++++++++
 Installation
 ++++++++++++
 
-To install the YottaDB Web Server, first download the `YDB-Web-Server repository <https://gitlab.com/YottaDB/Util/YDB-Web-Server>`_ by cloning it with ``git`` or downloading and extracting the `zip file <https://gitlab.com/YottaDB/Util/YDB-Web-Server/-/archive/master/YDB-Web-Server-master.zip>`_.
+If you don't use the :ref:`quickstart` method, you can install the YDB Web Server from source. In addition to YottaDB and its requirements, it requires ``cmake``, ``date``, ``gcc``, ``git``, ``make``, and ``pkg-config``. Clone the YDB-Web-Server repository, and then install the plugin, using the following commands:
 
-Then, create a build directory in the root directory of the repository:
+.. code:: bash
 
-.. code-block:: bash
+   git clone https://gitlab.com/YottaDB/Util/YDB-Web-Server YDB-Web-Server-master
+   cd YDB-Web-Server-master
+   mkdir build && cd build
+   cmake ..
+   make && sudo make install
 
-    mkdir build
-    cd build
-
-Next, run cmake to generate the Makefiles
-
-.. code-block:: bash
-
-    cmake ..
-
-Finally, install the plugin:
-
-.. code-block:: bash
-
-    [sudo] make install
+If `libsodium <https://doc.libsodium.org/>`_ is installed on the system, installing the web server also installs the `YDBSodium plugin <https://gitlab.com/YottaDB/Util/YDBSodium>`_ for the web server to use.
 
 To uninstall, run the following from the same directory:
 
 .. code-block:: bash
 
-    [sudo] xargs rm < install_manifest.txt
+    sudo xargs rm < install_manifest.txt
 
 +++++++++++++
 Initial setup

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -42,23 +42,35 @@ When installed in the :code:`$ydb_dist/plugin` directory, YDBPosix consists of t
 
 - :code:`o/utf8/_ydbposix.so` – if YottaDB is installed with UTF-8 support, a shared library with UTF-8 mode object code
 
+- ``posix/libmath.ref`` - reference data for ``%ydbposixtest``
+
+-------------
+Quickstart
+-------------
+
+As a YottaDB plugin, YDBPosix requires YottaDB. Install YottaDB and YDBPosix together:
+
+.. code:: bash
+
+   mkdir /tmp/tmp ; wget -P /tmp/tmp https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
+   cd /tmp/tmp ; chmod +x ydbinstall.sh
+   sudo ./ydbinstall.sh --utf8 --posix
+
+Omit the ``--utf8`` option if you do not want UTF-8 support installed. If you already have YottaDB installed, use ``sudo $ydb_dist/ydbinstall --posix --plugins-only --overwrite-existing`` to install or reinstall YDBPosix without reinstalling YottaDB.
+
 ------------
 Installation
 ------------
 
-YottaDB must be installed and available before installing the POSIX plugin. https://yottadb.com/product/get-started/ has instructions on installing YottaDB. Download and unpack the POSIX plugin in a temporary directory, and make that the current directory. Then:
+If you don't use the :ref:`quickstart` method, you can install YDBPosix from source. In addition to YottaDB and its requirements, YDBPosix requires ``cmake``, ``gcc``, ``git``, ``make``, and ``pkg-config``. Clone the YDBPosix repository, and then install the plugin, using the following commands:
 
-.. code-block:: bash
+.. code:: bash
 
-    mkdir build && cd build
-    cmake ..
-    make && sudo make install
-
-The POSIX plugin can also be installed when installing YottaDB, by adding the :code:`--posix` option to the :code:`ydbinstall.sh` command:
-
-.. code-block:: bash
-
-   sudo ./ydbinstall.sh --utf8 --verbose --posix
+   git clone https://gitlab.com/YottaDB/Util/YDBPosix YDBPosix-master
+   cd YDBPosix-master
+   mkdir build && cd build
+   cmake ..
+   make && sudo make install
 
 -------
 Testing

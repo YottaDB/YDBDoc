@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #								 #
-.. # Copyright (c) 2023 YottaDB LLC and/or its subsidiaries.	 #
+.. # Copyright (c) 2023-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.					 #
 .. #								 #
 .. #	 This document contains the intellectual property	 #
@@ -37,22 +37,21 @@ YDBSyslog can output a DDL which Octo will accept, allow the syslog databaase to
 Quickstart
 --------------
 
-As a YottaDB plugin, YDBSyslog requires YottaDB. You can install YottaDB and YDBSyslog at the same time. For example:
+As a YottaDB plugin, YDBSyslog requires YottaDB. You can install YottaDB and YDBSyslog together:
 
 .. code:: bash
 
-   mkdir /tmp/tmp ; cd /tmp/tmp
-   wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
-   chmod +x ydbinstall.sh
-   sudo ./ydbinstall.sh --utf8 --verbose --syslog
+   mkdir /tmp/tmp ; wget https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
+   cd /tmp/tmp ; chmod +x ydbinstall.sh
+   sudo ./ydbinstall.sh --utf8 --syslog
 
-To install or update YDBSyslog on a system that already has YottaDB installed, use the :code:`--plugins-only --syslog --overwrite-existing` options. :code:`./ydbinstall.sh --help` gives you a complete list of options.
+Although you can omit the ``--utf8`` option if you do not want UTF-8 support installed, we recommend installing UTF-8 support as syslogs can include UTF-8 characters. If you already have YottaDB installed, use ``sudo $ydb_dist/ydbinstall --syslog --plugins-only --overwrite-existing`` to install or reinstall the YDBSyslog plugin without reinstalling YottaDB.
 
 --------------
 Installation
 --------------
 
-If you prefer, you can install YDBSyslog from the source tree on GitLab. In addition to YottaDB, this requires :code:`cc`, :code:`cmake`, and :code:`ld`.
+If you don't use the :ref:`quickstart` method, you can install YDBSyslog from source. In addition to YottaDB and its requirements, YDBSyslog requires ``cmake``, ``git``, ``make``, and ``pkg-config``. Clone the YDBSyslog repository, and then install the plugin, using the following commands:
 
 .. code:: bash
 
@@ -60,8 +59,7 @@ If you prefer, you can install YDBSyslog from the source tree on GitLab. In addi
    cd YDBSyslog-master
    mkdir build && cd build
    cmake ..
-   make
-   sudo make install
+   make && sudo make install
 
 --------------
 Usage

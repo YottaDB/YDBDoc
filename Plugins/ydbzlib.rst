@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -77,11 +77,15 @@ zlibversion returns the version of the zlib library, version returns the version
 Quickstart
 --------------
 
-YDBzlib can be installed with YottaDB by using the :code:`--zlib` option:
+As a YottaDB plugin, YDBZlib requires YottaDB. Install YottaDB and YDBZlib together:
 
-.. code-block:: bash
+.. code:: bash
 
-   sudo ./ydbinstall.sh --utf8 --verbose --zlib
+   mkdir /tmp/tmp ; wget -P /tmp/tmp https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
+   cd /tmp/tmp ; chmod +x ydbinstall.sh
+   sudo ./ydbinstall.sh --utf8 --zlib
+
+Omit the ``--utf8`` option if you do not want UTF-8 support installed. If you already have YottaDB installed, use ``sudo $ydb_dist/ydbinstall --zlib --plugins-only --overwrite-existing`` to install or reinstall the YDBZlib plugin without reinstalling YottaDB.
 
 --------------------------
 Installation from Source

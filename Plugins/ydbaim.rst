@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -21,7 +21,7 @@ YDB AIM
 Overview
 -----------
 
-All applications need metadata. By providing an API to manage metadata, and enable content-based access to data, YDB AIM (Application Independent Metadata) removes the need for each YottaDB application to create its own separate framework.
+All applications need metadata. By providing an API to manage metadata, and enable content-based access to data, the YottaDB AIM (Application Independent Metadata) plugin removes the need for each YottaDB application to create its own separate framework.
 
 .. _quickstart:
 
@@ -29,33 +29,29 @@ All applications need metadata. By providing an API to manage metadata, and enab
 Quickstart
 -------------
 
-As a YottaDB plugin, AIM requires YottaDB.
-
-Install YottaDB and AIM together:
+As a YottaDB plugin, AIM requires YottaDB. Install YottaDB and AIM together:
 
 .. code:: bash
 
    mkdir /tmp/tmp ; wget -P /tmp/tmp https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh
    cd /tmp/tmp ; chmod +x ydbinstall.sh
-   sudo ./ydbinstall.sh --utf8 --verbose --aim
+   sudo ./ydbinstall.sh --utf8 --aim
 
-If you already have YottaDB installed, use the :code:`--plugins-only` option to install specified plugins.
+Omit the ``--utf8`` option if you do not want UTF-8 support installed. If you already have YottaDB installed, use ``sudo $ydb_dist/ydbinstall --aim --plugins-only --overwrite-existing`` to install or reinstall the AIM plugin without reinstalling YottaDB.
 
 -------------
 Installation
 -------------
 
-If you don't use the :ref:`quickstart` method, you can install YDB AIM from source.
-
-To install, you need :code:`cmake`, :code:`cc`, and :code:`ld` commands.
-
-Download the YDBAIM repository, and then install, using the following commands:
+If you don't use the :ref:`quickstart` method, you can install YDBAIM from source. In addition to YottaDB and its requirements, YDBAIM requires ``cmake``, ``gcc``, ``git``, ``make``, and ``pkg-config``. Clone the YDBAIM repository, and then install the plugin, using the following commands:
 
 .. code:: bash
 
    git clone https://gitlab.com/YottaDB/Util/YDBAIM.git YDBAIM-master
    cd YDBAIM-master
-   sudo -E ./install.sh
+   mkdir build && cd build
+   cmake ..
+   make && sudo make install
 
 ----------
 Metadata
