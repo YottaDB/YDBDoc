@@ -193,9 +193,6 @@ or
 
 * The application does not use triggers but updates a global on A in a transaction. If the transaction succeeds, the application starts two more transactions for the warehouses. The second transaction uses extended references to update P. If it fails, the application updates ^%BACKLOG("P") on a non-replicated region of A. The third transaction uses extended references to update Q. If it fails, the application updates ^%BACKLOG("Q") on a non-replicated region of A. A batch process runs periodically to apply updates from ^%BACKLOG to P and Q using TP or non-TP and remove updates that have been applied. This batch process uses LOCKs to control access and enforce serialization of updates to P and Q.
 
-.. note::
-   Because this functionality has a wide variety of user stories (use cases) and has substantial complexity - although the code appears robust, we are not confident that we have exercised a sufficient breadth of use cases in our testing. We may also make changes in future releases that are not entirely backward compatible. We encourage you to use this facility in development and testing, and to provide us with feedback. If you are a YottaDB customer and wish to use this in production, please contact us beforehand to discuss your use case(s).
-
 ++++++++++++++++++
 Examples
 ++++++++++++++++++

@@ -292,7 +292,7 @@ When **ydb_app_ensures_isolation** is a comma-separated list of global variable 
 ++++++++++++++++++++++++
 ydb_autorelink_ctlmax
 ++++++++++++++++++++++++
-**ydb_autorelink_ctlmax (gtm_autorelink_ctlmax)** specifies the maximum number of entries for unique routine names in the relink control file created by a process for any directory, with a minimum of 1,000, a maximum of 16,000,000 and a default of 50,000 if unspecified. If a specified value is above or below the allowed range, the process logs the errors `ARCTLMAXHIGH <../MessageRecovery/errors.html#arctlmaxhigh>`_ or `ARCTLMAXLOW <../MessageRecovery/errors.html#arctlmaxlow>`_ respectively in the syslog, and uses the nearest acceptable limit instead. `MUPIP RCTLDUMP <./dbmgmt.html#rctldump>`_ and `ZSHOW "A" <../ProgrammersGuide//commands.html#zshow>`_ outputs include the maximum number of unique routine names available in a relink control file.
+**ydb_autorelink_ctlmax (gtm_autorelink_ctlmax)** specifies the maximum number of entries for unique routine names in the relink control file created by a process for any directory, with a minimum of 1,000, a maximum of 16,000,000 and a default of 50,000 if unspecified. If a specified value is above or below the allowed range, the process logs the errors `ARCTLMAXHIGH <../MessageRecovery/errors.html#arctlmaxhigh>`_ or `ARCTLMAXLOW <../MessageRecovery/errors.html#arctlmaxlow>`_ respectively in the syslog, and uses the nearest acceptable limit instead. `MUPIP RCTLDUMP <./dbmgmt.html#rctldump>`_ and `ZSHOW "A" <../ProgrammersGuide//commands.html#zshow>`_ outputs include the maximum number of unique routine names available in a relink control file. If the maximum number of entries for unique routine names is exceeded, it triggers a relinkctl integrity-check to ensure that all pointers and indexes are within the shared memory bounds.
 
 +++++++++++++++++++++++++
 ydb_autorelink_keeprtn
@@ -620,6 +620,11 @@ ydb_log
 ydb_lvnullsubs
 +++++++++++++++++
 **ydb_lvnullsubs (gtm_lvnullsubs)** specifies the initialization of `VIEW [NEVER][NO]LVNULLSUBS <../ProgrammersGuide/commands.html#lvnullsubs-nolvnullsubs-neverlvnullsubs>`_ at process startup. The value of the environment variable can be 0 which is equivalent to VIEW “NOLVNULLSUBS”, 1 (the default) which is equivalent to VIEW “LVNULLSUBS” or 2, which is equivalent to VIEW “NEVERLVNULLSUBS”.
+
+++++++++++++++++
+ydb_malloc_limit
+++++++++++++++++
+**ydb_malloc_limit (gtm_malloc_limit)** specifies the initial value of `$ZMALLOCLIM <../ProgrammersGuide/isv.html#zmalloclim>`_ at process startup. An integer value specifies a number of bytes of process memory, which, if exceeded, cause YottaDB to issue a `MALLOCCRIT <../MessageRecovery/errors.html#malloccrit>`_ error. The default is 0, which indicates no warning limit on process memory utilization. When the environment variable specifies a positive value, YottaDB uses the smaller of that value (with a minimum of 2.5MB) and any OS defined amount for the value of $ZMALLOCLIM. A value of minus one (-1) provides a value of half the system imposed limit if any. YottaDB does not give errors or messages about its choice for $ZMALLOCLIM between a specified value and some other more appropriate value, so if the application needs to verify the result, it should examine the resulting ISV value.
 
 ++++++++++++++++
 ydb_maxtptime
