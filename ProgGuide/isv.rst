@@ -828,11 +828,11 @@ YottaDB does not permit the SET or NEW commands to modify $ZININTERRUPT.
 $ZINTERRUPT
 ---------------------
 
-$ZINT[ERRUPT] specifies the code to be `XECUTE'd <commands.html#xecute>`_ when an interrupt (for example, through a `MUPIP INTRPT <../AdminOpsGuide/dbmgmt.html#intrpt>`_) is processed. While a $ZINTERRUPT action is in process, any additional interrupt signals are discarded. When an interrupt handler is invoked, the current values of `$REFERENCE <#reference>`_ is saved and restored when the interrupt handler returns. The current device (`$IO <isv.html#io>`_) is neither saved nor restored.
+$ZINT[ERRUPT] specifies the code to be `XECUTE'd <commands.html#xecute>`_ when an interrupt (for example, through a `MUPIP INTRPT <../AdminOpsGuide/dbmgmt.html#intrpt>`_) is processed. While a $ZINTERRUPT action is in process, any additional interrupt signals are discarded. When an interrupt handler is invoked, the current values of `$ECODE <#ecode>`_ and `$REFERENCE <#reference>`_ are saved and restored when the interrupt handler returns. The current device (`$IO <isv.html#io>`_) is neither saved nor restored.
 
 $ZINTERRUPT can be modified by the `SET <commands.html#set>`_ command.
 
-When YottaDB uses an interrupt handler, it saves and restores the current value of `$REFERENCE <#reference>`_.
+When YottaDB uses an interrupt handler, it saves and restores the current value of $ECODE and $REFERENCE.
 
 If an interrupt handler changes the current IO device (via `USE <commands.html#use>`_), it is the responsibility of the interrupt handler to restore the current IO device before returning. There are sufficient legitimate possibilities for why an interrupt routine would want to change the current IO device (for example; log switching), that this part of the process context is not saved and restored automatically. To restore the device which was current when the interrupt handler began, specify USE without any deviceparameters. Any attempt to do IO on a device which was actively doing IO when the interrupt was recognized may cause a `ZINTRECURSEIO <../MessageRecovery/errors.html#zintrecurseio>`_ error.
 
@@ -876,6 +876,8 @@ Example:
 	  do ^handleinterrupt ; handle the interrupt
 	  use currentdev      ; restore the device which was current when the interrupt was recognized
 	  quit
+
+For more information on interrupt handling, refer to `Interrrupting Execution Flow <langext.html#interrupting-execution-flow>`_.
 
 ---------------
 $ZIO
@@ -985,6 +987,18 @@ Example:
    YDB>
 
 This program, executed from Direct Mode, produces a value of 4 for $ZLEVEL. If you run this program from the shell, the value of $ZLEVEL is three (3).
+
+------------------
+$ZMALLOCLIM
+------------------
+
+$ZMALL[OCLIM] contains an integer value specifying a number of bytes of process memory, which, if exceeded, causes YottaDB to issue a `MALLOCCRIT <../MessageRecovery/errors.html#malloccrit>`_ error. When the value is set, or defaults, to zero (0), YottaDB imposes no limit, although the OS still does. A positive value specifies a byte limit with a minimum of 2.5MB. A value of minus one (-1) provides a value of half the system imposed limit if any.
+
+When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces trappable MALLOCCRIT warning. By default, some later request for memory is likely to produce a fatal `MEMORY <../MessageRecovery/errors.html#memory-err>`_ error, unless subsequent to MALLOCCRIT, a limit has been reestablished by SET $ZMALLOCLIM to the same or higher limit, but one not exceeding any system limit.
+
+Note that YottaDB allocates memory from the OS in large blocks so the interaction of $ZMALLOCLIM with memory growth is not exact. MEMORY errors are fatal and terminate the process. In the case of a MEMORY error, YottaDB makes an attempt to marshal available memory to enable as graceful a termination as possible. Note that independent of this mechanism, the OS may kill the process without recourse if it determines the greed of the process for memory jeopardizes the viability of the system.
+
+When the integer byte value specified in a SET $ZMALLOCLIM=intexpr or by the environment variable `ydb_malloc_limit  <../AdminOpsGuide/basicops.html#ydb-malloc-limit>`_  ($gtm_malloc_limit if $ydb_malloc_limit is not defined) at process startup, specifies a positive value, YottaDB uses the smaller of that value and any OS defined amount for the value of $ZMALLOCLIM. YottaDB does not give errors or messages about its choice for $ZMALLOCLIM between a specified value and some other more appropriate value, so if the application needs to verify the result, it should examine the resulting ISV value.
 
 ------------------
 $ZMAXTPTIME

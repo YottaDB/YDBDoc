@@ -8300,6 +8300,16 @@ Run Time Error: This indicates that an expression referenced a local variable xx
 Action: Ensure that all variables are assigned values before they are referenced; use $GET(), or change the image or process to NOUNDEF mode.
 
 ----------------
+MALLOCCRIT
+----------------
+
+MALLOCCRIT, Memory allocation critical due to request for bbbb bytes from aaaa
+
+All YottaDB Components Warning: Indicates a YottaDB process exceeded the memory allocation threshold established with `$ydb_malloc_limit <https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-malloc-limit>`_ / `$ZMALLOCLIM <https://docs.yottadb.com/ProgrammersGuide/isv.html#zmalloclim>`_ with a request for bbbb bytes. The address aaaa gives a location in a YottaDB executable, likely only useful to your YottaDB support channel.
+
+Action: Consider diagnosing the process behavior. For example, look for a resource leak, or a more resource efficient approach. The size of the request may be helpful in indicating how aggressively the process is growing. The MALLOCCRIT invokes the error handler, and may need special handling to resume execution at the point it was detected. By default, some later request for memory is likely to produce a fatal :ref:`memory-err` error, unless a subsequent set of $ZMALLOCLIM reestablishes the same or higher limit not exceeding any system limit. MEMORY errors are fatal and terminate the process. Independent of this mechanism, the OS may kill the process without recourse if it determines the greed of the process for memory jeopardizes the viability of the system.
+
+----------------
 MALLOCMAXUNIX
 ----------------
 
@@ -8452,6 +8462,8 @@ MBXWRTONLY, Mailbox is write only, cannot read from it
 Run Time Error: This indicates that a READ command attempted to access a mailbox that was opened write-only.
 
 Action: Verify that the routine is using the correct mailbox and that the mailbox was opened with the appropriate device parameter.
+
+.. _memory-err:
 
 --------------------
 MEMORY
@@ -12651,6 +12663,30 @@ All YottaDB Components Error: This indicates that YottaDB was unable to close ou
 
 Action: Address the reason for the failure and retry.
 
+.. _rlnkinteginfo:
+
+----------------------
+RLNKINTEGINFO
+----------------------
+
+RLNKINTEGINFO, Integrity check completed successfully: xxxx -- called from module yyyy at line zzzz
+
+Run Time Information: Indicates relinkctl integrity check completed successfully by performing the action described by xxxx. If YottaDB does not issue this message after a :ref:`rlnkrecnfl-err` message, it means the relinkctl integrity check failed. This message was called from the yyyy module at zzzz line, and it goes to the operator log.
+
+Action: If the integrity check result succeeds, the process can continue, otherwise, YottaDB generates a trappable error, right after this message. Contact your YottaDB support channel to discuss what might have caused the issue.
+
+.. _rlnkrecnfl-err:
+
+----------------------
+RLNKRECNFL
+----------------------
+
+RLNKRECNFL, Conflict on relinkctl file rrrr for $ZROUTINES directory dddd, running an integrity check
+
+Run Time Warning: Indicates a process encountered an issue attempting to attach to a routine object in dynamically linked library associated with directory dddd, and initiated an integrity check of the library control structures associated with relinkctl file rrrr. YottaDB sends this message to the operator log.
+
+Action: If the check finds no problem or can correct any abnormality it finds (look for a subsequent :ref:`rlnkinteginfo` message in the operator log, to have more information about the integrity check result), the process can continue, otherwise, YottaDB generates a trappable error. Contact your YottaDB support channel to discuss what might have caused the issue.
+
 ----------------------
 ROLLBKINTERRUPT
 ----------------------
@@ -15249,7 +15285,6 @@ Run Time Error: This indicates that the argument xxxx for a VIEW command or $VIE
 
 Action: Add enough characters to make the argument unambiguous.
 
-
 --------------------
 VIEWARGCNT
 --------------------
@@ -15259,7 +15294,6 @@ VIEWARGCNT, View parameter xxxx has inappropriate number of subparameters
 Run Time Error: The argument xxxx for a VIEW command or a $VIEW function has too many or too few sub-arguments.
 
 Action: Modify the argument so it has the proper number of sub-arguments.
-
 
 --------------------
 VIEWCMD

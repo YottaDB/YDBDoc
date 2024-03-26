@@ -1,0 +1,262 @@
+<!---
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2024 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. # Portions Copyright (c) Fidelity National                    #
+.. # Information Services, Inc. and/or its subsidiaries.         #
+.. #                                                             #
+.. #     This document contains the intellectual property        #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
+-->
+
+# YottaDB r2.02
+
+## Binary Distributions
+
+| sha256sum | file |
+|-----------|------|
+|           |      |
+
+## Release Note Revision History
+
+| Revision | Date | Summary |
+|----------|------|---------|
+|          |      |         |
+
+## Contact Information
+### YottaDB LLC
+https://yottadb.com /  <info@yottadb.com>
+
+### Support
+#### Customers
+Contact YottaDB or your YottaDB support channel for support with assured service levels on commercial terms from knowledgeable staff.
+
+#### Others
+For free (to you) support from members of communities who run widely available applications on YottaDB, please use an application-specific list where appropriate.
+
+ - Join the discussion a the [YottaDB Discord channel](https://discord.gg/bFHmDdzcqY).
+ - For issues specific to the use of YottaDB from node.js via [Nodem](https://github.com/dlwicksell/nodem), [post an Issue on the Nodem project](https://github.com/dlwicksell/nodem/issues/new/).
+ - For issues specific to the use of YottaDB from [QewdJS](http://qewdjs.com/), or [EWD.js](https://github.com/robtweed/ewd.js), or from node.js via [mg-dbx](https://github.com/chrisemunt/mg-dbx) or [mg-dbx-napi](https://github.com/chrisemunt/mg-dbx-napi) post to the [Enterprise Web Developer community](https://groups.google.com/forum/#!forum/enterprise-web-developer-community).
+ - For issues specific to the use of YottaDB with [VistA](https://en.wikipedia.org/wiki/VistA) flavors, post to the [Hardhats](https://groups.google.com/forum/#!forum/hardhats) list.
+ - For issues specific to use of YottaDB with the [M Language](https://docs.yottadb.com/ProgrammersGuide/), post to the [Everything MUMPS](https://groups.google.com/g/everythingmumps) list.
+ - For requests other than to the communities above [post an Issue](https://gitlab.com/YottaDB/DB/YDB/-/issues) and include the words "Help Wanted" in the Title.
+
+## r2.02
+### Overview
+YottaDB r2.02 is a (_overview to be filled in prior to release_).
+
+In addition to enhancements and fixes made by YottaDB, r2.02 inherits numerous other enhancements and fixes from GT.M V7.0-002, described in the [Change History](#change-history).
+
+### Platforms
+A platform is a combination of a CPU architecture and an operating system. A platform is Supported, Supportable, or Unsupported.
+
+* Supported means that we have the platform in our development environment, test each release on that platform, and provide a binary distribution for it.
+* Supportable means that although we do not necessarily have such a platform in our environment, we have no reason to believe that the software will not run on it.
+* All others are Unsupported.
+
+| CPU Architecture                    | Supported OS Version(s)                                                              | Notes                                                                                                                         |
+| ----------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| 64-bit x86                          | Ubuntu 24.04 LTS; Red Hat Enterprise Linux 8.x; Red Hat Enterprise Linux 9.x; SUSE Linux Enterprise 15.x; Debian GNU/Linux 12 (Bookworm) | There are separate binary distributions for each OS version, owing to differences in library versions of those distributions. |
+| 64-bit ARM (Raspberry Pi 3 Model B) | Debian GNU/Linux 12 (Bookworm)                                                       | See below.                                                                                                                    |
+| 32-bit ARM (Raspberry Pi Zero)      | Debian GNU/Linux 12 (Bookworm)                                                       | See below.                                                                                                                    |
+
+Recent releases of major GNU/Linux distributions with contemporary kernels, glibc and ncurses are Supportable. Specific notes:
+
+- [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) recognizes [Rocky Linux](https://rockylinux.org/) as equivalent to RHEL, and [OpenSUSE Leap](https://www.opensuse.org/#Leap) as equivalent to SUSE Linux Enterprise, installing the releases for the corresponding distributions. Note that Rocky Linux and OpenSUSE Leap are Supportable, not Supported.
+- On [Arch Linux](https://www.archlinux.org/) and other leading edge distributions such as [OpenSUSE Tumbleweed](https://www.opensuse.org/#Tumbleweed), as well as new versions of Linux distributions, YottaDB will need to be recompiled from source code owing to library and tool chain versions newer than those used in building Supported distributions. The `--from-source` option of [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) simplifies the process.
+- While YottaDB is Supportable on other ARMv6, [ARMv7-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv7-A_cores), and [ARMv8-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv8-A_cores) CPUs, owing to variations in the implementations of ARM microarchitectures, we recommend that you ensure the software runs correctly before committing to any specific hardware other than those listed above. Please [contact us](mailto:info@yottadb.com) if you want a specific combination of OS and CPU microarchitecture to be Supported.
+
+### Installation
+See our [Get Started page](https://yottadb.com/product/get-started) to use YottaDB.
+
+We **strongly recommend** that you install YottaDB r2.02 in a newly created directory, different from those of prior YottaDB releases and any GT.M versions you may have installed on the system.
+
+### Removing an installed YottaDB release
+Assuming `$ydb_dist` points to the directory where YottaDB is installed:
+
+ - Cleanly shut down all application processes using that release.
+ - Execute `mupip rundown && mupip rundown -relinkctl` and review the output to ensure successful completion.
+ - Ensure that there are no `gtcm*` or `gtmsecshr` processes active.
+ - Use `sudo lsof | grep $ydb_dist` to ensure there are no open files.
+   - If there are links to files in `$ydb_dist`, e.g., from `/usr/local/bin/` or `/usr/local/etc/`, remove the links.
+ - Delete the directory with `sudo rm -rf $ydb_dist`
+
+## Upgrading to YottaDB r2.02
+YottaDB r2.02 is upward compatible from YottaDB [r2.00](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.00) and GT.M [V7.0-002](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html). The minimal upgrade steps are:
+
+* Install YottaDB r2.02. Use `ydbinstall` / `ydbinstall.sh` to install YottaDB plugins that you use.
+* Install plugins you need in addition to those installed in the previous step, e.g., non-YottaDB plugins.
+* Recompile object code, and recreate shared libraries if your application uses shared libraries.
+* If your application uses encryption, compile and install the reference implementation plugin (if not done by the `ydbinstall` / `ydbinstall.sh` script) or your customized plugin.
+* Cleanly shut down the application and ensure that the database files are shut down using MUPIP RUNDOWN from the prior release.
+* Switch journal files with the new YottaDB release.
+* Start using the new YottaDB release.
+
+If the database has triggers defined with non-canonical numbers, or numbers specified as strings with any version prior to [r1.28](https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.28), or if you are unsure, extract the trigger definitions, delete existing triggers, and reload the trigger definitions. Issue [[#430](https://gitlab.com/YottaDB/DB/YDB/-/issues/430)] from [r1.28](https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.28) has a series of steps you can copy and execute. There is no need to do this if upgrading from [r1.28](https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.28) or later.
+
+To upgrade from older GT.M releases, first upgrade to GT.M V6.0-000 or later and follow the steps above, or contact your YottaDB support channel for assistance and guidance.
+
+A more sophisticated upgrade technique is:
+
+* Install YottaDB r2.02.
+* Create a new replicated instance of your application (on the same system or a different system).
+* Assuming the existing instance is A, and the new instance is B, upgrade B to r2.02 and start replicating from A to B.
+* Once B catches up, switchover so that B is in a primary role replicating to A.
+* Once you are satisfied with B, remove (or upgrade) A.
+
+In the event you need database files that need to grow beyond the 992Mi block limit of database files created with r1.x / GT.M V6.x, you should extract data from r1.x database files and load the extracted data into database files created using r2.02.
+
+
+## Change History
+
+### r2.02
+
+YottaDB r2.02 includes the following enhancements and fixes beyond YottaDB [r2.00](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.00).
+
+| ID | Category | Summary |
+|----|----------|---------|
+|    |          |         |
+
+<a name="gtmv70002"></a>
+### GT.M V7.0-002
+
+YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-002](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html).
+
+| ID                              | Category              | Summary                                                                                              |
+|---------------------------------|-----------------------|------------------------------------------------------------------------------------------------------|
+| ([GTM-F132372](#GTM-F132372))   | Database              | The replication Update process and associated helper process record database-related statistics      |
+| ([GTM-F135292](#GTM-F135292))   | Languages             | Optional second argument to $ZJOBEXAM() to control its output                                        |
+| ([GTM-F135393](#GTM-F135393))   | Languages             | $ZMALLOCLIM ISV sets up a trappable warning of high memory usage by a process                        |
+| ([GTM-F135414](#GTM-F135414))   | Database              | Proactive Database Block Splitting                                                                   |
+| ([GTM-F135415](#GTM-F135415))   | Other                 | Defer a TLS renegotiation when a prior TLS renegotiation is pending                                  |
+| ([GTM-F135433](#GTM-F135433))   | Languages             | SET $ZTRAP produces appropriate result                                                               |
+| ([GTM-F135435](#GTM-F135435))   | Other                 | Routine shared object integrity check & repair                                                       |
+| ([GTM-F135842](#GTM-F135842))   | System Administration | MUPIP BACKUP respects user specified order                                                           |
+| ([GTM-DE201305](#GTM-DE201305)) | System Administration | MUPIP BACKUP works if environment variables used in segment to database file mapping are not defined |
+| ([GTM-DE201378](#GTM-DE201378)) | Languages             | Prevent $[Z]CHAR() representions from generationg results longer than the maximum string length      |
+| ([GTM-DE201380](#GTM-DE201380)) | Languages             | SOCKET device commands defend against large deviceparameter arguments                                |
+| ([GTM-DE201381](#GTM-DE201381)) | System Administration | MUPIP LOAD -FORMAT=BINARY uses only data length in checking for maximum length                       |
+| ([GTM-DE201386](#GTM-DE201386)) | Languages             | Address issues which can result in a segmentation violation (SIG-11) or similar failure              |
+| ([GTM-DE201388](#GTM-DE201388)) | Languages             | Better handling of literal arguments that cause numeric overflow                                     |
+| ([GTM-DE201389](#GTM-DE201389)) | Languages             | Pattern match better guards against deep recursion                                                   |
+| ([GTM-DE201390](#GTM-DE201390)) | Languages             | CTRAP only recognizes characters with ASCII codes 0-31 inclusive                                     |
+| ([GTM-DE201392](#GTM-DE201392)) | Other                 | Routine Management asynchronous event protection                                                     |
+| ([GTM-DE201393](#GTM-DE201393)) | Languages             | \@x\@y indirection ignores comments in x and handles empty string arguments appropriately            |
+| ([GTM-DE201825](#GTM-DE201825)) | System Administration | ydbinstall removes semsstat2, ftok, and getuid                                                       |
+| ([GTM-DE222430](#GTM-DE222430)) | Other                 | Prevent fatal errors from disconnect/hangup                                                          |
+
+### Database
+
+* <a name="GTM-F132372"></a>The replication update process and its helper processes record statistics using the STATSDB facility for reporting using %YGBLSTAT. YottaDB reports the WRL, PRG, WFL, and WHE statistics as part of the %YGBLSTAT output. Previously, the replication update process and its helper processes did not record statistics for STATSDB. [GTM-F132372](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197426456)
+
+* <a name="GTM-F135414"></a>By default, YottaDB proactively splits blocks when it detects significant restarts in an attempt to reduce overall restarts. MUPIP SET FILE <filename> PROBLKSPLIT=N where N is 0 disables proactive splitting, as do very large values of N. Values of N greater than 0 adjust the lower limit for the number of records below which GT.M does not consider splitting a block. The default value of N is 5. While this is behavior is aimed at reducing restarts, because it reduces data density, it may also increase the number of blocks and even the tree depth. [GTM-F135414](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637426)
+
+### Languages
+
+* <a name="GTM-F135292"></a>As YottaDB already implemented [this functionality in r1.30](https://gitlab.com/YottaDB/DB/YDB/-/issues/482), the following appears here for completeness.
+
+  $ZJOBEXAM() recognizes an optional second argument of an expr that evaluates to a string as described for the argument of ZSHOW specifying one or more codes determining the nature of the information produced by the function. If the argument is missing or empty, YottaDB operates as if it was a "*" and produces the associated context. This provides a way to suppress content that might contain PNI. Previously, $ZJOBEXAM() always produced a full context. [GTM-F135292](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637151)
+
+* <a name="GTM-F135393"></a>$ZMALL[OCLIM] provides a way for a process to limit its process memory. When the value is zero (0), YottaDB imposes no limit, although the OS still does. A positive value specifies a byte limit with a minimum of 2.5MB. A value of minus one (-1) provides a value of half the system imposed limit if any. When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces a trappable MALLOCCRIT warning. By default, some later request for memory is likely to produce a fatal MEMORY error, unless subsequent to MALLOCCRIT, a limit has been reestablished by SET $ZMALLOCLIM to the same or higher limit, but one not exceeding any system limit. Note that YottaDB allocates memory from the OS in large blocks so the interaction of $ZMALLOCLIM with memory growth is not exact. In the case of a MEMORY error, YottaDB makes an attempt to marshal available memory to enable as graceful a termination as possible. Note that independent of this mechanism, the OS may kill the process without recourse if it determines the greed of the process for memory jeopardizes the viability of the system. When the integer byte value specified in a SET $ZMALLOCLIN=intexpr or, at process startup, by the $ydb_malloc_limit environment variable ($gtm_malloc_limit, if it specified and $ydb_malloc_limit is not), specifies a positive value, YottaDB uses the smaller of that value and any OS defined amount for the value of $ZMALLOCLIM. YottaDB does not give errors or messages about its choice for $ZMALLOCLIM between a specified value and some other more appropriate value, so if the application needs to verify the outcome, it should examine the resulting ISV value. MEMORY errors are fatal and terminate the process. Previously, fatal MEMORY errors were not preceded by a trappable MALLOCCRIT warning. [GTM-F135393](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637393)
+
+* <a name="GTM-F135433"></a>SET \$ZTRAP=\$ETRAP works correctly; previously it tended to result in $ZTRAP="" regardless of the prior value of $ETRAP, but could also produce garbage values, while less likely, other assignments to $ZTRAP could also go awry. The workaround was to NEW $ETRAP, assign a the value of $ETRAP to a temporary, the empty string to $ETRAP and $ZTRAP to the value of the temporary. [GTM-F135433](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637480)
+
+* <a name="GTM-DE201378"></a>Operations that replace non-graphic characters with $[Z]CHAR() representations give a MAXSTRLEN error when the result would exceed 1MiB. Previously such operations ensured they had adequate space for the result, but could pass strings to other operations that might have no provision for dealing with strings longer than 1MiB. [GTM-DE201378)](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637455)
+
+* <a name="GTM-DE201380"></a>USE SOCKET handles the ATTACH, DETACH, CONNECT, SOCKET and ZLISTEN deviceparameters appropriately; previously, certain arguments for these deviceparameters could cause a segmentation violation(SIG-11). [GTM-DE201380](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637457)
+
+* <a name="GTM-DE201386"></a>Address issues that can result in a segmentation violation (SIG-11) or similar failure.
+
+  - YottaDB appropriately detects divide by zero; previously there were some unusual combinations of calculations which produced a SIGINTDIV (SIG-8), which could not be trapped and therefore terminated the process.
+  - The YottaDB compiler appropriately handles optimization of literal FALSE post conditionals; previously these could cause segmentation violations (SIG-11). The YottaDB compiler deals with argumentless BREAK and NEW commands combined with certain patterns of local variable use, and also with NEW commands having indirect arguments after a FOR command. Previously these could cause a segmentation violation (SIG-11).
+  - As YottaDB protects itself from overly long strings, it does not limit the list of global names to an arbitrary 1024 bytes. The following appears here for completeness: _The VIEW command for "NOISOLATION" handles various edge cases and reports a VIEWARGTOOLONG error when a list of global names exceeds 1024 bytes. Previously, some malformed global names could cause a segmentation violation (SIG-11) and using a string over 1024 bytes would cause an assertion failure._
+  - The ZSHOW command operates as expected when directing the output to a local variable. Previously repeatedly running the ZSHOW command in an indefinite loop with the output directed to a local variable could result in a segmentation violation (SIG-11).
+  - The $FNUMBER() and $JUSTIFY() functions work as expected. Previously, results requiring long lengths could result in a segmentation violation (SIG-11).
+  - The YottaDB compiler protects against an indirect argument combined with a missing closing parenthesis in a $INCREMENT() function; previously some syntax with that characteristic produced a segmentation violation (SIG-11).
+  - $ZSYSLOG() ignores Format Ascii Output (FAO) directives. Previously, $ZSYSLOG() did not ignore such directives resulting in a segmentation violation (SIG-11).
+  - The USE command works as expected when the indirect device name contains an ill formatted string. Previously certain strings could cause a segmentation violation (SIG-11).
+  - YottaDB ignores unknown device class mnemonic spaces. Previously, if a mnemonic space other than "SOCKET" or "PIPE" was used, a subsequent OPEN resulted in a segmentation violation (SIG-11).
+
+  [GTM-DE201386](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637465)
+
+* <a name="GTM-DE201388"></a>$[Z]CHAR(1E48) and similar numeric literal overflows produce a NUMOFLOW error at compile time; previously an optimization inappropriately treated this as $[Z]CHAR(0). [GTM-DE201388](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637468)
+
+* <a name="GTM-DE201389"></a>YottaDB pattern match reports a PATMAXLEN error for a deeply nested pattern containing many indefinite ranges (. symbols). While we think it unlikely, it is possible that existing complex patterns may now report this error. Previously such a deeply nested pattern terminated with a segmentation violation (SIG-11). [GTM-DE201389](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637469)
+
+* <a name="GTM-DE201390"></a>CTRAP characters other than CTRL-x, where x corresponds to the non-graphic characters represented by $CHAR(n) with n 0 to 31 inclusive, have no effect, and do not show up in ZSHOW "D" output. On the keyboard those characters correspond to <CTRL-@> to CTRL-_> with the bulk of the range being <CTRL-A> to <CTRL-Z>. Note that CTRAP=$CHAR(3) has a different semantic than the other CTRAP characters, in that, when enabled and $PRINCIPAL is a terminal device type, <CTRL-C> can interrupt at any time, including when \$PRINCIPAL\'=\$IO. YottaDB only recognizes the other CTRAP characters when they appear in input to a READ command. Previously, characters outside the range with codes 0-31 showed up in ZSHOW "D" output with a modulo 32 $CHAR() representation and caused corresponding CTRAP recognition. (GTM-DE201390)
+
+* <a name="GTM-DE201393"></a>Indirection of the form \@x@y ignores any comment at the end of the value of x; previously such a comment stopped the evaluation so the subscripts after the second @ were ignored. In addition, if the first (x) expression evaluates to the empty string, YottaDB produces a VAREXPECTED error; previously that scenario produced incorrect results, sub-optimal errors or, in the worst case damage to an item at the top of the heap. Also, if the second (y) expression is the empty string, it no longer has the potential to lead to incorrect results or sub-optimal error reports. [GTM-DE201393)](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637474)
+
+### System Administration
+
+* <a name="GTM-F135842"></a>When MUPIP BACKUP arguments specify a list, the utility processes regions in the listed order, or, for names expanded by wildcard ("*"), alphabetically. Previously, MUPIP BACKUP ignored any user-specified order of regions, and processed regions in FTOK order, which tends to change with changes in operational conditions within the underlying file system.[GTM-F135842](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637997)
+
+* <a name="GTM-DE201305"></a>When the Database segment to file mapping uses an environment variable, and the environment variable is not defined, MUPIP BACKUP uses the environment variable name itself in constructing the file name, as does MUPIP CREATE. Previously MUPIP CREATE created database with undefined environment variable name as the database name, but MUPIP BACKUP failed to backup that existing database. [GTM-DE201305](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637290)
+
+* <a name="GTM-DE201381"></a>MUPIP LOAD -FORMAT=BINARY checks the record length against the data for a record. YottaDB defines record length as the data in a node, but the utility in question still inappropriately included the key in its length check. [GTM-DE201381](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637458)
+
+* <a name="GTM-DE201825"></a>The `ydbinstall` script checks removes any `semsstat2`, `ftok`, and `getuid` files if they exist from a prior installation. YottaDB releases starting from r1.36 no longer use these programs. Previously, `ydbinstall` did not remove these obsolete executable files. Note that YottaDB recommends installing each YottaDB release in its own directory, and not overwriting an existing release. Installing in an existing directory must be explicitly specified with the `--ovewrite-existing` command line option. [GTM-DE201825](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637999)
+
+### Other
+
+* <a name="GTM-F135415"></a>The Source Server defers a TLS renegotiation when a prior TLS renegotiation is pending. Previously, the Source Server logged the REPLWARN message, closed the replication connection, and attempted to re-establish the replication connection with the Receiver Server. [GTM-F135415](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637428)
+
+* <a name="GTM-F135435"></a>YottaDB detects and recovers from certain integrity errors in the auto-relink control structures. YottaDB also issues RLNKRECNFL and RLNKINTEGINFO messages to the system log to report an integrity check. Previously, YottaDB terminated with an segmentation violation (SIG-11) or a YottaDB assert when it encountered such integrity errors. (GTM-F135435)
+
+* <a name="GTM-DE201392"></a>YottaDB provides protection from asynchronous events during routine management. Previously, asynchronous events like MUPIP STOP at inopportune times could cause a segmentation violation (SIG-11). This was only seen in a development environment and was never reported by a user. [GTM-DE201392](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637472)
+
+* <a name="GTM-DE222430"></a>YottaDB handles SIGHUP appropriately when $PRINCIPAL has HUPENABLE set; in r2.00 owing to changes in deferred event handling, error handing could encounter a GTMASSERT2. In addition, a TERMHANGUP error implicitly sets the device to NOHUPENABLE, so should a process anticipate multiple disconnects/hangups, it should explicitly issue a USE $PRINCIPAL:HUPENABLE. Also, ZSHOW "D" displays the HUPENABLE state for $PRINCIPAL. [GTM-DE222430](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637998)
+
+## Additional Information
+
+## Messages
+
+### New messages
+
+**MALLOCCRIT**, Memory allocation critical due to request for bbbb bytes from aaaa
+
+All YottaDB Components Warning: Indicates a YottaDB process exceeded the memory allocation threshold established with $ydb_malloc_limit / $ZMALLOCLIM with a request for bbbb bytes. The address aaaa gives a location in a YottaDB executable, likely only useful to your YottaDB support channel.
+
+Action: Consider diagnosing the process behavior. For example, look for a resource leak, or a more resource efficient approach. The size of the request may be helpful in indicating how aggressively the process is growing. The MALLOCRIT invokes the error handler, and may need special handling to resume execution at the point it was detected. By default, some later request for memory is likely to produce a fatal MEMORY error, unless a subsequent set of $ZMALLOCLIM reestablishes the same or higher limit not exceeding any system limit. MEMORY errors are fatal and terminate the process. Independent of this mechanism, the OS may kill the process without recourse if it determines the greed of the process for memory jeopardizes the viability of the system.
+
+**RLNKINTEGINFO**, Integrity check completed successfully: xxxx -- called from module yyyy at line zzzz
+
+Run Time Information: Indicates relinkctl integrity check completed successfully by performing the action described by xxxx. YottaDB issues this message after RLNKRECNFL, otherwise, it means the relinkctl integrity check failed. This message was called from the yyyy module at zzzz line, and it goes to the operator log.
+
+Action: If the integrity check result succeeds, the process can continue, otherwise, YottaDB generates a trappable error, right after this message. Contact your YottaDB support channel to discuss what might have caused the issue.
+
+**RLNKRECNFL**, Conflict on relinkctl file rrrr for $ZROUTINES directory dddd, running an integrity check
+
+Run Time Warning: Indicates a process encountered an issue attempting to attach to a routine object in dynamically linked library associated with directory dddd, and initiated an integrity check of the library control structures associated with relinkctl file rrrr. YottaDB sends this message to the operator log.
+
+Action: If the check finds no problem or can correct any abnormality it finds (look for the RLNKINTEGINFO message in the operator log, to have more information about the integrity check result), the process can continue, otherwise, YottaDB generates a trappable error. Contact your YottaDB support channel to discuss what might have caused the issue.
+
+As noted in [GTM-DE201386](#GTM-DE201386), YottaDB already protects itself from overly long arguments, and will never report this error. The following appears here for completeness.
+
+  **VIEWARGTOOLONG**, The argument length LLLL to VIEW command vvvv exceeds the maximum mmmm
+
+  Run Time Error: An argument to the VIEW command vvvv has a length LLLL bytes that exceeds the maximum supported length of mmmm.
+
+  Action: Reduce the length of the VIEW command argument to no more than mmmm bytes.
+
+### Revised messages
+
+### Obsolete Messages
+
+The following messages are no longer used:
+
+## Legal Stuff
+
+Copyright © 2024 YottaDB LLC. Portions Copyright Fidelity National Information Services, Inc. and/or its subsidiaries.
+
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.
+
+YottaDB® and Octo® are registered trademarks of YottaDB LLC. GT.M™ is a trademark of Fidelity National Information Services, Inc. Other trademarks belong to their respective owners.
+
+This document contains a description of YottaDB and the operating instructions pertaining to the various functions that comprise the software. This document does not contain any commitment of YottaDB LLC. YottaDB LLC believes the information in this publication is accurate as of its publication date; such information is subject to change without notice. YottaDB LLC is not responsible for any errors or defects.
