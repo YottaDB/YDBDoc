@@ -1432,23 +1432,24 @@ Interrupt Handling
 
 YottaDB process execution is interruptible with the following events:
 
-* Typing <CTRL-C> or getting SIGINT if CTRAP=$CHAR(3) for the terminal device or on a $PRINCIPAL terminal if its mode is CENABLE.
-* Typing <CTRL-n> if CTRAP=$CHAR(n) on a terminal device performing a READ.
-* Getting a MUPIP INTRPT (SIGUSR1).
-* Exceeding $ZMAXTPTIME in a transaction.
-* $ZTIMEOUT expires.
+* Typing <CTRL-C> or getting SIGINT if CTRAP=$CHAR(3) for the terminal device or on a `$PRINCIPAL <isv.html#principal>`_ terminal if its mode is CENABLE.
+* Typing <CTRL-n> if CTRAP=$CHAR(n) on a terminal device performing a `READ <commands.html#read>`_.
+* Getting a `MUPIP INTRPT <../AdminOpsGuide/dbmgmt.html#intrpt>`_ (SIGUSR1).
+* Exceeding `$ZMAXTPTIME <isv.html#zmaxtptime>`_ in a transaction.
+* `$ZTIMEOUT <isv.html#ztimeout>`_ expires.
 * A terminal disconnect ("hangup").
 * A terminal output error during an asynchronous flush.
-* A GT.CM network error.
-* +$ZTEXit evaluates to a truth value at the outermost TCOMMIT or TROLLBACK.
+* A `GT.CM <../AdminOpsGuide/gtcm.html>`_ network error.
+* A `MALLOCLIM <https://docs.yottadb.com/MessageRecovery/errors.html#malloclim>`_ error
+* `+$ZTEXIT <isv.html#ztexit>`_ evaluates to a truth value at the outermost `TCOMMIT <commands.html#tcommit>`_ or `TROLLBACK <commands.html#trollback>`_.
 
-When YottaDB detects any of these events, it transfers control to a vector that depends on the event. For most events, YottaDB uses the $ETRAP or $ZTRAP vectors described in more detail in the `Error Processing <errproc.html>`_ chapter. For INTRPT and $ZTEXit, it XECUTEs the interrupt handler code placed in $ZINTERRUPT. If $ZINTERRUPT is an empty string, the process ignores any MUPIP INTRPT directed at it. The default value of $ZINTERRUPT is :code:`"IF $ZJOBEXAM()"` which redirects a dump of :code:`ZSHOW "*"` to a file and reports each such occasion to the syslog. For $ZTIMEOUT, the value may specify a vector that takes precedence over the current error handling vector. <CTRL-C> without CENABLE transfers control as if there was an error; with CENABLE, YottaDB enters Direct Mode to give the programmer control. Without CENABLE or CTRAP, YottaDB ignores <CTRL-C> on a $PRINCIPAL terminal. The YottaDB terminal handler only recognizes other <CTRL> characters if CTRAP enabled when the OS terminal handling delivers them and they appear in the terminal input stream.
+When YottaDB detects any of these events, it transfers control to a vector that depends on the event. For most events, YottaDB uses the `$ETRAP <isv.html#etrap>`_ or `$ZTRAP <isv.html#ztrap>`_ vectors described in more detail in the `Error Processing <errproc.html>`_ chapter. For INTRPT and $ZTEXit, it XECUTEs the interrupt handler code placed in `$ZINTERRUPT <isv.html#zinterrupt>`_. If $ZINTERRUPT is an empty string, the process ignores any MUPIP INTRPT directed at it. The default value of $ZINTERRUPT is :code:`"IF $ZJOBEXAM()"` which redirects a dump of :code:`ZSHOW "*"` to a file and reports each such occasion to the syslog. For $ZTIMEOUT, the value may specify a vector that takes precedence over the current error handling vector. <CTRL-C> without CENABLE transfers control as if there was an error; with CENABLE, YottaDB enters Direct Mode to give the programmer control. Without CENABLE or CTRAP, YottaDB ignores <CTRL-C> on a $PRINCIPAL terminal. The YottaDB terminal handler only recognizes other <CTRL> characters if CTRAP enabled when the OS terminal handling delivers them and they appear in the terminal input stream.
 
-YottaDB recognizes most of these events when they occur but transfers control to the interrupt vector at the start of each M line, at each iteration of a FOR loop, at certain points during the execution of commands which may take a "long" time. For example, ZWRITE, HANG, LOCK, MERGE, ZSHOW "V", OPEN of terminals, disk files, PIPEs, FIFOs, and SOCKETs (unless zero timeout,) WRITE /WAIT for SOCKETs, and READ for terminals, SOCKETs, FIFOs, PIPEs, and sequential files in FOLLOW mode.
+YottaDB recognizes most of these events when they occur but transfers control to the interrupt vector at the start of each M line, at each iteration of a FOR loop, at certain points during the execution of commands which may take a "long" time. For example, `ZWRITE <commands.html#zwrite>`_, :ref:`hang-command`, `LOCK <commands.html#lock>`_, `MERGE <commands.html#merge>`_, `ZSHOW "V" <commands.html#zshow-information-codes>`_, `OPEN <commands.html#read>`_ of terminals, disk files, PIPEs, FIFOs, and SOCKETs (unless zero timeout) WRITE /WAIT for SOCKETs, and READ for terminals, SOCKETs, FIFOs, PIPEs, and sequential files in FOLLOW mode.
 
 The HANG command and timed restartable I/O commands such as timed READ for terminals, SOCKETs, FIFO, PIPE, and sequential files in FOLLOW mode as well as SOCKET OPEN CONNECT and WRITE /WAIT account for time spent in handling the interrupt. However, the LOCK command pauses the timeout countdown until the interrupt handling is complete.
 
-If +$ZTEXIT evaluates to a truth value at the outermost TCOMMIT or TROLLBACK, YottaDB XECUTEs $ZINTERRUPT after completing the commit or rollback. Except for <CTRL-C> YottaDB recognizes CTRAP characters when READ. CTRAP characters other than <CTRL-C> tend to be limited by terminal configuration.
+If +$ZTEXIT evaluates to a truth value at the outermost TCOMMIT or TROLLBACK, YottaDB `XECUTEs <commands.html#xecute>`_ $ZINTERRUPT after completing the commit or rollback. Except for <CTRL-C> YottaDB recognizes CTRAP characters when READ. CTRAP characters other than <CTRL-C> tend to be limited by terminal configuration.
 
 .. _m-locks:
 

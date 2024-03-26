@@ -58,23 +58,23 @@ The following table summarizes the YottaDB operating system interface facilities
 | Extension                                | Explanation                                                                                                   |
 +==========================================+===============================================================================================================+
 | `ZSYstem <commands.html#zsystem>`_       | Provides access to the shell.                                                                                 |
-+---------------------------------+------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------+---------------------------------------------------------------------------------------------------------------+
 | `$ZMessage() <functions.html#zmessage>`_ | Translates an error condition code into text form.                                                            |
-+---------------------------------+------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------+---------------------------------------------------------------------------------------------------------------+
 | `$ZCMdline <isv.html#zcmdline>`_         | Contains a string value specifying the "excess" portion of the command line that invoked the YottaDB process. |
-+---------------------------------+------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------+---------------------------------------------------------------------------------------------------------------+
 | `$ZJob <isv.html#zjob>`_                 | Holds the pid of the process created by the last JOB command performed by the current process.                |
-+---------------------------------+------------------------------------------------------------------------------------------------------------------------+
-| `$ZPARSE() <functions.html#zparse>`_     | Parses a UNIX filename.                                                                                       |
-+---------------------------------+------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------+---------------------------------------------------------------------------------------------------------------+
+| :ref:`zparse-function`                   | Parses a UNIX filename.                                                                                       |
++------------------------------------------+---------------------------------------------------------------------------------------------------------------+
 | `$ZSEARCH() <functions.html#zsearch>`_   | Searches for one or more UNIX files.                                                                          |
-+---------------------------------+------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------+---------------------------------------------------------------------------------------------------------------+
 | `$ZSYstem <isv.html#zsystem>`_           | Contains the status code of the last ZSYSTEM.                                                                 |
-+---------------------------------+------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------+---------------------------------------------------------------------------------------------------------------+
 | `$ZTRNLNM() <functions.html#ztrnlnm>`_   | Returns the value of an environment variable.                                                                 |
-+---------------------------------+------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------+---------------------------------------------------------------------------------------------------------------+
 | `$ZDIRectory <isv.html#zdirectory>`_     | Contains current working directory.                                                                           |
-+---------------------------------+------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------+---------------------------------------------------------------------------------------------------------------+
 
 .. note::
    Operating system services accessed by YottaDB commonly treat a NULL ($CHAR(0)) character as a terminator. Therefore embedded NULLs in strings that are passed to the OS as arguments may cause non-obvious behavior.
@@ -202,7 +202,7 @@ YottaDB process execution is interruptible by the following events:
 
 When YottaDB detects any of these events, it transfers control to a vector that depends on the event. For CTRAP characters and $ZMAXTPTIME, YottaDB uses the `$ETRAP <isv.html#etrap>`_ or `$ZTRAP <isv.html#ztrap>`_ vectors described in more detail in `Error Processing <errproc.html>`_. For MUPIP INTRPT and $ZTEXIT, it `XECUTEs <commands.html#xecute>`_ the interrupt handler code placed in `$ZINTERRUPT <isv.html#zinterrupt>`_. If $ZINTERRUPT is an empty string, a the response to a MUPIP INTRPT ia a no-op.
 
-YottaDB recognizes most of these events when they occur but transfers control to the interrupt vector at the start of each M line, at each iteration of a `FOR <commands.html#for>`_ loop, at certain points during the execution of commands which may take a "long" time. For example, `ZWRITE <commands.html#zwrite>`_, `HANG <commands.html#hang>`_, `LOCK <commands.html#lock>`_, `MERGE <commands.html#merge>`_, `ZSHOW "V" <commands.html#zshow-information-codes>`_, `OPENs <commands.html#open>`_ of disk files and `FIFOs <ioproc.html#fifo-characteristics>`_, OPENs of `SOCKETs <ioproc.html#using-socket-devices>`_ with the `CONNECT <ioproc.html#connect>`_ deviceparameter (unless the timeout is zero), `WRITE /WAIT <ioproc.html#write-command>`_ for SOCKETs, and `READ <commands.html#read>`_ for terminals, SOCKETs, FIFOs, and `PIPEs <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#using-pipe-devices>`_. If +$ZTEXIT evaluates to a truth value at the outermost TCOMMIT or TROLLBACK, YottaDB XECUTEs $ZINTERRUPT after completing the commit or rollback. CTRAP characters are recognized when they are read by the operating system.
+YottaDB recognizes most of these events when they occur but transfers control to the interrupt vector at the start of each M line, at each iteration of a `FOR <commands.html#for>`_ loop, at certain points during the execution of commands which may take a "long" time. For example, `ZWRITE <commands.html#zwrite>`_, :ref:`hang-command`, `LOCK <commands.html#lock>`_, `MERGE <commands.html#merge>`_, `ZSHOW "V" <commands.html#zshow-information-codes>`_, `OPENs <commands.html#open>`_ of disk files and `FIFOs <ioproc.html#fifo-characteristics>`_, OPENs of `SOCKETs <ioproc.html#using-socket-devices>`_ with the `CONNECT <ioproc.html#connect>`_ deviceparameter (unless the timeout is zero), `WRITE /WAIT <ioproc.html#write-command>`_ for SOCKETs, and `READ <commands.html#read>`_ for terminals, SOCKETs, FIFOs, and `PIPEs <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#using-pipe-devices>`_. If +$ZTEXIT evaluates to a truth value at the outermost TCOMMIT or TROLLBACK, YottaDB XECUTEs $ZINTERRUPT after completing the commit or rollback. CTRAP characters are recognized when they are read by the operating system.
 
 If an interrupt event occurs in a long running external call (for example, waiting in a message queue), YottaDB recognizes the event but makes the vector transfer after the external call returns when it reaches the next appropriate execution boundary.
 
