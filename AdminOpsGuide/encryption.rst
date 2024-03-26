@@ -772,10 +772,6 @@ While GPG comes with an agent program, gpg-agent, other parties often provide th
 
 When invoking GPG via GPGME, there is no convenient way to avoid invoking an agent that obtains the passphrase for the keyring from the user. When the reference implementation has placed an obfuscated password in the environment, the password should be derived from that obfuscated password, and the user should not be prompted for the password. By default the GPG agent calls /usr/bin/pinentry the pinentry program. YottaDB provides a custom pinentry function for YottaDB's encryption reference implementation (packaged in pinentry-gtm.sh and pinentry.m).
 
-.. note::
-   **Spurious CRYPTKEYFETCHFAILED errors**: A defect that affects GnuPG 2.0+ versions causes the gpg-agent to fail decrypting the GnuPG private key that secures the database encryption key. This decryption failure results in spurious CRYPTKEYFETCHFAILED errors during process startup or re-encryption. This defect appears more frequently with GnuPG releases starting at 2.1.15. At the time of this writing, Ubuntu 17.04 - 17.10, Debian 9 and Fedora 26 - 27 all have the affected GnuPG versions. However Fedora 26 - 27 are slated to receive fixed versions. GPG versions 2.1.15 and up suffer from persistent CRYPTKEYFETCHFAILED errors. The only recommended course of action is to upgrade to GnuPG 2.2.4 and libgcrypt 1.8.2 which contain the fixes for the defects https://dev.gnupg.org/T3473 and https://dev.gnupg.org/T3530. The GPG fixes that address the CRYPTKEYFETCHFAILED errors require additional gpg-agent configuration options listed below.
-
-
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Using the Reference Implementation's Custom pinentry Program
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

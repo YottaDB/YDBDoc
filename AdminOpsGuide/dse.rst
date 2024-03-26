@@ -1604,46 +1604,49 @@ This command displays an output like the following:
 
 .. code-block:: bash
 
-   File    /tmp/test/r1.34_x86_64/g/yottadb.dat
-   Region  DEFAULT
-   File            /tmp/test/r1.34_x86_64/g/yottadb.dat
+   File            /tmp/test/r2.01_x86_64/g/yottadb.dat
    Region          DEFAULT
-   Date/Time       28-JAN-2022 10:08:27 [$H = 66137,36507]
-     Access method                          MM  Global Buffers              100000
-     Reserved Bytes                          0  Block size (in bytes)         4096
-     Maximum record size                  4080  Starting VBN                   513
-     Maximum key size                      255  Total blocks            0x003DEB89
-     Null subscripts                     NEVER  Free blocks             0x000004DA
-     Standard Null Collation              TRUE  Free space              0x00000000
-     Last Record Backup     0x0000000000000001  Extension Count              10000
-     Last Database Backup   0x0000000000000001  Number of local maps          7926
-     Last Bytestream Backup 0x0000000000000001  Lock space              0x00000028
-     In critical section            0x00000000  Timers pending                   0
-     Cache freeze id                0x00000000  Flush timer            00:00:01:00
-     Freeze match                   0x00000000  Flush trigger                93750
-     Freeze online                       FALSE  Freeze online autorelease    FALSE
-     Current transaction    0x000000001CC9E6C5  No. of writes/flush              7
-     Maximum TN             0xFFFFFFFF83FFFFFF  Certified for Upgrade to        V6
-     Maximum TN Warn        0xFFFFFFFD93FFFFFF  Desired DB Format               V6
-     Master Bitmap Size                    496  Blocks to Upgrade       0x00000000
-     Create in progress                  FALSE  Modified cache blocks            0
-     Reference count                         1  Wait Disk                        0
-     Journal State                    DISABLED
-     Mutex Hard Spin Count                 128  Mutex Sleep Spin Count         128
-     Mutex Queue Slots                    1024  KILLs in progress                0
-     Replication State                     OFF  Region Seqno    0x0000000000000001
-     Zqgblmod Seqno         0x0000000000000000  Zqgblmod Trans  0x0000000000000000
-     Endian Format                      LITTLE  Commit Wait Spin Count          16
-     Database file encrypted             FALSE  Inst Freeze on Error         FALSE
-     Spanning Node Absent                 TRUE  Maximum Key Size Assured      TRUE
-     Defer allocation                     TRUE  Spin sleep time mask    0x00000000
-     Async IO                              OFF  WIP queue cache blocks           0
-     DB is auto-created                  FALSE  DB shares gvstats             TRUE
-     LOCK shares DB critical section     FALSE  Read Only                      OFF
-     Recover interrupted                 FALSE
-     Max conc proc time             1642870066  Max Concurrent processes       584
-     Reorg Sleep Nanoseconds                 0
-
+   Date/Time       27-MAR-2024 17:43:10 [$H = 66926,63790]
+     Access method                                  MM  Global Buffers                        1000
+     Reserved Bytes                                  0  Block size (in bytes)                 4096
+     Maximum record size                          4080  Starting VBN                          8193
+     Maximum key size                              255  Total blocks            0x0000000000001392
+     Null subscripts                             NEVER  Free blocks             0x0000000000001384
+     Standard Null Collation                      TRUE  Free space                      0x00000000
+     Last Record Backup             0x0000000000000001  Extension Count                      10000
+     Last Database Backup           0x0000000000000001  Number of local maps                    10
+     Last Bytestream Backup         0x0000000000000001  Lock space                      0x000000DC
+     In critical section                    0x00000000  Timers pending                           0
+     Cache freeze id                        0x00000000  Flush timer                    00:00:01:00
+     Freeze match                           0x00000000  Flush trigger                          938
+     Freeze online                               FALSE  Freeze online autorelease            FALSE
+     Current transaction            0x0000000000002AE3  No. of writes/flush                      7
+     Maximum TN                     0xFFFFFFF803FFFFFF  Certified for Upgrade to                V7
+     Maximum TN Warn                0xFFFFFFD813FFFFFF  Desired DB Format                       V7
+     Master Bitmap Size                           8176  Blocks to Upgrade       0x0000000000000000
+     Create in progress                          FALSE  Modified cache blocks                    0
+     Reference count                                 1  Wait Disk                                0
+     Journal State                       [inactive] ON  Journal Before imaging               FALSE
+     Journal Allocation                           2048  Journal Extension                     2048
+     Journal Buffer Size                          2312  Journal Alignsize                     4096
+     Journal AutoSwitchLimit                   8386560  Journal Epoch Interval                 300
+     Journal Yield Limit                             8  Journal Sync IO                      FALSE
+     Journal File: /tmp/test/r2.01_x86_64/g/yottadb.mjl
+     Mutex Hard Spin Count                         128  Mutex Sleep Spin Count                 128
+     Mutex Queue Slots                            1024  KILLs in progress                        0
+     Replication State                             OFF  Region Seqno            0x0000000000000001
+     Zqgblmod Seqno                 0x0000000000000000  Zqgblmod Trans          0x0000000000000000
+     Endian Format                              LITTLE  Commit Wait Spin Count                  16
+     Database file encrypted                     FALSE  Inst Freeze on Error                 FALSE
+     Spanning Node Absent                         TRUE  Maximum Key Size Assured              TRUE
+     Defer allocation                             TRUE  Spin sleep time mask            0x00000000
+     Async IO                                      OFF  WIP queue cache blocks                   0
+     DB is auto-created                          FALSE  DB shares gvstats                     TRUE
+     LOCK shares DB critical section             FALSE  Read Only                              OFF
+     Recover interrupted                         FALSE  Full Block Write                         0
+     StatsDB Allocation                           2050
+     Max conc proc time                     1711463747  Max Concurrent processes                 1
+     Reorg Sleep Nanoseconds                         0
 
 Note that certain fileheader elements appear depending on the current state of database. For example, if Journaling is not enabled in the database, DSE does not display Journal data element fields.
 

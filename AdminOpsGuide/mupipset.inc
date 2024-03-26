@@ -379,6 +379,22 @@ The default is Sep(arate)/FALSE.
 For more information, refer to :ref:`region-qualifiers`.
 
 ^^^^^^^^^^^^
+PROBLKSPLIT
+^^^^^^^^^^^^
+
+Specifies the approximate number of records a block in the region must exceed before YottaDB considers a proactive block split. The format of the PROBLKSPLIT qualifier is:
+
+.. code-block:: none
+
+   -PRO[BLKSPLIT]=integer
+
+In order to minimize restarts YottaDB can proactively split data blocks when updating an data block more than once within a TP transaction or mini-transaction owing to contention. Proactive block splits tend to make globals require more blocks and potentially deeper trees.
+
+* A value of one (1) indicates to always consider proactive splits, which might be useful for regions used to hold globals with a first subscript of, for example, $job.
+
+* The default value of five (5) indicates that YottaDB considers proactive block split only when the number of records in a block exceed 5.
+
+^^^^^^^^^^^^
 -QDBRUNDOWN
 ^^^^^^^^^^^^
 

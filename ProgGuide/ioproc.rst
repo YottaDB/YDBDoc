@@ -498,7 +498,7 @@ The following tables provide a brief summary of deviceparameters for terminals, 
 +===============================+==========================+===================================================================================================+
 | [NO]CENABLE                   | U                        | Controls whether <CTRL-C> on $PRINCIPAL causes YottaDB to go to direct mode.                      |
 +-------------------------------+--------------------------+---------------------------------------------------------------------------------------------------+
-| CTRAP=expr                    | U                        | Controls vectoring on trapped <CTRL> characters.                                                  |
+| CTRAP=$[Z]CHAR(intexpr[,...]) | U                        | Controls vectoring on trapped <CTRL> characters.                                                  |
 +-------------------------------+--------------------------+---------------------------------------------------------------------------------------------------+
 | [NO]EDITING                   | U                        | Controls the editing mode for $PRINCIPAL.                                                         |
 +-------------------------------+--------------------------+---------------------------------------------------------------------------------------------------+
@@ -1865,14 +1865,14 @@ where:
 
 .. note::
    In most circumstances, ``WRITE /WAIT(timeout[,"WRITE"])`` for non-blocking sockets returns immediately, because non-blocking sockets are usually ready for writing. See ``WRITE /BLOCK("OFF")`` below.
-
-   If the current Socket Device is $PRINCIPAL and input and output are different SOCKETs, WRITE /WAIT applies to the input side of the device.
+ 
+   If the current Socket Device is `$PRINCIPAL <isv.html#principal>`_ and input and output are different SOCKETs, WRITE /WAIT applies to the input side of the device.
 
 .. code-block:: none
 
    WRITE /PASS([targetpid],[timeout],handle[,handle]...)
 
-WRITE /PASS allows a YottaDB process to send DETACHed TCP or LOCAL sockets (that is, sockets in the socket pool) to another YottaDB process. The receiving process should execute WRITE /ACCEPT to receive the socket. WRITE /PASS and WRITE /ACCEPT may be used to send and receive both LISTENING and CONNECTED sockets.
+WRITE /PASS allows a YottaDB process to send DETACHed TCP or LOCAL sockets (that is, sockets in the socket pool) to another YottaDB process. The receiving process must execute WRITE /ACCEPT to receive the socket. WRITE /PASS and WRITE /ACCEPT may be used to send and receive both LISTENING and CONNECTED sockets.
 
 * If a numeric target pid is specified, YottaDB matches the value against the process id ($JOB) of the process receiving the sockets. YottaDB uses a system service to perform this check on platforms that support it. If the pids do not match, YottaDB issues a PEERPIDMISMATCH error and does not transfer the sockets.
 * If a numeric timeout is specified, YottaDB sets $TEST to 1 if the transfer completes within the specified time, and otherwise sets $TEST to 0 and does not transfer any of the sockets.
@@ -1898,28 +1898,26 @@ Note that the receiving process must establish desired deviceparameters (e.g., D
 
 .. code-block:: none
 
-   WRITE /TLS(option[,[timeout][,tlsid[,cfg-file-options]])
+   WRITE /TLS(option[,[timeout][,tlsid[,[obfuscatedpassword][,cfg-file-options]]]])
 
-SOCKET devices support encrypted connections with TLS using an encryption plugin. YottaDB ships with a reference implementation of the plugin which uses OpenSSL; the reference implementation also supports TLS for YottaDB replication streams. OpenSSL options are controlled by a configuration file. The WRITE /TLS command activates this feature for connected sockets.
+SOCKET devices support encrypted connections with TLS using an encryption plugin. The reference implementation in the `YottaDB encryption plugin <../AdminOpsGuide/encryption.html#plugin-architecture-and-interface>`_ uses `OpenSSL <https://openssl.org>`_; the reference implementation also supports TLS for YottaDB replication streams. OpenSSL options are controlled by a configuration file. The WRITE /TLS command activates this feature for connected sockets.
 
-* option is "server", "client", or "renegotiate". "server" or "client" indicates which TLS role to assume. The server role requires a certificate specified in the configuration file section with the label matching tlsid. The client role may require a certificate depending on the OpenSSL options. If a timeout is specified for options "client" or "server", YottaDB sets $TEST to 1 if the command successfully completed or to 0 if it timed out. $DEVICE provides status information in case of an error. ZSHOW "D" includes "TLS" in the second line of the output for an encrypted socket.
+* option is "server", "client", or "renegotiate". "server" or "client" indicates which TLS role to assume. The server role requires a certificate specified in the configuration file section with the label matching tlsid. The client role may require a certificate depending on the OpenSSL options. If a timeout is specified for options "client" or "server", YottaDB sets $TEST to 1 if the command successfully completed or to 0 if it timed out. $DEVICE provides status information in case of an error. `ZSHOW "D" <commands.html#zshow-information-codes>`_ includes "TLS" in the second line of the output for an encrypted socket.
 * "renegotiate" applies only to a server socket. It allows applications to request a TLS renegotiation. Renegotiation requires the suspension of application communication and the application must read all pending data before initiating a renegotiation. This means that in the communication protocol used, both parties must be at a known state when renegotiating keys. For example, in YottaDB replication, one party sends a renegotiation request and waits for an acknowledgement before initiating the renegotiation.
-* tlsid refers to the name of a section in the configuration file specified by the ydb_crypt_config environment variable. If tlsid is not specified with the "renegotiate" option and cfg-file-options are specified, YottaDB creates a virtual section by appending "-RENEGOTIATE" to the tlsid used to enable TLS on the socket. For the renegotiate option, if no section named tlsid is present in the configuration file, YottaDB creates a virtual section with that name for the life of the process.
+* tlsid refers to the name of a section in the configuration file specified by the `ydb_crypt_config <../AdminOpsGuide/basicops.html#ydb-crypt-config>`_ environment variable. If tlsid is not specified with the "renegotiate" option and cfg-file-options are specified, YottaDB creates a virtual section by appending "-RENEGOTIATE" to the tlsid used to enable TLS on the socket. For the renegotiate option, if no section named tlsid is present in the configuration file, YottaDB creates a virtual section with that name for the life of the process.
+* obfuscatedpassword can represent a private key in the tlsid section of the configuration file which overrides any existing password such as the environment variable `ydb_tls_passwd_<label> <../AdminOpsGuide/basicops.html#ydb-tls-passwd-label>`_. If a password is supplied on the command, it must supply the tlsid as well unless the option is "renegotiate".
 * cfg-file-options specifies configuration file options. Note cfg-file-options override those options if they are already specified in the configuration file except ssl-options and verify-level which are merged.
 * Supported cfg-file-options for the "renegotiate" command are (case-sensitive): verify-depth, verify-level, verify-mode, session-id-hex, and CAfile. WRITE /TLS ignores all other configuration file options whether given on the command or in the configuration file. For more information on the supported configuration options, refer to `Creating a TLS Configuration File <../AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
 
 .. note::
-   Note that SOCKET device actions may produce the following errors: TLSDLLOPEN, TLSINIT, TLSCONVSOCK, TLSHANDSHAKE, TLSCONNINFO, TLSIOERROR, and TLSRENEGOTIATE.
+   Note that SOCKET device actions may produce the following errors: `TLSDLLNOOPEN <../MessageRecovery/errors.html#tlsdllnoopen>`_, `TLSINIT <../MessageRecovery/errors.html#tlsinit>`_, `TLSCONVSOCK <../MessageRecovery/errors.html#tlsconvsock>`_, `TLSHANDSHAKE <../MessageRecovery/errors.html#tlshandshake>`_, `TLSCONNINFO <../MessageRecovery/errors.html#tlsconninfo>`_, `TLSIOERROR <../MessageRecovery/errors.html#tlsioerror>`_, and `TLSRENEGOTIATE <../MessageRecovery/errors.html#tlsrenegotiate>`_.
 
 The TLS plugin uses OpenSSL options in the configuration file specified under the ``tls:`` label as the default for all TLS connections and under the specific labels to override the defaults for corresponding connections.
 
 YottaDB buffers WRITEs to TLS enabled sockets until a subsequent USE :FLUSH, WRITE !, WRITE #, or an internal 400 millisecond timer expires.
 
 .. note::
-   Because this functionality has a wide variety of user stories (use cases) and has substantial complexity, although the code appears robust, we are not confident that we have exercised a sufficient breadth of use cases in testing. Also we may make changes in future releases that are not entirely backwards compatible. We encourage you to use with this facility in development and testing, and to provide us with feedback. If you are a YottaDB customer and wish to use this in production, please contact us beforehand to discuss your use case(s).
-
-.. note::
-   YDBEncrypt, the encryption plugin <https://gitlab.com/YottaDB/Util/YDBEncrypt>`_ is released as source code, and is built with the specific version of `OpenSSL <https://www.openssl.org/>`_ installed on your system. If the OpenSSL API changes, e.g., after a software upgrade, you may have to rebuild YDBEncrypt. YottaDB recomemnds installing or upgrading YDBEncrypt with `ydbinstall <../AdminOpsGuide/installydb.html#ydbinstall-script>`_.
+   YDBEncrypt, the encryption plugin <https://gitlab.com/YottaDB/Util/YDBEncrypt>`_ is released as source code, and is built with the specific version of OpenSSL installed on your system. If the OpenSSL API changes, e.g., after a software upgrade, you may have to rebuild YDBEncrypt. YottaDB recomemnds installing or upgrading YDBEncrypt with `ydbinstall <../AdminOpsGuide/installydb.html#ydbinstall-script>`_.
 
 .. code-block:: none
 
@@ -3623,13 +3621,13 @@ This example converts all lowercase to uppercase during READ X.
 CTRAP
 ~~~~~~
 
-CTRAP=expr Applies to: TRM
+CTRAP=$[Z]CHAR(intexpr[,...]) Applies to: TRM
 
-Establishes the <CTRL> characters in the expression as trap characters for the current device. When YottaDB receives a trap character in the input from a device, YottaDB issues a run-time exception. The device does not have to be the current device, that is $IO.
+Establishes the <CTRL> characters in the expression as trap characters for the current device. The expression is a comma seperated list of ASCII characters where 0<=intexpr<=31. Other than <CTRL_C>, YottaDB recognizes <CTRL> characters only when reading them from `$IO <isv.html#io>`_. The behavior for <CTRL-C> is different in the sense that the OS recognizes it as an out-of-band interrupt including when it occurs on `$PRINCIPAL <isv.html#principal>`_,i.e., when $IO'=$PRINCIPAL and delivers it immediately; When YottaDB receives a trap character in the input from a device, YottaDB issues a run-time exception. The device does not have to be the current device, that is $IO.
 
 The <CTRL> characters are ASCII 0 though 31. However, terminal configuration may prevent most <CTRL> characters from ever reaching YottaDB's CTRAP facility.
 
-For example, the command U $P:CTRAP=$C(26,30,7,19) sets a trap for the ASCII characters <SUB>, <RS>, <BEL> and <DC3>.
+For example, the command USE $PRINCIPAL:CTRAP=$CHAR(26,30,7,19) sets a trap for the ASCII characters <SUB>, <RS>, <BEL> and <DC3>.
 
 Specifying CTRAP completely replaces the previous CTRAP list. Setting CTRAP to the null string ("") disables character trapping.
 
@@ -3783,9 +3781,9 @@ EDITING
 
 [NO]EDITING Applies to: TRM
 
-Enables the EDITING mode for the $PRINCIPAL device. If you enable EDITING, YottaDB allows the use of the left and right cursor movement keys and certain <CTRL> characters within the current input line. You can recall the last input line using the up or down arrow key. The editing functions are the same as during direct mode command input as described in the "Line Editing" section of the "Operating & Debugging in Direct Mode" chapter except that backspace is not treated the same as the erase character from terminfo which is usually delete (ASCII 127). NOECHO disables EDITING mode.
+Enables the EDITING mode for the `$PRINCIPAL <isv.html#principal>`_ device. If you enable EDITING, YottaDB allows the use of the left and right cursor movement keys and certain <CTRL> characters within the current input line. You can recall the last input line using the up or down arrow key. The editing functions are the same as during direct mode command input as described in the `Line Editing section of the Operating & Debugging in Direct Mode chapter <opdebug.html#line-editing>`_ except that backspace is not treated the same as the erase character from terminfo which is usually delete (ASCII 127). NOECHO disables EDITING mode.
 
-Set the environment variable ydb_principal_editing to specify the mode for EDITING. For example, ydb_principal_editing="EDITING" enables EDITING mode at YottaDB startup. You can also specify the mode for INSERT. For example, ydb_principal_editing="NOINSERT:EDITING". If you specify both modes then separate them with a colon (":") and put them in any order.
+Set the environment variable `ydb_principal_editing <../AdminOpsGuide/basicops.html#ydb-principal-editing>`_ to specify the mode for EDITING. For example, ``ydb_principal_editing="EDITING"`` enables EDITING mode at YottaDB startup. You can also specify the mode for INSERT. For example, ``ydb_principal_editing="NOINSERT:EDITING"``. If you specify both modes then separate them with a colon (":") and put them in any order.
 
 By default, EDITING mode is disabled.
 
@@ -3796,7 +3794,7 @@ Enabling PASTHRU mode supersedes EDITING mode.
 If any of the EDITING <CTRL> characters are in the CTRAP list, their editing functions are not available since CTRAP takes precedence. However the EDITING <CTRL> characters takes precedence over the TERMINATOR list.
 
 .. note::
-   M READ EDITING depends on the values of $X and $Y being correct. If the application sends its own escape sequences or control characters, which change the cursor position, it must properly update $X and $Y before doing a M READ with EDITING enabled to ensure correct formatting during input.
+   M READ EDITING depends on the values of `$X <isv.html#x>`_ and `$Y <isv.html#y>`_ being correct. If the application sends its own escape sequences or control characters, which change the cursor position, it must properly update $X and $Y before doing a M READ with EDITING enabled to ensure correct formatting during input.
 
 .. _use-empterm:
 
@@ -3926,9 +3924,9 @@ HUPENABLE
 
 [NO]HUPENABLE Applies to: TRM
 
-Enables or disables the recognition by the process of the loss ("hang up") of PRINCIPAL device terminal. When enabled the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has diconnected. If YottaDB is configured to ignore such a signal, a process may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the operator log.
+Enables or disables the recognition by the process of the loss ("hang up") a `$PRINCIPAL <isv.html#principal>`_ device terminal. When enabled the process receives a `TERMHANGUP <../MessageRecovery/errors.html#termhangup>`_ error if the OS signals that the terminal assigned to the process as the $PRINCIPAL device has diconnected. If YottaDB is configured to ignore such a signal, a process may subsequently receive an `IOEOF <../MessageRecovery/errors.html#ioeof>`_ or a `TERMWRITE <../MessageRecovery/errors.html#termwrite>`_ error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a `NOPRINCIO <../MessageRecovery/errors.html#noprincio>`_ message to the operator log.
 
-If defined, the :code:`ydb_hupenable` environment variable determines the initial process behavior, and if that is undefined YottaDB does not immediately report a terminal disconnect.
+If defined, the `ydb_hupenable <../AdminOpsGuide/basicops.html#ydb-hupenable>`_ environment variable determines the initial process behavior, and if that is undefined YottaDB does not immediately report a terminal disconnect.
 
 .. _use-ikey:
 
@@ -4362,7 +4360,7 @@ Note that LOCAL sockets ignore the ZIBFSIZE deviceparameter.
 +-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
 | [NO]CONVERT                         | X            |                 |                 |                 |                 |                  |
 +-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
-| CTRAP=expr                          | X            |                 |                 |                 |                 |                  |
+| CTRAP=$[Z}CHAR(intexpr[,...])       | X            |                 |                 |                 |                 |                  |
 +-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
 | [NO]DELIMITER                       |              |                 |                 |                 |                 | X                |
 +-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+

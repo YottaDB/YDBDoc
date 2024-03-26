@@ -417,7 +417,7 @@ Example:
 This GOTO command transfers control to label A in the current routine, if x is less than zero (0), to routine ^A if x is equal to zero (0), and otherwise to label A in routine ^B. Once any of the transfers occur, the rest of the arguments have no effect.
 
 --------------------------
-Halt
+HALT
 --------------------------
 
 The HALT command stops program execution and causes YottaDB to return control to the operating system environment that invoked the YottaDB image.
@@ -433,7 +433,7 @@ The format of the HALT command is:
 
 A HALT releases all shared resources held by the process, such as devices OPENed in YottaDB, databases, and YottaDB LOCKs. If the process has an active M transaction (the value of $TLEVEL is greater than zero (0)), YottaDB performs a ROLLBACK prior to terminating.
 
-Because HALT and HANG share the same abbreviation (H), YottaDB differentiates them based on whether an argument follows the command.
+Because HALT and :ref:`hang-command` share the same abbreviation (H), YottaDB differentiates them based on whether an argument follows the command.
 
 Example:
 
@@ -445,8 +445,10 @@ Example:
 
 Because we invoke this YottaDB image interactively, the HALT in Direct Mode leaves the process at the shell prompt.
 
+.. _hang-command:
+
 -------------------
-Hang
+HANG
 -------------------
 
 The HANG command suspends YottaDB program execution for a period of time specified by the command argument.
@@ -458,12 +460,12 @@ The format of the HANG command is:
    H[ANG][:tvexpr] numexpr[,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
-* The numeric expression specifies the time in seconds to elapse before resuming execution; actual elapsed time may vary slightly from the specified time. If the numeric expression is negative, HANG has no effect. Portability requirements for YottaDB only guarantee accuracy to the nearest second. However, more accuracy can be found on different UNIX systems.
+* The numeric expression specifies the time in seconds to elapse before resuming execution; actual elapsed time may vary slightly from the specified time. If the numeric expression is negative, HANG has no effect.
 * An indirection operator and an expression atom evaluating to a list of one or more HANG arguments form a legal argument to a HANG.
 
 A process that repeatedly tests for some event, such as a device becoming available or another process modifying a global variable, may use a HANG to limit its consumption of computing resources.
 
-Because HALT and HANG share the same abbreviation (H), YottaDB differentiates them based on whether an argument follows the command.
+Because `HALT <#halt>`_ and HANG share the same abbreviation (H), YottaDB differentiates between them based on whether an argument follows the command.
 
 ++++++++++++++++++
 Examples of HANG
@@ -1392,7 +1394,7 @@ Example:
 The postconditional QUIT terminates the FOR loop. Note the two spaces after the QUIT because it has no argument.
 
 ----------------------
-Read
+READ
 ----------------------
 
 The READ command transfers the input from the current device to a global or local variable specified as a READ argument. For convenience, READ also accepts arguments that perform limited output to the current device.
@@ -1405,23 +1407,21 @@ The format of the READ command is:
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * A subscripted or unsubscripted global or local variable name specifies a variable into which to store the input; the variable does not have to exist prior to the READ; if the variable does exist prior to the READ, the READ replaces its old value.
-* When an asterisk (*) immediately precedes the variable name, READ accepts one character of input and places the ASCII code for that character into the variable.
-* When a number-sign (#) and a positive non-zero integer expression immediately follow the variable name, the integer expression determines the maximum number of characters accepted as input to the read; such reads terminate when YottaDB reads the number of characters specified by the integer expression or a terminator character in the input stream or the optional timeout expires, whichever occurs first.
-* The optional numeric expression specifies a time in seconds at most, for which the command waits for input to be terminated. When a timeout is specified, if the input has been terminated before the timeout expires, $TEST is set to 1 (true), otherwise, $TEST is set to 0 (false). When a READ times out, the target variable takes the value of the string received before the timeout.
-* To provide a concise means of issuing prompts, YottaDB sends string literal and format control character (!,?intexpr,#) arguments of a READ to the current device as if they were arguments of a WRITE.
+* When an asterisk (*) immediately precedes the variable name, READ accepts one character of input and places the ASCII code (in M mode) or Unicode code point (in UTF-8 mode when the encoding for the device is not "M") for that character into the variable.
+* When a number-sign (#) and a positive non-zero integer expression immediately follow the variable name, the integer expression determines the maximum number of characters accepted as input to the read; such reads terminate when YottaDB reads the number of characters specified by the integer expression, a terminator character is read in the input stream, or the optional timeout expires, whichever occurs first.
+* The optional numeric expression specifies a time in seconds at most, for which the command waits for input to be terminated. When a timeout is specified, if the input has been terminated before the timeout expires, `$TEST <isv.html#test>`_ is set to 1 (true), otherwise, $TEST is set to 0 (false). When a READ times out, the target variable takes the value of the string received before the timeout.
+* To provide a concise means of issuing prompts, YottaDB sends string literal and format control character (!,?intexpr,#) arguments of a READ to the current device as if they were arguments of a :ref:`write-command`.
 * An indirection operator and an expression atom evaluating to a list of one or more READ arguments form a legal argument for a READ.
-* In UTF-8 mode, the READ command uses the character set value specified on the device OPEN as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it generates a run-time error. The READ command recognizes all Unicode® line terminators for non-FIXED devices.
-* To ensure that existing applications which perform their own cursor management continue working unchanged after YottaDB upgrades, YottaDB defaults to not enabling READ line editing capabilities. To enable at process startup, use the environment variable :code:`ydb_principal_editing`. For example:
+* In UTF-8 mode, the READ command uses the character set value specified on the device `OPEN <#open>`_ as the character encoding of the input device. If character set "M" or "UTF-8" is specified, the data is read with no transformation. If character set is "UTF-16", "UTF-16LE", or "UTF-16BE", the data is read with the specified encoding and transformed to UTF-8. If the READ command encounters an illegal character or a character outside the selected representation, it generates a run-time error. The READ command recognizes all Unicode® line terminators for non-FIXED devices.
+* To ensure that existing applications which perform their own cursor management continue working unchanged after YottaDB upgrades, YottaDB defaults to not enabling READ line editing capabilities. To enable at process startup, use the environment variable `ydb_principal_editing <../AdminOpsGuide/basicops.html#ydb-principal-editing-env-var>`_. For example:
 
   .. code:: bash
 
      ydb_principal_editing=EDITING:EMPTERM:INSERT yottadb -run yourprogram
 
- Refer `ydb_principal_editing <../AdminOpsGuide/basicops.html#ydb-principal-editing-env-var>`_ for more information.
-
 For more information on READ, devices, input, output and format control characters, refer to `Chapter 9: “Input/Output Processing” <./ioproc.html>`_.
 
-The READ command does not use :code:`ydb_readline`.
+The READ command does not use `ydb_readline <../AdminOpsGuide/basicops.html#ydb-readline>`_.
 
 .. _set-command:
 
@@ -2560,6 +2560,8 @@ Example 2:
 
 This demonstrates use of VIEW "LABELS" to make label handling case insensitive. Notice that the routine was ZLINKed with an extension of .m to force a recompile and ensure that the object code and the run-time handling of labels is the same.
 
+.. _write-command:
+
 ------------------
 Write
 ------------------
@@ -3485,12 +3487,12 @@ The three least significant bits (lsb) of these message codes indicate the sever
 +================+==================================+=========================================================================================================+
 | 0              | Warning                          | XECUTEs $ETRAP or $ZTRAP and terminates the process                                                     |
 +----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
-| 1              | Success                          | Displays the associated message on STDERR (of the ydb process) and continues execution.                 |
+| 1              | Success                          | Displays the associated message on STDERR (of the YottaDB process) and continues execution.             |
 |                |                                  | It does not invoke $ETRAP or $ZTRAP.                                                                    |
 +----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
 | 2              | Error                            | XECUTEs $ETRAP or $ZTRAP and terminates the process                                                     |
 +----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
-| 3              | Information (success & error)    | Displays the associated message on STDERR (of the ydb process) and continues execution.                 |
+| 3              | Information (success & error)    | Displays the associated message on STDERR (of the YottaDB process) and continues execution.             |
 |                |                                  | It does not invoke $ETRAP or $ZTRAP.                                                                    |
 +----------------+----------------------------------+---------------------------------------------------------------------------------------------------------+
 | 4              | Severe/Fatal                     | Displays the associated message and terminates the process.                                             |
@@ -3502,10 +3504,10 @@ The three least significant bits (lsb) of these message codes indicate the sever
 
 ZMESSAGE can be used as a tool to simulate an error condition. The additional expressions specified after a colon ":" are the ordered context substitutions for the given exception condition. For example, if the message associated with the condition contains a substitution directive, passing a string as an additional expression causes the string to be inserted in the message text dat the point of the corresponding substitution directive.
 
-ZMESSAGE transforms two sets of error messages into SPCLZMSG errors:
+ZMESSAGE transforms two sets of error messages into `SPCLZMSG <../MessageRecovery/errors.html#spclzmsg>`_ errors:
 
 * The internal error messages which should not be user visible.
-* The error messages which are expected to be driven when their corresponding internal state is available. The list of such errors is as follows: CTRLY, CTRLC, CTRAP, JOBINTRRQST, JOBINTRRETHROW, REPEATERROR, STACKCRIT, SPCLZMSG, TPRETRY, UNSOLCNTERR.
+* The error messages which are expected to be driven when their corresponding internal state is available. The list of such errors is as follows: CTRLC, CTRAP, JOBINTRRQST, JOBINTRRETHROW, REPEATERROR, STACKCRIT, SPCLZMSG, TPRETRY, UNSOLCNTERR.
 * ZMESSAGE is conceptually similar to SET $ECODE=",<expr>,".
 
 +++++++++++++++++++++++++++++
@@ -3719,9 +3721,9 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 | MNEMONICS      | DESCRIPTION                                                                                                                          |
 +================+======================================================================================================================================+
-|  AFRA          | Set to 1 when waiting for instance freeze to release critical sections, 0 otherwise                                                  |
+|  AFRA          | # of waits for instance freeze to release critical sections                                                                          |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  BREA          | Set to 1 when waiting for block read & decryption, 0 otherwise                                                                       |
+|  BREA          | # of waits for block read & decryption                                                                                               |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  BTD           | # of database Block Transitions to Dirty                                                                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3750,7 +3752,7 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  DEX           | # of Database file EXtentions                                                                                                        |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  DEXA          | Set to 1 when waiting for db extension, 0 otherwise                                                                                  |
+|  DEXA          | # of waits for database extension                                                                                                    |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  DFL           | # of Database FLushes of the entire set of dirty global buffers in shared memory to disk                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3774,7 +3776,7 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  GET           | # of GET operations (TP and non-TP)                                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  GLB           | Set to 1 waiting for BG access critical section, 0 otherwise                                                                         |
+|  GLB           | # of waits for bg access critical section                                                                                            |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  JBB           | # of Journal Buffer Bytes updated in shared memory                                                                                   |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3791,9 +3793,9 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  JFW           | # of Journal File Write system calls                                                                                                 |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  JNL           | Set to 1 when waiting for journal access critical section, 0 otherwise                                                               |
+|  JNL           | # of waits for journal access critical section                                                                                       |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  JOPA          | Set to 1 when waiting for journal open critical section, 0 otherwise                                                                 |
+|  JOPA          | # of waits for journal open critical section                                                                                         |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  JRE           | # of Journal Regular Epoch records written to the journal file (only seen in a -detail journal extract).                             |
 |                | These are written every time an epoch-interval boundary is crossed while processing updates.                                         |
@@ -3815,9 +3817,9 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  LKS           | # of LocK calls (mapped to this db) that Succeeded                                                                                   |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  MLBA          | Set to 1 when waiting for blocked LOCK, 0 otherwise                                                                                  |
+|  MLBA          | # of waits for blocked LOCK                                                                                                          |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  MLK           | Set to 1 when waiting for LOCK access, 0 otherwise                                                                                   |
+|  MLK           | # of waits for LOCK access                                                                                                           |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  NBR           | # of Non-tp committed transaction induced Block Reads on this database                                                               |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3837,7 +3839,9 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  ORD           | # of $ORDer(,1) (forward) operations (TP and non-TP); the count of $Order(,-1) operations are reported under ZPR.                    |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  PRC           | Set to 1 when waiting on exit, 0 otherwise                                                                                           |
+|  PRC           | # of waits on exit                                                                                                                   |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  PRG           | # of pre-read globals that were performed by the reader helper                                                                       |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  QRY           | # of $QueRY() operations (TP and non-TP)                                                                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
@@ -3869,17 +3873,23 @@ If G occurs in the list, the statistics are displayed in the following order in 
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  TRB           | # of Tp read-only or read-write transactions Rolled Back (excluding incremental rollbacks)                                           |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  TRGA          | Set to 1 when waiting for mini-transaction completion, 0 otherwise                                                                   |
+|  TRGA          | # of mini-transaction completion                                                                                                     |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  TRX           | Set to 1 when waiting for transaction in progress, 0 otherwise                                                                       |
+|  TRX           | # of waits for transaction in progress                                                                                               |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  TTR           | # of Tp committed Transactions that were Read-only on this database                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  TTW           | # of Tp committed Transactions that were read-Write on this database                                                                 |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  WFL           | # of database flushes that were performed by the writer helpers                                                                      |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  WFR           | # of times a process slept while waiting for another process to read in a database block                                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  ZAD           | Set to 1 when waiting for region freeze off, 0 otherwise                                                                             |
+|  WHE           | # of writer helper epochs                                                                                                            |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  WRL           | # of times a process consistently slept (longer than WFR) while waiting for another process to read in a database block              |
++----------------+--------------------------------------------------------------------------------------------------------------------------------------+
+|  ZAD           | # of waits for region freeze off                                                                                                     |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  ZPR           | # of $order(,-1) or $ZPRevious() (reverse order) operations (TP and non-TP).                                                         |
 |                | The count of $Order(,1) operations are reported under ORD.                                                                           |
@@ -4284,8 +4294,8 @@ ZStep Interactions
 
 ZSTEP currently interacts with certain other elements in the YottaDB environment.
 
-* If a <CTRL-C> or a CTRAP character arrives at certain points in ZSTEP processing, there is a small chance YottaDB may ignore the <CTRL-C> or CTRAP; in a later release, <CTRL-C> and CTRAPs will always have priority over ZSTEP.
-* If GT.CM reports an asynchronous network error, a ZSTEP may cause the network error to go unreported; the chance of such an occurrence is small and the chance the error would subsequently be reported is high; in a later release, network errors will always be given priority over ZSTEP.
+* When there is a <CTRL-C> and CTRAP=$CHAR(3), the CTRAP has priority over ZSTEP.
+* When there is a <CTRL-n> and CTRAP=$CHAR(n) where n is 0-31, but not 3, GT.M recognizes the event at a READ and the recognition does not interact directly with ZSTEP, but competes "fairly" with other deferred events.
 
 +++++++++++++++
 Use of ZSTEP

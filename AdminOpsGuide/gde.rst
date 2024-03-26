@@ -714,7 +714,7 @@ This example performs the following mapping:
 * from ^x(20,40,50) through the last subscript in ^x maps to REG 3
 
 ~~~~~~~~~
--Segment
+SEGMENT
 ~~~~~~~~~
 
 Maps a segment to a database file. The syntax of the ADD -SEGMENT command is:
@@ -729,7 +729,9 @@ Example:
 
    GDE> add -segment temp -file_name=scratch
 
-This command creates a segment-name TEMP and maps it to the file scratch.dat in the current working directory. However, if you were to specify scratch as the file-name, in other words an environment variable, each process uses the file using the translation of that environment variable at run-time.
+This command creates a segment-name TEMP and maps it to the file ``scratch.dat`` in the current working directory of each process. However, if you were to specify ``file_name`` as an environment variable (e.g., ``$scratch``), each process maps the region to the file whose name is the value of ``$scratch`` in its environment, if defined. If ``$scratch`` is not defined, the region is mapped to ``$scratch.dat``, i.e., the environment variable name is used literally in the filename.
+
+Environment variables can occur anywhere in ``file_name``. For example, in the default environment created by `sourcing ydb_env_set <basicops.html#ydb-env-set>`_, the DEFAULT region is mapped to ``$ydb_dir/$ydb_rel/g/yottadb.dat``.
 
 File-name is case-sensitive.
 

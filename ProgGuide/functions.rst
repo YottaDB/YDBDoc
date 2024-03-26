@@ -2547,7 +2547,7 @@ This section lists the $ZDATE format specification elements. $ZDATE() format spe
 
 YY: Outputs the rightmost two digits of the year.
 
-YEAR: Outputs the year as a four-digit number.
+YEAR or YYYY: Outputs the year as a four-digit number.
 
 YYYYYY: Outputs the year as a six-digit number.
 
@@ -2778,7 +2778,7 @@ This example uses a loop with $ZFIND() to locate all the occurrences of the byte
 $ZGETJPI()
 ----------------
 
-Returns job or process information of the specified process. The format for the $ZGETJPI function is:
+Returns job or process information of the specified process. The format for the $ZGETJPI()) function is:
 
 .. code-block:: none
 
@@ -2805,8 +2805,8 @@ Returns job or process information of the specified process. The format for the 
 | UTIME                      | Process user time                                                                                                                    |
 +----------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
 
-* $ZGETJPI() retrieves process time measurements (CPUTIM, CSTIME, CUTIME, STIME, and UTIME) for the requested process. If the information is not available for the specified process, the function returns -1. If the process ID specified is 0, the current process ($JOB) time measurements are returned. The "child" process time includes ZSYSTEM and PIPE device sub-processes (only after the PIPE CLOSEs), but excludes processes created by JOB commands.
-* $ZGETJPI() provides a tool for examining the characteristics of a UNIX process. Accessing information about processes belonging to other users requires certain UNIX privileges. Consult your system manager if you require additional privileges.
+* $ZGETJPI() retrieves process time measurements (CPUTIM, CSTIME, CUTIME, STIME, and UTIME) for the requested process. If the information is not available for the specified process, the function returns -1. If the process ID specified is 0, the current process ($JOB) time measurements are returned. The "child" process time includes `ZSYSTEM <commands.html#zsystem>`_ and `PIPE <ioproc.html#using-pipe-devices>`_ device sub-processes (only after the PIPE CLOSEs), but excludes processes created by `JOB <commands.html#job>`_ commands.
+* $ZGETJPI() provides a tool for examining the characteristics of a process process. Accessing information about processes belonging to other users requires privileges. Consult your system manager if you require additional privileges.
 
 +++++++++++++++++++++++
 Examples of $ZGETJPI()
@@ -2841,16 +2841,16 @@ $ZJOBEXAM()
 
    $ZJOBEXAM([expr1[,expr2]])
 
-Returns the full specification of the file specified by the optional expr1 argument into which the function places a ZSHOW output specified by expr2. The return value is the name of the file. YottaDB reports each $ZJOBEXAM() to the operator log facility, along with its file specification.
+Returns the full specification of the file specified by the optional expr1 argument into which the function places a `ZSHOW <commands.html#zshow>`_ output specified by expr2. The return value is the name of the file. YottaDB reports each $ZJOBEXAM() to the operator log facility, along with its file specification.
 
-The optional expr1 argument is a template output device specification. It can be a device, a file directory, or a file name. The template is an expression that is pre-processed to create a file specification as the target for the ZSHOW. The preprocessing is equivalent to $ZPARSE(), as illustrated by the following M code:
+The optional expr1 argument is a template output device specification. It can be a device, a file directory, or a file name. The template is an expression that is pre-processed to create a file specification as the target for the ZSHOW. The preprocessing is equivalent to :ref:`zparse-function`, as illustrated by the following M code:
 
 .. code-block:: none
 
    set deffn="YDB_JOBEXAM.ZSHOW_DMP\_"_$JOB\_"_"_<cntr>
    set filespec=$zparse(expr1,"",deffn)
 
-The $ZJOBEXAM() does not trigger error processing except when there is a problem storing its return value, so no error is reported to the process until after any dump is complete. In the event of any error encountered during the $ZJOBEXAM(), YottaDB sends an appropriate message to operator log facility and returns control to the caller. Note that this special error handling applies only to the $ZJOBEXAM(), and is not a property of the $ZINTERRUPT interrupt handler, which uses $ZJOBEXAM() by default.
+$ZJOBEXAM() does not trigger error processing except when there is a problem storing its return value, so no error is reported to the process until after any dump is complete. In the event of any error encountered during the $ZJOBEXAM(), YottaDB sends an appropriate message to operator log facility and returns control to the caller. Note that this special error handling applies only to the $ZJOBEXAM(), and is not a property of the $ZINTERRUPT interrupt handler, which uses $ZJOBEXAM() by default.
 
 Defaulting to :code:`"*"`, expr2 specifies the :ref:`zshow-info-codes` of data to be included in the output. To specify expr2 while allowing expr1 to default, specify :code:`""` as the value of expr1. Invalid codes in expr2 are ignored, and can result in empty dump files.
 
