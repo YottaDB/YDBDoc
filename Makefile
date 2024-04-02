@@ -54,7 +54,7 @@ test: html
 	@if [ ! -f ./deadlinks ]; then \
 		echo "Downloading deadlinks..."; \
 		DEADLINKS_VERSION=$$(wget -q -O - https://api.github.com/repos/deadlinks/cargo-deadlinks/releases/latest | jq --raw-output .tag_name); \
-		echo $$DEADLINKDS_VERSION; \
+		echo $$DEADLINKS_VERSION; \
 		wget https://github.com/deadlinks/cargo-deadlinks/releases/download/$$DEADLINKS_VERSION/deadlinks-linux -O deadlinks; \
 		chmod +x ./deadlinks; \
 	fi
