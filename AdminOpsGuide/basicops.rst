@@ -1043,22 +1043,22 @@ Running YottaDB
 Refer to the `M Programmers Guide <../ProgrammersGuide/index.html>`_ to run YottaDB in M mode, and the `Multi-Language Programmers Guide <../MultiLangProgGuide/index.html>`_ to run YottaDB programs.
 
 --------------------------------------------------
- Configuring huge pages for YottaDB on Linux
+ Configuring hugepages for YottaDB on Linux
 --------------------------------------------------
 
-Huge pages are a Linux feature that may improve the performance of YottaDB applications in production. Huge pages create a single page table entry for a large block (typically 2MiB) of memory in place of hundreds of entries for many smaller (typically 4KiB) blocks. This reduction of memory used for page tables frees up memory for other uses, such as file system caches, and increases the probability of TLB (translation lookaside buffer) matches - both of which can improve performance. The performance improvement related to reducing the page table size becomes evident when many processes share memory as they do for global buffers, journal buffers, and replication journal pools. Configuring huge pages on Linux for x86 or x86_64 CPU architectures help improve:
+Hugepages are a Linux feature that may improve the performance of YottaDB applications in production. Hugepages create a single page table entry for a large block (typically 2MiB) of memory in place of hundreds of entries for many smaller (typically 4KiB) blocks. This reduction of memory used for page tables frees up memory for other uses, such as file system caches, and increases the probability of TLB (translation lookaside buffer) matches - both of which can improve performance. The performance improvement related to reducing the page table size becomes evident when many processes share memory as they do for global buffers, journal buffers, and replication journal pools. Configuring hugepages on Linux may help improve:
 
-* YottaDB shared memory performance: When your YottaDB database uses journaling, replication, and the BG access method.
+* Shared memory performance: When your YottaDB database uses journaling, replication, and the BG access method.
 
-* YottaDB process memory performance: For your process working space and dynamically linked code.
+* Process memory performance: For your process working space and dynamically linked code.
 
   .. note::
 
-     At this time, huge pages have no effect for MM databases; the text, data, or bss segments for each process; or for process stack.
+     At this time, hugepages have no effect for MM databases; the text, data, or bss segments for each process; or for process stack.
 
-While YottaDB recommends you configure huge pages for shared memory, you need to evaluate whether or not configuring huge pages for process-private memory is appropriate for your application. Having insufficient huge pages available during certain commands (for example, a `JOB <../ProgrammersGuide/commands.html#job>`_ command - see complete list below) can result in a process terminating with a SIGBUS error. This is a current limitation of Linux. Before you use huge pages for process-private memory on production systems, YottaDB recommends that you perform appropriate peak load tests on your application and ensure that you have an adequate number of huge pages configured for your peak workloads or that your application is configured to perform robustly when processes terminate with SIGBUS errors.
+While YottaDB recommends you configure hugepages for shared memory, you need to evaluate whether or not configuring hugepages for process-private memory is appropriate for your application. Having insufficient hugepages available during certain commands (for example, a `JOB <../ProgrammersGuide/commands.html#job>`_ command - see complete list below) can result in a process terminating with a SIGBUS error. This is a current limitation of Linux. Before you use hugepages for process-private memory on production systems, YottaDB recommends that you perform appropriate peak load tests on your application and ensure that you have an adequate number of hugepages configured for your peak workloads or that your application is configured to perform robustly when processes terminate with SIGBUS errors.
 
-The following YottaDB features fork processes and may generate SIGBUS errors when huge pages are not available - JOB, `OPEN <../ProgrammersGuide/commands.html#open>`_ a `PIPE device <../ProgrammersGuide/ioproc.html#using-pipe-devices>`_, `ZSYSTEM <../ProgrammersGuide/commands.html#zsystem>`_, interprocess signaling that requires the services of :code:`gtmsecshr` when :code:`gtmsecshr` is not already running, SPAWN commands in `DSE <./dse.html>`_, `GDE <./gde.html>`_, and `LKE <./mlocks.html>`_, argumentless `MUPIP RUNDOWN <./dbmgmt.html#rundown>`_, and `replication <./dbrepl.html>`_-related MUPIP commands that start server processes and/or helper processes. Should increasing the available huge pages require a reboot, an interim workaround is to unset the environment variable HUGETLB_MORECORE for YottaDB processes until you are able to reboot or otherwise make available an adequate supply of huge pages.
+The following YottaDB features fork processes and may generate SIGBUS errors when hugepages are not available - JOB, `OPEN <../ProgrammersGuide/commands.html#open>`_ a `PIPE device <../ProgrammersGuide/ioproc.html#using-pipe-devices>`_, `ZSYSTEM <../ProgrammersGuide/commands.html#zsystem>`_, interprocess signaling that requires the services of :code:`gtmsecshr` when :code:`gtmsecshr` is not already running, SPAWN commands in `DSE <./dse.html>`_, `GDE <./gde.html>`_, and `LKE <./mlocks.html>`_, argumentless `MUPIP RUNDOWN <./dbmgmt.html#rundown>`_, and `replication <./dbrepl.html>`_-related MUPIP commands that start server processes and/or helper processes. Should increasing the available hugepages require a reboot, an interim workaround is to unset the environment variable HUGETLB_MORECORE for YottaDB processes until you are able to reboot or otherwise make available an adequate supply of hugepages.
 
 Consider the following example of a memory map report of a Source Server process running at peak load:
 
@@ -1071,61 +1071,58 @@ Consider the following example of a memory map report of a Source Server process
    mapped: 61604K writeable/private: 3592K shared: 33532K
    $
 
-Process id 18839 uses a large amount of shared memory (33535K) and can benefit from configuring huge pages for shared memory. Configuring huge pages for shared memory does not cause a SIGBUS error when a process does a fork. For information on configuring huge pages for shared memory, refer to the "Using huge pages" and "Using huge pages for shared memory" topics below. SIGBUS errors only occur when you configure huge pages for process-private memory; these errors indicate you have not configured your system with an adequate number of huge pages. To prevent SIGBUS errors, you should perform peak load tests on your application to determine the number of required huge pages. For information on configuring huge pages for process-private memory, refer to the "Using huge pages" and "Using huge pages for process working space" sections.
+Process id 18839 uses a large amount of shared memory (33535K) and can benefit from configuring hugepages for shared memory. Configuring hugepages for shared memory does not cause a SIGBUS error when a process does a fork. For information on configuring hugepages for shared memory, refer to the "Using hugepages" and "Using hugepages for shared memory" topics below. SIGBUS errors only occur when you configure hugepages for process-private memory; these errors indicate you have not configured your system with an adequate number of hugepages. To prevent SIGBUS errors, you should perform peak load tests on your application to determine the number of required hugepages. For information on configuring hugepages for process-private memory, refer to the "Using hugepages" and "Using hugepages for process working space" sections.
 
-As application response time can be adversely affected if processes and database shared memory segments are paged out, YottaDB recommends configuring systems for use in production with sufficient RAM so as to not require swap space or a swap file. While you must configure an adequate number of huge pages for your application needs as empirically determined by benchmarking/testing and there is little downside to a generous configuration to ensure a buffer of huge pages available for workload spikes, an excessive allocation of huge pages may affect system throughput by reserving memory for huge pages that could otherwise be used by applications that cannot use huge pages.
+As application response time can be adversely affected if processes and database shared memory segments are paged out, YottaDB recommends configuring systems for use in production with sufficient RAM so as to not require swap space or a swap file. While you must configure an adequate number of hugepages for your application needs as empirically determined by benchmarking/testing and there is little downside to a generous configuration to ensure a buffer of hugepages available for workload spikes, an excessive allocation of hugepages may affect system throughput by reserving memory for hugepages that could otherwise be used by applications that cannot use hugepages.
 
 ++++++++++++++++++++++++++++++++++
-Using huge pages
+Using Hugepages
 ++++++++++++++++++++++++++++++++++
 
 +----------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
 | Prerequisites                                                        | Notes                                                                                                                                 |
 +======================================================================+=======================================================================================================================================+
-| An x86 CPU running a Linux kernel with huge pages enabled.           | All currently Supported Linux distributions appear to support huge pages; to confirm, use the command:                                |
-|                                                                      | :code:`grep hugetlbfs /proc/filesystems` which should report: :code:`nodev hugetlbfs`                                                 |
+| A CPU running a Linux kernel with hugepages enabled.                 | All currently Supported Linux distributions appear to support hugepages; to confirm, use the command:                                 |
+|                                                                      | :code:`grep hugetlbfs /proc/filesystems` which should report: :code:`nodev hugetlbfs`. If it does not, refer to your Linux            |
+|                                                                      | distribution's documentation to make it available for use.                                                                            |
 +----------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-| :code:`libhugetlbfs.so`                                              | Use your Linux system's package manager to install the :code:`libhugetlbfs.so` library. Note that libhugetlbfs is not                 |
-|                                                                      | in all distribitions and may need to be manually installed.                                                                           |
-+----------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
-| A sufficient number of huge pages available.                         | To reserve Huge Pages boot Linux with the :code:`hugepages=<num_pages>` kernel boot parameter; or, shortly after bootup when          |
+| A sufficient number of hugepages available.                          | To reserve hugepages boot Linux with the :code:`hugepages=<num_pages>` kernel boot parameter; or, shortly after bootup when           |
 |                                                                      | unfragmented memory is still available, with the command: :code:`hugeadm --pool-pages-min DEFAULT:<num_pages>`.                       |
-|                                                                      | For subsequent on-demand allocation of Huge Pages, use: :code:`hugeadm --pool-pages-max DEFAULT:<num_pages>`                          |
-|                                                                      | These delayed (from boot) actions do not guarantee availability of the requested number of huge pages; however, they are safe as, if  |
-|                                                                      | a sufficient number of huge pages isnot available, Linux simply uses traditional sized pages.                                         |
+|                                                                      | For subsequent on-demand allocation of hugepages, use: :code:`hugeadm --pool-pages-max DEFAULT:<num_pages>`                           |
+|                                                                      | These delayed (from boot) actions do not guarantee availability of the requested number of hugepages; however, they are safe as, if   |
+|                                                                      | a sufficient number of hugepages isnot available, Linux simply uses traditional sized pages.                                          |
 +----------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using Huge Pages for Shared Memory
+Using Hugepages for Shared Memory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To use huge pages for shared memory (journal buffers, replication journal pool, global buffers and M code executing from shared memory):
+To use hugepages for shared memory (journal buffers, replication journal pool, global buffers and M code executing from shared memory):
 
-* Permit the group used by YottaDB processes to use huge pages with the following command, which requires root privileges:
+
+* Permit a group used by YottaDB processes to use hugepages with the following command, which requires root privileges:
 
     .. code-block:: bash
 
        echo <gid> >/proc/sys/vm/hugetlb_shm_group
 
-.. note::
-   The :code:`/proc/sys/vm/hugetlb_shm_group` setting needs to be preserved on reboot, e.g., in :code:`/etc/sysctl.conf` or a startup script.
+    .. note::
+       The :code:`/proc/sys/vm/hugetlb_shm_group` setting needs to be preserved on reboot, e.g., in :code:`/etc/sysctl.conf` or a startup script.
 
-* Set the environment variable HUGETLB_SHM for each process to "yes".
+* Set the environment variable HUGETLB_SHM for each process to ``yes``.
 
 .. note::
-   Since the memory allocated by Linux for shared memory segments mapped with huge pages is rounded up to the next multiple of huge pages, there is potentially unused memory in each such shared memory segment. You can therefore increase any or all of the number of global buffers, journal buffers, and lock space to make use of this otherwise unused space. You can make this determination by looking at the size of shared memory segments using ipcs. Contact YottaDB support for a sample program to help you automate the estimate. Transparent huge pages may further improve virtual memory page table efficiency. Some supported releases automatically set transparent_hugepages to "always"; others may require it to be set at or shortly after boot-up. Consult your Linux distribution's documentation.
+   Since the memory allocated by Linux for shared memory segments mapped with hugepages is rounded up to the next multiple of hugepages, there is potentially unused memory in each such shared memory segment. You can therefore increase any or all of the number of global buffers, journal buffers, and lock space to make use of this otherwise unused space. You can make this determination by looking at the size of shared memory segments using ipcs. Contact YottaDB support for a sample program to help you automate the estimate. Transparent hugepages may further improve virtual memory page table efficiency. Some supported releases automatically set transparent_hugepages to "always"; others may require it to be set at or shortly after boot-up. Consult your Linux distribution's documentation.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Using huge pages for YottaDB process working space
+Using hugepages for YottaDB process working space
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To use huge pages for process working space and M code running in process-private memory:
+To use hugepages for process working space and M code running in process-private memory:
 
-* Set the environment variable HUGETLB_MORECORE for each process to "yes".
+* Set the environment variable HUGETLB_MORECORE for each process to ``yes``.
 
-Although not required to use huge pages, your application may benefit from including the path to libhugetlbfs.so in the LD_PRELOAD environment variable.
-
-If you enable huge pages for all applications (by setting HUGETLB_MORECORE, HUGETLB_SHM, and LD_PRELOAD as discussed above in /etc/profile and/or /etc/csh.login), you may find it convenient to suppress warning messages from common applications that are not configured to take advantage of huge pages by also setting the environment variable HUGETLB_VERBOSE to zero (0).
+If you enable hugepages for all applications (by setting HUGETLB_MORECORE and HUGETLB_SHM as discussed above in /etc/profile and/or /etc/csh.login), you may find it convenient to suppress warning messages from common applications that are not configured to take advantage of hugepages by also setting the environment variable HUGETLB_VERBOSE to zero (0).
 
 Refer to the documentation of your Linux distribution for details. Other sources of information are:
 
@@ -1183,7 +1180,7 @@ Restrictions apply as follows:
 +=========================================================+=======================================================================================================+
 | APD_ENABLE                                              | YottaDB supports the ability to log actions initiated from a principal device including M             |
 |                                                         | commands typed interactively, or piped in by a script or redirect, from the principal device          |
-|                                                         | (`$PRINCIPAL <../ProgrammersGuide/ioproc.html#principal>`_)                                           |
+|                                                         | (`$PRINCIPAL <../ProgrammersGuide/isv.html#principal>`_)                                              |
 |                                                         | and/or any information entered in response to a                                                       |
 |                                                         | `READ <../ProgrammersGuide/commands.html#read>`_ from                                                 |
 |                                                         | $PRINCIPAL. An action                                                                                 |

@@ -52,7 +52,7 @@ YottaDB provides three intrinsic special variables that identify devices.
 $IO
 ~~~~
 
-$I[O] contains the name of the current device specified by the last USE command. A SET command cannot modify $IO. USE produces the same $IO as USE $PRINCIPAL, but $P is the preferred construct.
+`$IO <isv.html#io>`_ contains the name of the current device specified by the last `USE <commands.html#use>`_ command. A `SET <commands.html#set>`_ command cannot modify $IO. USE 0 produces the same $IO as USE $PRINCIPAL, but `$PRINCIPAL <isv.html#principal>`_ is the preferred construct.
 
 .. _principal-io-isv:
 
@@ -60,17 +60,28 @@ $I[O] contains the name of the current device specified by the last USE command.
 $PRINCIPAL
 ~~~~~~~~~~~
 
-A process inherits three open file descriptors from its parent - STDIN, STDOUT and STDERR - which can all map to different files or devices. YottaDB provides no way for M application to access STDERR. Although STDIN and STDOUT may map to different devices, files, sockets, pipes, etc. in the operating system, M provides for only device $PRINCIPAL, to refers to both. At process startup, and when $PRINCIPAL is selected with a USE command, READ commands apply to STDIN and WRITE commands apply to STDOUT. The device type of the standard input determines which USE deviceparameters apply to $PRINCIPAL.
+A process inherits three open file descriptors from its parent - STDIN, STDOUT and STDERR - which can all map to different files or devices. YottaDB provides no standard way for M application to access STDERR. Although STDIN and STDOUT may map to different devices, files, sockets, pipes, etc. M provides for only device $PRINCIPAL, to refer to both. At process startup, and when $PRINCIPAL is selected with a USE command, READ commands apply to STDIN and WRITE commands apply to STDOUT. The device type of the standard input determines which USE deviceparameters apply to $PRINCIPAL.
 
 For an interactive process, $PRINCIPAL is the user's terminal. YottaDB ignores a CLOSE of the principal device. YottaDB does not permit a SET command to modify $PRINCIPAL.
 
-0 is an alternate for $PRINCIPAL (for example, USE 0). YottaDB recommends that application code use $PRINCIPAL. The environment variable ydb_principal can be used to set a string reported by YottaDB for $PRINCIPAL and which can be used in lieu of $PRINCIPAL for the USE command.
+0 is an alternate for $PRINCIPAL (for example, USE 0). YottaDB recommends that application code use $PRINCIPAL. The environment variable `ydb_principal <../AdminOpsGuide/basicops.html#ydb-principal>`_ can be used to set a string reported by YottaDB for $PRINCIPAL and which can be used in lieu of $PRINCIPAL for the USE command.
 
 ~~~~~
 $ZIO
 ~~~~~
 
-$ZIO contains the translated name of the current device, in contrast to $IO, which contains the name as specified by the USE command.
+`$ZIO <isv.html#zio>`_ contains the translated name of the current device, in contrast to $IO, which contains the name as specified by the USE command.
+
+~~~~~
+$ZPIN
+~~~~~
+
+When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variable `$ZPIN <isv.html#zpin>`_ to apply appropriate deviceparameters to the input side of $PRINCIPAL. A USE with $ZPIN sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. `$ZSOCKET() <functions.html#zsocket>`_ also accepts $ZPIN as its first argument and, if the device is a split SOCKET device, supplies information on the input `SOCKET <#using-socket-devices>`_ device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPIN returns the value of $PRINCIPAL followed by the string ``"< /"`` Any attempt to OPEN $ZPIN results in a DEVOPENFAIL error.
+
+~~~~~~
+$ZPOUT
+~~~~~~
+When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables `$ZPOUT <isv.html#zpout>`_ to apply appropriate deviceparameters to the output side of $PRINCIPAL. A USE with $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPOUT as its first argument and, if the device is a split SOCKET device, supplies information on the output SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPOUT returns the value of $PRINCIPAL followed by the string ``"> /"`` Any attempt to OPEN $ZPOUT results in a DEVOPENFAIL error.
 
 ++++++++++++++++++++++++++
 Cursor Position Variables
@@ -245,18 +256,6 @@ $ZEOF contains a truth-valued expression indicating whether the last READ operat
 $ZEOF refers to the end-of-file status of the current device. Therefore, be careful when sequencing USE commands and references to $ZEOF.
 
 $ZEOF is set for terminals if the connection dropped on read.
-
-~~~~~~
-$ZPIN
-~~~~~~
-
-When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variable $ZPIN to apply appropriate deviceparameters to the input side of $PRINCIPAL. A USE with $ZPIN sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPIN as its first argument and, if the device is a split SOCKET device, supplies information on the input SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPIN returns the value of $PRINCIPAL followed by the string "< /" Any attempt to OPEN $ZPIN results in a DEVOPENFAIL error.
-
-~~~~~~
-$ZPOUT
-~~~~~~
-
-When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables $ZPOUT to apply appropriate deviceparameters to the output side of $PRINCIPAL. A USE with $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. $ZSOCKET() also accepts $ZPOUT as its first argument and, if the device is a split SOCKET device, supplies information on the output SOCKET device. In any context other than USE or $ZSOCKET(), or if $PRINCIPAL is not a split device, $PRINCIPAL, $ZPIN and $ZPOUT are synonyms. In the case of a split $PRINCIPAL, $ZPOUT returns the value of $PRINCIPAL followed by the string "> /" Any attempt to OPEN $ZPOUT results in a DEVOPENFAIL error.
 
 -------------------
 I/O Devices
@@ -1902,12 +1901,20 @@ Note that the receiving process must establish desired deviceparameters (e.g., D
 
 SOCKET devices support encrypted connections with TLS using an encryption plugin. The reference implementation in the `YottaDB encryption plugin <../AdminOpsGuide/encryption.html#plugin-architecture-and-interface>`_ uses `OpenSSL <https://openssl.org>`_; the reference implementation also supports TLS for YottaDB replication streams. OpenSSL options are controlled by a configuration file. The WRITE /TLS command activates this feature for connected sockets.
 
-* option is "server", "client", or "renegotiate". "server" or "client" indicates which TLS role to assume. The server role requires a certificate specified in the configuration file section with the label matching tlsid. The client role may require a certificate depending on the OpenSSL options. If a timeout is specified for options "client" or "server", YottaDB sets $TEST to 1 if the command successfully completed or to 0 if it timed out. $DEVICE provides status information in case of an error. `ZSHOW "D" <commands.html#zshow-information-codes>`_ includes "TLS" in the second line of the output for an encrypted socket.
-* "renegotiate" applies only to a server socket. It allows applications to request a TLS renegotiation. Renegotiation requires the suspension of application communication and the application must read all pending data before initiating a renegotiation. This means that in the communication protocol used, both parties must be at a known state when renegotiating keys. For example, in YottaDB replication, one party sends a renegotiation request and waits for an acknowledgement before initiating the renegotiation.
+* option is "server", "client", or "renegotiate". "server" or "client" indicates which TLS role to assume. The server role requires a certificate specified in the configuration file section with the label matching tlsid. The client role may require a certificate depending on the OpenSSL options. If a timeout is specified for options "client" or "server", YottaDB sets `$TEST <isv.html#test>`_ to 1 if the command successfully completed or to 0 if it timed out. `$DEVICE <isv.html#device>`_ provides status information in case of an error. `ZSHOW "D" <commands.html#zshow-information-codes>`_ includes "TLS" in the second line of the output for an encrypted socket.
+* "renegotiate" applies only to a server socket. In protocols prior to TLS v1.3, it allows applications to request a TLS renegotiation. Renegotiation requires the suspension of application communication and the application must read all pending data before initiating a renegotiation. This means that in the communication protocol used, both parties must be at a known state when renegotiating keys. For example, in YottaDB replication, one party sends a renegotiation request and waits for an acknowledgement before initiating the renegotiation. Owing to a change in the TLSv1.3 protocol which removed the concept of renegotiation, this option refreshes the TLS connection keys in protocols TLS v1.3 and higher.
 * tlsid refers to the name of a section in the configuration file specified by the `ydb_crypt_config <../AdminOpsGuide/basicops.html#ydb-crypt-config>`_ environment variable. If tlsid is not specified with the "renegotiate" option and cfg-file-options are specified, YottaDB creates a virtual section by appending "-RENEGOTIATE" to the tlsid used to enable TLS on the socket. For the renegotiate option, if no section named tlsid is present in the configuration file, YottaDB creates a virtual section with that name for the life of the process.
 * obfuscatedpassword can represent a private key in the tlsid section of the configuration file which overrides any existing password such as the environment variable `ydb_tls_passwd_<label> <../AdminOpsGuide/basicops.html#ydb-tls-passwd-label>`_. If a password is supplied on the command, it must supply the tlsid as well unless the option is "renegotiate".
-* cfg-file-options specifies configuration file options. Note cfg-file-options override those options if they are already specified in the configuration file except ssl-options and verify-level which are merged.
+* cfg-file-options specifies configuration file options. If there is no section with the label tlsid, YottaDB creates a new virtual section, which persists for the life of the process. The specified options override those in the configuration file except for ssl-options and verify-level where YottaDB combines/merges with those specified in the configuration file. The options, which are case-sensitive, must be specified in the same format as the configuration file including the terminating semi-colon (";").
 * Supported cfg-file-options for the "renegotiate" command are (case-sensitive): verify-depth, verify-level, verify-mode, session-id-hex, and CAfile. WRITE /TLS ignores all other configuration file options whether given on the command or in the configuration file. For more information on the supported configuration options, refer to `Creating a TLS Configuration File <../AdminOpsGuide/tls.html>`_ in the Administration and Operations Guide.
+
+Example:
+
+```
+set obspass="CD86FF2BFD1F06EE" ; maskpass output of password for private key
+set cfgoptions="cert:""/path/to/certificate"";key:""/path/to/key.pem"";"
+write /tls("server",,"tlsone",obspass,cfgoptions)
+```
 
 .. note::
    Note that SOCKET device actions may produce the following errors: `TLSDLLNOOPEN <../MessageRecovery/errors.html#tlsdllnoopen>`_, `TLSINIT <../MessageRecovery/errors.html#tlsinit>`_, `TLSCONVSOCK <../MessageRecovery/errors.html#tlsconvsock>`_, `TLSHANDSHAKE <../MessageRecovery/errors.html#tlshandshake>`_, `TLSCONNINFO <../MessageRecovery/errors.html#tlsconninfo>`_, `TLSIOERROR <../MessageRecovery/errors.html#tlsioerror>`_, and `TLSRENEGOTIATE <../MessageRecovery/errors.html#tlsrenegotiate>`_.
@@ -2010,6 +2017,8 @@ The following table provides a brief summary of deviceparameters for socket devi
 +------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
 | MOREREADTIME=intexpr   | O/U                            | The polling interval (in milliseconds) that a SOCKET device uses to check for arriving    |
 |                        |                                | packets                                                                                   |
++------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
+| OPTIONS=expr           | O/U                            | Specifies a list of options for the socket.                                               |
 +------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
 | SOCKET=expr            | U                              | Makes the socket specified by the handle named in expr the current socket for the Socket  |
 |                        |                                | device.                                                                                   |
@@ -2872,6 +2881,37 @@ Example:
    open "test49.txt":(newversion:owner="rw":group="rw":world="rw")
 
 This example opens a new version of test49.txt with Read Write acess for the owner.
+
+.. _options-param:
+
+~~~~~~~
+OPTIONS
+~~~~~~~
+
+OPTIONS=expr Applies to SOC
+
+Specifies setsockopt() options to be set for sockets. The value of the expression is a comma separated list of option names. If the option takes a value, it is given after an equal sign (=) following the name.
+
+The supported options are:
+
+```
+KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.    
+KEEPCNT     sets the TCP_KEEPCNT socket value.    
+KEEPIDLE    sets the TCP_KEEPIDLE socket value.    
+KEEPINTVL   sets the TCP_KEEPINTVL socket value.    
+SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
+```
+
+Example:
+
+```
+OPEN dev:(LISTEN="1234:TCP":OPTIONS="KEEPALIVE=1,KEEPIDLE=50)::"SOCKET"
+```
+
+This enables SO_KEEPALIVE and sets TCP_KEEPIDLE to 50 seconds.
+
+.. note::
+   Please review the man page for setsockopt() for more information on the use of these options. ``man 7 socket`` and ``man 7 tcp`` provide additional information.
 
 ~~~~
 PAD
@@ -4054,6 +4094,35 @@ OKEY="key_name [IV]"
 key_name is case-sensitive and must match a key name in the "files" section of the ydb_crypt_config file. The optional IV specifies an initialization vector to use for encryption and decryption.
 
 For more information, refer to the description of :ref:`KEY <key-open>` deviceparameter of OPEN.
+
+~~~~~~~
+OPTIONS
+~~~~~~~
+
+OPTIONS=expr Applies to SOC
+
+Specifies setsockopt() options to be set for sockets. The value of the expression is a comma separated list of option names. If the option takes a value, it is given after an equal sign (=) following the name.
+
+The supported options are:
+
+```
+KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.    
+KEEPCNT     sets the TCP_KEEPCNT socket value.    
+KEEPIDLE    sets the TCP_KEEPIDLE socket value.    
+KEEPINTVL   sets the TCP_KEEPINTVL socket value.    
+SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
+```
+
+Example:
+
+```
+OPEN dev:(LISTEN="1234:TCP":OPTIONS="KEEPALIVE=1,KEEPIDLE=50)::"SOCKET"
+```
+
+This enables SO_KEEPALIVE and sets TCP_KEEPIDLE to 50 seconds.
+
+.. note::
+   Please review the man page for setsockopt() for more information on the use of these options. ``man 7 socket`` and ``man 7 tcp`` provide additional information.
 
 ~~~~~~~~~~
 OUTREWIND

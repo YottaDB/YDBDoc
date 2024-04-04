@@ -3496,6 +3496,16 @@ Run Time Information: This indicates that the length of the first delimiter stri
 Action: Modify the first delimiter string to have a length of, at most, the WIDTH of the socket device.
 
 ----------------------
+DEVICEOPTION 
+----------------------
+
+DEVICEOPTION, Option xxxx on yyyy command: zzzz
+
+Run Time Error: The xxxx option in an OPTIONS device parameter on a yyyy command was incorrectly specified as described by zzzz.
+
+Action: Correct the option as indicated.
+
+----------------------
 DEVICEREADONLY
 ----------------------
 

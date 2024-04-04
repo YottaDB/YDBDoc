@@ -735,9 +735,9 @@ If you enter the wrong passphrase YDB issues an error and prevents execution whe
 Tested Reference Implementations
 ------------------------------------
 
-YottaDB database encryption comes with a source reference implementation that should compile "out of the box" with selected encryption packages. You can use this for initial development and testing with YottaDB database encryption. There are many encryption packages. As discussed earlier, YottaDB neither endorses nor supports any specific cipher or package. For production use, you take responsibility for choosing, implementing and procuring support for your preferred package. Please remember that a malfunction in your chosen encryption package may result in unrecoverable data and YottaDB will be unable to help you.
+YottaDB provides an encryption plugin with a reference implementation that compiles "out of the box" with `GnuPG's libgcrypt <https://www.gnupg.org/>`_ and `OpenSSL <https://openssl.org/>`_ packages on each Supported platform. You can use this for initial development and testing with YottaDB database encryption. There are many encryption packages. YottaDB neither endorses nor supports any specific cipher or package. For production use, you take responsibility for choosing, implementing and procuring support for your preferred package. Please remember that a malfunction in your chosen encryption package may result in unrecoverable data and YottaDB will be unable to help you.
 
-The Plugin Architecture and Interface section below details the reference implementation, which is provided with full source code that you can freely modify for your own use.
+The :ref:`plugin-architecture-and-interface` section below details the encryption plugin, which is provided with full source code that you can freely modify for your own use.
 
 The reference implementation uses:
 
@@ -1019,6 +1019,8 @@ Database Creation
 To create a new encrypted database, first use GDE to flag the database file for encryption (with the -ENCRYPTION segment qualifier). Then, create a $ydb_crypt_config file and work with your security team to obtain the relevant encryption keys. Then, use the maskpass utility to set the environment variable ydb_passwd to the obfuscated form of the passphrase keyring. Finally, execute MUPIP CREATE to create an encrypted database and MUPIP REORG -ENCRYPT=<encr_key> to encrypt the blocks of the database.
 
 Once you encrypt a database, you cannot turn off encryption, it stays encrypted even if you specify MUPIP SET -NOENCRYPTABLE. If you wish any of the data in an encrypted database to be available unencrypted, you must extract the data and load it into a new database created to be unencypted and appropriately map the new database with a global directory. You can also use a MERGE command and multiple global directories to move data in either direction between encrypted and unencrypted database files.
+
+.. _plugin-architecture-and-interface:
 
 -------------------------------------
 Plugin Architecture and Interface

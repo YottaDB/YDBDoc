@@ -303,7 +303,7 @@ The format of the FOR command is:
 
 Increments and limits may be positive, negative, an integer, or a fraction. YottaDB never increments a FOR control variable "beyond" a limit. Other commands may alter a control variable within the extended scope of a FOR that it controls. When the argument includes a limit, such modification can cause the FOR argument to yield control at the start of the next iteration, or, less desirably, loop indefinitely.
 
-NOUNDEF does not apply to an undefined FOR control variable. This prevents an increment of an undefined FOR control variable from getting into an unintended infinite loop. For example, FOR A=1:1:10 KILL A gives an UNDEF error on the increment from 1 to 2 even with VIEW "NOUNDEF".
+NOUNDEF applies even in the case of an undefined FOR control variable, such as when a KILL or NEW command is used on the control variable, which may cause an unintended indefinite loop. For example, FOR A=1:1:10 KILL A results in an indefinite loop with VIEW "NOUNDEF".
 
 YottaDB terminates the execution of a FOR when it executes an explicit QUIT or a GOTO (or ZGOTO in YottaDB) that appears on the line after the FOR. FOR commands with arguments that have increments without limits and argumentless FORs can be indefinite loops. Such FORs must terminate with a (possibly postconditional) QUIT or a GOTO within the immediate scope of the FOR. FORs terminated by such commands act as "while" or "until" control mechanisms. Also, such FORs can, but seldom, terminate by a HALT within the scope of the FOR as extended by DOs, XECUTEs, and extrinsics.
 
@@ -2502,7 +2502,7 @@ Enables or disables handling of undefined variables as errors. With UNDEF, Yotta
 The environment variable $ydb_noundef specifies the initial value of [NO]UNDEF at process startup. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string.
 
 .. note::
-   NOUNDEF does not apply to an undefined FOR control variable. This prevents an increment (or decrement) of an undefined FOR control variable from getting into an unintended infinite loop. For example, FOR A=1:1:10 KILL A gives an UNDEF error on the increment from 1 to 2 even with VIEW "NOUNDEF".
+   NOUNDEF applies even in the case of an undefined FOR control variable, such as when a KILL or NEW command is used on the control variable, which may cause an unintended indefinite loop. For example, FOR A=1:1:10 KILL A results in an indefinite loop with VIEW "NOUNDEF". 
 
 ~~~~~~~~~~~~~~~~~~~~~
 ZDATE_FORM:value

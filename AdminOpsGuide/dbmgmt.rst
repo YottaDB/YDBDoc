@@ -283,9 +283,9 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
    -R[EGION]=region-list | -R[EGION] region-list
 
-* The region-list identifies the target of DUMPFHEAD. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
+* The region-list identifies the target of DUMPFHEAD. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order. INTEG processes regions based on the order specified in the list after wild-card expansion.
 
-* The region-list argument may specify more than one region of the current Global Directory in a list separated with commas. DUMPFHEAD REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_.
+* DUMPFHEAD REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_.
 
 * The REGION qualifier is incompatible with the FILE qualifier.
 

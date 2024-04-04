@@ -23,7 +23,7 @@
 .. contents::
    :depth: 2
 
-In addition to providing all of the ANSI standard M features, YottaDB offers a number of language extensions. In this chapter, the language extensions are grouped by intended function to demonstrate their relationships to each other and to the programming process. A summary table is provided in each section. For a full description of a particular extension, refer to its complete entry in the `“Commands” <./commands.html>`_, `“Functions” <./functions.html>`_, or `“Intrinsic Special Variables” <./isv.html>`_ chapters.
+In addition to providing all of the ANSI standard M features, YottaDB offers a number of language extensions. In this chapter, the language extensions are grouped by intended function to demonstrate their relationships to each other and to the programming process. A summary table is provided in each section. For a full description of a particular extension, refer to its complete entry in the `“Commands” <commands.html>`_, `“Functions” <functions.html>`_, or `“Intrinsic Special Variables” <isv.html>`_ chapters.
 
 The following sections describe the YottaDB language extensions listed below:
 
@@ -194,7 +194,7 @@ Interrupting Execution Flow
 
 YottaDB process execution is interruptible by the following events:
 
-* Typing CTRL+C or getting SIGINT (if `CENABLE <ioproc.html#cenable>`_ is on for a terminal `$PRINCIPAL <ioproc.html#principal>`_). YottaDB ignores SIGINT (CTRL+C) if $PRINCIPAL is not a terminal.
+* Typing CTRL+C or getting SIGINT (if `CENABLE <ioproc.html#cenable>`_ is on for a terminal `$PRINCIPAL <isv.html#principal>`_). YottaDB ignores SIGINT (CTRL+C) if $PRINCIPAL is not a terminal.
 * Typing one of the `CTRAP <ioproc.html#ctrap>`_ characters on a terminal $PRINCIPAL.
 * Exceeding `$ZMAXTPTIME <isv.html#zmaxtptime>`_ in a transaction.
 * Getting a `MUPIP INTRPT <../AdminOpsGuide/dbmgmt.html#intrpt>`_ (SIGUSR1).
