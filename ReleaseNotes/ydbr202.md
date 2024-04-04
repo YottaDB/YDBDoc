@@ -51,7 +51,7 @@ For free (to you) support from members of communities who run widely available a
 ### Overview
 YottaDB r2.02 is a (_overview to be filled in prior to release_).
 
-In addition to enhancements and fixes made by YottaDB, r2.02 inherits numerous other enhancements and fixes from GT.M V7.0-002, described in the [Change History](#change-history).
+In addition to enhancements and fixes made by YottaDB, r2.02 inherits numerous other enhancements and fixes from GT.M V7.0-002 and GT.M V7.0-003, asdescribed in the [Change History](#change-history).
 
 ### Platforms
 A platform is a combination of a CPU architecture and an operating system. A platform is Supported, Supportable, or Unsupported.
@@ -88,7 +88,7 @@ Assuming `$ydb_dist` points to the directory where YottaDB is installed:
  - Delete the directory with `sudo rm -rf $ydb_dist`
 
 ## Upgrading to YottaDB r2.02
-YottaDB r2.02 is upward compatible from YottaDB [r2.00](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.00) and GT.M [V7.0-002](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html). The minimal upgrade steps are:
+YottaDB r2.02 is upward compatible from YottaDB [r2.00](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.00), GT.M [V7.0-002](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html), and GT.M [V7.0-003](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html). The minimal upgrade steps are:
 
 * Install YottaDB r2.02. Use `ydbinstall` / `ydbinstall.sh` to install YottaDB plugins that you use.
 * Install plugins you need in addition to those installed in the previous step, e.g., non-YottaDB plugins.
@@ -151,25 +151,120 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-002](http://ti
 | ([GTM-DE201825](#GTM-DE201825)) | System Administration | ydbinstall removes semsstat2, ftok, and getuid                                                       |
 | ([GTM-DE222430](#GTM-DE222430)) | Other                 | Prevent fatal errors from disconnect/hangup                                                          |
 
+<a name="gtmv70003"></a>
+### GT.M V7.0-003
+
+YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-003](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html).
+
+| ID                              | Category              | Summary                                                                                                                                                 |
+|---------------------------------|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ([GTM-F134692](#GTM-F134692))   | System Administration | MUPIP INTEG and MUPIP DUMPFHEAD support the user-specified region order                                                                                 |
+| ([GTM-F134877](#GTM-F134877))   | Other                 | GT.M TLS reference encryption plugin provides support for ECDHE ciphers                                                                                 |
+| ([GTM-F135169](#GTM-F135169))   | Languages             | Provide additional options for SOCKET devices                                                                                                           |
+| ([GTM-F135258](#GTM-F135258))   | Other                 | GT.M TLS reference encryption plugin provides support for TLS v1.3                                                                                      |
+| ([GTM-F135313](#GTM-F135313))   | Other                 | Retry interruptions on database file creation or extention with NODEFER_ALLOCATE                                                                        |
+| ([GTM-F135334](#GTM-F135334))   | Other                 | Error reporting from the GT.M database and the TLS reference encryption plugins don't interfere with each other                                         |
+| ([GTM-F135416](#GTM-F135416))   | System Administration | MUPIP FREEZE -ON does not hang while an online rollback is in progress                                                                                  |
+| ([GTM-F135424](#GTM-F135424))   | Languages             | Empty string rather than UNDEF error in case of a lost FOR control variable in NOUNDEF mode                                                             |
+| ([GTM-F135428](#GTM-F135428))   | Languages             | $ZSOCKET() returns an empty string when given an out of range index                                                                                     |
+| ([GTM-F157495](#GTM-F157495))   | Languages             | $VIEW("DEVICE",<device-designation>) returns device status                                                                                              |
+| ([GTM-DE257948](#GTM-DE257948)) | Languages             | Appropriate handling for square-bracket (nonstandard) extended reference syntax and NUMOFLOW in expressions made up of literals                         |
+| ([GTM-DE276621](#GTM-DE276621)) | Languages             | Literal FALSE postconditionals don't cause failures when they suppress a command with a local variable in their argument that appears later in the line |
+| ([GTM-DE294185](#GTM-DE294185)) | System Administration | Receiver Server continues to operate after an unexpected termination of a TLS connection                                                                |
+| ([GTM-DE294187](#GTM-DE294187)) | Languages             | Protect $ZKey from damage during heap management                                                                                                        |
+|                                 |                       |                                                                                                                                                         |
+
 ### Database
 
 * <a name="GTM-F132372"></a>The replication update process and its helper processes record statistics using the STATSDB facility for reporting using %YGBLSTAT. YottaDB reports the WRL, PRG, WFL, and WHE statistics as part of the %YGBLSTAT output. Previously, the replication update process and its helper processes did not record statistics for STATSDB. [GTM-F132372](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197426456)
 
-* <a name="GTM-F135414"></a>By default, YottaDB proactively splits blocks when it detects significant restarts in an attempt to reduce overall restarts. MUPIP SET FILE <filename> PROBLKSPLIT=N where N is 0 disables proactive splitting, as do very large values of N. Values of N greater than 0 adjust the lower limit for the number of records below which GT.M does not consider splitting a block. The default value of N is 5. While this is behavior is aimed at reducing restarts, because it reduces data density, it may also increase the number of blocks and even the tree depth. [GTM-F135414](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637426)
+* <a name="GTM-F135414"></a>By default, YottaDB proactively splits blocks when it detects significant restarts in an attempt to reduce overall restarts. MUPIP SET FILE <filename> PROBLKSPLIT=N where N is 0 disables proactive splitting, as do very large values of N. Values of N greater than 0 adjust the lower limit for the number of records below which YottaDB does not consider splitting a block. The default value of N is 5. While this is behavior is aimed at reducing restarts, because it reduces data density, it may also increase the number of blocks and even the tree depth. [GTM-F135414](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637426)
 
 ### Languages
+
+* <a name="GTM-F135169"></a>The OPEN and USE commands for SOCKET devices support assigning characteristics maintained with the POSIX setsockopt() service using the OPTIONS deviceparameter for the newly created socket or the current socket.
+
+  ```
+  OPTIONS=expr  Applies to: SOC
+  ```
+
+  The argument (expr) is a string which contains a comma separated list of setsockopt options. If the option takes a value, it is given after an equal sign (=) following the option. The supported options are:
+  
+  ```
+  KEEPALIVE   a positive value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.    
+  KEEPIDLE    sets the TCP_KEEPIDLE socket value.    
+  KEEPCNT     sets the TCP_KEEPCNT socket value.    
+  KEEPINTVL   sets the TCP_KEEPINTVL socket value.    
+  SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
+  ```
+
+  Examples:
+  
+  ```
+  USE dev:OPTIONS="KEEPALIVE=1,KEEPIDLE=50"
+  ```
+  
+  This enables SO_KEEPALIVE and set TCP_KEEPIDLE to 50 seconds.
+
+  ```
+  USE dev:OPTIONS="KEEPALIVE=0"
+  ```
+
+  This disables SO_KEEPALIVE.
+  
+  **Note**
+  
+    For more information on the use of these options, please review the man page for setsockopt . On Linux, "man 7 socket" and "man 7 tcp" provide additional information.
+
+  The $ZSOCKET() function supports an "OPTIONS" keyword which takes an index argument and returns a string of the OPTIONS previously specified for the selected socket. The string may not exactly match the string originally specified but has the same meanings.
+
+  The new keywords "KEEPALIVE", "KEEPCNT", "KEEPIDLE", "KEEPINTVL", and "SNDBUF" return the individual items. If the system's current value for the item doesn't match the value previously specified with the OPTIONS device parameter, both values are returned separated by a semicolon (";"): "uservalue;systemvalue".
+
+  The "ZIBFSIZE" keyword may return the system value for SO_RCVBUF in addition to the value from the ZIBFSIZE device parameter. Note that the operating system may modify the values specified for SO_RCVBUF and SO_SNDBUF so the returned values for those options obtained with POSIX getsockopt() service may be different than those specified using setsockopt().
+  
+  [GTM-F135169](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135169)
 
 * <a name="GTM-F135292"></a>As YottaDB already implemented [this functionality in r1.30](https://gitlab.com/YottaDB/DB/YDB/-/issues/482), the following appears here for completeness.
 
   $ZJOBEXAM() recognizes an optional second argument of an expr that evaluates to a string as described for the argument of ZSHOW specifying one or more codes determining the nature of the information produced by the function. If the argument is missing or empty, YottaDB operates as if it was a "*" and produces the associated context. This provides a way to suppress content that might contain PNI. Previously, $ZJOBEXAM() always produced a full context. [GTM-F135292](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637151)
 
-* <a name="GTM-F135393"></a>$ZMALL[OCLIM] provides a way for a process to limit its process memory. When the value is zero (0), YottaDB imposes no limit, although the OS still does. A positive value specifies a byte limit with a minimum of 2.5MB. A value of minus one (-1) provides a value of half the system imposed limit if any. When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces a trappable MALLOCCRIT warning. By default, some later request for memory is likely to produce a fatal MEMORY error, unless subsequent to MALLOCCRIT, a limit has been reestablished by SET $ZMALLOCLIM to the same or higher limit, but one not exceeding any system limit. Note that YottaDB allocates memory from the OS in large blocks so the interaction of $ZMALLOCLIM with memory growth is not exact. In the case of a MEMORY error, YottaDB makes an attempt to marshal available memory to enable as graceful a termination as possible. Note that independent of this mechanism, the OS may kill the process without recourse if it determines the greed of the process for memory jeopardizes the viability of the system. When the integer byte value specified in a SET $ZMALLOCLIN=intexpr or, at process startup, by the $ydb_malloc_limit environment variable ($gtm_malloc_limit, if it specified and $ydb_malloc_limit is not), specifies a positive value, YottaDB uses the smaller of that value and any OS defined amount for the value of $ZMALLOCLIM. YottaDB does not give errors or messages about its choice for $ZMALLOCLIM between a specified value and some other more appropriate value, so if the application needs to verify the outcome, it should examine the resulting ISV value. MEMORY errors are fatal and terminate the process. Previously, fatal MEMORY errors were not preceded by a trappable MALLOCCRIT warning. [GTM-F135393](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637393)
+* <a name="GTM-F135393"></a>$ZMALL[OCLIM] provides a way for a process to limit its process memory.
+
+  - When the value is zero (0), YottaDB imposes no limit, although the OS still does.
+  - A positive value specifies a byte limit with a minimum of 2.5MB.
+  - A value of minus one (-1) provides a value of half the system imposed limit if any.
+  
+  When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces a trappable MALLOCCRIT warning. By default, some later request for memory is likely to produce a fatal MEMORY error, unless subsequent to MALLOCCRIT, a limit has been reestablished by SET $ZMALLOCLIM to the same or higher limit, but one not exceeding any system limit. Note that YottaDB allocates memory from the OS in large blocks so the interaction of $ZMALLOCLIM with memory growth is not exact. In the case of a MEMORY error, YottaDB makes an attempt to marshal available memory to enable as graceful a termination as possible. Note that independent of this mechanism, the OS may kill the process without recourse if it determines the greed of the process for memory jeopardizes the viability of the system. When the integer byte value specified in a SET $ZMALLOCLIN=intexpr or, at process startup, by the \$ydb_malloc_limit environment variable (\$gtm_malloc_limit, if it specified and \$ydb_malloc_limit is not), specifies a positive value, YottaDB uses the smaller of that value and any OS defined amount for the value of $ZMALLOCLIM. YottaDB does not give errors or messages about its choice for $ZMALLOCLIM between a specified value and some other more appropriate value, so if the application needs to verify the outcome, it should examine the resulting ISV value. MEMORY errors are fatal and terminate the process. Previously, fatal MEMORY errors were not preceded by a trappable MALLOCCRIT warning. [GTM-F135393](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637393)
+
+* <a name="GTM-F135424"></a>In NOUNDEF mode, YottaDB assigns the value of an empty string to an undefined FOR control variable. Previously, YottaDB provided an UNDEF error for this condition even when the mode was NOUNDEF. Note that KILL or NEW of a control variable is a questionnable programming practice that can result in an unintended infinite loop. [GTM-F135424](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135424)
+
+* <a name="GTM-F135428"></a>If the index for the $ZSOCKET() function is outside the range of attached sockets for the specified SOCKET device, $ZSOCKET() returns an empty string. Previously, if prior actions on the SOCKET device removed one or more sockets, $ZSOCKET() could return stale or invalid information, or cause a segmentation violation (SIG-11). [GTM-F135428](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135428)
 
 * <a name="GTM-F135433"></a>SET \$ZTRAP=\$ETRAP works correctly; previously it tended to result in $ZTRAP="" regardless of the prior value of $ETRAP, but could also produce garbage values, while less likely, other assignments to $ZTRAP could also go awry. The workaround was to NEW $ETRAP, assign a the value of $ETRAP to a temporary, the empty string to $ETRAP and $ZTRAP to the value of the temporary. [GTM-F135433](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637480)
 
+* <a name="GTM-F157495"></a>The $VIEW() keyword "DEVICE" returns the type and status, if any, for the device named by the second argument. If no device of that name exists, the function returns an empty string. The device type is based on what ZSHOW "D" shows.
+
+  Examples:
+
+  ```
+  WRITE $VIEW("DEVICE","0")
+  TERMINAL:OPEN
+  ```
+
+  This indicates the $PRINCIPAL device is a terminal and it is open, which is usually the case for $PRINCIPAL. $ZPIN and $ZPOUT intrinsic special variables used as the second argument select the corresponding side of a split $PRINCIPAL device.
+
+  ```
+  OPEN "f.txt"
+  CLOSE "f.txt":NODESTROY
+  WRITE $VIEW("DEVICE","f.txt")
+  RMS:CLOSED
+  ```
+
+  [GTM-F157495](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F157495)
+
 * <a name="GTM-DE201378"></a>Operations that replace non-graphic characters with $[Z]CHAR() representations give a MAXSTRLEN error when the result would exceed 1MiB. Previously such operations ensured they had adequate space for the result, but could pass strings to other operations that might have no provision for dealing with strings longer than 1MiB. [GTM-DE201378)](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637455)
 
-* <a name="GTM-DE201380"></a>USE SOCKET handles the ATTACH, DETACH, CONNECT, SOCKET and ZLISTEN deviceparameters appropriately; previously, certain arguments for these deviceparameters could cause a segmentation violation(SIG-11). [GTM-DE201380](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637457)
+* <a name="GTM-DE201380"></a>USE SOCKET handles the ATTACH, DETACH, CONNECT, SOCKET and ZLISTEN deviceparameters appropriately; previously, certain arguments for these deviceparameters could cause a segmentation violation (SIG-11). [GTM-DE201380](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637457)
 
 * <a name="GTM-DE201386"></a>Address issues that can result in a segmentation violation (SIG-11) or similar failure.
 
@@ -193,17 +288,53 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-002](http://ti
 
 * <a name="GTM-DE201393"></a>Indirection of the form \@x@y ignores any comment at the end of the value of x; previously such a comment stopped the evaluation so the subscripts after the second @ were ignored. In addition, if the first (x) expression evaluates to the empty string, YottaDB produces a VAREXPECTED error; previously that scenario produced incorrect results, sub-optimal errors or, in the worst case damage to an item at the top of the heap. Also, if the second (y) expression is the empty string, it no longer has the potential to lead to incorrect results or sub-optimal error reports. [GTM-DE201393)](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637474)
 
+* <a name="GTM-DE257948"></a>YottaDB accepts square-bracket expressions as synonyms for the standard vertical bars. Previously, YottaDB handled square-bracket expressions inappropriately, which could cause a fatal error. In addition, YottaDB detects and recovers from certain numeric overflow errors. Previously, YottaDB inappropriately handled such overflow errors when optimizing arithmetic expressions containing literals, which caused fatal errors. [GTM-DE257948](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-DE257948)
+
+* <a name="GTM-DE276621"></a>The issue and fix reported here were never in a YottaDB release, and the following appears here for completeness:
+
+  The YottaDB compiler correctly handles lines with literal FALSE postconditionals. Due to a regression in V7.0-002, the compiler could encounter a segmentation violation (SIG-11) error when having to fetch a variable that earlier in the same line was the argument of a command with a literal FALSE postconditional. [GTM-DE276621](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-DE276621)
+
+* <a name="GTM-DE294187"></a> Reading from $ZKey works as expected. Previously under rare circumstances, an access of $ZKey could result in a segmentation violation (SIG-11). This was only seen in a development environment and never reported by a user. (GTM-DE294187)
+
 ### System Administration
+
+* <a name="GTM-F134692"></a>When MUPIP INTEG and MUPIP DUMPFHEAD arguments specify a region list, MUPIP processes regions in the listed order, or, for names expanded by wildcard ("*"), alphabetically. Previously, MUPIP DUMPFHEAD and MUPIP INTEG ignored any user-specified order of regions, and processed regions in FTOK order, which tends to change with changes in operational conditions within the underlying file system. [GTM-F134692](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F134692)
+
+* <a name="GTM-F135416"></a>MUPIP FREEZE ON operates while an online rollback is in progress. YottaDB now checks for contention and ensures online rollback appropriately releases the required resources and other database accesses wait for this to occur. Previously in rare cases, it might hang because of shared resource contention. [GTM-F135416](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135416)
 
 * <a name="GTM-F135842"></a>When MUPIP BACKUP arguments specify a list, the utility processes regions in the listed order, or, for names expanded by wildcard ("*"), alphabetically. Previously, MUPIP BACKUP ignored any user-specified order of regions, and processed regions in FTOK order, which tends to change with changes in operational conditions within the underlying file system.[GTM-F135842](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637997)
 
 * <a name="GTM-DE201305"></a>When the Database segment to file mapping uses an environment variable, and the environment variable is not defined, MUPIP BACKUP uses the environment variable name itself in constructing the file name, as does MUPIP CREATE. Previously MUPIP CREATE created database with undefined environment variable name as the database name, but MUPIP BACKUP failed to backup that existing database. [GTM-DE201305](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637290)
 
-* <a name="GTM-DE201381"></a>MUPIP LOAD -FORMAT=BINARY checks the record length against the data for a record. YottaDB defines record length as the data in a node, but the utility in question still inappropriately included the key in its length check. [GTM-DE201381](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637458)
+* <a name="GTM-DE201381"></a>MUPIP LOAD FORMAT=BINARY checks the record length against the data for a record. YottaDB defines record length as the data in a node, but the utility in question still inappropriately included the key in its length check. [GTM-DE201381](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637458)
 
 * <a name="GTM-DE201825"></a>The `ydbinstall` script checks removes any `semsstat2`, `ftok`, and `getuid` files if they exist from a prior installation. YottaDB releases starting from r1.36 no longer use these programs. Previously, `ydbinstall` did not remove these obsolete executable files. Note that YottaDB recommends installing each YottaDB release in its own directory, and not overwriting an existing release. Installing in an existing directory must be explicitly specified with the `--ovewrite-existing` command line option. [GTM-DE201825](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637999)
 
+* <a name="GTM-DE294185"></a>The Receiver Server continues to operate after an unexpected termination of a TLS connection. Previously, and more frequently with OpenSSL 3.0, the Receiver Server would issue a TLSIOERR error message and terminate in response to network disruptions. [GTM-DE294185](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-DE294185)
+
 ### Other
+
+* <a name="GTM-F134877"></a>As all platforms Supported by YottaDB r2.02 use OpenSSL 1.1.0 or later, and as support for ECDHE cipher support with OpenSSL 1.0.2 has been available since YottaDB r1.32, the following appears here for completness.
+
+  The YottaDB TLS plugin library supports ECDHE ciphers with OpenSSL 1.0.2. OpenSSL 1.1.0 and above automatically support ECDHE ciphers. [GTM-F134877](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F134877)
+
+* <a name="GTM-F135258"></a>As support for TLS 1.3 has been available since YottaDB r1.32, the following appears here for completeness.
+
+  The YottaDB TLS reference encryption plugin supports TLS v1.3 with OpenSSL 1.1.1 series and up. OpenSSL negotiates that highest level of TLS available between both sides of a connection. The implication is that just using OpenSSL 1.1.1 and up does not guarantee the use of TLSv1.3 for all TLS sessions. Previously the TLS reference encryption plugin supported only up to TLS v1.2.
+
+  **Note**
+
+    TLSv1.3 introduces a number of protocol changes. The concept of renegotiation was removed. YottaDB used TLSv1.2 renegotiation to ensure appropriate refresh of session keys (for rationale, see [Luykx, A. and K. Paterson, "Limits on Authenticated Encryption Use in TLS", 2016](https://eprint.iacr.org/2024/051.pdf)). As a result, YottaDB uses the term "renegotiation" for SOCKET devices where the mode is "server" and "renegotiation_interval" for the frequency of renegotiation (by the Source Server) during database replication. For TLSv1.3 sessions, the YottaDB Reference TLS plugin treats the "renegotiation" as a request to update the session keys.
+
+  **Important**
+
+    OpenSSL 3.0 by default does not allow client-side initiated TLSv1.2 renegotiation requests due to potential DoS attacks. Because of this, the YottaDB Reference TLS plugin built with a pre-OpenSSL 3.0 version does not support client-initiated renegotiation when communicating with a plugin build with OpenSSL 3.0. This limitation only affects database replication and not SOCKET devices.
+
+  [GTM-F135258](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135258)
+
+* <a name="GTM-F135313"></a>When an event interrupts a POSIX fallocate system call used for database file creation or extension with NODEFER_ALLOCATE, YottaDB retries the call. Previously, such an interruption resulted in a PREALLOCATEFAIL message. [GTM-F135313](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135313)
+
+* <a name="GTM-F135334"></a>The YottaDB reference encryption plugin correctly reports OpenSSL messages when a process reports an error message from either a TLS connection or database encryption. Previously processes leveraging the reference encryption plugin with OpenSSL could see incorrect (potentially empty) error messages. This was only seen in a development environment and never reported by a user. [GTM-F135334](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135334)
 
 * <a name="GTM-F135415"></a>The Source Server defers a TLS renegotiation when a prior TLS renegotiation is pending. Previously, the Source Server logged the REPLWARN message, closed the replication connection, and attempted to re-establish the replication connection with the Receiver Server. [GTM-F135415](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637428)
 
