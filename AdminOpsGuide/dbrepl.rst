@@ -3976,7 +3976,10 @@ Specifies whether the replication server is permitted to fallback to plaintext c
 -RENEGotiate_interval=<minutes>
 *********************************
 
-Specifies the approximate time in minutes to wait before attempting to perform a TLS renegotiation. The default RENEGOTIATE_INTERVAL is a little over 120 minutes. A value of zero causes YottaDB to never attempt a renegotiation. The `MUPIP REPLICATE SOURCE JNLPOOL SHOW <#mupip-replic-show>`_ command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in the replication backlog.
+Specifies the approximate time in minutes to wait before attempting to perform a TLS renegotiation. The default RENEGOTIATE_INTERVAL is a little over 120 minutes, and the minimum is one minute. The `MUPIP REPLICATE SOURCE JNLPOOL SHOW <#mupip-replic-show>`_ command shows the time at which the next TLS renegotiation is scheduled, and how many such renegotiations have occurred thus far for a given secondary instance connection. As renegotiation requires the replication pipeline to be temporarily flushed, followed by the actual renegotiation, TLS renegotiation can cause momentary spikes in the replication backlog.
+
+.. note::
+   TLSv1.3 introduces a number of protocol changes. The concept of renegotiation was removed. As a result, when using TLS v1.3, this qualifier takes on a different meaning. YottaDB used TLSv1.2 renegotiation to ensure appropriate refresh of session keys (for rationale, see `Luykx, A. and K. Paterson, "Limits on Authenticated Encryption Use in TLS", 2016 <https://eprint.iacr.org/2024/051.pdf>`_. As a result, YottaDB uses the term "renegotiation" for `SOCKET <../ProgrammersGuide/ioproc.html#using-sckt-devs>`_ devices where the mode is SERVER and RENEGOTIATE_INTERVAL specifies the frequency of renegotiation during database replication. For TLSv1.3 sessions, the YottaDB encryption plugin treats the "renegotiation" as a request to update the session keys.
 
 ++++++++++++++++++++++++++++++++++++++++++++++
 Shutting Down the Source Server
