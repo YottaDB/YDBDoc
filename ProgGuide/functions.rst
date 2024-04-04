@@ -1581,6 +1581,8 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "BREAKMSG"       | none             | Value of the break message mask; YottaDB defaults this to 31.                                                                                                       |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "DEVICE"         | Device name      | Device type (FIFO, NULL, PIPE, RMS, SOCKET, or TERMINAL) and device status (OPEN or CLOSED) separated by a colon (":").                                             |
++------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "FREEBLOCKS"     | region           | Number of free database blocks in a given region.                                                                                                                   |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "FREEZE"         | region           | Process-id of a process that has frozen the database associated with the region specified (using DSE or MUPIP). If the region is currently not frozen, returns zero.|
@@ -1808,6 +1810,24 @@ Here are some $VIEW("REGION",gvn) outputs:
    DEFAULT,A1,A2,A3,A5,A4
 
 Support for $VIEW("REGION","^*"), which returns the name of the region in the global directory mapped to by the * namespace, was added effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+
+Some examples of $VIEW("DEVICE",name) usage:
+
+.. code-block::bash
+
+   GTM> WRITE $VIEW("DEVICE","0")
+   TERMINAL:OPEN
+
+This indicates the $PRINCIPAL device is a terminal and it is open (which is usually the case for $PRINCIPAL.) The $ZPIN and $ZPOUT intrinsic special variables can be used as the device name to select to corresponding side of a split $PRINCIPAL device.
+
+.. code-block::bash
+
+   GTM> OPEN "f.txt"
+   GTM> CLOSE "f.txt":NODESTROY
+   GTM> WRITE $VIEW("DEVICE","f.txt")
+   RMS:CLOSED
+
+This shows the CLOSED status of a file closed with the `NODESTROY <ioproc.html#destroy>`_ deviceparameter
 
 .. _zahandle-function:
 
@@ -3470,6 +3490,14 @@ The second expression specifies a keyword identifying the type of information re
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | IOERROR                    | handle                           | 1 (TRUE) if IOERROR=TRAP otherwise 0 (FALSE).                                                                                     |
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| KEEPALIVE                  | index                            | A non-zero value if SO_KEEPALIVE is enabled.                                                                                      |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| KEEPCNT                    | index                            | The value of TCP_KEEPCNT.                                                                                                         |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| KEEPIDLE                   | index                            | The value of TCP_KEEPIDLE in seconds.                                                                                             |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| KEEPINTVL                  | index                            | The value of TCP_KEEPINTVL in seconds.                                                                                            |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | LOCALADDRESS               | index                            | The address of the local side of the socket. For TCP sockets: the IPv6 or IPv4 numeric address. For LOCAL sockets: the path.      |
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | LOCALPORT                  | index                            | The numeric port of the local side of a TCP socket.                                                                               |
@@ -3478,6 +3506,9 @@ The second expression specifies a keyword identifying the type of information re
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | NUMBER                     |                                  | The number of sockets in the SOCKET device.                                                                                       |
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| OPTIONS                    | index                            | A string of `OPTIONS <ioproc.html#options-param>`_  previously specified for the selected socket. The string may not exactly      |
+|                            |                                  | match the string originally specified, but has the same meaning.                                                                  |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | PARENT                     | index                            | If the socket was created from a LISTENing socket: the handle of the LISTENing socket.                                            |
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | PROTOCOL                   | index                            | TCP, TCP6, or LOCAL                                                                                                               |
@@ -3485,6 +3516,8 @@ The second expression specifies a keyword identifying the type of information re
 | REMOTEADDRESS              | index                            | The address of the remote side of the socket. For TCP sockets: the IPv6 or IPv4 numeric address. For LOCAL sockets: the path.     |
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | REMOTEPORT                 | index                            | The numeric port of the remote side of a TCP socket.                                                                              |
++----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+| SNDBUF                     | index                            | Size of the OS send buffer in bytes (SO_SNDBUF).                                                                                  |
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | SOCKETHANDLE               | index                            | The handle for the selected socket.                                                                                               |
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
@@ -3502,6 +3535,10 @@ The second expression specifies a keyword identifying the type of information re
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 | ZDELAY                     | index                            | 1 if Nagle algorithm enabled, otherwise 0.                                                                                        |
 +----------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+
+.. note::
+
+   The keywords KEEPALIVE, KEEPCNT, KEEPIDLE, KEEPINTVL, SNDBUF, and ZIBFSIZE return two values if the value previously specified in an OPEN/USE command with the “OPTIONS” or "ZIBFSIZE" device parameter doesn't match the system's current value.  The two values are separated by a semicolon (";"):"uservalue;systemvalue".
 
 The following table describes the values for the fourth expression for the TLS keyword.
 
