@@ -835,12 +835,6 @@ Here is a sample configuration file:
       */
       CApath: "/home/jdoe/current/tls/certs/CA/";
 
-      /* Diffie-Hellman parameters used for key-exchange. Either none or both have to be specified. If neither is specified, then
-      * then the data is encrypted with the same keys that are used for authentication.
-      */
-      dh512: "/home/jdoe/current/tls/dh512.pem";
-      dh1024: "/home/jdoe/current/tls/dh1024.pem";
-
       /* crl: points to a file containing list of revoked certificates. This file is created by the openssl utility. */
       crl: "/home/jdoe/current/tls/revocation.crl";
 

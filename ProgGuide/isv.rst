@@ -131,6 +131,8 @@ Produces the result 58883,55555 at 3:25:55 pm on 20 March, 2002.
 
 For further information on formatting $HOROLOG for external use, refer to :ref:`zdate-function`.
 
+.. _io-isv:
+
 ---------
 $IO
 ---------
@@ -227,6 +229,8 @@ If the socket selected by WRITE /WAIT which implicitly or explicitly requests th
 .. code-block:: none
 
    "READ|<socket handle>|<address>"
+
+.. _principal-isv:
 
 ---------------
 $PRINCIPAL
@@ -492,7 +496,7 @@ $ZALLOCSTOR contains the number of bytes that are (sub) allocated (including ove
 $ZAUDIT
 ---------
 
-$ZAUDIT contains a boolean value that indicates whether `Audit Principal Device <../AdminOpsGuide/basicops.html#audit-principal-device-restriction-facility>`_ is enabled. YottaDB does not permit $ZAUDIT to be SET or NEWed.
+$ZAUDIT contains a boolean value that indicates whether Audit Principal Device in the `Audit Logging Facility <../AdminOpsGuide/basicops.html#audit-logging-facility>`_ is enabled. YottaDB does not permit $ZAUDIT to be SET or NEWed.
 
 ----------
 $ZB

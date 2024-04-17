@@ -290,15 +290,17 @@ The format of the REPLINSTANCE qualifier is:
 
    -REPLIN[STANCE]=<target_location>
 
-^^^^^^
+^^^^^
 RETry
-^^^^^^
+^^^^^
 
-Makes the specified number of attempts to perform a BACKUP. If RETRY is not specified, MUPIP attempts the file copy operation once. Retry attempts are always based on :code:`cp` or :code:`pax` even when another copy mechanism may be available. With the default of zero, YottaDB does not attempt a retry.
+Specifies the number of times that MUPIP BACKUP should retry the backup if it fails. If RETRY is not specified, MUPIP BACKUP retries the file copy operation once if the first attempt fails on a retriable reason. In case of an error, retry attempts are always based on ``cp`` or ``pax`` even when another copy mechanism is available. If ``--retry=0`` is specified, MUPIP BACKUP makes no attempt to retry when it encounters a failure.
+
+The format of the RETRY qualifier is:
 
 .. code-block:: none
 
-   -ret[ry]=<count>
+   --ret[ry]=<count>
 
 ^^^^^^^^^^^^^
 SHowprogress

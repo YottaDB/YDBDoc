@@ -376,6 +376,8 @@ ydb_coredump_filter
 .. note::
    Setting :code:`ydb_coredump_filter` to -1 disables writing to :code:`/proc/<pid>/coredump_filter`
 
+.. _ydb-crypt-config:
+
 +++++++++++++++++++
 ydb_crypt_config
 +++++++++++++++++++
@@ -395,6 +397,13 @@ ydb_crypt_plugin
 ydb_custom_errors
 ++++++++++++++++++++
 **ydb_custom_errors (gtm_custom_errors)** specifies the complete path to the file that contains a list of errors that should automatically stop all updates on those region(s) of an instance which have the `Instance Freeze <./dbrepl.html#instance-freeze>`_ mechanism enabled.
+
+.. _ydb-db-create-ver:
+
++++++++++++++++++++
+ydb_db_create_ver
++++++++++++++++++++
+**ydb_db_create_ver (gtm_db_create_ver)** directs `MUPIP CREATE <dbmgmt.html#create>`_ to create YottaDB r1.x (GT.M V6.x) compatible database file(s) when the environment variable is set to ``6`` or ``V6``.
 
 +++++++++++++++++++
 ydb_cur_gbldir
@@ -540,6 +549,8 @@ ydb_fullblockwrites
 **ydb_fullblockwrites (gtm_fullblockwrites)** specifies whether a YottaDB process should write a full filesystem, or full database block, worth of bytes when writing a database block that is not full. Depending on your IO subsystem, writing a full block worth of bytes (even when there are unused garbage bytes at the end) may result in better database IO performance by replacing a low level read-modify-read IO operation with a single write operation.
 
 ydb_fullblockwrites is deprecated in YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_ and no longer maintained or tested.
+
+.. _ydb-gbldir:
 
 +++++++++++++
 ydb_gbldir
@@ -828,7 +839,7 @@ Limitations include:
 
   * Only traditional characters terminate input lines (CR, LF, FF, and their UTF-8 variants); alternate terminators are not supported. (YottaDB direct mode has the ability to terminate input using the `TERMINATOR <../ProgrammersGuide/ioproc.html#terminator>`_ deviceparameter.)
   * Wrap on device width (set using `WIDTH <../ProgrammersGuide/ioproc.html#width>`_ deviceparameter) is not supported.
-  * `MUPIP INTRPT <dbmgmt.html#intrpt>`_ (SIGUSR1) turns off line editing on the line being entered. You can still enter more characters or cancel the line using CTRL-C.
+  * :ref:`MUPIP INTRPT <mupip-intrpt>` (SIGUSR1) turns off line editing on the line being entered. You can still enter more characters or cancel the line using CTRL-C.
 
 * Readline is not supported for the `READ <../ProgrammersGuide/commands.html#read>`_ command.
 
@@ -1058,7 +1069,7 @@ Hugepages are a Linux feature that may improve the performance of YottaDB applic
 
 While YottaDB recommends you configure hugepages for shared memory, you need to evaluate whether or not configuring hugepages for process-private memory is appropriate for your application. Having insufficient hugepages available during certain commands (for example, a `JOB <../ProgrammersGuide/commands.html#job>`_ command - see complete list below) can result in a process terminating with a SIGBUS error. This is a current limitation of Linux. Before you use hugepages for process-private memory on production systems, YottaDB recommends that you perform appropriate peak load tests on your application and ensure that you have an adequate number of hugepages configured for your peak workloads or that your application is configured to perform robustly when processes terminate with SIGBUS errors.
 
-The following YottaDB features fork processes and may generate SIGBUS errors when hugepages are not available - JOB, `OPEN <../ProgrammersGuide/commands.html#open>`_ a `PIPE device <../ProgrammersGuide/ioproc.html#using-pipe-devices>`_, `ZSYSTEM <../ProgrammersGuide/commands.html#zsystem>`_, interprocess signaling that requires the services of :code:`gtmsecshr` when :code:`gtmsecshr` is not already running, SPAWN commands in `DSE <./dse.html>`_, `GDE <./gde.html>`_, and `LKE <./mlocks.html>`_, argumentless `MUPIP RUNDOWN <./dbmgmt.html#rundown>`_, and `replication <./dbrepl.html>`_-related MUPIP commands that start server processes and/or helper processes. Should increasing the available hugepages require a reboot, an interim workaround is to unset the environment variable HUGETLB_MORECORE for YottaDB processes until you are able to reboot or otherwise make available an adequate supply of hugepages.
+The following YottaDB features fork processes and may generate SIGBUS errors when hugepages are not available - JOB, `OPEN <../ProgrammersGuide/commands.html#open>`_ a `PIPE device <../ProgrammersGuide/ioproc.html#using-pipe-devices>`_, `ZSYSTEM <../ProgrammersGuide/commands.html#zsystem>`_, interprocess signaling that requires the services of :code:`gtmsecshr` when :code:`gtmsecshr` is not already running, SPAWN commands in `DSE <./dse.html>`_, `GDE <./gde.html>`_, and `LKE <mlocks.html>`_, argumentless `MUPIP RUNDOWN <./dbmgmt.html#rundown>`_, and `replication <./dbrepl.html>`_-related MUPIP commands that start server processes and/or helper processes. Should increasing the available hugepages require a reboot, an interim workaround is to unset the environment variable HUGETLB_MORECORE for YottaDB processes until you are able to reboot or otherwise make available an adequate supply of hugepages.
 
 Consider the following example of a memory map report of a Source Server process running at peak load:
 
@@ -1146,12 +1157,14 @@ The file may contain zero or more of the following case-insensitive lines, in th
 
 .. code-block:: none
 
-   APD_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
+   A{M|PD}_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
    BREAK[:<group-name>]
    CENABLE[:<group-name>]
    DIRECT_MODE[:<group-name>]
    DSE[:<group-name>]
    HALT[:<group-name>]
+   LKE:[<group-name>]
+   LKECLEAR:[<group-name>]
    LOGDENIALS[:<group-name>]
    PIPE_OPEN[:<group-name>]
    TRIGGER_MOD[:<group-name>]
@@ -1191,6 +1204,8 @@ Restrictions apply as follows:
 |                                                         | provides a Boolean value that indicates whether Audit Principal Device is enabled. See the Audit      |
 |                                                         | Principal Device section below for details.                                                           |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| AM_ENABLE                                               | Enables the logging of `MUPIP <dbmgmt.html>`_ commands from the shell and MUPIP prompt.               |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | BREAK                                                   | YottaDB ignores any `BREAK <../ProgrammersGuide/commands.html#break>`_ command.                       |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | CENABLE                                                 | The process acts as if $ydb_nocenable is TRUE and ignores any                                         |
@@ -1203,6 +1218,10 @@ Restrictions apply as follows:
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | HALT                                                    | `HALT <../ProgrammersGuide/commands.html#halt>`_ results in a RESTRICTEDOP error.                     |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| LKE                                                     | Any invocation of the `LKE <mlocks.html>`_ utility produces a RESTRICTEDOP error.                     |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| LKECLEAR                                                | Any invocation of the `LKE CLEAR <mlocks.html#clear>`_ command results in a RESTRICTEDOP error.       |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | LOGDENIALS                                              | Limit logging to processes belonging to a specific group.                                             |
 |                                                         |                                                                                                       |
 |                                                         | YottaDB normally logs a number of errors related to permissions and access using the syslog()         |
@@ -1211,6 +1230,14 @@ Restrictions apply as follows:
 |                                                         | If the restriction is used, logging occurs for the specified group only.                              |
 |                                                         | YottaDB supports group names using the POSIX Portable Filename Character Set which includes           |
 |                                                         | characters from [A-Z], [a-z], [0-9], ., _ , and -.                                                    |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| PIPE_OPEN                                               | `OPEN <../ProgrammersGuide/commands.html#open>`_ of a                                                 |
+|                                                         | `PIPE device <../ProgrammersGuide/ioproc.html#using-pipe-devices>`_ produces a RESTRICTEDOP error.    |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| TRIGGER_MOD                                             | A `$ZTRIGGER() <../ProgrammersGuide/functions.html#ztrigger>`_ or                                     |
+|                                                         | `MUPIP TRIGGER <./dbmgmt.html#trigger>`_ that attempts a change or delete produces a RESTRICTEDOP     |
+|                                                         | error; in addition, while executing code within a trigger, ZBREAK results in a RESTRICTEDOP error,    |
+|                                                         | and both ZBREAK and `ZSTEP <../ProgrammersGuide/commands.html#zstep>`_  actions are ignored.          |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | ZBREAK                                                  | Any `ZBREAK <../ProgrammersGuide/commands.html#zbreak>`_ produces a RESTRICTEDOP error.               |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
@@ -1222,14 +1249,6 @@ Restrictions apply as follows:
 | ZHALT                                                   | `ZHALT <../ProgrammersGuide/commands.html#zhalt>`_ produces a RESTRICTEDOP error.                     |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | ZSYSTEM                                                 | `ZSYSTEM <../ProgrammersGuide/commands.html#zsystem>`_ produces a RESTRICTEDOP error.                 |
-+---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
-| PIPE_OPEN                                               | `OPEN <../ProgrammersGuide/commands.html#open>`_ of a                                                 |
-|                                                         | `PIPE device <../ProgrammersGuide/ioproc.html#using-pipe-devices>`_ produces a RESTRICTEDOP error.    |
-+---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
-| TRIGGER_MOD                                             | A `$ZTRIGGER() <../ProgrammersGuide/functions.html#ztrigger>`_ or                                     |
-|                                                         | `MUPIP TRIGGER <./dbmgmt.html#trigger>`_ that attempts a change or delete produces a RESTRICTEDOP     |
-|                                                         | error; in addition, while executing code within a trigger, ZBREAK results in a RESTRICTEDOP error,    |
-|                                                         | and both ZBREAK and `ZSTEP <../ProgrammersGuide/commands.html#zstep>`_  actions are ignored.          |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 
 Note that restricting $ZCMDLINE prevents commands like: :code:`yottadb -run %XCMD 'for read x xecute x'` which can act as substitutes for Direct Mode.
@@ -1286,29 +1305,33 @@ The commands, Intrinsic Special Variables, and functions whose behavior changes 
 After the filter completes, YottaDB restores the above to their values at the invocation of the filter.
 
 ++++++++++++++++++++++++++++++++++++++++++++
-Audit Principal Device restriction facility
+Audit Logging Facility
 ++++++++++++++++++++++++++++++++++++++++++++
 
-The "APD_ENABLE" entry in a restrictions definition file turns on APD and enables the logging of all code entered from Direct Mode and optionally any input entered on the principal device ($PRINCIPAL). To enable APD, add a line with the following format to the restriction file:
+To enable the audit logging facility, add a line in the following format to ``$ydb_dist/restrict.txt``:
 
 .. code-block:: none
 
-   APD_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
+   A{M|PD}_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
+
+APD_ENABLE enables the logging of all code entered from Direct Mode and optionally any input entered on the principal device ($PRINCIPAL). AM_ENABLE enables the logging of all MUPIP commands entered from the shell and the utility prompt.
 
 * The optional "comma-separated-list-of-options" can consist of zero or more of these options:
 
+  * RD - Enables logging of all responses READ from $PRINCIPAL in addition to that entered at the Direct Mode prompt. This option is more comprehensive and captures input that might be XECUTEd, but depending on your application architecture may significantly increase the amount of logged information. The RD option only applies to APD_ENABLE.
   * TLS - Enables TLS connectivity between YottaDB and the logger; this option requires the host information (e.g. IP/port or hostname/port)
-  * RD - Enables logging of all responses READ from $PRINCIPAL in addition to that entered at the Direct Mode prompt. This option is more comprehensive and captures input that might be XECUTEd, but depending on your application architecture may significantly increase the amount of logged information.
 
 * The "path-to-sock-file" is the absolute path of the UNIX domain socket file for connecting to the logger.
 
-* The "host" is the hostname or numeric IPv4/IPv6 address of the logger; numeric IP addresses must be enclosed in square brackets (i.e. '[' and ']').
+* The "host" is the hostname or numeric IPv4/IPv6 address of the logger; numeric IP addresses must be enclosed in square brackets (i.e. ``[`` and ``]``).
 
 * The "port" is the port number the logger listens on.
 
-* The optional "tls-id" is the label of the section within the YottaDB configuration file that contains TLS options and/or certificates for YottaDB to use; APD ignores any "tls-id" if the "TLS" option is not specified.
+* You can specify the same or different {path-to-sock-file|host:port} for any audit logging facility.
 
-If parsing the "APD_ENABLE" line in restriction file or initializing logger information fails, YottaDB enforces all restrictions (default restriction file behavior).
+* The optional "tls-id" is the label of the section within the YottaDB configuration file that contains TLS options and/or certificates for YottaDB to use; logging ignores any "tls-id" if the "TLS" option is not specified.
+
+If parsing the "A*_ENABLE" line in the restriction file or initializing logger information fails, YottaDB enforces all restrictions (default restriction file behavior).
 
 Examples:
 
@@ -1322,7 +1345,7 @@ Adding this line to the restriction file enables APD. YottaDB connects with the 
 
    APD_ENABLE:RD:[123.456.789.100]:12345
 
-Adding this line to the restriction file enables APD. YottaDB connects with the logger (listening on port 12345 at the IPv4 address 123.456.789.100) via TCP socket and sends all Direct Mode and READ activities from $PRINCIPAL to logger.
+Adding this line to the restriction file enables APD. YottaDB connects with the logger (listening on port 12345 at the IPv4 address 123.456.789.100) via a TCP socket and sends all Direct Mode and READ activities from $PRINCIPAL to logger.
 
 .. code-block:: none
 
@@ -1335,6 +1358,12 @@ Adding this line to the restriction file enables APD. YottaDB connects with the 
    APD_ENABLE:TLS,RD:[1234:5678:910a:bcde::f:]:12345:clicert
 
 Adding this line to the restriction file enables APD. YottaDB connects with the logger (listening on port 12345 at the IPv6 address 1234:5678:910a:bcde::f:) via TLS socket. YottaDB configures its TLS options for APD based on the contents within the section of the configuration file labeled "clicert". YottaDB sends all Direct Mode and READ activities from $PRINCIPAL to logger.
+
+.. code-block:: none
+
+   AM_ENABLE::/path/to/sock/file/audit.sock
+
+Adding this line to the restriction file enables the logging of all MUPIP commands. YottaDB connects with the logger via UNIX domain socket using the domain socket file "/path/to/sock/file/audit.sock" and sends all MUPIP activity to a logger. When this facility is enabled, all commands typed at the MUPIP prompt (MUPIP>) produce the `RESTRICTEDOP <../MessageRecovery/errors.html#restrictedop>`_ error.
 
 ~~~~~~~~~~~~~~~~~~~~~~~
 Logging

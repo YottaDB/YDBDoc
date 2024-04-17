@@ -60,8 +60,6 @@ Here is a sample configuration file:
            verify-depth: 7;
            CAfile: "/home/jdoe/current/tls/certs/CA/ydbCA.crt";
            CApath: "/home/jdoe/current/tls/certs/CA/";
-           dh512: "/home/jdoe/current/tls/dh512.pem";
-           dh1024: "/home/jdoe/current/tls/dh1024.pem";
            session-timeout: 600;
 
            /* List of certificate/key pairs specified by identifiers. */
@@ -86,11 +84,13 @@ The environment variable ydb_tls_passwd_<tlsid> must specify an obfuscated versi
 Supported OpenSSL options
 -------------------------
 
+The :ref:`ydb-crypt-config` configuration file has two scopes for the following OpenSSL options. At the root of the TLS configuration, is a global configuration scope that applies to all tlsids listed in the configuration. Each tlsid can override the global configuration by redefining the same parameters. Any overridden option apply only to the specific tlsid configuration that defines it. The supported OpenSSL options are as follows:
+
 ++++++
 CAFile
 ++++++
 
-When used on the tls level (or the tlsid level if not provided at the tls level), it points to a file (in PEM format) describing the trusted CAs. The file can contain several CA certificates identified by sequences of:
+When used on the tls level (or the tlsid level if not provided at the tls level), it points to a file in PEM format describing the trusted CAs. The file can contain several CA certificates identified by sequences of:
 
 .. code-block:: none
 
@@ -104,7 +104,7 @@ When specified for a server connection either in a tlsid level configuration fil
 CApath
 ++++++
 
-Points to a directory containing CA certificates in PEM format. The files each contain one CA certificate. The files are looked up by the CA subject name hash value, which must hence be available. If more than one certificate with the same name hash value exists, the extension must be different (e.g. 9d66eef0.0, 9d66eef0.1 etc). The directory is typically created by the OpenSSL tool 'c_rehash'.
+Points to a directory containing CA certificates in PEM format. The files each contain one CA certificate. The files are looked up by the CA subject name hash value, which must hence be available. If more than one certificate with the same name hash value exists, the extension must be different (e.g. 9d66eef0.0, 9d66eef0.1, etc). The directory is typically created by the OpenSSL tool 'c_rehash'. CApath is an alternative to CAfile.
 
 +++++++++++
 cipher-list
@@ -117,12 +117,6 @@ crl
 +++
 
 Points to a file containing a list of revoked certificates. This file is created by the openssl utility.
-
-++++++++++++++++
-dh512 and dh1024
-++++++++++++++++
-
-Specifies that Diffie-Hellman parameters are used for key-exchange. Either none or both have to be specified. If neither is specified, then the data is encrypted with the same keys that are used for authentication.
 
 ++++++
 format
