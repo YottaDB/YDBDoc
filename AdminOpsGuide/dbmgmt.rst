@@ -175,22 +175,22 @@ BACKUP
 CREATE
 ++++++++++++++++
 
-Creates and initializes database files using the information in a Global Directory file. If a file already exists for any segment, MUPIP CREATE takes no action for that segment.
+Creates and initializes database files using the information in the Global Directory file specified by :ref:`$ydb_gbldir <ydb-gbldir>`. If a file already exists for any segment, MUPIP CREATE takes no action for that segment.
 
 The format of the CREATE command is:
 
 .. code-block:: none
 
-   CR[EATE] [-R[EGION]=region-name | -R[EGION] region name]
+   cr[eate] [-r[egion]=region-name | -r[egion] region name]
 
-The single optional REGION qualifier specifies a region for which to create a database file.
+The single optional ``-region`` qualifier specifies a region for which to create a database file.
 
-Note that one YottaDB database file grows to a maximum size of 17,179,869,184(16Gi) blocks. This means, for example, that with an 4KiB block size, the maximum single database file size is 64TiB (4KiB*16Gi). Also, this is the size of one database file -- a logical database (an M global variable namespace) can consist of an arbitrary number of database files.
+One YottaDB database file can grow to a maximum size of 17,179,869,184(16Gi) blocks. This means, for example, that with a 4KiB block size, the maximum single database file size is 64TiB (4KiB*16Gi). This is just the size of one database file -- a logical database (a global variable namespace) can consist of an arbitrary number of database files, i.e., the size of a YottaDB database is limited only by available storage.
 
 Note that a MUPIP CREATE command that explicitly specifies a region which is tagged as :ref:`AutoDB <region-no-autodb>`, creates the database file for that region if it does not exist.
 
 ~~~~~~~~~~
--Region
+REGION
 ~~~~~~~~~~
 
 Specifies a single region for creation of a database file. By default, MUPIP CREATE creates database files for all regions in the current Global Directory that do not already have a database file.
@@ -199,9 +199,21 @@ The format of the REGION qualifier is:
 
 .. code-block:: none
 
-   -R[EGION]=region-name | -R[EGION] region-name
+   -r[egion]=region-name | -r[egion] region-name
 
-The region-name is case-insensitive. The specified region name is converted into upper case before processing.
+The region-name is case-insensitive.
+
+~~~~~~
+V6
+~~~~~~
+
+Directs MUPIP to create an r1.x (GT.M V6.x) compatible database file. When the environment variable :ref:`ydb-db-create-ver` specifies the creation of r1.x compatible database files, this option can be negated (``nov6``) to create r2.x database files.
+
+The format of the V6 qualifier is:
+
+.. code-block:: none
+
+   -[no]v6
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP CREATE
@@ -211,9 +223,9 @@ Example:
 
 .. code-block:: bash
 
-   $ mupip create -region=MAMMALS
+   $ mupip create -region=YDBOCTO
 
-This command creates the database file specified by the Global Directory (named by the Global Directory environment variable) for region MAMMALS.
+This command creates the database file specified by the Global Directory for region YDBOCTO.
 
 .. _mupip-downgrade:
 
@@ -1553,6 +1565,16 @@ Directs REORG to leave free space within index blocks for future updates. Argume
 
 Under certain conditions, especially with large database block sizes, it may be possible to achieve faster throughput by using a smaller fill factor for index blocks than for data blocks. By default, the INDEX_FILL_FACTOR is the value of FILL_FACTOR regardless of whether that value is explicitly specified or implicitly obtained by default.
 
+~~~~
+KEEP
+~~~~
+
+For a :ref:`MUPIP REORG TRUNCATE <reorg-truncate>`, KEEP allows the specification, as a decimal integer number of blocks or a percentage from 0% to 99% of the starting total blocks, the total amount of space the truncate operation should leave (i.e., not truncate) in the database file at the completion of other REORG operations. The format of the KEEP qualifier is:
+
+.. code-block:: none
+
+   [-keep=blocks|percent%]
+
 ~~~~~~~~~~~~~
 -NOCOALESCE
 ~~~~~~~~~~~~~
@@ -1650,25 +1672,19 @@ The format of the SELECT qualifier is:
 
 * By default, REORG selects all globals.
 
+.. _reorg-truncate:
+
 ~~~~~~~~~~
--TRUNCATE
+TRUNCATE
 ~~~~~~~~~~
 
-Specifies that REORG, after it has rearranged some or all of a region's contents, should attempt to reduce the size of the database file and return free space to the file system. The format of the TRUNCATE qualifier is:
+Specifies that REORG, after it has rearranged some or all of a region's contents, should attempt to reduce the size of the database file and return free space to the file system. TRUNCATE only applies to BG databases. The format of the TRUNCATE qualifier is:
 
 .. code-block:: none
 
-   -T[RUNCATE][=percentage]
+   -t[runcate][=percentage]
 
-The optional percentage (0-99) provides a minimum amount for the reclamation; in other words, REORG won't bother performing a file truncate unless it can give back at least this percentage of the file; the default (0) has it give back anything it can. TRUNCATE always returns space aligned with bit map boundaries, which fall at 512 database block intervals. TRUNCATE analyses the bit maps, and if appropriate, produces before image journal records as needed for recycled (formerly used) blocks; The journal extract of a truncated database file may contain INCTN records having the inctn opcode value 9 indicating that the specific block was marked from recycled to free by truncate.
-
-MUPIP REORG TRUNCATE recognizes the KEEP qualifier. The format of the KEEP qualifier is:
-
-.. code-block:: none
-
-   [-KEEP=blocks|percent%]
-
-The argument to KEEP specifies either a number of database blocks or a percentage (0-99), followed by a percent-sign (%), of the starting total blocks to exclude from truncation.
+The optional percentage (0-99) provides a minimum amount for the reclamation; in other words, REORG will not truncate the file unless it can release at least this percentage of the file; the default (0) has it release anything it can. TRUNCATE always returns space aligned with bit map boundaries, which fall at 512 database block intervals. TRUNCATE analyses the bit maps, and if appropriate, produces before image journal records as needed for recycled (formerly used) blocks. The journal extract of a truncated database file may contain INCTN records having the inctn opcode value 9 indicating that the specific block was marked from recycled to free by truncate.
 
 .. note::
    TRUNCATE does not complete if there is a concurrent online BACKUP or use of the snapshot mechanism, for example by INTEG.
