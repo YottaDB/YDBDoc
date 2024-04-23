@@ -51,7 +51,7 @@ For free (to you) support from members of communities who run widely available a
 ### Overview
 YottaDB r2.02 is a (_overview to be filled in prior to release_).
 
-In addition to enhancements and fixes made by YottaDB, r2.02 inherits numerous other enhancements and fixes from GT.M V7.0-002, V7.0-003, and V7.0-004, as described in the [Change History](#change-history).
+In addition to enhancements and fixes made by YottaDB, r2.02 inherits numerous other enhancements and fixes from GT.M V7.0-002, V7.0-003, V7.0-004, and V7.0-005, as described in the [Change History](#change-history).
 
 ### Platforms
 A platform is a combination of a CPU architecture and an operating system. A platform is Supported, Supportable, or Unsupported.
@@ -191,15 +191,54 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-004](http://ti
 | ([GTM-DE307442](#GTM-DE307442)) | Languages             | Handle error with USE LISTEN or CONNECT and IOERROR="T"                                            |
 | ([GTM-DE308470](#GTM-DE308470)) | Languages             | Preserve appropriate left-to-right evaluation within $SELECT() when using FULL_BOOLEAN compilation |
 
+<a name="gtmv70005"></a>
+
+YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-005](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html).
+
+| ID                              | Category              | Summary                                                                                       |
+|---------------------------------|-----------------------|-----------------------------------------------------------------------------------------------|
+| ([GTM-F134396](#GTM-F134396))   | Database              | More context for TPFAIL errors                                                                |
+| ([GTM-F135278](#GTM-F135278))   | Languages             | GT.M performs certain cases of string concatenation more efficiently                          |
+| ([GTM-F135288](#GTM-F135288))   | System Administration | Environment variables for huge pages and shared memory pinning                                |
+| ([GTM-F135319](#GTM-F135319))   | Other                 | Improve handling of stack limit detection and reporting                                       |
+| ([GTM-F135355](#GTM-F135355))   | Other                 | GT.M Internal signal DRVLONGJMP no longer exposed                                             |
+| ([GTM-F135370](#GTM-F135370))   | System Administration | Audit LKE facility                                                                            |
+| ([GTM-F135376](#GTM-F135376))   | System Administration | Automatically reestablish replication connection on detecting various network errors          |
+| ([GTM-F135382](#GTM-F135382))   | System Administration | Audit GDE facility                                                                            |
+| ([GTM-F135383](#GTM-F135383))   | System Administration | Audit DSE facility                                                                            |
+| ([GTM-F135406](#GTM-F135406))   | Database              | Trigger statistics for ZSHOW and ^%YGBLSTAT                                                   |
+| ([GTM-F135418](#GTM-F135418))   | System Administration | Extend restriction facility to ZLINK, ZRUPDATE & SET $ZROUTINES                               |
+| ([GTM-F170998](#GTM-F170998))   | Languages             | $ZAUDITLOG() function for possible application audit logging and audit GDE facility           |
+| ([GTM-F171004](#GTM-F171004))   | System Administration | GT.M audit logging puts standard input labeled with "tty=" and reports more error information |
+| ([GTM-F188829](#GTM-F188829))   | System Administration | MUPIP shell works with MUPIP Audit facility                                                   |
+| ([GTM-F188844](#GTM-F188844))   | Other                 | Auto-Relink performance Improvement                                                           |
+| ([GTM-DE309281](#GTM-DE309281)) | Other                 | Protect getaddrinfo and freeaddrinfo calls from interrupts                                    |
+| ([GTM-DE326986](#GTM-DE326986)) | System Administration | Improved management of shared memory associated with MUPIP INTEG -ONLINE                      |
+| ([GTM-DE327593](#GTM-DE327593)) | Database              | Fix name-level $ORDER(gvn,-1)                                                                 |
+| ([GTM-DE340860](#GTM-DE340860)) | System Administration | Clean up temporary backup files following multi-region backup copy errors                     |
+| ([GTM-DE345399](#GTM-DE345399)) | Database              | Prevent inappropriate TPFAIL with forth retry code of X                                       |
+
 ### Database
 
 * <a name="GTM-F132372"></a>The replication update process and its helper processes record statistics using the STATSDB facility for reporting using %YGBLSTAT. YottaDB reports the WRL, PRG, WFL, and WHE statistics as part of the %YGBLSTAT output. Previously, the replication update process and its helper processes did not record statistics for STATSDB. ([GTM-F132372](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197426456))
+
+* <a name="GTM-F134396"></a>TPFAIL errors include context similar to that provided for GVXXXFAIL errors. Previously such errors did not supply context beyond the retry codes. ([GTM-F134396](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F134396))
+
+* <a name="GTM-F135406"></a>YottaDB reports the STG, KTG and ZTG statistics as part of the ZSHOW and YGBLSTAT outputs. These accumulators provide additional details on invoked SET KILL and ZTRIGGER and triggers. Due to the nature of some statistics, their order of appearance in ZSHOW output may change. Previously, YottaDB did not record these statistics in ZSHOW and YGBLSTAT. ([GTM-F135406](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135406))
 
 * <a name="GTM-F135414"></a>By default, YottaDB proactively splits blocks when it detects significant restarts in an attempt to reduce overall restarts. MUPIP SET FILE <filename> PROBLKSPLIT=N where N is 0 disables proactive splitting, as do very large values of N. Values of N greater than 0 adjust the lower limit for the number of records below which YottaDB does not consider splitting a block. The default value of N is 5. While this is behavior is aimed at reducing restarts, because it reduces data density, it may also increase the number of blocks and even the tree depth. ([GTM-F135414](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637426))
 
 * <a name="GTM-DE270421"></a>YottaDB handles $ORDER(), $ZPREVIOUS(), $QUERY(), $NEXT(), and MERGE operations which traverse subscript-level mappings correctly. Previously, these operations could return gvns which should have been excluded by the global directory. In the case of MERGE, the target could contain data from excluded subtrees. ([GTM-DE270421](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-004_Release_Notes.html#GTM-DE270421))
 
+* <a name="GTM-DE327593"></a>The issue reported here was never in a YottaDB release, and the following appears here for completeness:
+
+  GT.M handles name-level $ORDER(gvn,-1)/$ZPREVIOUS(gvn) correctly when searching across subscript-level mappings in the global directory. In V7.0-004, $ORDER(gvn,-1), where gvn is an unsubscripted global, could return the same gvn instead of a previous global name or the null string. The workaround was to add global data to otherwise empty global maps between the specified gvn and its previous gvn, and optionally KILLing it afterwards, which leaves around sufficient residual information in the database to avoid the issue. ([GTM-DE327593](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-DE327593))
+
+* <a nane="GTM-DE345399"></a>TP transactions allocating blocks do not encounter TPFAIL errors with a fourth restart code of "X" due to a large number of such actions within a region. In r2.00, it would take a lifetime to encounter the issue but it has been completely eliminated. While user update patterns vary and we do not have the means to replicate them, our limited testing indicates the revision may result in a modest reduction in bit map related TPRESTARTs with code: a. In r1.24 through r1.38, such a TPFAIL could arise in a region with a high rate of TP induced block allocations and a long period of up time. The workaround was to monitor tp_hint and restart or reset the monitored value; contact your YottaDB support channel for additional information. ([GTM-DE345399](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-DE345399))
+
 ### Languages
+
+* <a name="GTM-F135278"></a>YottaDB avoids copying strings in some cases involving the concatenation operator. Certain concatenation patterns can see significant performance improvements. Previously, YottaDB sometimes unnecessarily recopied concatenation operands to the end of the heap (stringpool). ([GTM-F135278](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135278))
 
 * <a name="GTM-F135169"></a>The OPEN and USE commands for SOCKET devices support assigning characteristics maintained with the POSIX setsockopt() service using the OPTIONS deviceparameter for the newly created socket or the current socket.
 
@@ -281,6 +320,28 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-004](http://ti
 
   ([GTM-F157495](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F157495))
 
+* <a name="GTM-F170998"></a>The $ZAUDITLOG() function establishes a connection via a socket and sends its argument to a logger/listener process. It requires setting the AZA_ENABLE audit logging facility in the `$ydb_dist/restrict.txt` file. The format for the $ZAUDITLOG() function is:
+
+  ```
+  ZAUDITLOG(expr)
+  ```
+
+  - expr specifies the string to send for audit logging.
+  - $ZAUDITLOG() identifies its message with src=4, and like other YottaDB logging facilities, records the location of the YottaDB distribution, uid, euid, pid, tty, and the command / argument(s).
+  - A return of: TRUE (1) indicates successful logging, FALSE (0) indicates logging is not enabled; a trappable RESTRICTEDOP error indicates logging is enabled but not working.
+  - If LGDE is specified as an option for the AZA_ENABLE facility, GDE logs all commands. YottaDB ignores this option if specified with other A*_ENABLE audit logging facilities. When it fails to log a command, GDE issues a GDELOGFAIL error. The following table characterizes $ZAUDITLOG() and GDE audit logging behavior:
+
+   $ZAUDITLOG() / GDE logging Characteristics
+  | AZA_ENABLE | LGDE | Logging Success | GDE Audit Logging | $ZAUDITLOG() result |
+  |------------|------|-----------------|-------------------|---------------------|
+  | Yes        | Yes  | Yes             | Yes               | 1                   |
+  | Yes        | No   | Yes             | No                | 1                   |
+  | Yes        | Yes  | No              | GDELOGFAIL error  | RESTRICTEDOP error  |
+  | Yes        | No   | no              | No                | RESTRICTEDOP error  |
+  | No         | N/A  | N/A             | No                | 0                    |
+
+  Previously, YottaDB did not support the $ZAUDITLOG() function. ([GTM-F170998](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F170998))
+
 *<a name="GTM-DE201295"></a>SOCKET device OPEN better honors timeouts; similarly, USE for a SOCKET honors an implicit zero timeout. Note that very short timeouts, particularly zero (0), may be unsuitable for dealing with the timing of some network events, and thus may need adjustment to avoid timing out after this correction. Previously, these commands did not start their own timers to bound the operation, causing the CONNECT to only check for a timeout condition when some other process, or operating system, event interrupted the process. ([GTM-DE201295](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-004_Release_Notes.html#GTM-DE201295))
 
 * <a name="GTM-DE201378"></a>Operations that replace non-graphic characters with $[Z]CHAR() representations give a MAXSTRLEN error when the result would exceed 1MiB. Previously such operations ensured they had adequate space for the result, but could pass strings to other operations that might have no provision for dealing with strings longer than 1MiB. ([GTM-DE201378](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637455))
@@ -311,7 +372,7 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-004](http://ti
 
 * <a name="GTM-DE257948"></a>YottaDB accepts square-bracket expressions as synonyms for the standard vertical bars. Previously, YottaDB handled square-bracket expressions inappropriately, which could cause a fatal error. In addition, YottaDB detects and recovers from certain numeric overflow errors. Previously, YottaDB inappropriately handled such overflow errors when optimizing arithmetic expressions containing literals, which caused fatal errors. ([GTM-DE257948](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-DE257948))
 
-* <a name="GTM-DE276621"></a>The issue and fix reported here were never in a YottaDB release, and the following appears here for completeness:
+* <a name="GTM-DE276621"></a>The issue reported here was never in a YottaDB release, and the following appears here for completeness:
 
   The YottaDB compiler correctly handles lines with literal FALSE postconditionals. Due to a regression in V7.0-002, the compiler could encounter a segmentation violation (SIG-11) error when having to fetch a variable that earlier in the same line was the argument of a command with a literal FALSE postconditional. ([GTM-DE276621](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-DE276621))
 
@@ -331,6 +392,12 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-004](http://ti
 
 * <a name="GTM-F134692"></a>When MUPIP INTEG and MUPIP DUMPFHEAD arguments specify a region list, MUPIP processes regions in the listed order, or, for names expanded by wildcard ("*"), alphabetically. Previously, MUPIP DUMPFHEAD and MUPIP INTEG ignored any user-specified order of regions, and processed regions in FTOK order, which tends to change with changes in operational conditions within the underlying file system. ([GTM-F134692](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F134692))
 
+* <a name="GTM-F135288"></a>When the gtm_pinshm environment variable is defined and evaluates to a non-zero integer or any case-independent string or leading substring of TRUE or YES in a process creating shared memory, YottaDB attempts to pin such memory used for database global buffers, replication buffers, and routine buffers into physical memory. Hugepages are implicitly locked in physical memory, so YottaDB does not attempt to pin shared memory buffers backed by hugepages. gtm_pinshm does not pin memory used by online INTEG (integ snapshot). Pinning may not succeed due to insufficient physical memory and/or OS configuration. When the gtm_hugetlb_shm environment variable is defined and evaluates to a non-zero integer or any case-independent string or leading substring of TRUE or YES in a process creating shared memory, YottaDB attempts to back all such shared memory segments with huge pages, using the default huge page size. If huge pages cannot be used, GT.M tries to back the shared memory with base pages instead, and attempts to pin the shared memory if requested with gtm_pinshm. GT.M issues a SHMHUGETLB or SHMLOCK warning message to the system log when the system is unable to back shared memory with huge pages or is unable to pin shared memory to physical memory, respectively. Previously, YottaDB did not support the gtm_pinshm option to pin memory, and gtm_hugetlb_shm replaces the use of libhugetlbfs for huge page functions, so YottaDB no longer evaluates libhugetlbfs environment variables, e.g. HUGETLB_SHM, HUGETLB_VERBOSE, Setting HUGETLB* environment variables continues to work, but YottaDB will not be aware - a non-issue in practice - that hugepages are in use. [Linux] ([GTM-F135288](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135288))
+
+* <a name="GTM-F135370"></a>When the restriction file contains a line specifying AL_ENABLE, LKE establishes a connection, a via socket, to a logger/listener process, and sends all commands, designating src=5, and using the socket to the listener for audit logging. If sending succeeds, LKE executes the command. If the connection or the send fail, LKE issues a RESTRICTEDOP error and does not execute the command. AL_ENABLE supports TCP, TLS or UNIX socket types. By default, LKE commands execute without logging. Previously, LKE did not provide an audit logging option. ([GTM-F135370](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135370))
+
+* <a name="GTM-F135376"></a>YottaDB Replication resets replication connection and attempts to automatically reestablish connection on detecting various network errors. Previously, YottaDB replication server processes could shut down on encountering some network errors. ([GTM-F135376](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135376))
+
 * <a name="GTM-F135416"></a>MUPIP FREEZE ON operates while an online rollback is in progress. YottaDB now checks for contention and ensures online rollback appropriately releases the required resources and other database accesses wait for this to occur. Previously in rare cases, it might hang because of shared resource contention. ([GTM-F135416](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135416))
 
 * <a name="GTM-F135842"></a>When MUPIP BACKUP arguments specify a list, the utility processes regions in the listed order, or, for names expanded by wildcard ("*"), alphabetically. Previously, MUPIP BACKUP ignored any user-specified order of regions, and processed regions in FTOK order, which tends to change with changes in operational conditions within the underlying file system.([GTM-F135842](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637997))
@@ -339,9 +406,27 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-004](http://ti
 
 * <a name="GTM-F135381"></a>When the Audit MUPIP facility (AM_ENABLE) is enabled, MUPIP establishes a connection (via a UNIX/TCP/TLS socket) to a logger/listener process, and sends any MUPIP shell command through the socket to the listener for logging. If sending is successful, MUPIP executes the command. If the connection is not successful or sending of the command fails, then MUPIP produces an error and does not execute the command. When this facility is enabled, all commands typed at the MUPIP prompt (MUPIP>) produce the RESTRICTEDOP error. When this facility is disabled, which it is by default, MUPIP commands execute as usual. In addition, the APD_ENABLE facility displays the appropriate network error messages and exits the process gracefully. Previously, certain network errors could result in a segmentation fault without reporting the reason. ([GTM-F135381](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-004_Release_Notes.html#GTM-F135381))
 
+* <a name="GTM-F135382"></a>When LGDE is specified as an option for the AZA_ENABLE facility, GDE logs all commands. For example, an entry like the following in `$ydb_dist/restrict.txt` enables GDE logging via a local socket:
+
+  ```
+  AZA_ENABLE:LGDE:/path/to/sock/file/audit.sock
+  ```
+  
+  The AZA_ENABLE facility enables the use of the $ZAUDITLOG() function which GDE uses for logging commands. Refer to [GTM-F170998](#GTM-F170998) for information on the $ZAUDITLOG() function and for other possible use in application audit logging. Previously, GDE did not provide an audit logging option. ([GTM-F135382](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135382))
+
+* <a name="GTM-F135418"></a>The YottaDB restrictions facility recognizes ZLINK, ZRUPDATE and SET $ZROUTINES. When an explicit ZLINK (not auto-zlink), ZRUPDATE, or SET $ZROUTINES restriction conditions are configured, the restricted command issues a RESTRICTEDOP error message. Previously, the restrictions facility did not support ZLINK, ZRUPDATE, or SET $ZROUTINES. ([GTM-F135418](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135418))
+
+* <a name="GTM-F135383"></a>When the restriction file specifies AD_ENABLE, DSE establishes a connection via a socket, to a logger/listener process, and sends all commands, designating src=6, and using the socket to the listener for audit logging. If sending succeeds, DSE executes the command. If the connection or the send fail, DSE issues a RESTRICTEDOP error and does not execute the command. AD_ENABLE supports TCP, TLS or UNIX socket types. By default, DSE commands execute without logging. Previously, DSE did not provide an audit logging option. ([GTM-F135383](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135383))
+
 * <a name="GTM-F166755"></a>By default, MUPIP BACKUP DATABASE retries file copy operation once if the first attempt fails for a retriable reason; this is equivalent to RETRY=1. RETRY=0 prevents any retries, so if the copy fails MUPIP immediately reports an error. Additionally, any copy failure error messages include region information when displaying OS service error codes. Previously, while the default was equivalent to RETRY=1 that incorrectly meant one BACKUP attempt, RETRY=0 did not perform a backup, and error reports did not identify the region associated with the failure. ([GTM-F166755](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-004_Release_Notes.html#GTM-F166755))
 
 * <a name="GTM-F167559"></a>MUPIP CREATE creates GT.M V6.x (YottaDB r1.x) database files when the environment variable ydb_db_create_ver is defined as [V]6, or when the command line specifies `-v6`. The `-nov6` command line option allowing overrides a ydb_db_create_ver and creates a GT.M V7.x (YottaDB r2.x) database file. This means r2.02 can operate seamlessly with YottaDB r1.x (GT.M V6.x) databases. r2.00 did not have this support. ([GTM-F167559](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-004_Release_Notes.html#GTM-F167559))
+
+* <a name="GTM-F171004"></a>YottaDB audit logging facilities use `tty` to label the standard input of the process. YottaDB places `tty=ttyname` before the command field in all audit log messages. If the standard input at process startup is not a terminal device, YottaDB logs `tty=0`. In addition, the audit facilities check for errors at the time of closing a socket / terminating a connection and report them with a YDB-E-SOCKCLOSE message to the operator log. The audit logger/listener sample programs (downloadable from the A&O Guide) switch their log files after receiving a SIGHUP signal. The switched log file has a suffix "_%Y%j%H%M%S" (yearjuliendayhoursminutesseconds) and the naming convention is similar to what YottaDB uses for switching journal files. YottaDB recommends periodically switching logger files. As deleting an active audit log file makes it lost to new processes, while existing processes continue to use it, YottaDB recommends against taking such a step. The sample programs have a Makefile. Previously, the audit log facilities did not provide tty information, did not check and report on errors during socket close, the logger/listener programs did not implement a log file switching mechanism, and those programs had no Makefile. ([GTM-F171004](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F171004))
+
+* <a name="GTM-F188829"></a>The previous behavior reported here was never in a YottaDB release, and the following appears here for completeness:
+
+  When the restriction file contains a line specifying AM_ENABLE, commands typed at the MUPIP prompt (MUPIP>) are audit logged and executed the same as MUPIP shell commands. Note that MUPIP returns to the shell after each command. Previously, when this facility was enabled, all commands typed at the MUPIP prompt (MUPIP>) produced the RESTRICTEDOP error. ([GTM-F188829](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F188829))
 
 * <a name="GTM-DE201305"></a>When the Database segment to file mapping uses an environment variable, and the environment variable is not defined, MUPIP BACKUP uses the environment variable name itself in constructing the file name, as does MUPIP CREATE. Previously MUPIP CREATE created database with undefined environment variable name as the database name, but MUPIP BACKUP failed to backup that existing database. ([GTM-DE201305](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637290))
 
@@ -350,6 +435,10 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-004](http://ti
 * <a name="GTM-DE201825"></a>The `ydbinstall` script checks removes any `semsstat2`, `ftok`, and `getuid` files if they exist from a prior installation. YottaDB releases starting from r1.36 no longer use these programs. Previously, `ydbinstall` did not remove these obsolete executable files. Note that YottaDB recommends installing each YottaDB release in its own directory, and not overwriting an existing release. Installing in an existing directory must be explicitly specified with the `--ovewrite-existing` command line option. ([GTM-DE201825](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637999))
 
 * <a name="GTM-DE294185"></a>The Receiver Server continues to operate after an unexpected termination of a TLS connection. Previously, and more frequently with OpenSSL 3.0, the Receiver Server would issue a TLSIOERR error message and terminate in response to network disruptions. ([GTM-DE294185](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-DE294185))
+
+* <a name="GTM-DE326986"></a>YottaDB processes detach from shared memory associated with MUPIP INTEG snapshots correctly. Previously, relatively idle YottaDB processes could remain attached to such shared memory segments on unjournaled regions or when the journal file switched while the snapshot was active, which prevented YottaDB process rundown from removing shared memory. The workaround was to use a subsequent MUPIP RUNDOWN. ([GTM-DE326986](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-DE326986))
+
+* <a name="GTM-DE340860"></a>MUPIP BACKUP does not leave temporary files when there in an error during the copy phase for a multi-region backup. Previously, MUPIP BACKUP incorrectly left temporary files when there was an error during the copy phase for any region except the first. ([GTM-DE340860](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-DE340860))
 
 ### Other
 
@@ -373,7 +462,11 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-004](http://ti
 
 * <a name="GTM-F135313"></a>When an event interrupts a POSIX fallocate system call used for database file creation or extension with NODEFER_ALLOCATE, YottaDB retries the call. Previously, such an interruption resulted in a PREALLOCATEFAIL message. ([GTM-F135313](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135313))
 
+* <a name="GTM-F135319"></a>When a single operation exceeds both the STACKCRIT and STACKOFLOW limits, YottaDB issues a STACKCRIT message to the operator log, and exits with a STACKOFLOW error. Note this condition is fatal and not trappable. If this occurs, look into the ydb_mstack_crit and ydb_mstack_size environment variables. Previously, when this occurred, the process failed with a segmentation violation (SIG-11). ([GTM-F135319](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135319))
+
 * <a name="GTM-F135334"></a>The YottaDB reference encryption plugin correctly reports OpenSSL messages when a process reports an error message from either a TLS connection or database encryption. Previously processes leveraging the reference encryption plugin with OpenSSL could see incorrect (potentially empty) error messages. This was only seen in a development environment and never reported by a user. ([GTM-F135334](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135334))
+
+* <a name="GTM-F135355"></a>YottaDB prevents internal error ERR_DRVLONGJMP from becoming user visible after failure to open a statsDB. Previously, there were cases in which the error's mnemonic could be found in $ZSTATUS following attempts to open statsDBs in nonexistent directories. ([GTM-F135355](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135355))
 
 * <a name="GTM-F135415"></a>The Source Server defers a TLS renegotiation when a prior TLS renegotiation is pending. Previously, the Source Server logged the REPLWARN message, closed the replication connection, and attempted to re-establish the replication connection with the Receiver Server. ([GTM-F135415](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637428))
 
@@ -383,9 +476,13 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-004](http://ti
 
   Replication encrypted using the YottaDB encryption plugin may perform TLSv1.2 re negotiations when the Receiver Server's plugin was compiled with OpenSSL 3.0+. Previously, these would fail with the error message "no renegotiation". ([GTM-F158404](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-004_Release_Notes.html#GTM-F158404))
 
+* <a name="GTM-F188844"></a>When configured for auto-relink, YottaDB uses a lightweight operation to validate an existing relinkctl file. Previously, every YottaDB process using a relinkctl file would use a heavyweight operation to validate it, which added to routine ZLINK latency on the process' first lookup in the auto-relink directory. In particular, this may have resulted in visible latency when starting a large number of JOB processes if the JOB routine search included one or more auto-relink directories. ([GTM-F188844](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F188844))
+
 * <a name="GTM-DE201392"></a>YottaDB provides protection from asynchronous events during routine management. Previously, asynchronous events like MUPIP STOP at inopportune times could cause a segmentation violation (SIG-11). This was only seen in a development environment and was never reported by a user. ([GTM-DE201392](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637472))
 
 * <a name="GTM-DE222430"></a>YottaDB handles SIGHUP appropriately when $PRINCIPAL has HUPENABLE set; in r2.00 owing to changes in deferred event handling, error handing could encounter a GTMASSERT2. In addition, a TERMHANGUP error implicitly sets the device to NOHUPENABLE, so should a process anticipate multiple disconnects/hangups, it should explicitly issue a USE $PRINCIPAL:HUPENABLE. Also, ZSHOW "D" displays the HUPENABLE state for $PRINCIPAL. ([GTM-DE222430](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637998))
+
+* <a name="GTM-DE309281"></a>YottaDB handles the interruption of certain socket operations correctly. Previously, asynchronous events like MUPIP STOP while creating a socket connection could cause a segmentation violation (SIG-11). This was only seen in a development environment and was never reported by a user. ([GTM-DE309281](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-DE309281))
 
 ## Additional Information
 
@@ -411,6 +508,12 @@ Run Time Error: YottaDB was unable to send the to-be-logged activitiy by XXXX to
 
 Action: Check to make sure that YottaDB is able to successfully connect to the logger program. Check syslog or additional messages for more information.
 
+**GDELOGFAIL**, GDE failed to log command. Check operator log for more information
+
+GDE Error: This message appears when LGDE is specified with the AZA_ENABLE facility and there is a problem with logging the GDE commands. This message also prevents the execution of the GDE command.
+
+Action: Review the operator log for the exact reason of the failure to log the GDE command
+
 **MALLOCCRIT**, Memory allocation critical due to request for bbbb bytes from aaaa
 
 All YottaDB Components Warning: Indicates a YottaDB process exceeded the memory allocation threshold established with $ydb_malloc_limit / $ZMALLOCLIM with a request for bbbb bytes. The address aaaa gives a location in a YottaDB executable, likely only useful to your YottaDB support channel.
@@ -431,13 +534,41 @@ Action: If the check finds no problem or can correct any abnormality it finds (l
 
 As noted in ([GTM-DE201386](#GTM-DE201386)), YottaDB already protects itself from overly long arguments, and will never report this error. The following appears here for completeness.
 
-  **VIEWARGTOOLONG**, The argument length LLLL to VIEW command vvvv exceeds the maximum mmmm
+**SOCKCLOSE**, Error closing socket: (errno = aaaa) xxxx
 
-  Run Time Error: An argument to the VIEW command vvvv has a length LLLL bytes that exceeds the maximum supported length of mmmm.
+Operator log/All YottaDB Components Error: aaaa contains the OS error code and xxx indicates information about the error that occured while closing a socket connection for the process attempting to log a command to the audit logging facility.
 
-  Action: Reduce the length of the VIEW command argument to no more than mmmm bytes.
+Action: Review the message to determine whether the logger programs are running or whether a change is required in the configuration of your audit logging facility.
+
+**VIEWARGTOOLONG**, The argument length LLLL to VIEW command vvvv exceeds the maximum mmmm
+
+Run Time Error: An argument to the VIEW command vvvv has a length LLLL bytes that exceeds the maximum supported length of mmmm.
+
+Action: Reduce the length of the VIEW command argument to no more than mmmm bytes.
 
 ### Revised messages
+
+**STACKCRIT**, Stack space critical
+
+Run Time Error: This indicates that the process has consumed almost all of the available stack space.
+
+Action: If you do not take immediate action to reduce stack usage, YottaDB is likely to produce a STACKOFLOW error, which terminates the process. There are two common causes:
+
+ * Infinite recursion. The most common cause of infinite recursion is a buggy error trap. If you do not take immediate action to reduce your stack, YottaDB is likely to produce a STACKOFLOW error, which terminates the process. Examine the stack with ZSHOW. Trim the stack using QUIT, ZGOTO, HALT or ZHALT. Note that if a single application call generates a stack frame larger than the stack space between the STACKCRIT and STACKOFLOW boundaries, the process puts a STACKCRIT message in the operator log, but processes the STACKOFLOW and terminates, so the application gets no chance to intervene and handle the error. Look into the ydb_mstack_crit_threshold and ydb_mstack_size environment variables.
+
+ * Application level memory leak caused by NEW of local variables in a loop. Correct the application code to NEW variables outside any loop, and replace the NEW inside loops with KILL.
+
+**STACKOFLOW**, Stack overflow
+
+Run Time Fatal: This indicates that the process required more stack space than was available in memory.
+
+Action: Reduce the stack when you get a STACKCRIT error. This error terminates the process. Note that if a single application call generates a stack frame larger than the stack space between the STACKCRIT and STACKOFLOW boundaries, the process puts a STACKCRIT message in the operator log, but processes the STACKOFLOW and terminates, so the application gets no chance to intervene and handle the error. Look into the ydb_mstack_crit_threshold and ydb_mstack_size environment variables.
+
+**TPFAIL**, Transaction COMMIT failed
+
+Run Time Error: This indicates that YottaDB attempted to process this transaction four times, but encountered an error every time. Additional accompanying messages indicate details of the failure.
+
+Action: Report this database error to the group responsible for database integrity at your operation.
 
 ### Obsolete Messages
 
