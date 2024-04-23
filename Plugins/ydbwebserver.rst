@@ -487,20 +487,84 @@ To transfer a large amount of data, a YottaDB global variable may be preferable,
     If ``httprsp`` begins with a ``^``, it's interpreted as a global. If you want to send a literal ``^`` in your data, you can do 
     that by setting ``httprsp(1)`` to ``^rest_of_data`` and not setting ``httprsp``.
 
-For example, consider the ``xml`` label in the ``%ydbwebapi`` routine, which uses a global variable:
+``httprsp`` can also be used to send chunked-encoded data as well. Here's how you do it:
 
 .. code-block::
 
-    xml ; GET /test/xml XML sample
-        set httprsp("mime")="text/xml"
-        set httprsp(1)="<?xml version=""1.0"" encoding=""UTF-8""?>"
-        set httprsp(2)="<note>"
-        set httprsp(3)="<to>Tovaniannnn</to>"
-        set httprsp(4)="<from>Jani</from>"
-        set httprsp(5)="<heading>Reminders</heading>"
-        set httprsp(6)="<body>Don't forget me this weekend!</body>"
-        set httprsp(7)="</note>"
-        QUIT
+    1 set httprsp("mime")="text/plain; charset=utf-8" ; Character set of the return URL
+    2 set httprsp("chunked",1)=$name(data1)
+    3 set httprsp("chunked",2)=$name(^data2)
+    4 set httprsp("chunked",3)=$name(^data3("foo"))
+    5 set httprsp("chunked",4)="chunkcallback1^myroutine"
+    6 set httprsp("chunked",5)="chunkcallback2^myroutine"
+
+The important part to note here is that to send chunked data, you set
+``httprsp("chunked",n)`` to something. The example above sends 5 chunks
+(actually, the last one sends multiple chunks, so it's more than 5).
+
+Lines 2-4 are mostly the same: we send data in a local variable or
+global variable. In this case, the chunk calculation is automatically
+done, and as a developer, you don't need to do anything else.
+
+Things get more interesting with lines 5 and 6. These are routine
+callbacks, allowing you to custom produce chunks dynamically:
+
+Here's ``chunkcallback1^myroutine``, which sends a single chunk:
+    
+.. code-block::
+
+    new oldio set oldio=$io
+    new file set file="/mwebserver/r/_ydbwebtest.m"
+    ;
+    ; Get file size
+    open "D":(shell="/bin/sh":command="stat -c%s "_file:parse):0:"pipe"
+    use "D"
+    new size read size
+    use oldio close "D"
+    ;
+    ; Send hex size
+    do:httplog>2 stdout^%ydbwebutils("Sending chunk with size "_size)
+    new hexsize set hexsize=$$dec2hex^%ydbwebutils(size)
+    do w^%ydbwebrsp(hexsize_$char(13,10))
+    ;
+    ; read and send file
+    ; Fixed prevents Reads to terminators on SD's. CHSET makes sure we don't analyze UTF.
+    open file:(rewind:readonly:fixed:chset="M")
+    use file
+    ; hang simulates that we are sending lots of data slowly
+    new x for  read x#4079:0 use oldio do w^%ydbwebrsp(x) hang .01 use file quit:$zeof
+    use oldio close file
+    ; now send end of this chunk (CRLF)
+    do w^%ydbwebrsp($char(13,10))
+    quit
+
+Here's ``chunkcallback2^myroutine``, which sends multiple chunks. Note the
+use of ``sendonechunk^%ydbwebrsp``, which is provided for the convenience of the
+user. All you have to do is get data and call ``sendonechunk`` as many
+times as you want.
+
+.. code-block::
+
+    new oldio set oldio=$io
+    new file set file="/mwebserver/r/_ydbwebtest.m"
+    ;
+    ; Get file size (for verifying that we sent the full file)
+    open "D":(shell="/bin/sh":command="stat -c%s "_file:parse):0:"pipe"
+    use "D"
+    new fullsize read fullsize
+    use oldio close "D"
+    ;
+    ; read and send file in chunks
+    ; Fixed prevents Reads to terminators on SD's. CHSET makes sure we don't analyze UTF.
+    open file:(rewind:readonly:fixed:chset="M":nowrap)
+    use file
+    new incsize,size set incsize=0
+    new x for  read x#4079:0 quit:$zeof  set size=$$sendonechunk^%ydbwebrsp(x),incsize=incsize+size
+    use oldio close file
+    do:httplog>2 stdout^%ydbwebutils("full size: "_fullsize_" sent size: "_incsize)
+    if fullsize'=incsize set $ecode=",U-signal-error,"
+    quit
+
 
 ++++++++++++
 POST and PUT
@@ -676,6 +740,40 @@ The server in this case returns a 404 error as expected. Now, try to ``PUT`` to 
         {"apiVersion":1.1,"error":{"code":404,"errors":[{"errname":"Unknown error","message":"150379354,filesys+12^%ydbwebapi,%YDB-E-DEVOPENFAIL, Error opening \/tmp\/text,%SYSTEM-E-ENO2, No such file or directory","reason":500},{"errname":"Not Found","message":"Not Found","reason":404}],"request":"PUT \/text ","toperror":"Not Found"}}
 
 This also results in a 404 error, as expected.
+
++++++++++++++++++++++++++++++++++++++++
+POST and PUT with Chunked-Encoded Input
++++++++++++++++++++++++++++++++++++++++
+The ``POST``/``PUT`` method support a second processing routine, specific to only processing Chunked-encoded input. The reason this exists is that it is possible for chunked-encoded data to be very large; this lets the user read each chunk at a time into a global, as it's possible processing the entire request in memory may be impossible. ``_ydbweburl.m`` will now look like this:
+
+.. code-block::
+
+    ;;POST test/postchunkedinc chunkedpostinc^%ydbwebapi chunkCallback=chunkedpostincread^%ydbwebapi
+
+In this case, ``chunkedpostinc^%ydbwebapi`` will process the final data (as before), but ``chunkedpostincread^%ydbwebapi`` will process each chunk as it is being received. Here's how both are implemented, starting with ``chunkedpostincread``
+
+.. code-block::
+
+    chunkedpostincread ; Incremental read of each chunk
+        merge ^chunkedread($increment(^chunkedread))=httpreq("body")
+        quit
+        ;
+    chunkedpostinc ; POST /text/postchunkedinc Incremental Read Chunk Test
+        new charcount set charcount=0
+        set httprsp("mime")="text/plain; charset=utf-8" ; Character set of the return URL
+        new i,j for i=0:0 set i=$order(^chunkedread(i)) quit:'i  for j=0:0 set j=$order(^chunkedread(i,j)) quit:'j  set charcount=charcount+$zlength(^chunkedread(i,j))
+        kill ^chunkedread
+        set httprsp=charcount_" bytes received "_$char(13,10)
+        quit
+        ;
+
+The end result with curl shows this:
+
+.. code-block::
+
+     $ curl --header "Transfer-Encoding: chunked" localhost:9080/test/postchunkedinc -d @757.4+SHORTCUTS.zwr
+     1010720 bytes received
+
 
 .. _testing:
 
