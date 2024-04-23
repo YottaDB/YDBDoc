@@ -42,7 +42,7 @@ A YottaDB distribution comes with many scripts that set up a default YottaDB env
 
 * **ydb** (**gtm**): The :code:`ydb` script starts YottaDB after sourcing :code:`ydb_env_set`.
 
-* **gdedefaults**: a `GDE <./gde.html>`_ command file that specifies the default values for database characteristics defined by GDE.
+* **gdedefaults**: a `GDE <gde.html>`_ command file that specifies the default values for database characteristics defined by GDE.
 
 These scripts are designed to give you a friendly out-of-the-box YottaDB experience. Even though you can set up an environment for normal YottaDB operation without using these scripts, going through these scripts will help you understand how to configure environments.
 
@@ -244,8 +244,6 @@ Environment Variables
 
 .. _env-vars:
 
-(Last updated: `r1.38 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.38>`_)
-
 YottaDB supports both ydb_* environment variables and GT.M environment variables (referred to here as gtm*, though some are upper case). If the ydb* environment variable is not defined, but the gtm* environment variable is is, the latter is used. If the ydb* environment variable and the gtm* environment variable are both defined, the ydb* environment variable value takes precedence.
 
 Environment variables of the form ydb_xc_<package> are used to point to `external call tables <../ProgrammersGuide/extrout.html#using-external-calls>`_; the GT.M names of these variables are of the form GTMXC_<package>.
@@ -415,7 +413,7 @@ ydb_cur_gbldir was added to YottaDB effective release `r1.36 <https://gitlab.com
 ++++++++++++++++++++++++++++++
 ydb_dbfilext_syslog_disable
 ++++++++++++++++++++++++++++++
-**ydb_dbfilext_syslog_disable (gtm_dbfilext_syslog_disable)** Controls whether database file extensions are logged in the syslog or not. If the environment variable is set to a non-zero numeric value or case-independent string or leading substrings of TRUE or YES, database file extensions are not logged to the syslog.
+**ydb_dbfilext_syslog_disable (gtm_dbfilext_syslog_disable)** Controls whether database file extensions are logged in the syslog or not. If the environment variable is set to a non-zero numeric value or case-independent string or leading substring of TRUE or YES, database file extensions are not logged to the syslog.
 
 +++++++++++++
 ydb_dbglvl
@@ -565,12 +563,20 @@ ydb_gbldir_translate
 ++++++++++++++
 ydb_gdscert
 ++++++++++++++
-**ydb_gdscert (gtm_gdscert)** specifies the initial setting that controls whether YottaDB processes should test updated database blocks for structural damage. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", YottaDB performs a block-level integrity check on every block as a process commits it. Within a running process, `VIEW "GDSCERT":value <../ProgrammersGuide/commands.html#gdscert-value>`_ controls this setting. By default, YottaDB does not check database blocks for structural damage, because the impact on performance is usually unwarranted.
+**ydb_gdscert (gtm_gdscert)** specifies the initial setting that controls whether YottaDB processes should test updated database blocks for structural damage. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", YottaDB performs a block-level integrity check on every block as a process commits it. Within a running process, `VIEW "GDSCERT":value <../ProgrammersGuide/commands.html#gdscert-value>`_ controls this setting. By default, YottaDB does not check database blocks for structural damage, because the impact on performance is usually unwarranted.
+
+.. _ydb-hugetlb-shm:
+
+++++++++++++++++
+ydb_hugetlb_shm
+++++++++++++++++
+
+**ydb_hugetlb_shm (gtm_hugetlb_shm)** specifies the initial value that determines whether a YottaDB process should use hugepages to back shared memory. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES" in a YottaDB process creating shared memory, YottaDB attempts to back all such shared memory segments with hugepages, using the default hugepage size. If hugepages cannot be used, YottaDB backs the shared memory with base pages instead, and attempts to pin the shared memory if requested with $ydb_pinshm.
 
 +++++++++++++++
 ydb_hupenable
 +++++++++++++++
-**ydb_hupenable (gtm_hupenable)** specifies the initial value that determines whether a YottaDB process should recognize a disconnect signal from a PRINCIPAL device that is a terminal. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has disconnected. Within a running process, `USE $PRINCIPAL:[NO]HUP[ENABLE] <../ProgrammersGuide/ioproc.html#hupenable>`_ controls this behavior. By default, YottaDB ignores such a signal, but a process that ignores the signal may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the syslog.
+**ydb_hupenable (gtm_hupenable)** specifies the initial value that determines whether a YottaDB process should recognize a disconnect signal from a PRINCIPAL device that is a terminal. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has disconnected. Within a running process, `USE $PRINCIPAL:[NO]HUP[ENABLE] <../ProgrammersGuide/ioproc.html#hupenable>`_ controls this behavior. By default, YottaDB ignores such a signal, but a process that ignores the signal may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the syslog.
 
 ydb_hupenable was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
 
@@ -667,10 +673,14 @@ ydb_msgprefix
 ++++++++++++++++
 **ydb_msgprefix** specifies a prefix for YottaDB messages generated by a process, with the prefix defaulting to "YDB", e.g., YDB-I-DBFILEXT. Previously, the prefix was always "GTM". A value of "GTM" retains the previous format.
 
-++++++++++++++++++
-ydb_mstack_crit
-++++++++++++++++++
-**ydb_mstack_crit (gtm_mstack_crit)** specifies an integer between 15 and 95 defining the percentage of the stack which should be used before YottaDB emits a STACKCRIT warning. If the value is below the minimum or above the maximum, YottaDB uses the minimum or maximum respectively. The default is 90.
+.. _ydb-mstack-crit-threshold:
+
+++++++++++++++++++++++++++
+ydb_mstack_crit_threshold
+++++++++++++++++++++++++++
+**ydb_mstack_crit_threshold (gtm_mstack_crit_threshold)** specifies an integer between 15 and 95 defining the percentage of the stack which should be used before YottaDB emits a STACKCRIT warning. If the value is below the minimum or above the maximum, YottaDB uses the minimum or maximum respectively. The default is 90.
+
+.. _ydb-mstack-size:
 
 ++++++++++++++++++
 ydb_mstack_size
@@ -687,7 +697,7 @@ ydb_mupjnl_parallel
 ++++++++++++++++
 ydb_nocenable
 ++++++++++++++++
-**ydb_nocenable (gtm_nocenable)** specifies whether the $principal terminal device should ignore <CTRL-C> or use <CTRL-C> as a signal to place the process into direct mode; a USE command can modify this device characteristic. If ydb_nocenable is defined and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", $principal ignores <CTRL-C>. If ydb_nocenable is not set or evaluates to a value other than a positive integer or any case-independent string or leading substrings of "FALSE" or "NO", <CTRL-C> on $principal places the process into direct mode at the next opportunity (usually at a point corresponding to the beginning of the next source line).
+**ydb_nocenable (gtm_nocenable)** specifies whether the $principal terminal device should ignore <CTRL-C> or use <CTRL-C> as a signal to place the process into direct mode; a USE command can modify this device characteristic. If ydb_nocenable is defined and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", $principal ignores <CTRL-C>. If ydb_nocenable is not set or evaluates to a value other than a positive integer or any case-independent string or leading substring of "FALSE" or "NO", <CTRL-C> on $principal places the process into direct mode at the next opportunity (usually at a point corresponding to the beginning of the next source line).
 
 +++++++++++++
 ydb_nofflf
@@ -741,6 +751,11 @@ ydb_patnumeric
 ydb_pattern_file/ydb_pattern_table
 +++++++++++++++++++++++++++++++++++++
 **ydb_pattern_file (gtm_pattern_file)** and **ydb_pattern_table (gtm_pattern_table)** specify alternative patterns for the pattern (?) syntax. Refer to the `Internationalization chapter in the Programmer's Guide <../ProgrammersGuide/internatn.html>`_ for additional information.
+
++++++++++++
+ydb_pinshm
++++++++++++
+**ydb_pinshm (gtm_pinshm)** specifies whether a YottaDB process should attempt to pin shared memory it creates into physical memory. If it is defined and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES" in a process creating shared memory, YottaDB attempts to pin shared memory used for database global buffers, replication buffers, and routine buffers into physical memory. As hugepages are implicitly locked in physical memory, YottaDB does not attempt to pin shared memory buffers backed by hugepages. $ydb_pinshm does not pin memory used by online INTEG (integ snapshot). Pinning may not succeed due to insufficient physical memory and/or OS configuration. By default, YottaDB does not attempt to pin shared memory.
 
 ++++++++++++++++
 ydb_poollimit
@@ -1002,7 +1017,7 @@ ydb_zlib_cmp_level
 +++++++++++++++++++
 ydb_zquit_anyway
 +++++++++++++++++++
-**ydb_zquit_anyway (gtm_zquit_anyway)** specifies whether the code of the form QUIT <expr> execute as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT, where <tmp> is a temporary local variable in the YottaDB runtime system that is not visible to application code. This setting is a run-time setting, rather than a compiler-time setting. If ydb_zquit_anyway is defined and evaluates to 1 or any case-independent string or leading substrings of "TRUE" or "YES", code of the form QUIT <expr> executes as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT. If ydb_zquit_anyway is not defined or evaluates to 0 or any case-independent string or leading substrings of "FALSE" or "NO", YottaDB executes QUIT <expr> as specified by the standard.
+**ydb_zquit_anyway (gtm_zquit_anyway)** specifies whether the code of the form QUIT <expr> execute as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT, where <tmp> is a temporary local variable in the YottaDB runtime system that is not visible to application code. This setting is a run-time setting, rather than a compiler-time setting. If ydb_zquit_anyway is defined and evaluates to 1 or any case-independent string or leading substring of "TRUE" or "YES", code of the form QUIT <expr> executes as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT. If ydb_zquit_anyway is not defined or evaluates to 0 or any case-independent string or leading substring of "FALSE" or "NO", YottaDB executes QUIT <expr> as specified by the standard.
 
 ++++++++++++
 ydb_zstep
@@ -1040,7 +1055,7 @@ Always set the same value of $ydb_tmp for all processes using the same YottaDB v
 .. _config-op-ydb-unicode:
 
 -------------------------------------------------------------------------
- Configuring and operating YottaDB with Unicode™ support (optional) for M
+Configuring and operating YottaDB with Unicode™ support (optional) for M
 -------------------------------------------------------------------------
 
 Data is stored in a database as byte sequences, and the database is agnostic about the interpretation of those byte sequences as characters. Mapping between bytes and characters, i.e., treating the bytes as single-byte characters or multi-byte characters, is done by application software. Whether to install YottaDB with Unicode support depends on applicate code.
@@ -1054,7 +1069,7 @@ Running YottaDB
 Refer to the `M Programmers Guide <../ProgrammersGuide/index.html>`_ to run YottaDB in M mode, and the `Multi-Language Programmers Guide <../MultiLangProgGuide/index.html>`_ to run YottaDB programs.
 
 --------------------------------------------------
- Configuring hugepages for YottaDB on Linux
+Configuring hugepages for YottaDB on Linux
 --------------------------------------------------
 
 Hugepages are a Linux feature that may improve the performance of YottaDB applications in production. Hugepages create a single page table entry for a large block (typically 2MiB) of memory in place of hundreds of entries for many smaller (typically 4KiB) blocks. This reduction of memory used for page tables frees up memory for other uses, such as file system caches, and increases the probability of TLB (translation lookaside buffer) matches - both of which can improve performance. The performance improvement related to reducing the page table size becomes evident when many processes share memory as they do for global buffers, journal buffers, and replication journal pools. Configuring hugepages on Linux may help improve:
@@ -1069,7 +1084,7 @@ Hugepages are a Linux feature that may improve the performance of YottaDB applic
 
 While YottaDB recommends you configure hugepages for shared memory, you need to evaluate whether or not configuring hugepages for process-private memory is appropriate for your application. Having insufficient hugepages available during certain commands (for example, a `JOB <../ProgrammersGuide/commands.html#job>`_ command - see complete list below) can result in a process terminating with a SIGBUS error. This is a current limitation of Linux. Before you use hugepages for process-private memory on production systems, YottaDB recommends that you perform appropriate peak load tests on your application and ensure that you have an adequate number of hugepages configured for your peak workloads or that your application is configured to perform robustly when processes terminate with SIGBUS errors.
 
-The following YottaDB features fork processes and may generate SIGBUS errors when hugepages are not available - JOB, `OPEN <../ProgrammersGuide/commands.html#open>`_ a `PIPE device <../ProgrammersGuide/ioproc.html#using-pipe-devices>`_, `ZSYSTEM <../ProgrammersGuide/commands.html#zsystem>`_, interprocess signaling that requires the services of :code:`gtmsecshr` when :code:`gtmsecshr` is not already running, SPAWN commands in `DSE <./dse.html>`_, `GDE <./gde.html>`_, and `LKE <mlocks.html>`_, argumentless `MUPIP RUNDOWN <./dbmgmt.html#rundown>`_, and `replication <./dbrepl.html>`_-related MUPIP commands that start server processes and/or helper processes. Should increasing the available hugepages require a reboot, an interim workaround is to unset the environment variable HUGETLB_MORECORE for YottaDB processes until you are able to reboot or otherwise make available an adequate supply of hugepages.
+The following YottaDB features fork processes and may generate SIGBUS errors when hugepages are not available - JOB, `OPEN <../ProgrammersGuide/commands.html#open>`_ a `PIPE device <../ProgrammersGuide/ioproc.html#using-pipe-devices>`_, `ZSYSTEM <../ProgrammersGuide/commands.html#zsystem>`_, interprocess signaling that requires the services of :code:`gtmsecshr` when :code:`gtmsecshr` is not already running, SPAWN commands in `DSE <dse.html>`_, `GDE <gde.html>`_, and `LKE <mlocks.html>`_, argumentless `MUPIP RUNDOWN <./dbmgmt.html#rundown>`_, and `replication <./dbrepl.html>`_-related MUPIP commands that start server processes and/or helper processes. Should increasing the available hugepages require a reboot, an interim workaround is to unset the environment variable HUGETLB_MORECORE for YottaDB processes until you are able to reboot or otherwise make available an adequate supply of hugepages.
 
 Consider the following example of a memory map report of a Source Server process running at peak load:
 
@@ -1095,13 +1110,13 @@ Using Hugepages
 +======================================================================+=======================================================================================================================================+
 | A CPU running a Linux kernel with hugepages enabled.                 | All currently Supported Linux distributions appear to support hugepages; to confirm, use the command:                                 |
 |                                                                      | :code:`grep hugetlbfs /proc/filesystems` which should report: :code:`nodev hugetlbfs`. If it does not, refer to your Linux            |
-|                                                                      | distribution's documentation to make it available for use.                                                                            |
+|                                                                      | distribution's documentation to make hugepages available for use.                                                                     |
 +----------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
 | A sufficient number of hugepages available.                          | To reserve hugepages boot Linux with the :code:`hugepages=<num_pages>` kernel boot parameter; or, shortly after bootup when           |
 |                                                                      | unfragmented memory is still available, with the command: :code:`hugeadm --pool-pages-min DEFAULT:<num_pages>`.                       |
 |                                                                      | For subsequent on-demand allocation of hugepages, use: :code:`hugeadm --pool-pages-max DEFAULT:<num_pages>`                           |
 |                                                                      | These delayed (from boot) actions do not guarantee availability of the requested number of hugepages; however, they are safe as, if   |
-|                                                                      | a sufficient number of hugepages isnot available, Linux simply uses traditional sized pages.                                          |
+|                                                                      | a sufficient number of hugepages is not available, Linux simply uses traditional sized pages.                                         |
 +----------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------+
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1111,16 +1126,26 @@ Using Hugepages for Shared Memory
 To use hugepages for shared memory (journal buffers, replication journal pool, global buffers and M code executing from shared memory):
 
 
-* Permit a group used by YottaDB processes to use hugepages with the following command, which requires root privileges:
+* Permit YottaDB processes to use hugepages for shared memory segments (YottaDB recommends option 1 below, since the ext4 and xfs filesystems both support extended attributes) using one of the following, both of which require administrative privileges:
 
-    .. code-block:: bash
+  1. Set the CAP_IPC_LOCK capability for your ``yottadb``, ``dse``,  and ``mupip`` processes, with a command such as:
 
-       echo <gid> >/proc/sys/vm/hugetlb_shm_group
+     .. code-block:: bash
 
-    .. note::
-       The :code:`/proc/sys/vm/hugetlb_shm_group` setting needs to be preserved on reboot, e.g., in :code:`/etc/sysctl.conf` or a startup script.
+        setcap 'cap_ipc_lock+ep' $ydb_dist/yottadb
 
-* Set the environment variable HUGETLB_SHM for each process to ``yes``.
+     Non-M applications that access YottaDB databases, through a `non-M language API <../MultiLangProgGuide/cprogram.html#ydb-subscript-next-s-ydb-subscript-next-st>`_ or `call-ins <../ProgrammersGuide/extrout.html#calls-from-external-routines-call-ins>`_ should also set the capability on the top level executable files.
+
+  1. Permit the group used by YottaDB processes that use huge pages with the following command
+
+     .. code-block:: bash
+
+	echo <gid> >/proc/sys/vm/hugetlb_shm_group
+
+     .. note::
+	The :code:`/proc/sys/vm/hugetlb_shm_group` setting needs to be preserved on reboot, e.g., in :code:`/etc/sysctl.conf` or a startup script.
+
+* Set the environment variable :ref:`ydb-hugetlb-shm` for each process to ``yes``. The older technique, setting the environment variable ``HUGETLB_SHM`` set to ``yes``, potentially with ``LD_PRELOAD`` set to the path to ``libhugetlbfs.so`` also works, but YottaDB will not know that hugepages are being used for shared memory in that case.
 
 .. note::
    Since the memory allocated by Linux for shared memory segments mapped with hugepages is rounded up to the next multiple of hugepages, there is potentially unused memory in each such shared memory segment. You can therefore increase any or all of the number of global buffers, journal buffers, and lock space to make use of this otherwise unused space. You can make this determination by looking at the size of shared memory segments using ipcs. Contact YottaDB support for a sample program to help you automate the estimate. Transparent hugepages may further improve virtual memory page table efficiency. Some supported releases automatically set transparent_hugepages to "always"; others may require it to be set at or shortly after boot-up. Consult your Linux distribution's documentation.
@@ -1157,12 +1182,13 @@ The file may contain zero or more of the following case-insensitive lines, in th
 
 .. code-block:: none
 
-   A{M|PD}_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
+   A{D|L|M|PD|ZA}_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
    BREAK[:<group-name>]
    CENABLE[:<group-name>]
    DIRECT_MODE[:<group-name>]
    DSE[:<group-name>]
    HALT[:<group-name>]
+   LIBRARY:[<group-name>]
    LKE:[<group-name>]
    LKECLEAR:[<group-name>]
    LOGDENIALS[:<group-name>]
@@ -1171,6 +1197,10 @@ The file may contain zero or more of the following case-insensitive lines, in th
    ZBREAK[:<group-name>]
    ZCMDLINE[:<group-name>]
    ZEDIT[:<group-name>]
+   ZHALT[:<group-nam>]
+   ZLINK[:<group-nam>]
+   ZROUTINES[:<group-nam>]
+   ZRUPDATE[:<group-nam>]
    ZSYSTEM[:<group-name>]
 
 If the file :code:`$ydb_dist/restrict.txt` does not exist, YottaDB does not restrict any facilities.
@@ -1204,19 +1234,33 @@ Restrictions apply as follows:
 |                                                         | provides a Boolean value that indicates whether Audit Principal Device is enabled. See the Audit      |
 |                                                         | Principal Device section below for details.                                                           |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| AD_ENABLE                                               | Enables the logging of `DSE <dse.html>`_ commands from the shell and DSE prompt.                      |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| AL_ENABLE                                               | Enables the logging of `LKE <mlocks.html>`_ commands from the shell and LKE prompt.                   |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | AM_ENABLE                                               | Enables the logging of `MUPIP <dbmgmt.html>`_ commands from the shell and MUPIP prompt.               |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| AZA_ENABLE                                              | Enables the use of the `$ZAUDITLOG() <../ProgrammersGuide/functions.html#zauditlog>`_ function.       |
+|                                                         | When LGDE is specified as the keyword for AZA_ENABLE, GDE logs GDE commands.                          |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | BREAK                                                   | YottaDB ignores any `BREAK <../ProgrammersGuide/commands.html#break>`_ command.                       |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | CENABLE                                                 | The process acts as if $ydb_nocenable is TRUE and ignores any                                         |
-|                                                         | `CENABLE <../ProgrammersGuide/ioproc.html#cenable>`_ deviceparameter                                  |
+|                                                         | `CENABLE <../ProgrammersGuide/ioproc.html#cenable>`_ deviceparameter.                                 |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | DIRECT_MODE                                             | :code:`yottadb -direct` terminates immediately with a                                                 |
 |                                                         | `RESTRICTEDOP <../MessageRecovery/errors.html#restrictedop>`_ error.                                  |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
-| DSE                                                     | `DSE <./dse.html>`_ terminates immediately with a RESTRICTEDOP error.                                 |
+| DSE                                                     | `DSE <dse.html>`_ terminates immediately with a RESTRICTEDOP error.                                   |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | HALT                                                    | `HALT <../ProgrammersGuide/commands.html#halt>`_ results in a RESTRICTEDOP error.                     |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| LIBRARY                                                 | Any attempt to load an external library produces a RESTRICTEDOP error.                                |
+|                                                         |                                                                                                       |
+|                                                         | Libary restrictions apply to third party libraries loaded by YottaDB directly, and those loaded       |
+|                                                         | at the behest of YottaDB applications. This restriction allows administrators to control which        |
+|                                                         | libraries YottaDB is able to load at run-time. To allow library loading, place symbolic links to      |
+|                                                         | the desired libraries in `$ydb_dist/plugin`.                                                          |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | LKE                                                     | Any invocation of the `LKE <mlocks.html>`_ utility produces a RESTRICTEDOP error.                     |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
@@ -1224,7 +1268,7 @@ Restrictions apply as follows:
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | LOGDENIALS                                              | Limit logging to processes belonging to a specific group.                                             |
 |                                                         |                                                                                                       |
-|                                                         | YottaDB normally logs a number of errors related to permissions and access using the syslog()         |
+|                                                         | YottaDB normally logs a number of errors related to permissions and access using the syslog           |
 |                                                         | facility. The YottaDB restriction LOGDENIALS provides a facility for disabling this logging on a      |
 |                                                         | group basis. If this mechanism is not used, the logging occurs for all YottaDB processes              |
 |                                                         | If the restriction is used, logging occurs for the specified group only.                              |
@@ -1247,6 +1291,12 @@ Restrictions apply as follows:
 | ZEDIT                                                   | `ZEDIT <../ProgrammersGuide/commands.html#zedit>`_ produces a RESTRICTEDOP error.                     |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | ZHALT                                                   | `ZHALT <../ProgrammersGuide/commands.html#zhalt>`_ produces a RESTRICTEDOP error.                     |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| ZLINK                                                   | An explicit `ZLINK <../ProgrammersGuide/commands.html#zlink>`_ produces a RESTRICTEDOP error.         |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| ZROUTINES                                               | A SET of `$ZROUTINES <../ProgrammersGuide/isv.html#zroutines>`_ produces a RESTRICTEDOP error.        |
++---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
+| ZRUPDATE                                                | `ZRUPDATE <../ProgrammersGuide/commands.html#zrupdate>`_ produces a RESTRICTEDOP error.               |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
 | ZSYSTEM                                                 | `ZSYSTEM <../ProgrammersGuide/commands.html#zsystem>`_ produces a RESTRICTEDOP error.                 |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
@@ -1312,14 +1362,15 @@ To enable the audit logging facility, add a line in the following format to ``$y
 
 .. code-block:: none
 
-   A{M|PD}_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
+   A{D|L|M|PD|ZA}_ENABLE:[comma-separated-list-of-options]:{path-to-sock-file|host:port}[:tls-id]
 
-APD_ENABLE enables the logging of all code entered from Direct Mode and optionally any input entered on the principal device ($PRINCIPAL). AM_ENABLE enables the logging of all MUPIP commands entered from the shell and the utility prompt.
+APD_ENABLE enables the logging of all code entered from Direct Mode and optionally any input entered on the principal device ($PRINCIPAL). AD_ENABLE, AL_ENABLE and AM_ENABLE enable the logging of all DSE, LKE and MUPIP commands entered from the shell and utility prompt. AZA_ENABLE enables the logging for arguments to the $ZAUDITLOG() function.
 
 * The optional "comma-separated-list-of-options" can consist of zero or more of these options:
 
-  * RD - Enables logging of all responses READ from $PRINCIPAL in addition to that entered at the Direct Mode prompt. This option is more comprehensive and captures input that might be XECUTEd, but depending on your application architecture may significantly increase the amount of logged information. The RD option only applies to APD_ENABLE.
-  * TLS - Enables TLS connectivity between YottaDB and the logger; this option requires the host information (e.g. IP/port or hostname/port)
+  * LGDE - Enable logging of all GDE commands from shell and GDE prompt. The LGDE option only applies to AZA_ENABLE.
+  * RD - Enable logging of all responses READ from $PRINCIPAL in addition to that entered at the Direct Mode prompt. This option is more comprehensive and captures input that might be XECUTEd, but depending on your application architecture may significantly increase the amount of logged information. The RD option only applies to APD_ENABLE.
+  * TLS - Enables TLS connectivity between YottaDB and the logger; this option requires a tls-id and host information (e.g. IP/port or hostname/port).
 
 * The "path-to-sock-file" is the absolute path of the UNIX domain socket file for connecting to the logger.
 
@@ -1361,36 +1412,91 @@ Adding this line to the restriction file enables APD. YottaDB connects with the 
 
 .. code-block:: none
 
+   AD_ENABLE::/path/to/sock/file/audit.sock
+
+Adding this line to the restriction file enables the logging of all DSE commands. YottaDB connects with the logger via a UNIX domain socket using the domain socket file `/path/to/sock/file/audit.sock` and sends all DSE activity to the logger.
+
+.. code-block:: none
+
+   AL_ENABLE::/path/to/sock/file/audit.sock
+
+Adding this line to the restriction file enables the logging of all LKE commands. YottaDB connects with the logger via a UNIX domain socket using the domain socket file `/path/to/sock/file/audit.sock` and sends all LKE activity to the logger.
+
+.. code-block:: none
+
    AM_ENABLE::/path/to/sock/file/audit.sock
 
-Adding this line to the restriction file enables the logging of all MUPIP commands. YottaDB connects with the logger via UNIX domain socket using the domain socket file "/path/to/sock/file/audit.sock" and sends all MUPIP activity to a logger. When this facility is enabled, all commands typed at the MUPIP prompt (MUPIP>) produce the `RESTRICTEDOP <../MessageRecovery/errors.html#restrictedop>`_ error.
+Adding this line to the restriction file enables the logging of all MUPIP commands. YottaDB connects with the logger via a UNIX domain socket using the domain socket file `/path/to/sock/file/audit.sock` and sends all MUPIP activity to the logger.
 
 ~~~~~~~~~~~~~~~~~~~~~~~
 Logging
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-The "logger" is a separate server-like program responsible for receiving the to-be-logged information from YottaDB and logging it. This separate program must be introduced by the user, either running in foreground or background, in order for logging to actually work. YottaDB distributions include basic example logger programs.
+A "logger" is a separate server-like program responsible for receiving and logging information from YottaDB audit logging facilities (A*_ENABLE). A logger program can run in the foreground or background. You can use the same logger program or specify different logger programs for each audit logging facilities.
 
-The six fields in the message, separated by semicolons (';'), contain information on the to-be-logged activity. Each to-be-logged message sent to the logger from YottaDB has the following format:
+YottaDB includes `sample logger programs <https://docs.yottadb.com/AdminOpsGuide/dm_audit_listener.zip>`_ that you can download and adapt to your needs. ``dm_audit_listener.zip`` contains three sample logger programs that can be used for logging. The difference among the three is the socket connection type used to communicate with YottaDB. The ``dm_audit_unix_listener.c``, ``dm_audit_tcp_listener.c``, and ``dm_audit_tls_listener.c`` use UNIX domain, TCP, and TLS sockets respectively to communicate with YottaDB. Choose the logger program based on the connection type specified in the A*_ENABLE entry in ``$ydb_dist/restrict.txt``. The zip file contains a ``Makefile`` to help with compilation.
+
+You can unzip ``dm_audit_listener.zip`` and run ``make`` to compile all three logger programs. To compile an individual program, just run ``make`` with the name of the program, e.g., ``make dm_audit_tcp_listener``. To compile ``dm_audit_tls_listener`` requires the OpenSSL package.
+
+Running the logger programs:
+
+* Run the UNIX domain socket logger as follows:
+
+  .. code-block:: bash
+
+     dm_audit_unix <logfile> <sockfile>
+
+  - <logfile> is the path to the output audit log.
+  - <sockfile> is the path to the Unix domain socket file.
+
+* Run the TCP logger as follows:
+
+  .. code-block:: bash
+
+     dm_audit_tcp <logfile> <portno>
+
+  - <logfile> is the path to the output audit log.
+  - <portno> is the port number on which to listen.
+
+* Run the TLS logger as follows:
+
+  .. code-block:: bash
+
+     dm_audit_tls_listener <logfile> <portno> <certfile> <privkeyfile> <passphrase> [-clicert] [-cafile <CAfilepath>] [-capath <CApath>]
+
+  - <logfile> is the path to the output audit log.
+  - <portno> is the port number on which to listen.
+  - <certfile> is the path of the TLS certificate to use.
+  - <privkeyfile> is the parth to the file with the private key.
+  - <passphrase> is the password pr passphrase for the certificate / key.
+  - If the ``-clicert`` option is present, the logger asks the YottaDB process for a client certificate.
+  - If the ``-cafile`` option is specifed, <CAfilepath> is the path to a file of CA certificates in PEM format for verification purposes.
+  - If the ``capath`` opton is specified, <CApath> is the path a directory of CA certificate files in PEM format for verification purposes.
+
+Logger Message Format:
+
+The seven fields in the message areseparated by semicolons (';'), and contain information on the to-be-logged activity. Each to-be-logged message sent to the logger from YottaDB has the following format:
 
 .. code-block:: none
 
-   dist=<path>; src={0|1|2}; uid=<uid>; euid=<euid>; pid=<pid>; command=<text>
+   dist=<path>; src={0|1|2|3|4|5|6}; uid=<uid>; euid=<euid>; pid=<pid>; tty=<ttyname> command=<text>
 
 
-* The "dist" field, shows the path to location of the sender/user's $ydb_dist (YottaDB executables).
-* The "src" field shows zero (0) for input from unknown source, one (1) for Direct Mode input, or two (2) for READ input from $PRINCIPAL.
-* The next three fields ("uid", "euid", and "pid") show (respectively) decimal representations of the user ID, effective user ID, and process ID of the process that sent the message.
-* The "command" field is the input provided on the YottaDB side.
+* The ``dist`` field, shows the path to location of the sender/user's ``$ydb_dist`` (or top level program, if not an M program).
+* The ``src`` field shows zero (0) for input from unknown source, one (1) for Direct Mode input; two (2) for READ input from $PRINCIPAL or when the standard input to the Direct Mode prompt is not froma terminal (commands entered via HEREDOCs from a shell script, or a pipe); three (3) for MUPIP commands; four(4) for $ZAUDITLOG() and GDE; five (5) for LKE; and six (6) for DSE.
+* The next three fields (``uid``, ``euid``, and ``pid``) show respectively the user ID, effective user ID, and process ID of the process that sent the message, all in decimal.
+* The ``tty`` field shows the stdin for the process. If the stdin at process startup is not a terminal device, the field is ``tty=0``.
+* The ``command`` field is the input provided on the YottaDB side.
 
 Examples:
 
 .. code-block:: none
 
-   dist=/path/to/ydb_dist; src=1; uid=112233445; euid=112233445; pid=987654; command=write "Hello world",!
-   dist=/usr/local/lib/yottadb/r132; src=2; uid=998877665; euid=998877665; pid=123456; command=set a=789
+   dist=/usr/local/lib/yottadb/r202; src=1; uid=112233445; euid=112233445; pid=987654; tty=/dev/pts/0; command=write "Hello world",!
+   dist=/usr/local/lib/yottadb/r202; src=2; uid=998877665; euid=998877665; pid=123456; tty=/dev/pts/1; command=read num
+   dist=/usr/local/lib/yottadb/r202; src=2; uid=998877665; euid=998877665; pid=123456; tty=/dev/pts/1; command=7
 
-Click `here <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AdminOpsGuide/dm_audit_listener.zip>`_ to download sample listener programs.
+This example demonstrates the audit logging with APD_ENABLE:RD facility. Logging activity shows that PID 987654 and PID 123456 ran two Direct Mode commands - write "Hello world",! and read num. The response from PID 123456 for read num was 7.
 
 .. raw:: html
 

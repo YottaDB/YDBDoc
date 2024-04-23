@@ -4899,6 +4899,16 @@ GDE Error: This error is triggered by an attempt to mark an MM database segment 
 
 Action: Use the BG access method for encrypted files.
 
+-----------
+GDELOGFAIL
+-----------
+
+GDELOGFAIL, GDE failed to log command. Check operator log for more information
+
+GDE Error: This message appears when LGDE is specified with the AZA_ENABLE facility and there is a problem with logging the GDE commands. This message also prevents the execution of the GDE command.
+
+Action: Review the operator log for the exact reason of the failure to log the GDE command
+
 ---------------
 GDINVALID
 ---------------
@@ -13467,6 +13477,16 @@ Run Time Error: This indicates a format or usage error in a WRITE /BLOCK command
 
 Action: Correct the format or usage of the WRITE /BLOCK command.
 
+----------
+SOCKCLOSE
+----------
+
+SOCKCLOSE, Error closing socket: (errno = aaaa) xxxx
+
+Operator log/All YottaDB Components Error: aaaa contains the OS error code and xxx indicates information about the error that occured while closing a socket connection for the process attempting to log a command to the audit logging facility.
+
+Action: Review the message to determine whether the logger programs are running or whether a change is required in the configuration of your audit logging facility.
+
 -----------------
 SOCKETEXIST
 -----------------
@@ -13810,10 +13830,9 @@ Run Time Error: This indicates that the process has consumed almost all of the a
 
 Action: If you do not take immediate action to reduce stack usage, YottaDB is likely to produce a STACKOFLOW error, which terminates the process. There are two common causes:
 
- * Infinite recursion. The most common cause of infinite recursion is a buggy error trap. Whatever the cause, you can examine the stack with ZSHOW, and use ZGOTO, QUIT to try to regain control of the process, or HALT or ZHALT to terminate the process.
-
- * Application level memory leak caused by NEW of local variables in a loop. Correct the application code to NEW variables outside any loop, and replace the NEW inside loops with KILL.
-
+* Infinite recursion. The most common cause of infinite recursion is a buggy error trap. If you do not take immediate action to reduce your stack, YottaDB is likely to produce a STACKOFLOW error, which terminates the process. Examine the stack with ZSHOW. Trim the stack using QUIT, ZGOTO, HALT or ZHALT. Note that if a single application call generates a stack frame larger than the stack space between the STACKCRIT and STACKOFLOW boundaries, the process puts a STACKCRIT message in the operator log, but processes the STACKOFLOW and terminates, so the application gets no chance to intervene and handle the error. Look into the `ydb_mstack_crit_threshold <../AdminOpsGuide/basicops.html#ydb-mstack-crit-threshold>`_ and `ydb_mstack_size <../AdminOpsGuide/basicops.html#ydb-mstack-size>`_ environment variables.
+* Application level memory leak caused by NEW of local variables in a loop. Correct the application code to NEW variables outside any loop, and replace the NEW inside loops with KILL.
+ 
 -----------------
 STACKOFLOW
 -----------------
@@ -13822,7 +13841,7 @@ STACKOFLOW, Stack overflow
 
 Run Time Fatal: This indicates that the process required more stack space than was available in memory.
 
-Action: Reduce the stack when you get a STACKCRIT error. This error terminates the process.
+Action: Reduce the stack when you get a STACKCRIT error. This error terminates the process. Note that if a single application call generates a stack frame larger than the stack space between the STACKCRIT and STACKOFLOW boundaries, the process puts a STACKCRIT message in the operator log, but processes the STACKOFLOW and terminates, so the application gets no chance to intervene and handle the error. Look into the `ydb_mstack_crit_threshold <../AdminOpsGuide/basicops.html#ydb-mstack-crit-threshold>`_ and `ydb_mstack_size <../AdminOpsGuide/basicops.html#ydb-mstack-size>`_ environment variables.
 
 -------------------
 STACKUNDERFLO
@@ -14473,9 +14492,9 @@ Action: Examine application logic and ensure that transaction logic returns an a
 TPFAIL
 --------------------
 
-TPFAIL, Transaction COMMIT failed. failure code: xxxx.
+TPFAIL, Transaction COMMIT failed
 
-Run Time Error: This indicates that YottaDB attempted to process this transaction four times, but encountered an error every time. xxxx contains the failure codes for the four attempts. It is very likely that the database may have integrity errors or that the process-private data structures are corrupted.
+Run Time Error: This indicates that YottaDB attempted to process this transaction four times, but encountered an error every time. Additional accompanying messages indicate details of the failure.
 
 Action: Report this database error to the group responsible for database integrity at your operation.
 
