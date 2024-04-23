@@ -97,7 +97,7 @@ The following example illustrates a replication configuration where instance A f
 .. note::
    In this replication configuration, instance B can also replicate to instance Q. However, instance P cannot replicate to an instance in Q's group because it is an SI member of A's BC group.
 
-YottaDB imposes no distance limits between instances. You can place instances 20,000 kilometers apart (the circumference of Planet Earth is 40,000 kilometers) or locally within the same data center.
+YottaDB imposes no distance limits between instances. You can place instances 20,000 kilometers apart (the circumference of Planet Earth is 40,000 kilometers) or locally within the same data center. However, ensure that adequate network bandwidth is available to handle database update volume from the replicated regions.
 
 Using TCP connections, YottaDB replicates between instances with heterogeneous stacks of hardware, operating system, endian architecture and even YottaDB releases. YottaDB replication can even be used in configurations with different application software versions, including many cases where the application software versions have different database schema. This also means that a number of inexpensive systems - such as GNU/Linux commodity servers - can be placed in locations throughout an organization. Replicating instances can be used for decision support, reporting, and analytics. Because YottaDB databases can be encrypted, these commodity servers are potentially usable in environments outside secure data centers as long as their operating systems and software are secured.
 

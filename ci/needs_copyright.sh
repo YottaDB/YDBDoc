@@ -2,7 +2,7 @@
 
 #################################################################
 #								#
-# Copyright (c) 2020-2023 YottaDB LLC and/or its subsidiaries.	#
+# Copyright (c) 2020-2024 YottaDB LLC and/or its subsidiaries.	#
 # All rights reserved.						#
 #								#
 #	This source code contains the intellectual property	#
@@ -31,7 +31,7 @@ fi
 
 # .png, .gif and .svg are image format files
 # .c, .m, .go, .pl, .py and .rs are example program files
-skipextensions="png gif svg css c m go pl py rs" # List of extensions that cannot have copyrights.
+skipextensions="png gif svg css c m go pl py rs zip" # List of extensions that cannot have copyrights.
 if echo "$skipextensions" | grep -q -w "$(echo "$file" | awk -F . '{print $NF}')"; then
 	exit 1
 fi

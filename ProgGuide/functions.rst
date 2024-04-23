@@ -1974,6 +1974,50 @@ Example:
 
 This example uses $ZATRANSFORM() and two (here unspecified) collation definitions to compare the ordering of two (literal) expressions as YottaDB would collate them if there was a way to collate them together. The result indicates that the first would collate before the second.
 
+-------------
+$ZAUditlog()
+-------------
+
+Sends its argument to an audit/logger listener process. This function requires setting the AZA_ENABLE audit logging facility in the ``$ydb_dist/restrict.txt`` file. For information on setting up the AZA_ENABLE audit logging facility, refer to `Configuring the Restriction Facility <../AdminOpsGuide/basicops.html#configuring-restriction-facility>`_ in the Administration and Operations Guide. The format for the $ZAUDITLOG() function is:
+
+.. code-block:: none
+
+   $ZUADITLOG(expr)
+
+* expr is the string to send for audit logging.
+* A return value of 1 indicates successful logging, 0 indicates logging is not enabled, and a trappable `RESTRICTEDOP <../MessageRecovery/errors.html#restrictedop>`_ error indicates that logging is enabled but not working.
+* $ZAUDITLOG() identifies its message with ``src=4``, and like other YottaDB logging facilities, records the location of the directory path to the executing program (``$ydb_dist`` for M programs), ``uid``, ``euid``, ``pid``, ``tty`` and the command / argument(s).
+* If LGDE is specified as an option for the AZA_ENABLE facility, GDE logs all commands. YottaDB ignores this option if specified with other A*_ENABLE audit logging facilities. When it fails to log a command, GDE issues a `GDELOGFAIL <../MessageRecovery/errors.html#gdelogfail>`_ error. The following table characterizes $ZAUDITLOG() and GDE audit logging behavior:
+
+**$ZAUDITLOG() / GDE Logging Characteristics**
++------------+------+-----------------+-------------------+---------------------+
+| AZA_ENABLE | LGDE | Logging Success | GDE Audit Logging | $ZAUDITLOG() result |
++============+======+=================+===================+=====================+
+| Yes        | Yes  | Yes             | Yes               | 1                   |
++------------+------+-----------------+-------------------+---------------------+
+| Yes        | No   | Yes             | No                | 1                   |
++------------+------+-----------------+-------------------+---------------------+
+| Yes        | Yes  | No              | GDELOGFAIL error  | RESTRICTEDOP error  |
++------------+------+-----------------+-------------------+---------------------+
+| Yes        | No   | no              | No                | RESTRICTEDOP error  |
++------------+------+-----------------+-------------------+---------------------+
+| No         | N/A  | N/A             | No                | 0                   |
++------------+------+-----------------+-------------------+---------------------+
+
++++++++++++++++++++++++++++
+Examples of $ZAUDITLOG()
++++++++++++++++++++++++++++
+
+Example:
+
+.. code-block:: none
+
+   YDB>write $zauditlog("Name Change for "_ip)
+   1
+   YDB>
+
+This example uses $ZAUDITLOG() to log a literal label concatenated with a variable (identifier). The return indicates the logging was successful.
+
 ---------------------
 $ZBIT Functions
 ---------------------
