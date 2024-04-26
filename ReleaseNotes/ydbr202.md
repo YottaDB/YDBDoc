@@ -362,7 +362,7 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-005](http://ti
 
   ([GTM-DE201386](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637465))
 
-* <a name="GTM-DE201388"></a>$[Z]CHAR(1E48) and similar numeric literal overflows produce a NUMOFLOW error at compile time; previously an optimization inappropriately treated this as $[Z]CHAR(0). ([GTM-DE201388](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637468))
+* <a name="GTM-DE201388"></a>$[Z]CHAR("1E48") and similar numeric literal overflows produce a NUMOFLOW error at compile time; previously an optimization inappropriately treated this as $[Z]CHAR(0). ([GTM-DE201388](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637468))
 
 * <a name="GTM-DE201389"></a>YottaDB pattern match reports a PATMAXLEN error for a deeply nested pattern containing many indefinite ranges (. symbols). While we think it unlikely, it is possible that existing complex patterns may now report this error. Previously such a deeply nested pattern terminated with a segmentation violation (SIG-11). ([GTM-DE201389](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637469))
 
