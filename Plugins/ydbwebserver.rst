@@ -1092,17 +1092,21 @@ Certificate Set-up
     mkdir certs
     mv mycert.* certs/
 
-    # Create a file (name doesn't matter) called ydbcrypt_config.libconfig with the
+    # Create a file, e.g., ydb_crypt_config.libconfig (name doesn't matter), with the
     # following contents. Note the section called server. This can be called anything.
     # It lets you put a pair of cert/key for each environment you need to configure.
     # Note the "client" section. This allows you to use the self-signed certificate
     # by telling YottaDB about it.
-    cat ydbcrypt_config.libconfig
+    # Users are responsible for periodically evaluating and updating ssl-options and
+    # cipher-list, based on current technology recommendations.
+    cat ydb_crypt_config.libconfig
     tls: {
       server: {
         format: "PEM";
         cert: "/data/certs/mycert.pem";
         key:  "/data/certs/mycert.key";
+        ssl-options: "SSL_OP_NO_SSLv2:SSL_OP_NO_SSLv3:SSL_OP_NO_TLSv1:SSL_OP_NO_TLSv1_1";
+        cipher-list: "ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES256:!aNULL:!SHA1:!AESCCM";
       };
       client: {
         CAfile: "/data/certs/mycert.pem";
@@ -1110,14 +1114,14 @@ Certificate Set-up
     }
 
     # In your file that sets up the YottaDB environment, add set the env variable
-    # ydbcrypt_config to be the path to your config file:
-    export ydbcrypt_config="/data/ydbcrypt_config.libconfig"
+    # ydb_crypt_config to be the path to your config file:
+    export ydb_crypt_config="/data/ydb_crypt_config.libconfig"
 
     # Find out the hash of your key password using the maskpass utility
     $ydb_dist/plugin/ydbcrypt/maskpass <<< 'monkey1234' | cut -d ":" -f2 | tr -d ' '
 
     # In your environment file, ydbtls_passwd_{section name} to be that hash. For me, it's:
-    export ydbtls_passwd_server="30A22B54B46618B4361F"
+    export ydb_tls_passwd_server="30A22B54B46618B4361F"
 
     # Run the server like this, substituting the {section name} appropriately. Here it is server. See how to stop it below (although you can CTRL-C here and stop it).
     $ydb_dist/yottadb -run ^%ydbwebreq --port 9080 --tlsconfig server
