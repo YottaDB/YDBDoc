@@ -38,7 +38,7 @@ pages:
   interruptible: true
   script:
     - apt-get update
-    - apt-get install -y --no-install-recommends git make jq python3-sphinx-rtd-theme python3-sphinx-copybutton rsync sphinx-common tcsh wget pkg-config
+    - apt-get install -y --no-install-recommends git make jq python3-sphinx-rtd-theme python3-sphinx-copybutton rsync sphinx-common tcsh wget pkg-config graphviz
     - make test
   artifacts:
     paths:

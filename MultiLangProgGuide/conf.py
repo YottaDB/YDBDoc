@@ -124,7 +124,7 @@ html_sidebars = {"**": ["relations.html", "globaltoc.html", "searchbox.html"]}  
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "MultiLanguage\ Programmers\ Guidedoc"
+htmlhelp_basename = "MultiLanguage Programmers Guidedoc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
