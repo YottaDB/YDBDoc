@@ -410,6 +410,8 @@ Guidelines for Mapping
 
 This section lists the parameters that apply to defining each component of a mapping.
 
+.. _mapping-names:
+
 ~~~~~
 NAMES
 ~~~~~
@@ -427,6 +429,8 @@ A name space:
 * A global name can be one to 31 alphanumeric characters. However, the combined length of a global and its subscripts is limited to 1,019 bytes (the maximum key size supported by YottaDB). Note that the byte length of the subscripted global specification can exceed the maximum KeySize specified for its region.
 * Maps to only one region in the Global Directory.
 
+.. _mapping-regions:
+
 ~~~~~~~
 REGIONS
 ~~~~~~~
@@ -441,6 +445,8 @@ A region name:
 * Can have from 1 to 31 characters.
 
 GDE automatically converts region names to uppercase, and uses DEFAULT for the default region name.
+
+.. _mapping-segments:
 
 ~~~~~~~~
 SEGMENTS
@@ -1430,7 +1436,7 @@ The following table shows the names of this field in various contexts.
 | `MUPIP DUMPFHEAD <dbmgmt.html#dumpfhead>`_ and                 | :code:`"sgmnt_data.lock_crit_with_db"`: values are     |
 | `%PEEKBYNAME() <../ProgrammersGuide/utility.html#peekbyname>`_ | 0 (Separate) / 1 (Not Separate)                        |
 +----------------------------------------------------------------+--------------------------------------------------------+
-| `MUPIP SET <dbmgmt.html#set>`_                                 | `LCK_SHARES_DB_CRIT <dbmgmt.html#lck-shares-db-crit>`_ | 
+| `MUPIP SET <dbmgmt.html#set>`_                                 | `LCK_SHARES_DB_CRIT <dbmgmt.html#lck-shares-db-crit>`_ |
 +----------------------------------------------------------------+--------------------------------------------------------+
 
 A specification of LOCK_CRIT_SEPARATE shows up as "Sep" in the "Lock Crit" column in a GDE SHOW -REGION output. A specification of NOLOCK_CRIT_SEPARATE shows up as "DB" in the "Lock Crit" column in a GDE SHOW -REGION output.
@@ -1688,6 +1694,8 @@ The maximum EXTENSION is 65,535 blocks.
 By default, GDE uses an EXTENSION of 100 blocks.
 
 Like allocation, the default extension amount was chosen for initial development and experimentation. Use larger extensions for larger actual applications. Because multiple file extensions adversely affect performance, set up extensions appropriate to the file allocation.
+
+.. _segment-file-name:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 -F[ILE_NAME]=file-name

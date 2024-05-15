@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -118,23 +118,17 @@ If $ZDATEFORM is 1965, an input year of 70 would be interpreted as 1970, whereas
 
 The %D utility displays the current date using the [d]d-mmm-[yy]yy format. If a routine uses this function repetitively, put the utility code directly into the M program.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Sets variable %DAT to current date.
 
 FUNC[()]: Invokes an extrinsic function returning today's date.
 
-~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %DAT: Contains the current date.
 
-~~~~~~~~~~~~~~~~
-Examples of %D
-~~~~~~~~~~~~~~~~
+**Examples of %D**
 
 For the following examples, $ZDATEFORM is assumed to be one (1).
 
@@ -174,35 +168,25 @@ This example invokes %D as an extrinsic function with the label FUNC. $$FUNC^%D 
 
 The %DATE utility converts an input date to the $HOROLOG format. The $HOROLOG format represents time as the number of days since December 31, 1840. The routine has entry points for interactive or non-interactive use.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Converts %DS input non-interactively (if defined), otherwise the current date.
 
 FUNC(t): Invokes an extrinsic function returning $HOROLOG format of the argument.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Date: Interactively requests a date for conversion to $HOROLOG format.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %DS: Contains input date; refer to %DATE Input Formats table.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %DN: Contains output date in $HOROLOG format
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-DATE Input Formats Table
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+**%DATE Input Formats Table**
 
 +----------------------+------------------------------------------------------------------------------------+------------------------------------+
 | Element              | Description                                                                        | Examples                           |
@@ -235,9 +219,7 @@ DATE Input Formats Table
 |                      |                                                                                    | 2002 or 11-22-2002                 |
 +----------------------+------------------------------------------------------------------------------------+------------------------------------+
 
-~~~~~~~~~~~~~~~~~~~
-Examples of %DATE
-~~~~~~~~~~~~~~~~~~~
+**Examples of %DATE**
 
 Example:
 
@@ -306,9 +288,7 @@ This example shows the use of a year limit in $ZDATEFORM. Two digit years are in
 
 The %H utility converts date and time to and from $HOROLOG format.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 %CDS: Converts %DT $HOROLOG input date to mm/dd/yyyy format.
 
@@ -326,25 +306,19 @@ CDN(dt): Extrinsic entry that converts the argument to $HOROLOG format.
 
 CTN(tm): Extrinsic entry that converts the argument to $HOROLOG format.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %DT: Contains input date in either $HOROLOG or mm/dd/[yy]yy format, depending on the format expected by the utility entry point.
 
 %TM: Contains input time in either $HOROLOG or [h]h:mm:ss format, depending on the format expected by the utility entry point.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %DAT: Contains converted output date
 
 %TIM: Contains converted output time
 
-~~~~~~~~~~~~~~~~
-Examples of %H
-~~~~~~~~~~~~~~~~
+**Examples of %H**
 
 Example:
 
@@ -424,23 +398,17 @@ This example shows the use of a year limit in $ZDATEFORM. Two digit years are in
 
 The %T utility displays the current time in [h]h:mm AM/PM. If a routine uses this function repetitively, put the utility code directly into the M program.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Sets %TIM to current time in [h]h:mm AM/PM format.
 
 FUNC[()]: Invokes an extrinsic function returning the current time.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %TIM: Contains current time in [h]h:mm AM/PM format.
 
-~~~~~~~~~~~~~~~~
-Examples of %T
-~~~~~~~~~~~~~~~~
+**Examples of %T**
 
 Example:
 
@@ -478,31 +446,23 @@ This example invokes FUNC as an extrinsic function, which returns the current ti
 
 The %TI utility converts time to $HOROLOG format. The $HOROLOG format represents time as the number of seconds since midnight. %TI returns the converted time in the variable %TN. The routine has entry points for interactive or non-interactive use.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT Non-interactively converts %TS to $HOROLOG format; if %TS is not defined, then current time is converted.
 
 FUNC[(ts)] Invokes an extrinsic function returning $HOROLOG format of the argument, or if no argument, the $HOROLOG format of the current time.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Time: Requests time in [h]h:mm:ss format to convert to $HOROLOG format.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %TS Contains input time.
 
 The following table summarizes input formats accepted by %TI.
 
-~~~~~~~~~~~~~~~~~~~
-%TI Input Formats
-~~~~~~~~~~~~~~~~~~~
+**%TI Input Formats**
 
 +-----------------------------+--------------------------------------------------------------+----------------------------------------+
 | Element                     | Description                                                  | Examples                               |
@@ -527,14 +487,10 @@ The following table summarizes input formats accepted by %TI.
 | DELIMITERS                  | Colon between hours and minutes                              | 3:00                                   |
 +-----------------------------+--------------------------------------------------------------+----------------------------------------+
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 %TN: Contains output time in $HOROLOG format
 
-~~~~~~~~~~~~~~~~~
-Examples of %TI
-~~~~~~~~~~~~~~~~~
+**Examples of %TI**
 
 Example:
 
@@ -587,27 +543,19 @@ This example invokes %TI as an extrinsic function to convert the supplied time t
 
 The %TO utility converts the input time from $HOROLOG format to [h]h:mm AM/PM format. Put the utility code directly into the M program if the routine uses this function repetitively.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Converts non-interactively %TS or if %TS is not defined, the current time to [h]h:mm AM/PM format.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %TN: Contains input time in $HOROLOG format.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %TS: Contains output time in [h]h:mm AM/PM format.
 
-~~~~~~~~~~~~~~~~~
-Examples of %TO
-~~~~~~~~~~~~~~~~~
+**Examples of %TO**
 
 Example:
 
@@ -656,39 +604,29 @@ The conversion utilities can be invoked as extrinsic functions.
 
 The %DH utility converts numeric values from decimal to hexadecimal. %DH defaults the length of its output to eight digits. However, the input variable %DL overrides the default and controls the length of the output. The routine has entry points for interactive or non-interactive use.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Converts interactively entered decimal number to hexadecimal number with the number of digits specified.
 
 FUNC(d[,l]): Invokes %DH as an extrinsic function returning the hexadecimal equivalent of the argument.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %DH: As input, contains input decimal number.
 
 %DL: Specifies how many digits appear in the output, defaults to eight.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Decimal: Requests a decimal number for conversion to hexadecimal.
 
 Digits: Requests the length of the output in digits; eight by default.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %DH: As output, contains the converted number in hexadecimal.
 
-~~~~~~~~~~~~~~~~~
-Examples of %DH
-~~~~~~~~~~~~~~~~~
+**Examples of %DH**
 
 Example:
 
@@ -731,39 +669,29 @@ This example invokes %DH as an extrinsic function using the FUNC label. The firs
 
 The %DO utility converts numeric values from decimal to octal. The default length of its output is 12 digits. The value assigned to the input variable %DL overrides the default and controls the length of the output. The routine has entry points for interactive or non-interactive use.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Converts the specified decimal number to an octal number with the specified number of digits, interactively.
 
 FUNC(d[,ln]): Invokes %DO as an extrinsic function, returning the octal equivalent of the argument.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Decimal: Requests a decimal number for conversion to octal.
 
 Digits: Requests the length of the output in digits; 12 by default.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %DO: As input, contains input decimal number.
 
 %DL: Specifies the number of digits in the output, defaults to 12.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %DO: As output, contains the converted number in octal.
 
-~~~~~~~~~~~~~~~~~
-Examples of %DO
-~~~~~~~~~~~~~~~~~
+**Examples of %DO**
 
 Example:
 
@@ -805,35 +733,25 @@ This example invokes %DO as an extrinsic function with the label FUNC. The first
 
 The %HD utility converts numeric values from hexadecimal to decimal, accepting strings starting with a case independent :code:`"0x"`. %HD returns the decimal number in the read-write variable %HD. %HD rejects input numbers beginning with a minus (-) sign and returns null (""). The routine has entry points for interactive or non-interactive use.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Converts hexadecimal number entered interactively to decimal number.
 
 FUNC(h): Invokes %HD as an extrinsic function returning the decimal equivalent of the argument.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Hexadecimal: Requests a hexadecimal number for conversion to decimal.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %HD: As input, contains input hexadecimal number.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %HD: As output, contains the converted number in decimal.
 
-~~~~~~~~~~~~~~~~~
-Examples of %HD
-~~~~~~~~~~~~~~~~~
+**Examples of %HD**
 
 Example:
 
@@ -874,9 +792,7 @@ This example invokes %HD as an extrinsic function with the label FUNC and writes
 
 The %HO utility converts numeric values from hexadecimal to octal, accepting strings starting with a case independent :code:`"0x"`. %HO returns the octal number in the read-write variable %HO. %HO rejects input numbers beginning with a minus (-) sign and returns null (""). The routine has entry points for interactive or non-interactive use.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Converts hexadecimal number entered interactively to octal number.
 
@@ -935,35 +851,25 @@ This example invokes %HO as an extrinsic function with the FUNC label.
 
 The %LCASE utility converts a string to all lower-case letters. If a routine uses this function repetitively, put the utility code directly into the M program.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Converts interactively a string to lower-case.
 
 FUNC(s): Invokes %LCASE as an extrinsic function returning the lower-case form of the argument.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 String: Requests a string for conversion to lower case.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %S: As input, contains string to be converted to lower case.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %S: As output, contains the converted string in lower case.
 
-~~~~~~~~~~~~~~~~~~~~
-Examples of %LCASE
-~~~~~~~~~~~~~~~~~~~~
+**Examples of %LCASE**
 
 Example:
 
@@ -1004,35 +910,25 @@ This example sets the variable ^X to the string "Hello" and invokes %LCASE as an
 
 The %OD utility converts numeric values from octal to decimal. %OD returns the decimal number in the read-write variable %OD. %OD rejects input numbers beginning with a minus (-) sign and returns null (""). The routine has entry points for interactive or non-interactive use.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Converts octal number entered interactively to decimal number.
 
 FUNC(oct): Invokes %OD as an extrinsic function returning the decimal equivalent of the argument.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Octal: Requests an octal number for conversion to decimal.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %OD: As input, contains input octal number.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %OD: As output, contains the converted number in decimal.
 
-~~~~~~~~~~~~~~~~~
-Examples of %OD
-~~~~~~~~~~~~~~~~~
+**Examples of %OD**
 
 Example:
 
@@ -1073,35 +969,25 @@ This example invokes %OD as an extrinsic function with the FUNC label. The argum
 
 The %OH utility converts numeric values from octal to hexadecimal. %OH returns the hexadecimal number in the read-write variable %OH. %OH rejects input numbers beginning with a minus (-) sign. The routine has entry points for interactive or non-interactive use. In interactive mode, %OH rejects non-octal numbers with the following message, "Input must be an octal number". In non-interactive mode, %OH returns a null string ("") upon encountering a non-octal number.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Converts interactively octal number entered to hexadecimal number.
 
 FUNC(oct): Invokes %OH as an extrinsic function returning the hexadecimal equivalent of the argument.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Octal: Requests an octal number for conversion to hexadecimal.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %OH: As input, contains input octal number.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %OH: As output, contains the converted number in hexadecimal.
 
-~~~~~~~~~~~~~~~~~
-Examples of %OH
-~~~~~~~~~~~~~~~~~
+**Examples of %OH**
 
 Example:
 
@@ -1142,35 +1028,25 @@ This example invokes %OH as an extrinsic function with the FUNC label.
 
 The %UCASE utility converts a string to all upper-case letters. If a routine uses this function repetitively, put the utility code directly into the M program.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Converts a string to upper case interactively.
 
 FUNC(s): Invokes %UCASE as an extrinsic function, returning the upper-case form of the argument.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 String: Requests a string for conversion to upper case.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %S: As input, contains string to be converted to upper case.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %S: As output, contains the converted string in upper case.
 
-~~~~~~~~~~~~~~~~~~~~
-Examples of %UCASE
-~~~~~~~~~~~~~~~~~~~~
+**Examples of %UCASE**
 
 Example:
 
@@ -1212,39 +1088,29 @@ The mathematic utilities can be invoked as extrinsic functions.
 
 The %EXP utility raises one number provided to the power of another number provided. While this utility provides an interactive interface for exponential calculations, most production code would perform inline calculation with the "**" operator. The routine has entry points for interactive or non-interactive use.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Calculates a number to the power of another number interactively.
 
 FUNC(i,j): Invokes %EXP as an extrinsic function returning the first argument raised to the power of the second argument.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Power: Requests an exponent or power.
 
 Number: Requests a base number to raise by the power.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %I: As input, contains number to be raised to a power.
 
 %J: Contains exponential power by which to raise %I.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %I: As output, contains the result of the exponential calculation.
 
-~~~~~~~~~~~~~~~~~~
-Examples of %EXP
-~~~~~~~~~~~~~~~~~~
+**Examples of %EXP**
 
 Example:
 
@@ -1286,35 +1152,25 @@ This example invokes %EXP as an extrinsic function with the label FUNC.
 
 The %SQROOT utility calculates the square root of a number provided. While this utility provides an interactive interface for taking square roots, most production code would perform inline calculation by raising a number to the .5 power (n**.5). The routine has entry points for interactive or non-interactive use.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INT: Calculates the square root of a number interactively.
 
 FUNC(s): Invokes %SQROOT as an extrinsic function returning the square root of the argument.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 The square root of: Requests a number.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %X: Contains the number for which to calculate the square root.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %Y: Contains the square root of %X.
 
-~~~~~~~~~~~~~~~~~~~~~
-Examples of %SQROOT
-~~~~~~~~~~~~~~~~~~~~~
+**Examples of %SQROOT**
 
 Example:
 
@@ -1370,9 +1226,7 @@ If expr1 and expr2 are not specified, %MPIECE assumes expr1 to be one or more co
 
 %MPIECE removes all leading occurrences of expr1 from the result.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 $$SPLIT^%MPIECE(str,expr1): Invokes %MPIECE as an extrinsic function that returns an alias local array of string divided into pieces by expr1. If expr1 is not specified, MPIECE assumes expr1 to be one or more consecutive occurrences of whitespaces.
 
@@ -1502,9 +1356,7 @@ The Global utilities are:
 
 The %G utility displays names, descendants and values of globals currently existing in the database. Use %G to examine global variables and their values. Enter a question mark (?) at any prompt to display help information.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Output Device: <terminal>:
 
@@ -1537,9 +1389,7 @@ Arguments for %G and %GED:
 |                                        | \* descendants                                                                      | \*                                 |
 +----------------------------------------+-------------------------------------------------------------------------------------+------------------------------------+
 
-~~~~~~~~~~~~~~~~
-Examples of %G
-~~~~~~~~~~~~~~~~
+**Examples of %G**
 
 Example:
 
@@ -1613,9 +1463,7 @@ This example specifies "?D" as the global that invokes the %GD utility. %GD disp
 
 The %GC utility copies values of globals from one global to another. It is useful for testing and for moving misfiled data.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Show copied nodes <Yes>?:
 
@@ -1625,9 +1473,7 @@ From global: ^Requests a global variable name from which to copy variable and de
 
 To global: ^Request a global variable name to receive the copy.
 
-~~~~~~~~~~~~~~~~~
-Examples of %GC
-~~~~~~~~~~~~~~~~~
+**Examples of %GC**
 
 Example:
 
@@ -1657,9 +1503,7 @@ The %GCE utility changes every occurrence of a string within the data of selecte
 
 %GCE displays the name of each global as it is processed. You can suppress the output of the names of globals in which no changes are made by using the QUIET utility label.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Global^: Requests (using %GSEL) the name(s) of the globals to change; <RETURN> ends selection.
 
@@ -1677,9 +1521,7 @@ Requests a destination device; defaults to the principal device.
 
 QUIET: Only displays the names of globals in which changes are made.
 
-~~~~~~~~~~~~~~~~~~
-Examples of %GCE
-~~~~~~~~~~~~~~~~~~
+**Examples of %GCE**
 
 Example:
 
@@ -1767,15 +1609,11 @@ After each selection %GD reports the number of globals selected by the input.
 
 A question mark (?) entered at a prompt displays help information. Pressing <RETURN> exits %GD.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Global^: Requests (using %GSEL) a global name with optional wildcards or a range of names; <RETURN> terminates %GD.
 
-~~~~~~~~~~~~~~~~~
-Examples of %GD
-~~~~~~~~~~~~~~~~~
+**Examples of %GD**
 
 Example:
 
@@ -1826,17 +1664,13 @@ The asterisk (*) wildcard at the Global ^ prompt displays all globals in the glo
 
 The %GED utility enables you to edit the globals in a full-screen editor environment. %GED invokes your default editor as specified by the EDITOR environment variable. When you finish the edit, use the [save and] exit command(s) of the editor you are using, to exit.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Edit^: Requests the name, in ZWRITE format, of a global to edit.
 
 Only one global can be edited at a time with %GED, see “Prompts” above for descriptions of valid input for subscripts.
 
-~~~~~~~~~~~~~~~~~~
-Examples of %GED
-~~~~~~~~~~~~~~~~~~
+**Examples of %GED**
 
 Example:
 
@@ -1884,9 +1718,7 @@ In many ways, %GI is similar to MUPIP LOAD. The format of the input file (GO or 
 
 ^%GI loads records having up to 1MiB string length.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Enter input file:
 
@@ -1894,9 +1726,7 @@ Requests name of a file; file should be in standard Global Output (GO) format or
 
 OK <Yes>?: Asks for confirmation.
 
-~~~~~~~~~~~~~~~~~
-Examples of %GI
-~~~~~~~~~~~~~~~~~
+**Examples of %GI**
 
 Example:
 
@@ -1922,9 +1752,7 @@ Example:
 
 In many ways, the %GO utility is similar to MUPIP EXTRACT (-FORMAT=GO or -FORMAT=ZWR). Like MUPIP EXTRACT, %GO does not extract and load YottaDB trigger definitions.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Global^: Requests (using %GSEL) the name(s) of the globals to search; <RETURN> ends selection.
 
@@ -1938,9 +1766,7 @@ Output Device: <terminal>:
 
 Requests destination device, which may be any legal filename.
 
-~~~~~~~~~~~~~~~~~
-Examples of %GO
-~~~~~~~~~~~~~~~~~
+**Examples of %GO**
 
 Example:
 
@@ -1969,9 +1795,7 @@ The %GSE utility finds occurrences of a string within the data values for select
 
 %GSE displays the name of each global as it is processed. You can suppress the output of the names of globals in which the search string is not found by using the QUIET utility label.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Output Device: <terminal>:
 
@@ -1981,9 +1805,7 @@ Global^: Requests (using %GSEL) the name(s) of the globals to search; <RETURN> e
 
 String: Requests a search string.
 
-~~~~~~~~~~~~~~~~~~
-Examples of %GSE
-~~~~~~~~~~~~~~~~~~
+**Examples of %GSE**
 
 Example:
 
@@ -2026,27 +1848,19 @@ The %GSEL utility selects globals. %GSEL creates a variable %ZG that is a local 
 
 * A minus sign (-) or quotation mark (')  as the first character will cause the search to remove the proceding global or range from the %ZG array.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 CALL: Runs %GSEL without reinitializing %ZG.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %ZG Contains array of all globals selected.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Global^: Requests a global name with optional wildcards or a range of names.
 
-~~~~~~~~~~~~~~~~~~~
-Examples of %GSEL
-~~~~~~~~~~~~~~~~~~~
+**Examples of %GSEL**
 
 Example:
 
@@ -2113,9 +1927,7 @@ This example uses CALL^%GSEL to add to an existing %ZG array of selected globals
 
 The %ZSHOWVTOLCL utility restores ZSHOW "V":gvn data into its original local variables. Invoke this utility with $ECODE set to the empty string. This utility facilitates automated restoration even of nodes exceeding the maximum record size of the global.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 %ZSHOWvbase: The name of the global variable destination for ZSHOW "V". Note that %ZSHOWVTOLCL cannot restore a local variable with the name %ZSHOWvbase.
 
@@ -2149,9 +1961,7 @@ The %FL utility lists the comment lines at the beginning of source programs. %FL
 
 %FL uses %RSEL to select routines. For more information, see :ref:`rsel-util`.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Routine: Requests the name(s) of the routines (using %RSEL); <RETURN> ends the selection.
 
@@ -2159,9 +1969,7 @@ Output Device: <terminal>:
 
 Requests a destination device; defaults to the principal device.
 
-~~~~~~~~~~~~~~~~~
-Examples of %FL
-~~~~~~~~~~~~~~~~~
+**Examples of %FL**
 
 Example:
 
@@ -2211,9 +2019,7 @@ The %RCE utility replaces every occurrence of a text string with another text st
 
 Regardless of whether you select a display of every change, %RCE displays the name of each routine as it is processed. You can suppress the output of the names of routines in which no changes are made by using the QUIET and QCALL utility labels. %RCE completes processing with a count of replacements and routines changed.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Routine: Requests (using %RSEL) the name(s) of the routines to change; <RETURN> ends the selection.
 
@@ -2229,15 +2035,11 @@ Output Device: <terminal>:
 
 Requests a destination device; defaults to the principal device.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 CALL: Works without user interaction unless %ZR is not defined.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 The following input variables are only applicable when invoking CALL^%RCE.
 
@@ -2251,9 +2053,7 @@ The following input variables are only applicable when invoking CALL^%RCE.
 
 %ZC: Truth-value indicating whether to display the change trail, defaults to 0 (no).
 
-~~~~~~~~~~~~~~~~~~
-Examples of %RCE
-~~~~~~~~~~~~~~~~~~
+**Examples of %RCE**
 
 Example:
 
@@ -2332,15 +2132,11 @@ After each selection %RD displays the total number of routines listed.
 
 Pressing <RETURN> exits %RD.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Routine: Requests (using %RSEL) the name(s) of the routines to list; <RETURN> ends the selection.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 OBJ: Lists object modules accessible through the current $ZROUTINES.
 
@@ -2348,9 +2144,7 @@ LIB: Lists percent (%) routines accessible through the current $ZROUTINES.
 
 SRC: Lists the source modules accessible through the current $ZROUTINES (same as %RD).
 
-~~~~~~~~~~~~~~~~~
-Examples of %RD
-~~~~~~~~~~~~~~~~~
+**Examples of %RD**
 
 Example:
 
@@ -2416,9 +2210,7 @@ This example invokes %RD with the label SRC that lists only source modules acces
 
 %RI transforms M routines in the sequential format described in the ANSI standard into individual .m files in YottaDB format. Use %RI to make M RO format accessible as YottaDB routines.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Formfeed delimited <No>?
 
@@ -2432,9 +2224,7 @@ Output Directory:
 
 Requests name of directory to output M routines.
 
-~~~~~~~~~~~~~~~~~
-Examples of %RI
-~~~~~~~~~~~~~~~~~
+**Examples of %RI**
 
 Example:
 
@@ -2463,9 +2253,7 @@ The %RO utility writes M source code for one or more routines to a sequential de
 
 %RO writes the routines in alphabetical order to the specified device. %RO displays the name of each routine as it writes the routine to the device.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Routine: Requests (using %RSEL) the name(s) of the routines to output; <RETURN> ends selection.
 
@@ -2479,15 +2267,11 @@ Strip comments <No>?:
 
 Asks whether to remove all comment lines except those with two adjacent semicolons.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 CALL: Works without user interaction unless %ZR is not defined.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 The following input variables are only applicable when invoking CALL^%RO.
 
@@ -2495,9 +2279,7 @@ The following input variables are only applicable when invoking CALL^%RO.
 
 %ZD: Identifies the device to display output, defaults to principal device.
 
-~~~~~~~~~~~~~~~~~
-Examples of %RO
-~~~~~~~~~~~~~~~~~
+**Examples of %RO**
 
 Example:
 
@@ -2542,9 +2324,7 @@ The %RSE utility searches for every occurrence of a text string in a routine or 
 
 %RSE completes processing with a count of occurrences found.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Routine: Requests (using %RSEL) the name(s) of the routines to search; <RETURN> ends selection.
 
@@ -2554,15 +2334,11 @@ Output device: <terminal>:
 
 Requests a destination device; defaults to the principal device.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 CALL: Works without user interaction unless %ZR is not defined.
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 The following input variables are only applicable when invoking CALL^%RSE.
 
@@ -2572,9 +2348,7 @@ The following input variables are only applicable when invoking CALL^%RSE.
 
 %ZD: Identifies the device to display the results, defaults to principal device. Make sure you open the device if the device is not the principal device.
 
-~~~~~~~~~~~~~~~~~~
-Examples of %RSE
-~~~~~~~~~~~~~~~~~~
+**Examples of %RSE**
 
 Example:
 
@@ -2642,15 +2416,11 @@ A colon (:) between two routines specifies a range.
 .. note::
    If a local variable %ZRSET is defined, %RSEL places the output information into a global variable (^%RSET) instead of the local variable %ZR.
 
-~~~~~~~~~
-Prompts
-~~~~~~~~~
+**Prompts**
 
 Routine: Requests the name(s) of the routines; <RETURN> ends selection.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 CALL: Performs %RSEL without reinitializing %ZR.
 
@@ -2662,9 +2432,7 @@ SRC: Searches only source files (same as %RSEL).
 
 SRCDIR: Returns a space separated list of directories in $ZROUTINES that can contain source code. The syntax is SRCDIR^%RSEL. Typically, the first source directory is the location where code generators should place generated source code. If there are no source directories, for example, if $ZROUTINES contains only shared libraries, SRCDIR^%RSEL returns an empty string (:code:`""`).
 
-~~~~~~~~~~~~~~~~~
-Input Variables
-~~~~~~~~~~~~~~~~~
+**Input Variables**
 
 The following input variables are only valid when invoking CALL^%RSEL:
 
@@ -2674,17 +2442,13 @@ The following input variables are only valid when invoking CALL^%RSEL:
 
 %ZRSET: On being set, requests %RSEL to place the output in the global variable ^%RSET.
 
-~~~~~~~~~~~~~~~~~~
-Output Variables
-~~~~~~~~~~~~~~~~~~
+**Output Variables**
 
 %ZR: As output, contains list of directories and shared libraries indexed by selected routine names.
 
 ^%RSET($JOB): The output global variable ^%RSET is used instead of the local variable %RD if the input variable %ZRSET is set. It is indexed by job number $JOB and the selected routine names.
 
-~~~~~~~~~~~~~~~~~~~
-Examples of %RSEL
-~~~~~~~~~~~~~~~~~~~
+**Examples of %RSEL**
 
 Example:
 
@@ -2823,9 +2587,7 @@ The System Management utilities are:
 
 The %DUMPFHEAD utility provides a programmatic interface to the functionality of MUPIP DUMPFHEAD. This routine reads the database file header directly, rather than opening it as a database and reading values mapped into memory. This means that it is lighter weight in some senses than ^%PEEKBYNAME, but it also means that the information it retrieves is more limited, and possibly less current.
 
-~~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~~
+**Utility Labels**
 
 getfields^%DUMPFHEAD(fldarray,dbname) : Retrieve the file header fields provided by the MUPIP DUMPFHEAD command for the database file specified by the second parameter into the array passed by reference to the first parameter.
 
@@ -2903,27 +2665,19 @@ Example:
    YDB>write $$^%PEEKBYNAME("sgmnt_data.label",base)
    GDSDYNUNX03
 
-~~~~~~~~~~~~~~~~~~~~~
-LISTALL^%PEEKBYNAME
-~~~~~~~~~~~~~~~~~~~~~
+**LISTALL^%PEEKBYNAME**
 
 Prints all the field mnemonics acceptable as the first argument to %PEEKBYNAME().
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-LIST^%PEEKBYNAME(.output)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**LIST^%PEEKBYNAME(.output)**
 
 Populates output variable with the type and size information indexed by the field mnemonics for all %PEEKBYNAME()-acceptable fields. For example, output("gd_region.jnl_file_name")="unsigned-char,256".
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Labels for selected fields
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Labels for selected fields**
 
 Below are selected fields for which you may find %PEEKBYNAME to be a useful alternative to running a DSE or MUPIP command in a PIPE device, and parsing the output. If there is a field that you wish to access using %PEEKBYNAME, please send questions to your YottaDB support channel. We will get you an answer, and if it seems to us to be of general interest, we will add it to the %PEEKBYNAME user documentation.
 
-~~~~~~~~~~~~~~~~~~~
-Region Parameters
-~~~~~~~~~~~~~~~~~~~
+**Region Parameters**
 
 Calls to %PEEKBYNAME with the listed string as value of the first parameter, and the region name as the value of the second parameter, return the value. For example:
 
@@ -3039,9 +2793,7 @@ When using the following, remember to write code that allows for values other th
 
     Note that ``gtmsource_local_struct.heartbeat_jnl_seqno`` is an array field, so ``^%PEEKBYNAME`` requires an additional integer parameter to specify which array element to index. Also, the return value must be reduced by 1 for conformity to the values in MUPIP REPLIC -SOURCE -BACKLOG. For example, the following statement will fetch array index 0 (indices run from 0-15): ``write ($$FUNC^%HD($$^%PEEKBYNAME("gtmsource_local_struct.heartbeat_jnl_seqno",0)))-1,!``.
 
-~~~~~~~~~~~~~~~~~~~~~~~~
-Replication Parameters
-~~~~~~~~~~~~~~~~~~~~~~~~
+**Replication Parameters**
 
 Calls to %PEEKBYNAME with the listed parameter as the first or only parameter return replication fields as described. For example:
 
@@ -3095,9 +2847,7 @@ Calls to %PEEKBYNAME with the listed parameter as the first or only parameter re
 
 The ^%XCMD utility XECUTEs input from the shell command line and returns any error status (truncated to a single byte on UNIX) generated by that code. It is useful for running YottaDB commands from the shell, as a useful complement to standard utilities such as `awk <https://en.wikipedia.org/wiki/AWK>`_, `grep <https://en.wikipedia.org/wiki/Grep>`_, `sort <https://en.wikipedia.org/wiki/Sort_(Unix)>`_ and `wc <https://en.wikipedia.org/wiki/Wc_(Unix)>`_. In some cases, you may be able to accomplish your goal in a single process instead of a series of processes in a pipe.
 
-~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~
+**Utility Labels**
 .. code-block:: none
 
    LOOP^%XCMD [--before=/<XECUTE_code>/] --xec=/<XECUTE_code>/ [--after=/<XECUTE_code>/]
@@ -3181,9 +2931,7 @@ Example which brackets commands by different characters (:code:`*` and :code:`$`
 
 The %YDBJNLF utility routine loads journal extracts into global variables, allowing software to answer questions such as which process(es) updated a certain global, in what sequence and when; that global variable updates a process made; etc.
 
-~~~~~~~~~~~~~~~
-Utility Labels
-~~~~~~~~~~~~~~~
+**Utility Labels**
 
 INGEST^%YDBJNLF(jnlfile[,label]) uses `MUPIP JOURNAL EXTRACT FORWARD SHOW=ALL FENCES=NONE DETAIL FULL NOVERIFY <../AdminOpsGuide/ydbjournal.html#journal-selection-qualifiers>`_ to extract journal file jnlfile into global variables as described below. Since troubleshooting and forensics may need damaged journal files to be ingested, %YDBJNLF uses the NOVERIFY option.
 
@@ -3265,9 +3013,7 @@ When ingesting journal files on systems where the corresponding database file is
 
 :code:`PURGE^%YDBJNLF(label)` purges all ingested %YDBJNLF data with the specified :code:`label`. If :code:`label` is omitted, it purges all ingested %YDBJNLF data.
 
-~~~~~~~~~~
-Octo DDL
-~~~~~~~~~~
+**Octo DDL**
 
 :code:`OCTODDL^%YDBJNLF([rectype])` outputs CREATE TABLE statements in a format suitable for Octo, which then allows the journal file data identified by label to be queried through Octo using SQL.
 If rectype is omitted, OCTODDL, outputs CREATE TABLE statements for all record types and all metadata, e.g.,

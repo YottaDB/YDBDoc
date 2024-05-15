@@ -61,6 +61,8 @@ The format of the SET command is:
 SET Qualifiers
 ~~~~~~~~~~~~~~~~
 
+.. _set-file:
+
 ^^^^^^
 -FILE
 ^^^^^^
@@ -100,6 +102,8 @@ Specifies that the argument is a region-list which identifies database file(s) m
 In other words, either a space or an equal sign can follow the qualifier. The region-list identifies the target of SET. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wild-cards can be used to specify them. Any region-name may include the wild-card characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order. Note that region-list must immediately follow the REGION qualifier. Older versions of YottaDB used only a space and permitted other qualifiers between the REGION qualified and region-list.
 
 Incompatible with: FILE, JNLFILE and REPLICATION
+
+.. _set-replication:
 
 ^^^^^^^^^^^^^
 -REPLICATION
@@ -274,6 +278,8 @@ Enables or disables custom errors in a region to automatically cause an Instance
 For more information on creating a list of custom errors that automatically cause an Instance Freeze, refer to :ref:`instance-freeze`.
 
 For more information on promptly setting or clearing an Instance Freeze on an instance irrespective of whether any region is enabled for Instance, refer to the :ref:`start-source-server` section of the Database Replication chapter.
+
+.. _set-journal:
 
 ^^^^^^^^^
 -JOURNAL
@@ -477,6 +483,8 @@ Specifies the maximum number of nanoseconds for processes to sleep while waiting
 * The default is zero (0) which causes the process to return control to the UNIX kernel to be rescheduled with no explicit delay. When the value is non-zero, the process waits for a random value between zero (0) and the maximum value permitted by the mask.
 
 * Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless you have data from testing and benchmarking that demonstrates a benefit from a change.
+
+.. _set-stats:
 
 ^^^^^^^
 -STATS

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -70,7 +70,7 @@ Perform the following tasks before you begin a database backup.
 
 If you are backing up any encrypted regions, you need to backup your $ydb_crypt_config / $gtmcrypt_config file and protect the encryption keys. You also need to backup the related algorithms used to retrieve or regenerate keys. For example, if you are using `GnuPG <https://gnupg.org/>`_ for encryption and signing services, you must backup the relevant files in your $GNUPGHOME directory as part of your backup in addition to preserving the encryption key. Look in the manpages of GnuPG (:code:`man gpg`) to see what files are required.  Remember that if you cannot retrieve the encryption key which was in use at the time of the backup, there is no way to decrypt the data from the encrypted regions. Therefore, ensure that you have procedures in place to securely handle storage and retrieval of the encryption keys.
 
-* When using replication, ensure that a Source/Receiver process is alive (`MUPIP REPLICATE SOURCE CHECKHEALTH <./dbrepl.html#checking-server-health>`_). Always backup the replication instance file with the database (`MUPIP BACKUP REPLINSTANCE <./dbmgmt.html#replinstance>`_).
+* When using replication, ensure that a Source/Receiver process is alive (`MUPIP REPLICATE SOURCE CHECKHEALTH <./dbrepl.html#checking-source-server-health>`_). Always backup the replication instance file with the database (`MUPIP BACKUP REPLINSTANCE <./dbmgmt.html#replinstance>`_).
 
 * If you intend to use a DATABASE backup at the same time in the same computer system as the source database, be sure to disable journaling in the backed up database with `BKUPDBJNL=DISABLE <./dbmgmt.html#bkupdbjnl>`_.
 
@@ -254,6 +254,8 @@ The format of the REPLACE qualifier is:
 * By default, MUPIP BACKUP protects against overwriting the destination files. REPLACE disables this default behavior.
 
 * REPLACE is compatible only with DATABASE.
+
+.. _backup-replication:
 
 ^^^^^^^^^^^^^
 -REPLICation

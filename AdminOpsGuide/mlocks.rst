@@ -380,6 +380,8 @@ The optional qualifiers are:
 
 By default, CLNUP operates on all regions (-ALL).
 
+.. _clnup-all:
+
 ~~~~~~~~~~~
 -A[LL]
 ~~~~~~~~~~~
@@ -461,6 +463,8 @@ Specifies all current LOCKs.
 
 * SHOW -ALL and -WAIT displays both -ALL and -WAIT information.
 
+.. _show-lock:
+
 ~~~~~~~~~~~~~~~~~~~~~~
 -L[OCK]=resource_name
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -483,6 +487,8 @@ Allows the SHOW command to work even if another process is holding a critical se
 
 * Use NOCRIT[ICAL] with SHOW only when normal operation is unsuccessful, as NOCRIT[ICAL] may cause LKE to report incomplete or inconsistent information.
 
+.. _show-output:
+
 ~~~~~~~~~~~~~~~~~~~~~~
 -O[UTPUT]="file-name"
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -494,6 +500,8 @@ Directs the reporting of all specified LOCKs to a file.
 * The -OUTPUT qualifier is compatible with all other qualifiers.
 
 * By default, the SHOW command sends output messages to stderr.
+
+.. _show-pid:
 
 ~~~~~~~~~~~
 -P[ID]=pid
@@ -508,6 +516,8 @@ Specifies the process identification number that holds a LOCK on a resource name
 * The -PID qualifier is compatible with all other qualifiers; the most restrictive of the qualifiers prevails.
 
 * By default, SHOW displays the LOCKs for all PIDs.
+
+.. _show-region:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -R[EGION]=region-name | -R[EGION] region-name

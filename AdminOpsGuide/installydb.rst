@@ -70,6 +70,8 @@ Install the following packages:
    # RHEL/Rocky Linux
    yum install -y file binutils findutils elfutils-libelf libicu wget procps-ng nano gzip
 
+.. _installation-procedure-installing-yottadb:
+
 +++++++++++++++++++
 Installing YottaDB
 +++++++++++++++++++

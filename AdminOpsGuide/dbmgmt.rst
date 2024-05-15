@@ -579,6 +579,8 @@ Creates an encrypted binary extract with null IVs from a database with non-null 
 
 * The default is NONULL_IV which produces a binary extract in GDS BINARY EXTRACT LEVEL 9 format.
 
+.. _extract-region:
+
 ~~~~~~~
 -REGION
 ~~~~~~~
@@ -796,11 +798,15 @@ Controls the behavior of a FREEZE specified with -ONLINE when YottaDB must write
 
 * Incompatible with: OFF, NOONLINE
 
+.. _freeze-dbg:
+
 ~~~~
 -DBG
 ~~~~
 
 Produces verbose output to help with debugging.
+
+.. _freeze-online:
 
 ~~~~~~~~
 -ONLINE
@@ -832,6 +838,8 @@ Controls the potential impact of a FREEZE on concurrently updating processes. Th
 .. note::
    If any database region is nearly full, run MUPIP EXTEND before attempting a MUPIP FREEZE ON ONLINE. Otherwise, should a database file extension become necessary after the MUPIP FREEZE takes effect, the freeze will be released (if AUTORELEASE was specified or implicitly assumed by default) or all updates will be blocked (if NOAUTORELEASE was specified) effectively turning the ONLINE freeze into a NOONLINE freeze.
 
+.. _freeze-override:
+
 ~~~~~~~~~~
 -OVERRIDE
 ~~~~~~~~~~
@@ -845,6 +853,8 @@ Release a freeze set by a process with a different userid. YottaDB provides OVER
 * OVERRIDE should not be necessary (and may even be dangerous) in most schemes.
 
 * Incompatible with: AUTORELEASE, ON, ONLINE, RECORD
+
+.. _freeze-record:
 
 ~~~~~~~~
 -RECORD
@@ -938,6 +948,8 @@ Specifies that the reported key is for the Journal Pool of the instance created 
 ~~~~~~~~~
 
 Specifies that the reported key is for the Receive Pool of the instance created by the current Global Directory.
+
+.. _ftok-id:
 
 ~~~~~
 -ID
@@ -1067,6 +1079,8 @@ The format of the LOAD command is:
    The MUPIP EXTRACT or MUPIP LOAD procedure for large databases is time consuming due to the volume of data that has to be converted from binary to ZWR format (on source) and vice versa (on target). One must also consider the fact that the extracted file can be very large for a large database. Users must ensure there is adequate storage space to support the size of the extract file and the space occupied by the source and target databases. In order to reduce the total time and space it takes to transfer database content from one endian platform to another, it is efficient to convert the endian format in-place for a database and transfer the converted database. See MUPIP ENDIANCVT for more information on converting the endian format of a database file.
 
 The following sections describe the optional qualifiers of the MUPIP LOAD command.
+
+.. _load-format:
 
 ~~~~~~~~
 -FORMAT
@@ -1382,6 +1396,8 @@ Note that there are more and less dense index and data blocks used than in scena
 
 The optional qualifiers for MUPIP REORG are:
 
+.. _reorg-downgrade:
+
 ~~~~~~~~~~~~
 -DOWNGRADE
 ~~~~~~~~~~~~
@@ -1585,6 +1601,8 @@ For an interrupted REORG operation, RESUME allows the user to resume the REORG o
 
 * With RESUME specified, the program retrieves the last key value, from the database file header, and restarts operations from that key.
 
+.. _reorg-region:
+
 ~~~~~~~~
 -REGION
 ~~~~~~~~
@@ -1598,6 +1616,8 @@ The format of the REGION qualifier is:
    -R[EGION=region-list | -R[EGION] region-list
 
 region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
+
+.. _reorg-select:
 
 ~~~~~~~~~
 -SELECT
@@ -1892,6 +1912,8 @@ The format of the RESTORE command is:
 
 * If the BACKUP BYTESTREAM was created using TRANSACTION=1, create a new database with MUPIP CREATE and do not access it, except the standalone MUPIP commands INTEG FILE, EXTEND, and SET before initiating the RESTORE.
 
+.. _restore-extend:
+
 ~~~~~~~~~
 -EXTEND
 ~~~~~~~~~
@@ -1964,6 +1986,8 @@ The RUNDOWN command may include one of the following qualifiers:
 
 If the RUNDOWN command does not specify either FILE or REGION, it checks all the IPC resources (shared memory) on the system and if they are associated with a YottaDB database, attempts to rundown that file. MUPIP RUNDOWN with no argument removes any statistics database file resources associated with actual database file resources it can remove.
 
+.. _rundown-file:
+
 ~~~~~~
 -FILE
 ~~~~~~
@@ -1972,11 +1996,15 @@ Specifies that the argument is a file-name for a single database file. The FILE 
 
 Incompatible with: REGION
 
+.. _rundown-override:
+
 ~~~~~~~~~
 -OVERRIDE
 ~~~~~~~~~
 
 Overrides the protection that prevents MUPIP RUNDOWN from performing a rundown of a replication-enabled (with BEFORE_IMAGE) database or a non-replicated NOBEFORE-journaled database that was abnormally shutdown. The protection involves issuing the MUUSERLBK error for a previously crashed replication-enabled (with BEFORE IMAGE journaling) database and the MUUSERECOV error for a non-replicated or NOBEFORE-journaled database. Both these errors prevent complications related to data recovery from a journal file or a replication-enabled database.
+
+.. _rundown-region:
 
 ~~~~~~~~
 -REGION
@@ -2066,6 +2094,8 @@ The 2 sigma column for the two sampling techniques shows the dispersion of the s
 
 Specifies the logical adjacency of data blocks that MUPIP SIZE should assume during estimation. By default, MUPIP SIZE assumes ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP SIZE report. Note that adjacency is only a proxy for database organization and its usefulness may be limited by the technology and configuration of your secondary storage. See the :ref:`mupip-integ` section of this chapter for additional comments on adjacency.
 
+.. _size-select:
+
 ~~~~~~~~
 -SELECT
 ~~~~~~~~
@@ -2088,6 +2118,8 @@ global-name-list can be:
 
 * "\*" to select all global variables.
 
+.. _size-region:
+
 ~~~~~~~~
 -REGION
 ~~~~~~~~
@@ -2099,6 +2131,8 @@ Specifies the region on which MUPIP SIZE runs. If REGION is not specified, MUPIP
    -R[EGION]=region-list | -R[EGION] region-list
 
 The regions in the region-list are case-insensitive. The specified region-list is converted into upper case before processing.
+
+.. _size-subscript:
 
 ~~~~~~~~~~~~
 -SUBSCRIPT
@@ -2249,6 +2283,8 @@ Provides a facility to examine the current trigger definition. SELECT produces a
 .. note::
    The output from the MUPIP TRIGGER SELECT command may not be identical to your trigger definition file. This is because YottaDB converts semantically identical syntax into a single internal representation; while SELECT output may not be identical to the TRIGGERFILE input, it has the same meaning. Additionally, MUPIP TRIGGER SELECT displays a field called "Cycle" as part of a comment. Cycle is the number of trigger definition updates (addition, modification, or deletion) performed on a global node. MUPIP TRIGGER treats the deletion of a non-existent trigger as a success; if that is the only operation, or one of a set of successful operations, it returns success 0 to the shell. Also, MUPIP TRIGGER returns failure in case of trigger selection using trigger names where the number after the pound-sign (#) starts with a 0 (which is an impossible auto-generated trigger name).
 
+.. _trigger-upgrade:
+
 ~~~~~~~~~
 -UPGRADE
 ~~~~~~~~~
@@ -2262,6 +2298,8 @@ The format of the UPGRADE qualifier is:
    -UPGRADE
 
 If YottaDB encounters an old trigger definition it produces a NEEDTRIGUPGRD message. To preserve the possibility of a straightforward downgrade to an earlier version, perform a select "*" action with MUPIP TRIGGER (or $ZTRIGGER() and save the result. Note that TRIGGER UPGRADE assumes that the existing trigger definitions are properly defined; if the prior release has produced defective triggers, delete them with a wild-card ("*"), and redefine the triggers in the new release. In the event of a downgrade, delete "*" all triggers before the downgrade and insert the saved version from before the upgrade. Attempting to perform a MUPIP TRIGGER UPGRADE on a database without write authorization to the database produces a TRIGMODREGNOTRW error. The UPGRADE qualifier is not compatible with any other MUPIP TRIGGER qualifier. Trigger upgrades from older versions may produce journal records based on the prior format that a MUPIP JOURNAL RECOVER cannot process correctly, therefore, YottaDB recommends you do them with journaling off, and start with a backup and fresh journal files after the trigger upgrade.
+
+.. _trigger-stdin:
 
 ~~~~~~~~
 -STDIN
@@ -2278,6 +2316,8 @@ The format of the STDIN qualifier is:
 STDIN is incompatible with any other option.
 
 STDIN qualifier was added to YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
+
+.. _trigger-stdout:
 
 ~~~~~~~~~
 -STDOUT

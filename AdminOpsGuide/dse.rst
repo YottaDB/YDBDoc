@@ -316,6 +316,8 @@ The format of the ALL command is:
 Qualifiers
 ~~~~~~~~~~
 
+.. _qual-all:
+
 ^^^^
 -ALL
 ^^^^
@@ -1396,6 +1398,8 @@ Example:
    DSE> critical -OWNER
    Write critical section is currently unowned
 
+.. _crit-release:
+
 ^^^^^^^^^^
 -REL[EASE]
 ^^^^^^^^^^
@@ -1424,6 +1428,8 @@ Displays the number of times the critical section has been through an online rei
 Using -RESET with -INIT causes an error for processes that are attempting to get the critical section of the region. Under the guidance of YottaDB, use -RESET -INIT as a way to clear certain types of hangs.
 
 Use only with: -INIT
+
+.. _crit-seize:
 
 ^^^^^^^^
 -S[EIZE]
@@ -1480,6 +1486,8 @@ Use the error messages reported by MUPIP INTEG to determine what to DUMP and exa
 Qualifiers of DUMP
 ~~~~~~~~~~~~~~~~~~
 
+.. _dump-all:
+
 ^^^^^^
 -A[LL]
 ^^^^^^
@@ -1487,6 +1495,8 @@ Qualifiers of DUMP
 When used with -FILEHEADER, the -A[LL] qualifier displays additional information on the database most of which is useful to YottaDB in diagnosing issues. A complete description of all the elements that show up with the DSE DUMP -FILEHEADER -ALL command are beyond the scope of this book.
 
 Meaningful only with: -FILEHEADER
+
+.. _dump-block:
 
 ^^^^^^^^^^^^^^^^^^^^^
 -B[LOCK]=block-number
@@ -1544,6 +1554,8 @@ By default, DUMP displays all information in a block or record.
 
 Incompatible with: -ALL, -FILEHEADER, -GLO, -UPDPROC and -ZWR.
 
+.. _dump-offset:
+
 ^^^^^^^^^^^^^^^^
 -O[FFSET]=offset
 ^^^^^^^^^^^^^^^^
@@ -1551,6 +1563,8 @@ Incompatible with: -ALL, -FILEHEADER, -GLO, -UPDPROC and -ZWR.
 Specifies the offset, in bytes, of the starting record for the dump. If the offset does not point to the beginning of a record, DSE rounds down to the last valid record start (e.g., DUMP -OFF=10 starts at -OFF=A if that was the beginning of the record containing offset 10).
 
 Incompatible with: -ALL, -FILEHEADER, and -RECORD.
+
+.. _dump-record:
 
 ^^^^^^^^^^^^^^^^^^^^^^^
 -R[ECORD]=record_number
@@ -1771,6 +1785,8 @@ Locates a given block or region. The format of the FIND command is:
 Qualifiers of FIND
 ~~~~~~~~~~~~~~~~~~
 
+.. _find-block:
+
 ^^^^^^^^^^^^^^^^^^^^^
 -B[LOCK]=block_number
 ^^^^^^^^^^^^^^^^^^^^^
@@ -1816,6 +1832,8 @@ Designates the starting point of a -FREEBLOCK search.
 FIND -FREE -HINT locates the "closest" free block to the hint. This provides a tool for locating blocks to add to the B-tree, or to hold block copies created with SAVE that would otherwise be lost when DSE exits. FIND -FREE relies on the bitmaps to locate its target, so be sure to fix any blocks incorrectly marked "FREE" before using this command.
 
 Required with: -FREEBLOCK; compatible with -BLOCK and [NO]CRIT.
+
+.. _find-key:
 
 ^^^^^^^^^^
 -K[EY]=key
@@ -1966,11 +1984,15 @@ The format of the INTEGRIT command is:
 Qualifiers of INTEGRIT
 ~~~~~~~~~~~~~~~~~~~~~~
 
+.. _integ-block:
+
 ^^^^^^^^^^^^^^^^^^^^^
 -B[LOCK]=block_number
 ^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block for DSE to check. On commands with no -BLOCK qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, that is, on the first block-oriented command, DSE uses block one (1).
+
+.. _integ-nocrit:
 
 ^^^^^^^^^
 -NO[CRIT]
@@ -2004,6 +2026,8 @@ By default, MAPS shows the status of the bitmap for the specified block.
 ~~~~~~~~~~~~~~~~~~
 Qualifiers for MAP
 ~~~~~~~~~~~~~~~~~~
+
+.. _map-block:
 
 ^^^^^^^^^^^^^^^^^^^^^
 -BL[OCK]=block_number
@@ -2188,17 +2212,23 @@ The format of the OVERWRITE command is:
 Qualifiers for OVERWRITE
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. _overwrite-block:
+
 ^^^^^^^^^^^^^^^^^^^^^
 -B[LOCK]=block number
 ^^^^^^^^^^^^^^^^^^^^^
 
 Directs DSE to OVERWRITE a specific block. If no block number is specified, the default is the current block.
 
+.. _overwrite-data:
+
 ^^^^^^^^^^^^^^
 -D[ATA]=string
 ^^^^^^^^^^^^^^
 
 Specifies the data to be written. Use quotation marks around the string and escape codes of the form \\a or \\ab, where "a" and "b" are hexadecimal digits representing non-printing characters. \\\\ translates to a single backslash.
+
+.. _overwrite-offset:
 
 ^^^^^^^^^^^^^^^^
 -O[FFSET]=offset
@@ -2301,11 +2331,15 @@ Specifies the lower bound for the key range.
 
 Restricts a search to either BUSY or FREE blocks.
 
+.. _range-nocrit:
+
 ^^^^^^^^^^^
 -[NO]C[RIT]
 ^^^^^^^^^^^
 
 Allows DSE RANGE to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally.
+
+.. _range-star:
 
 ^^^^^^^
 -S[TAR]
@@ -2398,6 +2432,8 @@ The version number is specified in decimal.
 Qualifiers of REMOVE
 ~~~~~~~~~~~~~~~~~~~~
 
+.. _remove-block:
+
 ^^^^^^^^^^^^^^^^^^^^^
 -B[LOCK]=block_number
 ^^^^^^^^^^^^^^^^^^^^^
@@ -2407,6 +2443,8 @@ Specifies the block associated with the record or buffer being deleted.
 On commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, that is, on the first block-oriented command, DSE uses block one (1).
 
 BLOCK accepts blocks higher than the current database size because they deal with a set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE).
+
+.. _remove-count:
 
 ^^^^^^^^^^^^^^
 -C[OUNT]=count
@@ -2418,6 +2456,8 @@ By default, REMOVE deletes a single record.
 
 Incompatible with: -VERSION
 
+.. _remove-offset:
+
 ^^^^^^^^^^^^^^^^
 -O[FFSET]=offset
 ^^^^^^^^^^^^^^^^
@@ -2425,6 +2465,8 @@ Incompatible with: -VERSION
 Specifies the offset (in bytes) of the record to be removed. If the offset does not point to the beginning of a record, DSE rounds down to the beginning of the record containing the offset (for example, REMOVE -OFF=10 starts at OFF=A if that was the last prior record boundary).
 
 Incompatible with: -VERSION, -RECORD
+
+.. _remove-record:
 
 ^^^^^^^^^^^^^^^^^^^^^^^
 -R[ECORD]=record_number
@@ -2468,6 +2510,8 @@ The version number is specified in decimal.
 Qualifiers of RESTORE
 ~~~~~~~~~~~~~~~~~~~~~
 
+.. _restore-block:
+
 ^^^^^^^^^^^^^^^^^^^^^
 -B[LOCK]=block_number
 ^^^^^^^^^^^^^^^^^^^^^
@@ -2477,6 +2521,8 @@ Specifies the block to restore.
 For commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, (i.e., on the first block-oriented command), DSE uses block one (1).
 
 BLOCK accepts blocks higher than the current database size because it deals with a set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE).
+
+.. _restore-from:
 
 ^^^^^^^^^^^^^^^^^^^^
 -F[ROM]=block_number
@@ -2488,6 +2534,8 @@ DSE restores the block specified with -BLOCK qualifier with the block specified 
 
 By default, RESTORE uses the target block number as the -FROM block number.
 
+.. _restore-region:
+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 -R[EGION]=region | -R[EGION] region
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2495,6 +2543,8 @@ By default, RESTORE uses the target block number as the -FROM block number.
 Specifies the region of the saved buffer to restore.
 
 By default, RESTORE uses SAVE buffers from the current region.
+
+.. _restore-version:
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 -V[ERSION]=version_number
@@ -2528,6 +2578,8 @@ The format of the SAVE command is:
 Qualifiers of SAVE
 ~~~~~~~~~~~~~~~~~~
 
+.. _save-block:
+
 ^^^^^^^^^^^^^^^^^^^^^
 -B[LOCK]=block_number
 ^^^^^^^^^^^^^^^^^^^^^
@@ -2555,6 +2607,8 @@ By default, SAVE -LIST provides a directory of all SAVEd blocks.
 LIST may display blocks higher than the current database size because it deals with a set of saved block copies rather than the database and there are situations where a saved block may be outside the current database size (for example, due to a concurrent MUPIP REORG -TRUNCATE);
 
 Incompatible with: -COMMENT
+
+.. _save-nocrit:
 
 ^^^^^^^^^^^
 -[NO]C[RIT]
@@ -2594,6 +2648,8 @@ Specifies the number of bytes to shift data in the direction of the block header
 
 Incompatible with: -FORWARD
 
+.. _shift-block:
+
 ^^^^^^^^^^^^^^^^^^^^^
 -BL[OCK]=block_number
 ^^^^^^^^^^^^^^^^^^^^^
@@ -2607,6 +2663,8 @@ Specifies the block number to perform the DSE SHIFT.
 Specifies the number of bytes to shift data toward the end of the block.
 
 Incompatible with: -BACKWARD
+
+.. _shift-offset:
 
 ^^^^^^^^^^^^^^^^
 -O[FFSET]=offset

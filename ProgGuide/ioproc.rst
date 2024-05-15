@@ -1861,7 +1861,7 @@ where:
 
 .. note::
    In most circumstances, ``WRITE /WAIT(timeout[,"WRITE"])`` for non-blocking sockets returns immediately, because non-blocking sockets are usually ready for writing. See ``WRITE /BLOCK("OFF")`` below.
-   
+
    If the current Socket Device is $PRINCIPAL and input and output are different SOCKETs, WRITE /WAIT applies to the input side of the device.
 
 .. code-block:: none
@@ -3567,6 +3567,8 @@ Example:
 
 This example positions the cursor to "home" in the upper left corner of a VDT and clears the entire current screen "page."
 
+.. _use-connect:
+
 ~~~~~~~~
 CONNECT
 ~~~~~~~~
@@ -3631,6 +3633,8 @@ A trap character enabled by CTRAP produces one of the following actions:
 For more information on error handling, refer to `Chapter 13: “Error Processing” <./errproc.html>`_.
 
 When CTRAP includes <CTRL-C>, [NO]CENABLE has no effect. CTRAPping <CTRL-C> also takes precedence over CENABLE.
+
+.. _use-delimiter:
 
 ~~~~~~~~~~
 DELIMITER
@@ -3784,6 +3788,8 @@ If any of the EDITING <CTRL> characters are in the CTRAP list, their editing fun
 .. note::
    M READ EDITING depends on the values of $X and $Y being correct. If the application sends its own escape sequences or control characters, which change the cursor position, it must properly update $X and $Y before doing a M READ with EDITING enabled to ensure correct formatting during input.
 
+.. _use-empterm:
+
 ~~~~~~~~
 EMPTERM
 ~~~~~~~~
@@ -3828,6 +3834,8 @@ Example:
 
 This example disables the escape sequence processing and set $c(13) as the line terminator.
 
+.. _use-exception:
+
 ~~~~~~~~~
 EXCEPTION
 ~~~~~~~~~
@@ -3837,6 +3845,8 @@ EXCEPTION=expr Applies to: All devices
 Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current ydb_ztrap_form.
 
 For more information on error handling, refer to `Chapter 13: “Error Processing” <./errproc.html>`_.
+
+.. _use-fflf:
 
 ~~~~~~
 FFLF
@@ -3878,6 +3888,8 @@ Example:
 
 This example removes the effect of escape sequences on the maintenance $X and $Y.
 
+.. _use-follow:
+
 ~~~~~~~
 FOLLOW
 ~~~~~~~
@@ -3907,6 +3919,8 @@ HUPENABLE
 Enables or disables the recognition by the process of the loss ("hang up") of PRINCIPAL device terminal. When enabled the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has diconnected. If YottaDB is configured to ignore such a signal, a process may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the operator log.
 
 If defined, the :code:`ydb_hupenable` environment variable determines the initial process behavior, and if that is undefined YottaDB does not immediately report a terminal disconnect.
+
+.. _use-ikey:
 
 ~~~~~
 IKEY
@@ -3946,6 +3960,8 @@ INSERT
 
 Enables or disables insert mode for the $PRINCIPAL device. If INSERT mode is enabled, YottaDB inserts input characters at the logical position in the input stream designated by the virtual cursor as defined by $X and $Y, for example in the middle of the line/record. If INSERT mode is disabled, input characters overwrite the existing characters in the input stream at the logical position designated by the virtual cursor. You can toggle the insert mode within a direct mode line or if EDITING is enabled for a single READ argument's input using the terminal's INSERT key. The INSERT mode is reset to the default or what was last specified with USE at the beginning of each direct mode line or READ argument.
 
+.. _use-ioerror:
+
 ~~~~~~~~
 IOERROR
 ~~~~~~~~
@@ -3966,6 +3982,8 @@ Example:
 This example enables exception handling in socket device sock and specifies that all I/O errors on sock raise the error condition.
 
 If $LENGTH(strexpr)&("Tt"[$EXTRACT(strexpr)) then Error Trapping is enabled; otherwise the application must check $DEVICE for errors.
+
+.. _use-key:
 
 ~~~~
 KEY
@@ -4012,6 +4030,8 @@ This example sets the virtual page length to 24 for socket device sock.
         ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
    SOCKET[1]=h12185825450 DESC=4 LISTENING PASSIVE NOTRAP PORT=6322
         ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
+
+.. _use-okey:
 
 ~~~~~
 OKEY
@@ -4069,6 +4089,8 @@ Enables or disables automatic output of <XON> before a READ and <XOFF> after a R
 
 By default, the terminal drivers operate NOREADSYNC.
 
+.. _use-rewind:
+
 ~~~~~~~
 REWIND
 ~~~~~~~
@@ -4080,6 +4102,8 @@ REWIND places the file pointer to the beginning of the file.
 By default, USE does not REWIND.
 
 REWIND on redirected output for $PRINCIPAL is the same as OUTREWIND.
+
+.. _use-seek=strexpr:
 
 ~~~~~~~~~~~~~
 SEEK=strexpr
@@ -4133,6 +4157,8 @@ Example:
    YDB> USE $P:TERM=$C(26,13,11,7)
 
 This example enables the ASCII characters <SUB>, <CR>, <VT> and <BEL> as READ terminators.
+
+.. _use-truncate:
 
 ~~~~~~~~~
 TRUNCATE
@@ -4203,6 +4229,8 @@ YottaDB format control characters, FILTER, and the device WIDTH and WRAP also ha
 
 In UTF-8 mode and SOC output, the WIDTH deviceparameter specifies the number of UTF-8 characters.
 
+.. _use-wrap:
+
 ~~~~~
 WRAP
 ~~~~~
@@ -4221,6 +4249,8 @@ Example:
 
 See `WRAP <./ioproc.html#wrap>`_ in the OPEN deviceparameters section.
 
+.. _use-x:
+
 ~~
 X
 ~~
@@ -4232,6 +4262,8 @@ $X positions the cursor to a vertical column on the terminal. If NOWRAP is enabl
 To ensure that $Y and $X match what is occurring visually on the terminal, the YottaDB deviceparameters and the device characteristics must match at all times.
 
 The terminal hardware may affect physical cursor positioning. The X deviceparameter does not change the cursor row or update $Y.
+
+.. _use-y:
 
 ~~
 Y
@@ -4247,6 +4279,8 @@ To ensure that $Y and $X match what is occurring visually on the terminal, the Y
 
 The Y deviceparameter does not change the cursor column or update $X.
 
+.. _use-zbfsize:
+
 ~~~~~~~~
 ZBFSIZE
 ~~~~~~~~
@@ -4257,6 +4291,8 @@ Allocates a buffer used by YottaDB when reading from a socket. The ZBFSIZE devic
 
 By default, the size of ZBFSIZE is 1024 and the maximum it can be is 1048576.
 
+.. _use-zdelay:
+
 ~~~~~~~
 ZDELAY
 ~~~~~~~
@@ -4264,6 +4300,8 @@ ZDELAY
 Z[NO]DELAY Applies to: SOC
 
 Controls buffering of data packets by the system TCP stack using the TCP_NODELAY option to the SETSOCKOPT system call. This behavior is sometimes known as the Nagle algorithm. The default is ZDELAY. This delays sending additional packets until either an acknowledgement of previous packets is received or an interval passes. If several packets are sent from one end of a connection before the other end responds, setting ZNODELAY may be desirable though at the cost of additional packets being transmitted over the network. ZNODELAY must be fully spelled out.
+
+.. _use-zff:
 
 ~~~~
 ZFF
@@ -4280,6 +4318,8 @@ Example:
    u tcpdev:(zwidth=80:zff=$char(13):zlength=24)
 
 This example sends $char(13) to the current socket of device tcpdev on every WRITE #.
+
+.. _use-zibfsize:
 
 ~~~~~~~~~
 ZIBFSIZE
@@ -4525,6 +4565,8 @@ In UTF-8 mode, if a WRITE command encounters an illegal character, it produces a
 
 For more information, see the sections on specific I/O devices.
 
+.. _write-star:
+
 ++++++++++
 WRITE *
 ++++++++++
@@ -4595,6 +4637,8 @@ Determines whether the process retains device characteristics after CLOSE. The d
 
 Because it forms a communication link with a process it creates, CLOSE of a PIPE device always eliminates the device and hence ignores any [NO]DESTROY deviceparameter.
 
+.. _close-exception:
+
 ~~~~~~~~~~
 EXCEPTION
 ~~~~~~~~~~
@@ -4607,6 +4651,8 @@ The expression must contain a fragment of YottaDB code (for example, GOTO ERRFIL
 
 For more information on error handling, refer to `Chapter 13: “Error Processing” <./errproc.html>`_.
 
+.. _close-group:
+
 ~~~~~
 GROUP
 ~~~~~
@@ -4618,6 +4664,8 @@ Specifies access permission on a UNIX file for other users in the file owner's g
 In order to modify file security, the user who issues the CLOSE must have ownership.
 
 By default, CLOSE does not modify the permissions on an existing file.
+
+.. _close-owner:
 
 ~~~~~~
 OWNER
@@ -4641,6 +4689,8 @@ Changes the file name to the name contained in the argument string. CLOSE ignore
 
 If the process has sufficient access permissions, it may use RENAME to specify a different directory as well as file name. RENAME cannot move a file to a different filesystem.
 
+.. _close-socket:
+
 ~~~~~~~
 SOCKET
 ~~~~~~~
@@ -4659,6 +4709,8 @@ TIMEOUT=expr Applies to: PIPE
 
 Performs a timed check (in seconds) on the termination status of the PIPE co-process of a PIPE device that is not OPEN'd with the INDEPENDENT deviceparameter. intexpr specifies time in seconds. The default is 2 seconds if TIMEOUT is not specified.
 
+.. _close-uic:
+
 ~~~~
 UIC
 ~~~~
@@ -4668,6 +4720,8 @@ UIC=exprgroup number Applies to: SOC(LOCAL) SD FIFO
 Specifies the group that has access to the file. The format of the string is "g,i" where g is a decimal number representing the group portion of the UIC and i is a decimal number representing the individual portion.
 
 Specifies the owner and affects access to the file. The expression evaluates to the numeric identifier of the new owner.
+
+.. _close-world:
 
 ~~~~~~
 WORLD

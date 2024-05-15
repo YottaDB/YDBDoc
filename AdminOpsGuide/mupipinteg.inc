@@ -120,6 +120,8 @@ Displays a single summary report by database file of the total number of directo
 
 * Incompatible with: FULL
 
+.. _integ-dbg:
+
 ^^^^
 -DBG
 ^^^^
@@ -237,6 +239,8 @@ Specifies the maximum number of "key size too large" errors that a MUPIP INTEG o
 
 * "Key size too large" errors normally only occur if a DSE CHANGE FILEHEADER KEY_MAX_SIZE command reduces the maximum key size.
 
+.. _integ-online:
+
 ^^^^^^^^
 -ONLINE
 ^^^^^^^^
@@ -269,6 +273,8 @@ Specifies that while a MUPIP INTEG operation is active, other processes can upda
   * For every 64K transactions after the online integ initiation, online integ checks YottaDB's health for improperly abandoned online integs and releases resources held by any it finds.
 
 * Incompatible with: FILE, TN_RESET (there should be no need to use TN_RESET on a YottaDB database).
+
+.. _integ-region:
 
 ^^^^^^^^
 -REGION
@@ -351,6 +357,8 @@ The format of the TN_RESET qualifier is:
 
 .. note::
    Any time a YottaDB update opens a database file that was not properly closed, YottaDB increments the transaction number by 1000. This automatic increment prevents problems induced by abnormal database closes, but users must always consider this factor in their operational procedures. The rate at which YottaDB "uses up" transaction numbers is a function of operational procedures and real database updates.
+
+.. _integ-transaction:
 
 ^^^^^^^^^^^^^^
 -TRANSACTION

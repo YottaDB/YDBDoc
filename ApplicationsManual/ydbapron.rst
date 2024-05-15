@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2024 YottaDB LLC and/or its subsidiaries.     #
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -1159,6 +1159,8 @@ Finally, download `testdata.zwr <https://gitlab.com/YottaDB/Demo/YDBApron/-/blob
 
 Now, you can begin filling out the application routes proper and test them as you go.
 
+.. _fill-routes-ingredients.py:
+
 ~~~~~~~~~~~~~~
 ingredients.py
 ~~~~~~~~~~~~~~
@@ -1251,6 +1253,8 @@ Finally, revise the ``/delete`` route:
 ``/delete`` now just processes a simple POSTed form with an ingredient category and ingredient name, deletes that ingredient from the database, and redirects to the ingredient list page.
 
 Now, your ``ingredients.py`` file should look like `ingredients.py <https://gitlab.com/YottaDB/Demo/YDBApron/-/blob/master/YDBApron/ingredients.py>`_.
+
+.. _fill-routes-recipes.py:
 
 ~~~~~~~~~~
 recipes.py
@@ -1376,6 +1380,8 @@ Finally, add the ``/delete`` route:
 ``/delete`` simply calls ``delete_recipe()`` using a recipe category and name from a simple form received from the client. After deleting the recipe entry, the browser is redirected to the recipe list page.
 
 Now, your ``recipes.py`` file should look like `recipes.py <https://gitlab.com/YottaDB/Demo/YDBApron/-/blob/master/YDBApron/recipes.py>`_.
+
+.. _fill-routes-schedules.py:
 
 ~~~~~~~~~~~~
 schedules.py

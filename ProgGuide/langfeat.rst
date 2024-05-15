@@ -1386,6 +1386,8 @@ The pattern match operator accepts the alternation syntax. Alternation consists 
 .. note::
    Complex pattern matches may not be efficient to evaluate, so every effort should be made to simplify any commonly used pattern and to determine if more efficient alternative logic would be more appropriate.
 
+.. _lang-feat-commands:
+
 --------------------------------
 Commands
 --------------------------------
@@ -1475,6 +1477,8 @@ Intrinsic Functions
 ----------------------------
 
 M Intrinsic Functions start with a single dollar sign ($) and have one or more arguments enclosed in parentheses () and separated by commas (,). These functions provide an expression result by performing actions that would be impossible or difficult to perform using M commands. It is now possible to invoke a C function in a package via the external call mechanism. For information on the functions, see `Chapter 7: “Functions” <./functions.html>`_.
+
+.. _lang-feat-intrinsic-special-variables:
 
 ----------------------------
 Intrinsic Special Variables

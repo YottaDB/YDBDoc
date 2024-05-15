@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -305,6 +305,8 @@ Operate as Root
 Never run a routine as root.
 
 Other than YottaDB installation, never perform any YottaDB operation as root.
+
+.. _donts-triggers:
 
 ~~~~~~~~~~
 Triggers

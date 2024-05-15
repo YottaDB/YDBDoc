@@ -1,7 +1,7 @@
 #!/bin/bash
  ###############################################################
  #                                                             #
- # Copyright (c) 2019-2023 YottaDB LLC and/or its subsidiaries.#
+ # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
  # All rights reserved.                                        #
  #                                                             #
  #     This source code contains the intellectual property     #
@@ -81,3 +81,20 @@ mv "$target"/ProgGuide/ "$target"/ProgrammersGuide/
 echo "Removing unused fonts..."
 find $target -iname 'lato*' -delete
 find $target -iname 'roboto*' -delete
+
+# Verify that there are no duplicate references. Every duplicate reference will be automatically named as a numbered link
+# containing for example "#id1", "#id2" etc. by Sphinx so we look for that below. And expect NO such lines in "index.html".
+# If we do find such lines, they need to be fixed to remove the duplicate reference thereby every reference will have a
+# named link (which is a much better permalink than a numbered link). See YDBDoc#397 for more details.
+outfile="public/duplicate_reference.out"
+find public -name index.html -exec grep "href.*#id[0-9]" /dev/null {} \; >& $outfile
+if [ -s $outfile ]; then
+	echo "--------------------------------------------------------------------------"
+	echo "Duplicate references found by buildall.sh. List follows. Fix those first."
+	echo "--------------------------------------------------------------------------"
+	cat $outfile
+	echo "--------------------------------------------------------------------------"
+	exit 1
+fi
+rm -f $outfile
+

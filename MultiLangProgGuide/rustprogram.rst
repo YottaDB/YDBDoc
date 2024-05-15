@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -388,6 +388,8 @@ lock()
 	ctx.lock(Duration::from_secs(0), &[]).unwrap();
 	Ok(())
      }
+
+.. _lock-new:
 
 ~~~~~~
 new()
@@ -1218,6 +1220,8 @@ lock_incr()
         key.lock_incr(Duration::from_secs(1))?;
         Ok(())
      }
+
+.. _lock-intr-new:
 
 ~~~~~~
 new()

@@ -410,6 +410,8 @@ Fencing Disadvantages
 
 * An application structured so that all information for each logical transaction is stored in a single global node (while other nodes hold only redundant information), permits rebuild programs to completely correct logical inconsistencies. With less restrictive designs, logical inconsistencies may be corrected manually or by using semi-automated techniques.
 
+.. _journaling-view-keywords:
+
 +++++++++++++++
 VIEW Keywords
 +++++++++++++++
@@ -421,6 +423,8 @@ VIEW "JNLFLUSH":region initiates a complete transfer of all buffered journal rec
 VIEW "JNLWAIT" causes to suspend process execution until all updates initiated by the process in all regions have been transferred to the journal file (on disk). Updates within M TRANSACTIONS typically behave as if they included an implicit VIEW "JNLWAIT" with their final TCOMMIT. TRANSACTIONS with a TRANSACTION ID="BATCH" or "BA" are exempted from the implicit "JNLWAIT". Normally, process execution for updates outside of M transactions continues asynchronously with the transfer of journal records to disk.
 
 For more information on the VIEW command, refer to the `"Commands" chapter in the Programmer's Guide <../ProgrammersGuide/commands.html>`_.
+
+.. _journaling-dollarview-keywords:
 
 ++++++++++++++++++++
 $VIEW() Keywords
@@ -545,6 +549,8 @@ Associates a journal file with a different database file; this command may be us
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the name of the previous generation of the journal file in the header of jnl_file to jnlfilename (for example, when moving the previous generation journal file to a different location). The file name can be a full path-name or a relative path name; however, before the file-name is stored in the header, it is expanded to its full path-name.
+
+.. _set-jnlfile-noprevjnlfile:
 
 ^^^^^^^^^^^^^^
 -noprevjnlfile
@@ -770,6 +776,8 @@ In all cases where journaling is ON both before and after a journal file switch,
 The previous generation journal filename is a back link from the current generation journal.
 
 YottaDB produces an error and makes no change to the journaling state of the database when the FILENAME is an existing file and is not the active journal file for that database. In this way, YottaDB prevents possible cycles in the back-links (such as, a3.mjl has a back-link to a2.mjl which in turn has a back-link to a1.mjl which in turn has a back-link to a3.mjl thereby creating a cycle). Cycles could prevent journal recovery. Also, note that cycles in back-links are possible only due to explicit FILENAME specifications and never due to existing FILENAME characteristics from the database or by using the default FILENAME.
+
+.. _set-journal-noprevjnlfile:
 
 ^^^^^^^^^^^^^
 NOPREVJNLFILE
