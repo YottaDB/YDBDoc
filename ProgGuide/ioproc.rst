@@ -737,7 +737,7 @@ Example:
 .. code-block:: bash
 
    YDB>zshow “D”
-   /dev/pts/4 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 EDIT NOINSE TTSYNC NOHOSTSYNC 
+   /dev/pts/4 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 EDIT NOINSE TTSYNC NOHOSTSYNC
 
 
 --------------------------
@@ -1864,7 +1864,7 @@ where:
 
 .. note::
    In most circumstances, ``WRITE /WAIT(timeout[,"WRITE"])`` for non-blocking sockets returns immediately, because non-blocking sockets are usually ready for writing. See ``WRITE /BLOCK("OFF")`` below.
- 
+
    If the current Socket Device is `$PRINCIPAL <isv.html#principal>`_ and input and output are different SOCKETs, WRITE /WAIT applies to the input side of the device.
 
 .. code-block:: none
@@ -2895,10 +2895,10 @@ Specifies setsockopt() options to be set for sockets. The value of the expressio
 The supported options are:
 
 ```
-KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.    
-KEEPCNT     sets the TCP_KEEPCNT socket value.    
-KEEPIDLE    sets the TCP_KEEPIDLE socket value.    
-KEEPINTVL   sets the TCP_KEEPINTVL socket value.    
+KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.
+KEEPCNT     sets the TCP_KEEPCNT socket value.
+KEEPIDLE    sets the TCP_KEEPIDLE socket value.
+KEEPINTVL   sets the TCP_KEEPINTVL socket value.
 SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
 ```
 
@@ -3517,6 +3517,8 @@ PIPE: Valid for PIPEs
 
 SOC: Valid for Socket devices
 
+.. _io-commands-use:
+
 +++
 USE
 +++
@@ -3725,13 +3727,13 @@ Example:
 
    YDB>set tcp="serv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
    YDB>zshow "D"
-   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC 
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC
    seerv OPEN SOCKET TOTAL=1 CURRENT=0
        SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
                 ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
    YDB>set tcp="seerv" o tcp:(listen="6322:TCP":attach="serv2")::"SOCKET"
    YDB>zshow "D"
-   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC 
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC
    seerv OPEN SOCKET TOTAL=2 CURRENT=1
        SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
                 ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
@@ -3746,7 +3748,7 @@ The following command moves the "serv" socket to the "socketpool" device.
 
    YDB>use tcp:detach="serv"
    YDB>use 0 zshow "D"
-   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC 
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC
    seerv OPEN SOCKET TOTAL=1 CURRENT=0
        SOCKET[0]=serv2 DESC=4 LISTENING PASSIVE NOTRAP PORT=6322
                 ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
@@ -3765,7 +3767,7 @@ This creates a new socket device.
 .. code-block:: bash
 
    YDB>zshow "D"
-   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC 
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC
     s2 OPEN SOCKET TOTAL=0 CURRENT=0
     seerv OPEN SOCKET TOTAL=1 CURRENT=0
         SOCKET[0]=serv2 DESC=4 LISTENING PASSIVE NOTRAP PORT=6322
@@ -3780,7 +3782,7 @@ The following command moves the serv socket from the socketpool to the tcp2 devi
 
    YDB>use tcp2:attach="serv"
    YDB>use 0 zshow "D"
-   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC 
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC
    s2 OPEN SOCKET TOTAL=1 CURRENT=0
       SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
              ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
@@ -4072,7 +4074,7 @@ This example sets the virtual page length to 24 for socket device sock.
    YDB>set tcp="seerv" open tcp:(listen="6321:TCP":attach="serv")::"SOCKET"
    YDB>use tcp:listen="6322:TCP"
    YDB>use 0 zshow "D"
-   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC 
+   /dev/pts/9 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 TTSYNC NOHOSTSYNC
    seerv OPEN SOCKET TOTAL=2 CURRENT=1
    SOCKET[0]=serv DESC=3 LISTENING PASSIVE NOTRAP PORT=6321
         ZDELAY ZBFSIZE=1024 ZIBFSIZE=87380 NODELIMITER
@@ -4095,6 +4097,8 @@ key_name is case-sensitive and must match a key name in the "files" section of t
 
 For more information, refer to the description of :ref:`KEY <key-open>` deviceparameter of OPEN.
 
+.. _use-options:
+
 ~~~~~~~
 OPTIONS
 ~~~~~~~
@@ -4106,10 +4110,10 @@ Specifies setsockopt() options to be set for sockets. The value of the expressio
 The supported options are:
 
 ```
-KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.    
-KEEPCNT     sets the TCP_KEEPCNT socket value.    
-KEEPIDLE    sets the TCP_KEEPIDLE socket value.    
-KEEPINTVL   sets the TCP_KEEPINTVL socket value.    
+KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.
+KEEPCNT     sets the TCP_KEEPCNT socket value.
+KEEPIDLE    sets the TCP_KEEPIDLE socket value.
+KEEPINTVL   sets the TCP_KEEPINTVL socket value.
 SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
 ```
 
@@ -4191,6 +4195,8 @@ SEEK Applies to: SD
 Positions the current file pointer to the location specified in strexpr. The format of strexpr is a string of the form "[+|-]integer" where an unsigned value specifies an offset from the beginning of the file, and an explicitly signed value specifies an offset relative to the current file position. For STREAM or VARIABLE format, the positive intexpr after any sign is a byte offset, while for a FIXED format, it is a record offset. In order to deal with the possible presence of a Byte Order Marker (BOM), SEEK for a FIXED format file written in a UTF character set must follow at least one prior READ since the device was created.
 
 SEEK on redirected input for $PRINCIPAL is the same as INSEEK.
+
+.. _use-socket:
 
 ~~~~~~~
 SOCKET
