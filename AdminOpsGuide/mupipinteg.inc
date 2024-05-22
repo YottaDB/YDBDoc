@@ -245,7 +245,7 @@ Specifies the maximum number of "key size too large" errors that a MUPIP INTEG o
 -ONLINE
 ^^^^^^^^
 
-Specifies that while a MUPIP INTEG operation is active, other processes can update the database without affecting the result of the backup. Allows checking database structural integrity to run concurrently with database updates. The format of the ONLINE qualifier is:
+Specifies that while a MUPIP INTEG operation is active, other processes can update the database without affecting the result of the operation. Allows checking database structural integrity to run concurrently with database updates. The format of the ONLINE qualifier is:
 
 .. code-block:: none
 
