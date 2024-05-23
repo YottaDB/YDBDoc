@@ -1910,11 +1910,11 @@ SOCKET devices support encrypted connections with TLS using an encryption plugin
 
 Example:
 
-```
-set obspass="CD86FF2BFD1F06EE" ; maskpass output of password for private key
-set cfgoptions="cert:""/path/to/certificate"";key:""/path/to/key.pem"";"
-write /tls("server",,"tlsone",obspass,cfgoptions)
-```
+.. code-block:: none
+	  
+   set obspass="CD86FF2BFD1F06EE" ; maskpass output of password for private key
+   set cfgoptions="cert:""/path/to/certificate"";key:""/path/to/key.pem"";"
+   write /tls("server",,"tlsone",obspass,cfgoptions)
 
 .. note::
    Note that SOCKET device actions may produce the following errors: `TLSDLLNOOPEN <../MessageRecovery/errors.html#tlsdllnoopen>`_, `TLSINIT <../MessageRecovery/errors.html#tlsinit>`_, `TLSCONVSOCK <../MessageRecovery/errors.html#tlsconvsock>`_, `TLSHANDSHAKE <../MessageRecovery/errors.html#tlshandshake>`_, `TLSCONNINFO <../MessageRecovery/errors.html#tlsconninfo>`_, `TLSIOERROR <../MessageRecovery/errors.html#tlsioerror>`_, and `TLSRENEGOTIATE <../MessageRecovery/errors.html#tlsrenegotiate>`_.
@@ -2894,19 +2894,19 @@ Specifies setsockopt() options to be set for sockets. The value of the expressio
 
 The supported options are:
 
-```
-KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.
-KEEPCNT     sets the TCP_KEEPCNT socket value.
-KEEPIDLE    sets the TCP_KEEPIDLE socket value.
-KEEPINTVL   sets the TCP_KEEPINTVL socket value.
-SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
-```
+.. code-block:: none
+
+   KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.
+   KEEPCNT     sets the TCP_KEEPCNT socket value.
+   KEEPIDLE    sets the TCP_KEEPIDLE socket value.
+   KEEPINTVL   sets the TCP_KEEPINTVL socket value.
+   SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
 
 Example:
 
-```
-OPEN dev:(LISTEN="1234:TCP":OPTIONS="KEEPALIVE=1,KEEPIDLE=50)::"SOCKET"
-```
+.. code-block:: none
+
+   OPEN dev:(LISTEN="1234:TCP":OPTIONS="KEEPALIVE=1,KEEPIDLE=50)::"SOCKET"
 
 This enables SO_KEEPALIVE and sets TCP_KEEPIDLE to 50 seconds.
 
@@ -4109,19 +4109,19 @@ Specifies setsockopt() options to be set for sockets. The value of the expressio
 
 The supported options are:
 
-```
-KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.
-KEEPCNT     sets the TCP_KEEPCNT socket value.
-KEEPIDLE    sets the TCP_KEEPIDLE socket value.
-KEEPINTVL   sets the TCP_KEEPINTVL socket value.
-SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
-```
+.. code-block:: none
+
+   KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.
+   KEEPCNT     sets the TCP_KEEPCNT socket value.
+   KEEPIDLE    sets the TCP_KEEPIDLE socket value.
+   KEEPINTVL   sets the TCP_KEEPINTVL socket value.
+   SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
 
 Example:
 
-```
-OPEN dev:(LISTEN="1234:TCP":OPTIONS="KEEPALIVE=1,KEEPIDLE=50)::"SOCKET"
-```
+.. code-block:: none
+
+   OPEN dev:(LISTEN="1234:TCP":OPTIONS="KEEPALIVE=1,KEEPIDLE=50)::"SOCKET"
 
 This enables SO_KEEPALIVE and sets TCP_KEEPIDLE to 50 seconds.
 
