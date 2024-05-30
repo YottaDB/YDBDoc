@@ -1660,13 +1660,13 @@ Verify the error using the MUPIP command INTEG SUBSCRIPT=, specifying an immedia
 
 Most of these errors terminate with a four-character failure code. Each character in the code represents the failure type for an attempt to perform the database access. In cases where the letters are not all the same, the last code is the most critical, because it reflects what happened when the process made its last retry. Earlier tries show error codes that are important to establishing the context of the last error.
 
-The following table lists the failure codes, whether or not they require a MUPIP INTEG, a brief description of the code's meaning, and a section reference for locating more information.
-
 .. _runtime-db-failure-codes:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Run-time Database Failure Codes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following table lists the failure codes, whether or not they require a MUPIP INTEG, a brief description of the code's meaning, and a section reference for locating more information. Except in the context of a final retry (four codes in a row), they can be ignored when they are reported in the syslog in conjunction with `NONTPRESTART <../MessageRecovery/errors.html#nontprestart>`_ or `TPRESTART <../MessageRecovery/errors.html#tprestart>`_ messages. They cannot be ignored in the context of :ref:`r1-runtime-errors` above, e.g., `GVGETFAIL <../MessageRecovery/errors.html#gvgetfail>`_.
 
 +------------+------------+-------------------------------------------------------------------------------------------------------------------------+------------+
 | Fail Code  | Run INTEG  | Description                                                                                                             | Section    |
