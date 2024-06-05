@@ -1138,7 +1138,9 @@ Refer to the documentation of your Linux distribution for details. Other sources
 Configuring the Restriction Facility
 -------------------------------------
 
-Post installation, a system administrator can optionally add a :code:`restrict.txt` file in $ydb_dist to restrict the use of certain YottaDB facilities to a group-name. The owner and group for $ydb_dist/restrict.txt can be different from those used to install YottaDB. The file may contain zero or more of the following case-insensitive lines in any order:
+Post installation, a system administrator can optionally add a :code:`restrict.txt` file in $ydb_dist to restrict the use of certain YottaDB facilities to a group-name. The owner and group for :code:`$ydb_dist/restrict.txt` can be different from those used to install YottaDB.
+
+The file may contain zero or more of the following case-insensitive lines, in the specified format, in any order:
 
 .. code-block:: none
 
@@ -1158,7 +1160,16 @@ Post installation, a system administrator can optionally add a :code:`restrict.t
 
 If the file :code:`$ydb_dist/restrict.txt` does not exist, YottaDB does not restrict any facilities.
 
-Any non-empty lines that do not match the above format cause processes with read-only permissions to behave as if they could not read the file, and YottaDB enforces all restrictions.
+If the file exists, a process that has:
+
+* write authorization to :code:`restrict.txt` has no restrictions;
+* no access to :code:`restrict.txt` is restricted from all facilities for which YottaDB supports a restriction (the above list); and
+* read-only access to :code:`restrict.txt` is restricted from any listed facility unless it is a member of the group specified in the optional group-id following the facility name.
+
+In addition, a process that has read-only access to :code:`restrict.txt` is restricted from all facilities if any of the below conditions are met.
+
+* Any non-empty lines that do not match the above format.
+* Any :code:`<group-name>` mentioned after the facility name is not a valid group name in the system/host.
 
 Restrictions apply as follows:
 
@@ -1218,14 +1229,6 @@ Restrictions apply as follows:
 |                                                         | error; in addition, while executing code within a trigger, ZBREAK results in a RESTRICTEDOP error,    |
 |                                                         | and both ZBREAK and `ZSTEP <../ProgrammersGuide/commands.html#zstep>`_  actions are ignored.          |
 +---------------------------------------------------------+-------------------------------------------------------------------------------------------------------+
-
-If the file exists, a process that has:
-
-* write authorization to :code:`restrict.txt` has no restrictions;
-
-* no access to :code:`restrict.txt` is restricted from all facilities for which YottaDB supports a restriction (the above list); and
-
-* read-only access to :code:`restrict.txt` is restricted from any listed facility unless it is a member of the group specified in the optional group-id following the facility name.
 
 Note that restricting $ZCMDLINE prevents commands like: :code:`yottadb -run %XCMD 'for read x xecute x'` which can act as substitutes for Direct Mode.
 
