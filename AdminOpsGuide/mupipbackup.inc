@@ -27,6 +27,8 @@ The format of the MUPIP BACKUP command is:
     -REPLA[CE]
     -REPLIC[ATION]=ON
     -REPLIN[STANCE]=target_location
+    -RET[RY]=count
+    -SH[OWPROGRESS]
     -S[INCE]={DATABASE|BYTESTREAM|RECORD}
     -T[RANSACTION]=hexadecimal_transaction_number
    ] region-list[,...] destination-list
@@ -287,6 +289,30 @@ The format of the REPLINSTANCE qualifier is:
 .. code-block:: none
 
    -REPLIN[STANCE]=<target_location>
+
+^^^^^^
+RETry
+^^^^^^
+
+Makes the specified number of attempts to perform a BACKUP. If RETRY is not specified, MUPIP attempts the file copy operation once. Retry attempts are always based on :code:`cp` or :code:`pax` even when another copy mechanism may be available. With the default of zero, YottaDB does not attempt a retry.
+
+.. code-block:: none
+
+   -ret[ry]=<count>
+
+^^^^^^^^^^^^^
+SHowprogress
+^^^^^^^^^^^^^
+
+When the backup copy mechanism supports monitoring, SHOWPROGRESS periodically displays the transfer progress, estimated time left, speed, and the number of transaction applied to the database during backup.
+
+The format of the SHOWPROGRESS qualifier is:
+
+.. code-block:: none
+
+   -sh[owprogress]
+
+Incompatible with BYTESTREAM.
 
 ^^^^^^^
 -Since
