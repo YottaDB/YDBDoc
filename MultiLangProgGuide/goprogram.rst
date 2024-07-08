@@ -42,36 +42,59 @@ As Go implementations are inherently multi-threaded, where the :ref:`C Simple AP
 Go Quick Start
 ---------------
 
-The YottaDB Go wrapper requires a minimum YottaDB release of r1.30 and is tested with a minimum Go version of 1.13. If the Golang packages on your operating system are older, and the Go wrapper does not work, please obtain and install a newer Golang implementation.
+The YottaDB Go wrapper requires a minimum YottaDB release of r1.30 and is tested with a minimum Go version of 1.18. If the Golang packages on your operating system are older, and the Go wrapper does not work, please obtain and install a newer Golang implementation.
 
-The :ref:`go-quick-start` assumes that YottaDB has already been installed as described in the :ref:`mlpg-quick-start` section. After completing step 1 (*Installing YottaDB*), download the Go wrapper, install it and test it.
+The :ref:`go-quick-start` assumes that YottaDB has already been installed as described in the :ref:`mlpg-quick-start` section. After completing step 1 (*Installing YottaDB*), you can immediately start using YottaDB with a Go application that uses YottaDB. To create a Go application that uses YottaDB, see below.
 
 .. code-block:: bash
 
-        $ go mod init myprogram
-        $ go get lang.yottadb.com/go/yottadb
-        $ go build lang.yottadb.com/go/yottadb
+        # Sets up a default YottaDB environment
         $ source /usr/local/etc/ydb_env_set
-        $ go get -t lang.yottadb.com/go/yottadb
-        $ chmod +w  ~/go/pkg/mod/lang.yottadb.com/go/yottadb\@v*/m_routines/
-        $ go test lang.yottadb.com/go/yottadb
-        ok      lang.yottadb.com/go/yottadb     0.194s
-        $
 
-There are a number of programs in the :code:`go/pkg/mod/lang.yottadb.com/go/yottadb\@v*` directory that you can look at.
+        # Create an empty directory and cd to it
+        $ mkdir ydb-example && cd ydb-example
 
-#. Put your GO program in a directory of your choice, e.g., :code:`$ydb_dir` directory and change to that directory.
-   As a sample program, you can download the `wordfreq.go program <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/go/inref/wordfreq.go>`_,   with a `reference input file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_input.txt>`_ and `corresponding reference output file <https://gitlab.com/YottaDB/DB/YDBTest/blob/master/simpleapi/outref/wordfreq_output.txt>`_. Compile it thus: :code:`go build wordfreq.go`.
+        # Initialize a new Go Module
+        $ go mod init example.com/yottadb-example
+
+        # Test program containing the YottaDB Go Import
+        $ cat > yottadb-example.go << EOF
+        package main
+
+        import (
+            "lang.yottadb.com/go/yottadb"
+        )
+
+        func main() {
+            // Set global node ^hello("world")="Sawadee (hello in Thai)"
+            err := yottadb.SetValE(yottadb.NOTTP, nil, "สวัสดี", "^hello", []string{"world"})
+            if err != nil {
+                panic(err)
+            }
+        }
+        EOF
+
+        # Download the YottaDB Go Module (you can also use "go mod tidy" here)
+        $ go get .
+
+        # Run the code; alternatively, you can use `go build` to compile it into an exe
+        $ go run .
+        $ go build && ./yottadb-example
+
+#. As a sample program, you can download the `wordfreq.go program <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/go/inref/wordfreq.go>`_,   with a `reference input file <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/simpleapi/outref/wordfreq_input.txt>`_ and `corresponding reference output file <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/simpleapi/outref/wordfreq_output.txt>`_. 
 
 #. Run your program and verify that the output matches the reference output. For example:
 
 .. code-block:: bash
 
-        $ cd $ydb_dir
+        $ source /usr/local/etc/ydb_env_set
+        $ mkdir yottadb-wordfreq && cd yottadb-wordfreq
+        $ go mod init example.com/yottadb-wordfreq
         $ wget https://gitlab.com/YottaDB/DB/YDBTest/raw/master/go/inref/wordfreq.go
-        $ go build wordfreq.go
+        $ go mod tidy
         $ wget https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/outref/wordfreq_input.txt
         $ wget https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/outref/wordfreq_output.txt
+        $ go build wordfreq.go
         $ ./wordfreq <wordfreq_input.txt >wordfreq_output_go.txt
         $ diff wordfreq_output_go.txt wordfreq_output.txt
         $
