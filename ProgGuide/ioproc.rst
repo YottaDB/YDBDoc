@@ -937,7 +937,9 @@ The following tables provide a brief summary of deviceparameters for sequential 
 +-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
 | [NO]READONLY                      | O                        | Controls read-only file access.                                                                                                                      |
 +-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| RENAME=expr                       | C                        | Specifies CLOSE replace name of a disk file with name specified by expression.                                                                       |
+| RENAME=expr                       | C                        | Specifies that CLOSE replace name of a disk file with name specified by expression, taking care not to replace an existing file.                     |
++-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| REPLACE=expr                      | C                        | Specifies that CLOSE replace name of a disk file with name specified by expression, replacing any existing file.                                     |
 +-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
 | SYSTEM=expr                       | O/C                      | Specifies file permissions for the owner of the file (same as OWNER).                                                                                |
 +-----------------------------------+--------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1146,27 +1148,29 @@ The following table summarizes the deviceparameters that can be used with FIFOs.
 
 **File Access Deviceparameters**
 
-+---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
-| Deviceparameter           | Command                       | Description                                                                                                                              |
-+===========================+===============================+==========================================================================================================================================+
-| DELETE                    | C                             | Specifies that the FIFO should be deleted when the last user closes it. If specified on an OPEN, DELETE is activated only at the time of |
-|                           |                               | the close. No new attachments are allowed to a deleted FIFO and any new attempt to use a FIFO with the name of the deleted device creates|
-|                           |                               | a new device.                                                                                                                            |
-+---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
-| GROUP=expr                | O/C                           | Specifies file permissions for other users in owner's group.                                                                             |
-+---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
-| [NO]READONLY              | O                             | OPENs a device for reading only (READONLY) or reading and writing (NOREADONLY).                                                          |
-+---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
-| OWNER=expr                | O/C                           | Specifies file permissions for owner of file.                                                                                            |
-+---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
-| RENAME=expr               | C                             | Specifies that CLOSE replace the name of a disk file with the name specified by the expression.                                          |
-+---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
-| SYSTEM=expr               | O/C                           | Specifies file permissions for owner of file (same as OWNER).                                                                            |
-+---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
-| UIC=expr                  | O/C                           | Specifies the file's owner ID.                                                                                                           |
-+---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
-| WORLD=expr                | O/C                           | Specifies file permissions for users not in the owner's group.                                                                           |
-+---------------------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
++---------------------------+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+| Deviceparameter           | Command                       | Description                                                                                                                                  |
++===========================+===============================+==============================================================================================================================================+
+| DELETE                    | C                             | Specifies that the FIFO should be deleted when the last user closes it. If specified on an OPEN, DELETE is activated only at the time of     |
+|                           |                               | the close. No new attachments are allowed to a deleted FIFO and any new attempt to use a FIFO with the name of the deleted device creates    |
+|                           |                               | a new device.                                                                                                                                |
++---------------------------+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+| GROUP=expr                | O/C                           | Specifies file permissions for other users in owner's group.                                                                                 |
++---------------------------+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+| [NO]READONLY              | O                             | OPENs a device for reading only (READONLY) or reading and writing (NOREADONLY).                                                              |
++---------------------------+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+| OWNER=expr                | O/C                           | Specifies file permissions for owner of file.                                                                                                |
++---------------------------+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+| RENAME=expr               | C                             | Specifies that CLOSE replace the name of a disk file with the name specified by the expression, taking care not to replace an existing file. |
++---------------------------+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+| REPLACE=expr              | C                             | Specifies that CLOSE replace the name of a disk file with the name specified by the expression, replacing any existing file.                 |
++---------------------------+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+| SYSTEM=expr               | O/C                           | Specifies file permissions for owner of file (same as OWNER).                                                                                |
++---------------------------+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+| UIC=expr                  | O/C                           | Specifies the file's owner ID.                                                                                                               |
++---------------------------+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+| WORLD=expr                | O/C                           | Specifies file permissions for users not in the owner's group.                                                                               |
++---------------------------+-------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------+
 
 -----------------------------------
 Using NULL Devices
@@ -4685,9 +4689,19 @@ RENAME
 
 RENAME=expr Applies to: SD
 
-Changes the file name to the name contained in the argument string. CLOSE ignores RENAME when it specifies the same file as that of the CLOSE file-specification. When the files are different, and the original file specified by the CLOSE no longer exists. RENAME gives an error if the specified file exists, while REPLACE does not. When the expression omits part of the pathname, YottaDB constructs the full pathname by applying the defaults discussed in the section on device specifications.
+Changes the file name to the name contained in the argument string. CLOSE ignores RENAME when it specifies the same file name as that of the CLOSE file-specification. When the files names are different, the original file name specified by the CLOSE no longer exists. RENAME gives an error if the specified file exists, while REPLACE does not. When the expression omits part of the pathname, YottaDB constructs the full pathname by applying the defaults discussed in the section on device specifications.
 
 If the process has sufficient access permissions, it may use RENAME to specify a different directory as well as file name. RENAME cannot move a file to a different filesystem.
+
+~~~~~~~~
+REPLACE
+~~~~~~~~
+
+REPLACE=expr Applies to SD
+
+Changes the file name to the name contained in the argument string. REPLACE overwrites any existing file, whereas RENAME does not. CLOSE ignores REPLACE when it specifies the same file name as the that of the CLOSE file-specification. When the file names are different, the original file name specified by CLOSE no longer exists. When the expression omits part of the pathname, YottaDB constructs the full pathname by applying the defaults discussed in the section on device specifications.
+
+If the process has sufficient access permissions, it may use REPLACE to specify a different directory as well as file name. REPLACE cannot move a file to a different filesystem.
 
 .. _close-socket:
 
@@ -4753,6 +4767,8 @@ In order to modify file security, the user who issues the CLOSE must have owners
 | “OWNER”                            |                    | X                | X          |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
 | “RENAME”                           |                    | X                | X          |              |
++------------------------------------+--------------------+------------------+------------+--------------+
+| “REPLACE"                          |                    | X                | X          |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
 | “REWIND”                           |                    | X                |            |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
@@ -4850,6 +4866,8 @@ The following table lists all of the deviceparameters and shows the commands to 
 | RECORDSIZE=intexpr              | X                   |                     |                     |
 +---------------------------------+---------------------+---------------------+---------------------+
 | RENAME=expr                     |                     |                     | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| REPLACE=expr                    |                     |                     | X                   |
 +---------------------------------+---------------------+---------------------+---------------------+
 | [NO]RETRY                       | X                   | X                   |                     |
 +---------------------------------+---------------------+---------------------+---------------------+
