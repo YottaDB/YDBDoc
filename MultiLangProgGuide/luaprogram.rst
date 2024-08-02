@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2022 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2022-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -117,7 +117,7 @@ We can delete a node -- either its *value* or its entire *tree*:
    -- hello("chinese")="你好世界!!"
    -- hello("cowboy")="Howdy partner!"
 
-   n:delete_tree() -- delete both the value at the '^hello' node and all of its children
+   n:kill() -- delete both the value at the '^hello' node and all of its children
    n:dump()
    -- nil
 
@@ -125,12 +125,6 @@ We can delete a node -- either its *value* or its entire *tree*:
 
 Let's use Lua to calculate the height of 3 oak trees, based on their shadow length and the angle of the sun.
 Method ``settree()`` is a handy way to enter literal data into the database from a Lua table constructor:
-
-You may also wish to look at ``node:gettree()`` which has multiple uses.
-On first appearances, it just loads a database tree into a Lua table (opposite of ``settree`` above),
-but it also allows you to iterate over a whole database tree and process each node through a filter function.
-For example, to use `print` as a filter function, do ``node:gettree(nil, print)``.
-Incidentally, lua-yottadb itself uses ``gettree``, to implement ``node:dump()``.
 
 .. code-block:: lua
   :force:
@@ -146,6 +140,44 @@ Incidentally, lua-yottadb itself uses ``gettree``, to implement ``node:dump()``.
    -- Oak 1 is 5.8m high
    -- Oak 2 is 7.5m high
    -- Oak 3 is 15.0m high
+
+You may also wish to look at ``node:gettree()`` which has multiple uses.
+On first appearances, it just loads a database tree into a Lua table (opposite of ``settree`` above),
+but it also allows you to iterate over a whole database tree and process each node through a filter function.
+For example, to use `print` as a filter function, do ``node:gettree(nil, print)``.
+Incidentally, lua-yottadb itself uses ``gettree``, to implement ``node:dump()``.
+
+**Database transactions are also available**
+
+.. code-block:: lua
+  :force:
+
+  > Znode = ydb.node('^Ztest')
+  > transact = ydb.transaction(function(end_func)
+    print("^Ztest starts as", Znode:get())
+    Znode:set('value')
+    end_func()
+    end)
+
+  > transact(ydb.trollback)  -- perform a rollback after setting Znode
+  ^Ztest starts as	nil
+  YDB Error: 2147483645: YDB_TP_ROLLBACK
+  > Znode.get()  -- see that the data didn't get set
+  nil
+
+  > tries = 2
+  > function trier()  tries=tries-1  if tries>0 then ydb.trestart() end  end
+  > transact(trier)  -- restart with initial dbase state and try again
+  ^Ztest starts as	nil
+  ^Ztest starts as	nil
+  > Znode:get()  -- check that the data got set after restart
+  value
+
+  > Znode:set(nil)
+  > transact(function() end)  -- end the transaction normally without restart
+  ^Ztest starts as	nil
+  > Znode:get()  -- check that the data got set
+  value
 
 ---------
 Lua API
