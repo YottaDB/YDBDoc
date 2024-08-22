@@ -3167,10 +3167,11 @@ format is an optional single case independent character formatting code for the 
 * I : returns a signed integer value - negative values have a preceding minus sign (-); the length can be 1, 2, 4, or 8 bytes.
 * U : returns an unsigned integer value - all bits are part of the numeric value; the length can be 1, 2, 4, or 8 bytes.
 * S : returns a character representation of the memory locations and the first NULL character found terminates the returned string; that is: the specified length is a maximum.
-* T: Selects a $HOROLOG format for a field of 4 or 8 bytes which is intended for use on fields in UNIX time format (seconds since 01/01/1970)
+* T : Selects a $HOROLOG format for a field of 4 or 8 bytes which is intended for use on fields in UNIX time format (seconds since 01/01/1970)
 * X : returns a hexadecimal value as 0xXXXXXX where XXXXXX is twice the specified length in bytes, so requested length 1 returns 0xXX and length 4 returns 0xXXXXXXXX; the length can be 1, 2, 4, or 8 bytes.
 * Z : returns a hexadecimal representation of the memory locations as 'X' does, without regard to endianness, and with no length restriction other than max string length.
-* $ZPEEK() function generates an UNDEF error when VIEW UNDEF is not set and a format parameter is specified but is undefined.
+
+$ZPEEK() function generates an UNDEF error when VIEW UNDEF is not set and a format parameter is specified but is undefined.
 
 $ZPEEK() has no UTF-8 checking. It is possible for values returned by the 'C' and 'S' codes to have invalid UTF-8 values in them. Take care when processing values obtained by these codes to either use "VIEW NOBADCHAR" when dealing with such values and/or use the $Zxxx() flavors of functions like $ZPIECE(), $ZEXTRACT(),etc which also do not raise BADCHAR errors when encountering invalid UTF-8 encoded strings.
 

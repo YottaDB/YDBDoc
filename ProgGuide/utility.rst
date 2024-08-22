@@ -2646,7 +2646,7 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
   3. If the first expression refers to one of the replication related structures supported by the $ZPEEK() function that are indexed, PEEKBYNAME treats this second expression as a numerical (base 10) index value.
   4. For those structures supported by the $ZPEEK() function that do not accept an argument, this second expression must be NULL or not specified.
 
-* The optional third expression specifies the output format in one character as defined in the "format" argument in the $ZPEEK() documentation. This argument overrides the automatic format detection by the %PEEKBYNAME utility.
+* The optional third expression specifies the output format in one character as defined in the "format" argument in :ref:`zpeek-function`. This argument overrides the automatic format detection by the %PEEKBYNAME utility.
 * The optional fourth argument is a global directory referencing the :code:`ydbhelp.gld` for accesssing the :code:`ydbhelp.dat` file.
 
 Example:
@@ -2690,9 +2690,9 @@ Calls to %PEEKBYNAME with the listed string as value of the first parameter, and
    YDB>for i=1:1:10000 set ^x($$^%RANDSTR(8))=$$^%RANDSTR(64)
    YDB>write $$^%PEEKBYNAME("node_local.wcs_active_lvl","DEFAULT") ; And now, how many of them are dirty
    377
-   YDB>write $ZPIECE($$^%PEEKBYNAME("gd_region.open","DEFAULT"),$ZCHAR(0),1) ; display if DEFAULT region is open (1) or not (0)
+   YDB>write $$^%PEEKBYNAME("gd_region.open","DEFAULT") ; display if DEFAULT region is open (1) or not (0)
    1
-   YDB>write $ZPIECE($$^%PEEKBYNAME("gd_segment.fname","AREG"),$ZCHAR(0),1) ; display database file name for AREG region
+   YDB>write $$^%PEEKBYNAME("gd_segment.fname","AREG","S") ; display database file name for AREG region as a string
    YDB>
 
 When using the following, remember to write code that allows for values other than those listed, e.g., if writing code to check whether before image journaling is in use, make sure it can deal with values other than 0 and 1, because a future release of YottaDB can potentially introduce a new return value for a field.
