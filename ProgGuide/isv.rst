@@ -720,11 +720,11 @@ $ZGBLDIR
 
 $ZG[BLDIR] contains the value of the current Global Directory filename. When $ZGBLDIR specifies an invalid or inaccessible file, YottaDB cannot successfully perform database operations.
 
-YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to the value of the environment variable gtm_gbldir, and if that is not defined, then to the empty string (:code:`""`). When $ZGBLDIR is the empty string, any attempt to access the global directory results in a :code:`ZGBLDIRUNDEF` error.
+YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to the value of the environment variable gtmgbldir, and if that is not defined, then to the empty string (:code:`""`). When $ZGBLDIR is the empty string, any attempt to access the global directory results in a :code:`ZGBLDIRUNDEF` error.
 
 $ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR using the same logic as at process startup. Newing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. As with NEWed local variables, QUIT restores the prior value in effect at the time of call. A $ZGBLDIR value may include an environment variable.
 
-Setting $ZGBLDIR sets the environment variable `ydb_cur_gbldir <../AdminOpsGuide/basicops.html#>`_ to the new value of $ZGBLDIR. This allows a child process to decide whether to use the current global directory of the parent or the :code:`$ydb_gbldir`/ :code:`$gtm_gbldir` at parent process startup.
+Setting $ZGBLDIR sets the environment variable `ydb_cur_gbldir <../AdminOpsGuide/basicops.html#>`_ to the new value of $ZGBLDIR. This allows a child process to decide whether to use the current global directory of the parent or the :code:`$ydb_gbldir`/ :code:`$gtmgbldir` at parent process startup.
 
 Setting $ZGBLDIR also causes YottaDB to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB triggers an error without changing the value of $ZGBLDIR.
 
