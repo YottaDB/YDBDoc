@@ -15772,6 +15772,16 @@ Run Time Error: This indicates that a SET of a $ZGBLDIR or external global refer
 
 Action: Ensure that you specified the intended Global Directory. Use a host shell command to verify that the specified directory exists and has the protections required for the desired access.
 
+------------------
+ZGBLDIRUNDEF
+------------------
+
+ZGBLDIRUNDEF, Global Directory env var $ydb_gbldir/$gtmgbldir is undefined
+
+Run Time Error: This indicates that the env var :code:`ydb_gbldir` (or :code:`gtmgbldir` in that order) is undefined or is defined and set to the empty string :code:`""`. And that in turn implies there is no valid Global Directory file that can be used for the current global reference.
+
+Action: Ensure that you set the env var to the intended Global Directory file.
+
 ----------------
 ZGOCALLOUTIN
 ----------------
