@@ -12863,6 +12863,16 @@ Action: Correct the code that attempts to set $ZDIRECTORY to an excessively long
 SETZDIRTOOLONG was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
 
 ------------------------
+SHEBANGMEXT
+------------------------
+
+SHEBANGMEXT, xxxx needs a .m extension to be a valid shebang script
+
+Run Time Information: xxxx needs to have a .m extension in order to support a shebang invocation.
+
+Action: Rename xxxx with a .m extension and retry the shebang invocation.
+
+------------------------
 SHMPLRECOV
 ------------------------
 
