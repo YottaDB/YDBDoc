@@ -400,7 +400,7 @@ This example performs a TROLLBACK if a transaction is in progress. A statement l
 $TRESTART
 ---------------
 
-$TR[ESTART] contains a count of the number of times the current TRANSACTION has been RESTARTed. A RESTART can be explicit (specified in M as a TRESTART) or implicit (initiated by YottaDB as part of its internal concurrency control mechanism). $TRESTART can have values of 0 through 4. When there is no TRANSACTION in progress, $TRESTART is zero (0).
+$TR[ESTART] contains a count of the number of times the current TRANSACTION has been RESTARTed. A RESTART can be explicit (specified in M as a TRESTART) or implicit (initiated by YottaDB as part of its internal concurrency control mechanism). $TRESTART can have values of 0 through 4. When there is no TRANSACTION in progress or during the first iteration of a transaction, $TRESTART is zero (0).
 
 $TRESTART can be used by the application to limit the number of RESTARTs, or to cause a routine to perform different actions during a RESTART than during the initial execution.
 
