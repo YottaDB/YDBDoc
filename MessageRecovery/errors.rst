@@ -1,4 +1,4 @@
-.. ###############################################################
+. ###############################################################
 .. #                                                             #
 .. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
@@ -223,6 +223,16 @@ ARCTLMAXLOW, The environment variable XXXX = YYYY is too low. Assuming the minim
 Run Time Warning: The environment variable named XXXX that controls the maximum number of auto-relink routine entries is assigned a value (YYYY) that is too low. YottaDB will set the maximum routine count to ZZZZ and continue normal operation.
 
 Action: Please set the environment variable XXXX to a value between 1,000 and 16,000,000.
+
+-------------
+ARGSLONGLINE
+-------------
+
+ARGSLONGLINE, Entered line is greater than maximum characters allowed nnnn
+
+Run Time Warning: A shell command line longer than MAX_LINE (currently 32,021 bytes) was used to invoke YottaDB, or entered at a YottaDB command line (e.g., at the `direct mode <../ProgrammersGuide/opdebug.html>`_ prompt) when `GNU Readline <https://www.gnu.org/software/readline/>`_ is not specified by `$ydb_readline <../AdminOpsGuide/basicops.html#ydb-readline>`_. The command line is ignored.
+
+Action: Enter a shorter line, or break the needed actions into multiple commands.
 
 ----------
 ARROWNTDSP
@@ -779,7 +789,7 @@ Action: Specify the proper character set when opening the file. For UTF-16 data,
 BOOLEXPRTOODEEP
 -----------------
 
-BOOLEXPRTOODEEP,Boolean expression depth exceeds maximum supported limit of 2047
+BOOLEXPRTOODEEP, Boolean expression depth exceeds maximum supported limit of 2047
 
 Compile / Run Time Error: The nesting depth of a Boolean expression exceeds 2047, the YottaDB limit.
 
@@ -801,7 +811,7 @@ BOVTMGTEOVTM
 
 BOVTMGTEOVTM, Journal file xxxx has beginning timestamp aaaa greater than end timestamp bbbb
 
-MUPIP Error: This indicates that the beginning time stamp aaaa of the journal file xxxx is greater than the ending timestamp bbbb. This could be due to something that changed the system time,such as a daylight savings time change or a testing time reset, while YottaDB was journaling. YottaDB recommends against changing system time during YottaDB Run-time as a matter of course, as this disruption is not heavily tested.
+MUPIP Error: This indicates that the beginning time stamp aaaa of the journal file xxxx is greater than the ending timestamp bbbb. This could be due to something that changed the system time, such as a daylight savings time change or a testing time reset, while YottaDB was journaling. YottaDB recommends against changing system time during YottaDB Run-time as a matter of course, as this disruption is not heavily tested.
 
 Action: Changing system time during YottaDB run-time is not allowed. Contact your YottaDB support channel for further assistance.
 
@@ -3404,6 +3414,16 @@ Run Time Error: The application made an attempt to READ from a device in a WRITE
 
 Action: Check for logic errors and revise the code.
 
+----------------
+DEVNAMERESERVED
+----------------
+
+DEVNAMERESERVED, Cannot use NNNN as device name. Reserved for internal usage.
+
+Run Time Error: This error appears when there is an attempt to OPEN a device with the name YGTMSOCKETPOOL. YottaDB internally reserves the name YGTMSOCKETPOOL to identify the socket pool and prevents any other device from using it.
+
+Action: Use a different name for the SOCKET device.
+
 --------------------
 DEVNOTIMP
 --------------------
@@ -3675,6 +3695,16 @@ DSEFAIL, DSE failed. Failure code: xxxx.
 DSE Error: This indicates that DSE could not complete a database operation. xxxx contains failure codes for the four attempts. It is very likely that the database may have integrity errors or that the process-private data structures are corrupted.
 
 Action: Report this database structure error to the group responsible for database integrity at your operation.
+
+--------------
+DSEINVALBLKID
+--------------
+
+DSEINVALBLKID, Trying to edit DB with 64-bit block IDs using pre-GT.M-V7/pre-YottaDB-r2.00 DSE
+
+DSE Error: Indicates a mismatch between the version of DSE and the version of the target database. Specifically, editing a newer database is being attempted with an older DSE.
+
+Action: Use the version of DSE that matches the database.
 
 ---------------------------
 DSEINVLCLUSFN
@@ -4377,6 +4407,16 @@ FILEPARSE, Error parsing file specification: xxxx
 Run Time Error: This indicates a problem with the specification of file xxxx, or the path to it. If the file is a source or object file, a ZLINK command or $ZROUTINES-related action encountered the error.
 
 Action: Look for and correct any typographical errors in the file-specification.
+
+----------------
+FILEPATHTOOLONG
+----------------
+
+FILEPATHTOOLONG, Filename including the path cannot be longer than 255 characters
+
+Error: A file name with its path exceeds the maximum supported length.
+
+Action: Adjust the path and name to meet the supported maximum.
 
 ---------------------
 FILERENAME
@@ -7054,7 +7094,7 @@ JNLSPACELOW, Journal file jjjj nearing maximum size, nnnn blocks to go
 
 Run Time Information: Depending on your settings for ALLOCATION, AUTOSWITCHLIMIT, and EXTENSION journaling options, you may see one to three JNLSPACELOW messages for each generation of a journal file. When the difference between AUTOSWITCHLIMIT and ALLOCATION is an exact multiple of EXTENSION, YottaDB attempts to write the JNLSPACELOW message to the operator log three times as a journal file reaches its maximum size. The first JNLSPACELOW message appears in the operator log when the available free space (blocks) in a journal file is equal to twice the EXTENSION, the second appears when the available free space is equal to EXTENSION, and the third appears when the journal file reaches the maximum size (AUTOSWITCHLIMIT). With EXTENSION=0 or EXTENSION=AUTOSWITCHLIMIT, YottaDB logs the JNLSPACELOW message only once per journal file to the operator log.
 
-Action:  The JNLSPACELOW message is an information message and requires no action. However, you can use the JNLSPACELOW messages as part of monitoring journaling space requirements or as an operational practice to a trigger to intervene in journal file management. Use the frequency of JNLSPACELOW messages to proactively monitor how fast a journal file grows and as part of a monitoring alorithm that helps predict how soon the disk is likely to hit a quota limit.
+Action: The JNLSPACELOW message is an information message and requires no action. However, you can use the JNLSPACELOW messages as part of monitoring journaling space requirements or as an operational practice to a trigger to intervene in journal file management. Use the frequency of JNLSPACELOW messages to proactively monitor how fast a journal file grows and as part of a monitoring alorithm that helps predict how soon the disk is likely to hit a quota limit.
 
 -----------------
 JNLSTATE
@@ -7115,7 +7155,7 @@ JNLSWITCHSZCHG, Journal AUTOSWITCHLIMIT [aaaa blocks] is rounded down to [bbbb b
 
 MUPIP Information: This indicates that the specified AUTOSWITCHLIMIT value was rounded down as little as possible to make it aligned to the ALLOCATION + a multiple of EXTENSION. Any subsequently created journal file will use this value for AUTOSWITCHLIMIT.
 
-Action:  If the automatically rounded value for AUTOSWITCHLIMIT is inappropriate, specify an appropriate value for ALIGNSIZE, ALLOCATION, and/or EXTENSION.
+Action: If the automatically rounded value for AUTOSWITCHLIMIT is inappropriate, specify an appropriate value for ALIGNSIZE, ALLOCATION, and/or EXTENSION.
 
 
 --------------------
@@ -7707,7 +7747,7 @@ LIBYOTTAMISMTCH, $ydb_dist/libyottadb.so does not match the shared library path.
 
 Runtime Error: This indicates that the full path of the currently running libyottadb.so shared library does not match the path described by $ydb_dist. This is possible for example if a C program tries to directly invoke a base image function (e.g. ydb_main, dse_main, mupip_main etc.) for more than one build/release of YottaDB in the same process.
 
-Action:  Make sure a C program invokes a base image function of only one libyottadb.so executable.
+Action: Make sure a C program invokes a base image function of only one libyottadb.so executable.
 
 -----------------------
 LINKVERSION
@@ -9256,9 +9296,19 @@ MUTRUNC1ATIME
 
 MUTRUNC1ATIME, Process with PID iiii already performing truncate in region rrrr
 
-MUPIP Information: Issued when a REORG -TRUNCATE on a region rrrr detects some other active REORG process concurrently processing a truncation.
+MUPIP Information: Issued when a REORG TRUNCATE on a region rrrr detects some other active REORG process concurrently processing a truncation.
 
 Action: No action required. The other process will complete the truncate.
+
+---------------
+MUTRUNCALREADY
+---------------
+
+MUTRUNCALREADY,	Region xxxx: no further truncation possible
+
+MUPIP Information: Issued by `MUPIP REORG TRUNCATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#truncate>`_ when it finds that the database file was already truncated.
+
+Action: No action required. The database is defragmented, and space is fully used.
 
 --------------------
 MUTRUNCBACKINPROG
@@ -9460,6 +9510,16 @@ GDE Error: This indicates that the nnnn'th subscript in a name did not have a va
 
 Action: Specify the name with a properly formatted string subscript.
 
+------------------
+NAMNUMSUBNOTEXACT
+------------------
+
+NAMNUMSUBNOTEXACT, Subscript #nnnn with value vvvv in name specification is not an exact GT.M number
+
+GDE Error: This indicates that the nnnn'th subscript in a name specification is not an exact YottaDB number.
+
+Action: Specify a subscript that is an exact number.
+
 ---------------------
 NAMNUMSUBSOFLOW
 ---------------------
@@ -9510,6 +9570,17 @@ GDE Error: This indicates that the subscripted name specifications mmmm and nnnn
 
 Action: Ranges that overlap cannot map to different regions. The only exception is sub-ranges where one range lies completely inside of another. Fix the range specifications to either map to the same region or split the ranges further to avoid overlap.
 
+
+-----------------
+NAMRPARENMISSING
+-----------------
+
+NAMRPARENMISSING, Subscripted Name specification vvvv is missing one or more right parentheses at the end of subscripts
+
+GDE Error: This indicates that the subscripted name specification vvvv does not have terminating right parentheses matching opening parentheses.
+
+Action: Fix the syntax error of the specification and try again.
+
 -------------------
 NAMRPARENNOTEND
 -------------------
@@ -9559,6 +9630,16 @@ NAMSTRSUBSFUN, Subscript #nnnn with value vvvv in name specification uses functi
 GDE Error: This indicates that the nnnn'th subscript in a name specifies a string subscript using an unsupported function. The only two supported functions are $CHAR or $ZCHAR (long form and short forms).
 
 Action: Specify the string subscript using only the supported functions.
+
+------------------
+NAMSTRSUBSLPAREN
+------------------
+
+NAMSTRSUBSLPAREN, Subscript nnn with value vvv in name specification does not have left parenthesis following $ specification
+
+GDE Error: A subscript specification that uses a function (e.g., $CHAR()) does not have a left parenthesis after the function name.
+
+Action: Correct the syntax and try again.
 
 --------------------
 NAMSUBSBAD
@@ -11297,11 +11378,11 @@ Action: Check the path and directory permissions needed for the process to creat
 READLINELONGLINE
 --------------------
 
-READLINELONGLINE, Entered line is greater than 32Kb long and will be truncated
+READLINELONGLINE, Entered line is greater than 32Kb long, exceeding maximum allowed
 
-Run Time Warning: Readline provided LKE, DSE, or MUPIP with a command line longer than 32KB. YottaDB truncates the line and executes the truncated line.
+Run Time Warning: When use of `GNU Readline <https://www.gnu.org/software/readline/>`_ is specified by `$ydb_readline <../AdminOpsGuide/basicops.html#ydb-readline>`_, a line entered at a YottaDB command line (e.g., at the `direct mode <../ProgrammersGuide/opdebug.html>`_ prompt) exceeds MAX_LINE (currently 32,021 bytes). The command is ignored.
 
-Action: Provide YottaDB with a shorter command line.
+Action: Enter a shorter line, or break the needed actions into multiple commands.
 
 -------------------------
 READONLYLKFAIL
@@ -11703,7 +11784,7 @@ REPLINSTCREATE, Error creating replication instance file xxxx
 
 Run Time Error: There was an error when YottaDB or MUPIP tried to create the replication instance file. The error detail accompanies this message.
 
-Action: Look at the accompanying message that gives error details. Possible causes are file permissions, system quotas, and so on.  If possible, correct the cause and retry creating the replication instance file. If the error persists, report to your YottaDB support channel along with the error details.
+Action: Look at the accompanying message that gives error details. Possible causes are file permissions, system quotas, and so on. If possible, correct the cause and retry creating the replication instance file. If the error persists, report to your YottaDB support channel along with the error details.
 
 ---------------------
 REPLINSTDBMATCH
@@ -11940,7 +12021,7 @@ REPLJNLCLOSED
 
 REPLJNLCLOSED, Replication in jeopardy as journaling for database file ddd. Current region seqno is xxx[XXX] and system seqno is yyy[YYY]
 
-Run Time Warning: This message indicates that YottaDB turned OFF journaling and switched replication from ON to WAS_ON in the specified database. Other preceding messages identify the cause (for example, a lack of disk space while writing to a journal file, a permissions issue while auto-switching to new journal files,and so on). The message also displays the region and journal sequence numbers. From this point, replicating updates on the primary to the secondary might or might not work depending on the backlog on the primary until replication/journaling gets turned back ON.
+Run Time Warning: This message indicates that YottaDB turned OFF journaling and switched replication from ON to WAS_ON in the specified database. Other preceding messages identify the cause (for example, a lack of disk space while writing to a journal file, a permissions issue while auto-switching to new journal files, and so on). The message also displays the region and journal sequence numbers. From this point, replicating updates on the primary to the secondary might or might not work depending on the backlog on the primary until replication/journaling gets turned back ON.
 
 Action: First, correct the cause (lack of disk space, permission issues, and so on) that turned journaling OFF.
 
@@ -12394,6 +12475,18 @@ MUPIP Information: MUPIP RUNDOWN -RELINKCTL successfully ensured the auto-relink
 
 Action: None required
 
+.. _rlnkinteginfo:
+
+----------------------
+RLNKINTEGINFO
+----------------------
+
+RLNKINTEGINFO, Integrity check completed successfully: xxxx -- called from module yyyy at line zzzz
+
+Run Time Information: Indicates relinkctl integrity check completed successfully by performing the action described by xxxx. If YottaDB does not issue this message after a :ref:`rlnkrecnfl-err` message, it means the relinkctl integrity check failed. This message was called from the yyyy module at zzzz line, and it goes to the operator log.
+
+Action: If the integrity check result succeeds, the process can continue, otherwise, YottaDB generates a trappable error, right after this message. Contact your YottaDB support channel to discuss what might have caused the issue.
+
 -------------------
 RLNKRECLATCH
 -------------------
@@ -12403,6 +12496,18 @@ RLNKRECLATCH, Failed to get latch on relinkctl record for routine name rrrr in $
 Error: The process attempted to auto-relink or ZLINK routine rrrr from directory dddd but was unable to acquire the resource that ensures auto-relink state information for the routine is consistent.
 
 Action: Report the entire incident context to your YottaDB support channel.
+
+.. _rlnkrecnfl-err:
+
+----------------------
+RLNKRECNFL
+----------------------
+
+RLNKRECNFL, Conflict on relinkctl file rrrr for $ZROUTINES directory dddd, running an integrity check
+
+Run Time Warning: Indicates a process encountered an issue attempting to attach to a routine object in dynamically linked library associated with directory dddd, and initiated an integrity check of the library control structures associated with relinkctl file rrrr. YottaDB sends this message to the operator log.
+
+Action: If the check finds no problem or can correct any abnormality it finds (look for a subsequent :ref:`rlnkinteginfo` message in the operator log, to have more information about the integrity check result), the process can continue, otherwise, YottaDB generates a trappable error. Contact your YottaDB support channel to discuss what might have caused the issue.
 
 ----------------------
 RLNKSHMLATCH
@@ -12473,30 +12578,6 @@ RNDWNSTATSDBFAIL, Rundown of statistics database region RRRR (DB DDDD) failed at
 All YottaDB Components Error: This indicates that YottaDB was unable to close out the shared resources associated with region RRRR (database file DDDD) becaus of the error EEEE, which it received at location LLLL
 
 Action: Address the reason for the failure and retry.
-
-.. _rlnkinteginfo:
-
-----------------------
-RLNKINTEGINFO
-----------------------
-
-RLNKINTEGINFO, Integrity check completed successfully: xxxx -- called from module yyyy at line zzzz
-
-Run Time Information: Indicates relinkctl integrity check completed successfully by performing the action described by xxxx. If YottaDB does not issue this message after a :ref:`rlnkrecnfl-err` message, it means the relinkctl integrity check failed. This message was called from the yyyy module at zzzz line, and it goes to the operator log.
-
-Action: If the integrity check result succeeds, the process can continue, otherwise, YottaDB generates a trappable error, right after this message. Contact your YottaDB support channel to discuss what might have caused the issue.
-
-.. _rlnkrecnfl-err:
-
-----------------------
-RLNKRECNFL
-----------------------
-
-RLNKRECNFL, Conflict on relinkctl file rrrr for $ZROUTINES directory dddd, running an integrity check
-
-Run Time Warning: Indicates a process encountered an issue attempting to attach to a routine object in dynamically linked library associated with directory dddd, and initiated an integrity check of the library control structures associated with relinkctl file rrrr. YottaDB sends this message to the operator log.
-
-Action: If the check finds no problem or can correct any abnormality it finds (look for a subsequent :ref:`rlnkinteginfo` message in the operator log, to have more information about the integrity check result), the process can continue, otherwise, YottaDB generates a trappable error. Contact your YottaDB support channel to discuss what might have caused the issue.
 
 ----------------------
 ROLLBKINTERRUPT
@@ -12657,6 +12738,16 @@ SECNOTSUPPLEMENTARY, ssss is a Supplementary Instance and so cannot act as a sou
 Source Server log/MUPIP Error: Issued by a Source Server on a Supplementary Instance. ssss attempted to connect to a Replicating Instance iiii, but found that iiii is not configured as a Supplementary Instance.
 
 Action: Reconfigure the instances to a supported configuration.
+
+--------------
+SECSHRPATHMAX
+--------------
+
+SECSHRPATHMAX, gtmsecshr executable path length is greater than maximum nnnnn
+
+Run Time Error: This message indicates an inappropriate `gtmsecshr <../AdminOpsGuide/securityph.html#gtmsecshr-exception>`_ invocation. Either gtmsecshr is improperly installed or an inappropriate access attempt is underway.
+
+Action: Verify that YottaDB (and gtmsecshr) are correctly installed following documented procedures and that filesystem mount points have not changed. If YottaDB is correctly installed and filesystem mount points have not changed, investigate this as an attempt to break system security.
 
 ---------------------
 SEFCTNEEDSFULLB
@@ -12872,6 +12963,26 @@ Run Time Information: xxxx needs to have a .m extension in order to support a sh
 
 Action: Rename xxxx with a .m extension and retry the shebang invocation.
 
+-----------
+SHMHUGETLB
+-----------
+
+SHMHUGETLB, Could not back shared memory with huge pages, using base pages instead
+
+Run Time Warning: When the `ydb_hugetlb_shm <../AdminOpsGuide/basicops.html#ydb-hugetlb-shm>`_ environment variable is defined and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES" in a process creating shared memory, YottaDB attempts to back shared memory segments with hugepages, using the default hugepages size. If huge pages cannot be used, YottaDB outputs the SHMHUGETLB warning and tries to back the shared memory with base pages instead. The warning message specifies the operation of the caller along with the relevant file path for the process requesting shared memory. The warning message also includes either an ENOMEM or an EPERM error, depending on why the request for hugepages failed.
+
+Action: If the warning includes an ENOMEM error, consider allocating more hugepages. If the EPERM error is specified, make sure the caller is privileged (i.e. has the CAP_IPC_LOCK capability) and is a member of the group specified by the :code:`vm.hugetlb_shm_group` kernel parameter.
+
+--------
+SHMLOCK
+--------
+
+SHMLOCK, Could not pin shared memory into physical memory
+
+Run Time Warning: When the `ydb_pinshm <../AdminOpsGuide/basicops.html#ydb-pinshm>`_ environment variable is defined and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES" in a process creating shared memory, YottaDB attempts to pin such memory used for database global buffers, replication buffers, and routine buffers into physical memory. As hugepages are implicitly locked in physical memory, YottaDB does not attempt to pin shared memory buffers backed by hugepages. ydb_pinshm does not pin memory used by online INTEG (integchk snapshot). Pinning may not succeed due to insufficient physical memory and/or OS configuration.
+
+Action: If the ENOMEM error is included in the warning message, consider increasing the RLIMIT_MEMLOCK soft resource limit. If the EPERM error is specified, make sure the calling process is privileged (i.e. has the CAP_IPC_LOCK capability).
+
 ------------------------
 SHMPLRECOV
 ------------------------
@@ -12910,7 +13021,7 @@ SIDEEFFECTEVAL, Extrinsic ($$), External call ($&) or $INCREMENT() with potentia
 
 Compile Time Warning: A side effect expression appeared to the right of a global or local variable (glvn) in an order within an outer expression where the side effect might modify the glvn. Setting the ydb_side_effects environment variable to 2 (two) activates this check.
 
-Action: Analyze the effect(s) of the side effect expressions, which are $INCREMENT(), extrinsics ($$),or external calls ($& or $ZCALL()) as to whether they modify a glvn earlier in the expression. If they do, the setting of ydb_side_effects modifies the behavior and you either need to modify the code to eliminate the side effect interaction or be sure to select the behavior you desire.
+Action: Analyze the effect(s) of the side effect expressions, which are $INCREMENT(), extrinsics ($$), or external calls ($& or $ZCALL()) as to whether they modify a glvn earlier in the expression. If they do, the setting of ydb_side_effects modifies the behavior and you either need to modify the code to eliminate the side effect interaction or be sure to select the behavior you desire.
 
 ----------------------
 SIGACCERR
@@ -13904,6 +14015,16 @@ Run Time Error: This indicates that a system call failed due to some unusual err
 
 Action: Report to the system administrator and if necessary report the entire incident context to your YottaDB support channel for further analysis.
 
+------------
+SYSTEMVALUE
+------------
+
+SYSTEMVALUE, Invalid value for $SYSTEM (vvvv)
+
+Run Time Error: A SET $SYSTEM of value vvvv would cause $SYSTEM to exceed its maximum length.
+
+Action: Fix the logic to assign an appropriate value to $SYSTEM.
+
 --------------------
 SYSUTILCONF
 --------------------
@@ -13932,7 +14053,7 @@ TCOMMITDISALLOW, TROLLBACK required after an unhandled error in trigger context
 
 Run Time Error: This transaction did an update that invoked a trigger which in turn encountered an error that was not handled by the application error trap inside the trigger context. Because of this, the exit from the trigger context was abnormal. YottaDB does not commit such transactions since they would not preserve the atomicity of trigger updates (triggering update + triggered updates).
 
-Action: Such transactions can only be rolled back. If this is a nested TSTART (subtransaction), it can optionally be rolled back incrementally, that is, only the nested TSTART needs to be rolled back while the parent TSTART can still be committed.
+Action: Such transactions can only bge rolled back. If this is a nested TSTART (subtransaction), it can optionally be rolled back incrementally, that is, only the nested TSTART needs to be rolled back while the parent TSTART can still be committed.
 
 ----------------------
 TCPCONNTIMEOUT
@@ -14416,7 +14537,7 @@ TRANS2BIG, Transaction exceeded available buffer space for region rrrr
 
 Run Time Error: This indicates that a transaction updated more blocks than the global buffer could hold (half-2) for a particular region rrrr or accessed more than the single transaction limit of 64K blocks.
 
-Action: Look for missing TCOMMIT commands; modify the code to reduce the total content or change content of the transaction. If the transaction is as intended and the issue is the number of updates, increase the GLOBAL_BUFFERS for the region using MUPIP SET, or modify the Global Directory to redistribute the relevant globals to more regions.  If this occurs on a replicating instance it may indicate either a difference in configuration between the originating and replicating instances, which probably should be addressed, or a transaction that was borderline on the originating instance, but failed on the replicating instance because of difference in the database layout. In the later case, consider examining the application code to see if it's possible to reduce the size of the transaction, or alternatively increase the global buffers on both the instances.
+Action: Look for missing TCOMMIT commands; modify the code to reduce the total content or change content of the transaction. If the transaction is as intended and the issue is the number of updates, increase the GLOBAL_BUFFERS for the region using MUPIP SET, or modify the Global Directory to redistribute the relevant globals to more regions. If this occurs on a replicating instance it may indicate either a difference in configuration between the originating and replicating instances, which probably should be addressed, or a transaction that was borderline on the originating instance, but failed on the replicating instance because of difference in the database layout. In the later case, consider examining the application code to see if it's possible to reduce the size of the transaction, or alternatively increase the global buffers on both the instances.
 
 ----------------
 TRANSMINUS
@@ -14822,6 +14943,16 @@ Run Time Warning: This indicates that a process has been terminated by a source 
 
 Action: Investigate why an operator or program is stopping YottaDB processes without using MUPIP STOP.
 
+--------------
+UNKNOWNSYSERR
+--------------
+
+UNKNOWNSYSERR, nnnn does not correspond to a known YottaDB error code
+
+Run Time Error: The return code of `ydb_message() / ydb_message_t() <../MultiLangProgGuide/cprogram.html#ydb-message-ydb-message-t>`_ when the :code:`errnum` parameter does not correspond to an error that YottaDB recognizes.
+
+Action: Fix the application code to provide a meaningful :code:`errnum`.
+
 -----------------
 UNSDCLASS
 -----------------
@@ -15074,6 +15205,16 @@ Run Time Error: The argument xxxx for a VIEW command or a $VIEW function has too
 
 Action: Modify the argument so it has the proper number of sub-arguments.
 
+---------------
+VIEWARGTOOLONG
+---------------
+
+VIEWARGTOOLONG, The argument length LLLL to VIEW command vvvv exceeds the maximum mmmm
+
+Run Time Error: An argument to the VIEW command vvvv has a length LLLL bytes that exceeds the maximum supported length of mmmm.
+
+Action: Reduce the length of the VIEW command argument to no more than mmmm bytes.
+
 --------------------
 VIEWCMD
 --------------------
@@ -15175,6 +15316,16 @@ All YottaDB Components Error: This indicates that an attempt to flush a buffer t
 Action: For a BG database file, this means that a process attempting to flush modified global buffers to disk encountered an error. EEEE is the error it encountered, for database file DDDD when attempting to flush the blocks for database transaction number TTTT. This is usually accompanied by other messages that can together help provide more information and context. If you need further assistance and have purchased support, contact your YottaDB support channel.
 
 Action: Refer to the description of error EEEE and take appropriate action.
+
+-------------
+WCSFLUFAILED
+-------------
+
+WCSFLUFAILED, xxxx error while flushing buffers at transaction number nnnn for database file yyyy
+
+MUPIP Error: A `MUPIP REORG <../AdminOpsGuide/dbmgmt.html#reorg>`_ UPGRADE/DOWNGRADE of database file yyyy using the BG access method failed with the xxxx error transaction number nnnn.
+
+Action: Take corrective action for the xxxx error and retry the operation. If you need further assistance and have purchased support, contact your YottaDB support channel.
 
 ------------------
 WCWRNNOTCHG
@@ -15317,6 +15468,36 @@ XTRNTRANSERR, Error attempting to generate an environment using an external algo
 Run Time Error: This indicates that the external environment translation routine returned an error.
 
 Action: Check the external routine and the conditions it errors on. A supplementary TEXT message is printed if more information is provided by the external environment translation routine.
+
+-------------
+YDBDISTUNDEF
+-------------
+
+YDBDISTUNDEF, Environmental variable $ydb_dist is not defined
+
+Run Time Error: This indicates that the environment variable ydb_dist, is not defined for a processes attempting to use a YottaDB executable.
+
+Action: Define the environment variable. Also, report the circumstances under which you encountered the error to your YottaDB support channel as YottaDB normally automatically derives the information if the environment variable is not set.
+
+---------------
+YDBDISTUNVERIF
+---------------
+
+YDBDISTUNVERIF, Environment variable $ydb_dist (dddd) could not be verified against the executables path (pppp)
+
+Run Time Error: This indicates that the executable pppp does not reside in the path pointed to by environment variable ydb_dist (or if it is not defined, the environment variable gtm_dist), dddd.
+
+Action: Ensure that the setting for $ydb_dist (or $gtm_dist if $ydb_dist is not defined) matches that of the executable.
+
+-----------
+ZATRANSCOL
+-----------
+
+ZATRANSCOL, The collation requested has no implementation for the requested operation
+
+Run Time Error: The $ZATRANSFORM() function requested a next or previous collation character, but the collation transform module involved does not implement that functionality.
+
+Action: Enhance the collation transform plug-in in question to support the desired functionality.
 
 ------------------
 ZATRANSERR
