@@ -4637,6 +4637,9 @@ Example:
 
 The above example displays all nodes of :code:`x` containing exactly 3 subscripts, not 1 or 2 subscripts.
 
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />
 
 
 

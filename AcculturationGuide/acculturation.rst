@@ -2708,3 +2708,7 @@ Notice that Paris now shows a zero backlog for Melbourne, but still has a large 
    ydbuser@paris:~/jnlex$
 
 If you like, you can similarly boot Santiago and show that it also clears the backlog automatically. Shut down the instances when you are done.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AcculturationGuide.png" />

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -583,3 +583,6 @@ Similarly, the interpreted representation of ^NAME(.12,0,"STR",-34.567) looks li
 Note that since there is an odd number of digits, YottaDB appends zero (0) to the mantissa and one (1) to each byte in the mantissa.
 
 
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

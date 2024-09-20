@@ -10,6 +10,10 @@
 .. #                                                             #
 .. ###############################################################
 
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/cprogram.png" />
+
 ================
 Programming in C
 ================
@@ -1633,3 +1637,4 @@ M routines can be called from C with the following functions which are described
 Historically, the predecessors of the functions to call M routines returned positive return codes. In order to maintain backward compatibility, values returned by the above are positive values, whereas YottaDB :ref:`err-ret-codes` are negative. For example, to return an invalid string length (:ref:`YDB-ERR-INVSTRLEN`), the :code:`ydb_ci*()` functions return :code:`-YDB_ERR_INVSTRLEN`, which is a positve value because :code:`YDB_ERR_STRLEN` is a negative value.
 
 Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ :code:`ydb_zstatus()` returns an :code:`int`.
+

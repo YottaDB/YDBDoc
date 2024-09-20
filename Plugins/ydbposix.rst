@@ -857,3 +857,7 @@ Error Handling
 Entryrefs within :code:`^%ydbposix` except the top one (calling which is not meaningful), raise errors but do not set their own error handlers with $ETRAP or $ZTRAP. Application code error handlers should deal with these errors. In particular, note that non-zero function return values from :code:`$&ydbposix` functions result in ZCSTATUSRET errors.
 
 Look at the end of :code:`_ydbposix.m` for errors raised by entryrefs in %ydbposix.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/plugins.png" />

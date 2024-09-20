@@ -2939,3 +2939,7 @@ YDBApron is just one example of the kinds of applications that you can build wit
 Additionally, the summary sections above included examples of how to structure application data in YottaDB, showcasing how flexible the YottaDB data model can be.
 
 With this, we hope you have come to a better understanding of how YottaDB works, what it can do, and whether it might be a good fit for your next application.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/ApplicationsManual.png" />

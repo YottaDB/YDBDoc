@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2023-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -540,3 +540,7 @@ Start-up:
 4. On receiving Pi, start replication (``start.sh``)
 5. On receiving Pi, check status using ``repl_status.sh`` until the status shows that the two machines are in sync
 6. On receiving Pi, start ``rocto``
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/ApplicationsManual.png" />

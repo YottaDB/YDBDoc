@@ -828,3 +828,8 @@ This shows a deadlock situation where neither user can proceed because it is wai
 .. note::
    Avoid using the LKE CLEAR command to clear a deadlock in a production environment, as it may lead to unpredictable application behavior. Always use the MUPIP STOP command to clear a deadlock situation in your production environment. However, in a debugging environment, you can use LKE to debug LOCKs, analyze the status of the LOCK database and even experiment with LKE CLEAR.
 
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />
+

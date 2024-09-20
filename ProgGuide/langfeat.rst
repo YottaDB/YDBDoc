@@ -2192,3 +2192,7 @@ Generally, this type of program would be receiving data from multiple sessions i
 
 
 
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

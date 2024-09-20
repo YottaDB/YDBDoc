@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -104,3 +104,7 @@ Recommendations for running YottaDB in Kubernetes
 * Use a `preStop hook <https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/>`_ to stop processes accessing YottaDB gracefully when a pod needs to be stopped.
 
 * Improve security by running all YottaDB processes in a single pod/multiple container set-up, rather than multiple pod/single container. The security issues are summarized here: `<https://serverfault.com/questions/1054724/ipc-between-multiple-pods-on-same-kubernetes-node>`_.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

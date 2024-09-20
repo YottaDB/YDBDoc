@@ -177,3 +177,7 @@ When you run YottaDB, if your system has not been configured to automatically lo
   The pre-allocation for return strings in :code:`gtmzlib.xc`, whether compressed or uncompressed, allows for strings up to 1048576 bytes (1MB) which is the longest string value currently supported by YottaDB. Extensive use of gtmzlib may therefore result in frequent garbage collection. If your application is guaranteed to use strings only smaller than 1MB, you can reduce this number accordingly.
 
   The YottaDB interface to call out to C libraries is a low-level interface designed for use by programmers rather than end-users. Misuse, abuse and bugs can result in applications that are fragile, hard to troubleshoot and with security vulnerabilities.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/plugins.png" />

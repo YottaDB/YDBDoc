@@ -3944,3 +3944,7 @@ Examples of $ZYSUFFIX()
    YDB>
 
 $ZYSUFFIX() was added in YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

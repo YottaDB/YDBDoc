@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -869,3 +869,7 @@ Processing Errors from Direct Mode and Shell
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
 
 For more information, see `Chapter 13: “Error Processing” <./errproc.html>`_.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -74,3 +74,7 @@ Chapter 14: `Triggers <./triggers.html>`_ describes the trigger facility availab
 Chapter 15: `Database Encryption Extensions to the YottaDB External Interface <./encrypt.html>`_ describes the YottaDB reference encryption for Database encryption.
 
 
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

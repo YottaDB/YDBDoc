@@ -1166,3 +1166,7 @@ Choosing the right parameter type for strings
 * Use :code:`ydb_string_t *` if you to pass data from/to M that contains embedded NULLs (e.g. binary data).
 * Use :code:`ydb_buffer_t *` if you need to send data back (IO parameter) that has a larger length than the input data. For input-only, or output-only parameters, using :code:`ydb_string_t *` is simpler to use.
 
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

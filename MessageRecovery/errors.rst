@@ -16239,3 +16239,7 @@ ZYSQLNULLNOTVALID, $ZYSQLNULL cannot be used as an integer, numeric, gvn subscri
 Compile / Run Time Error: $ZYSQLNULL can only be used in expressions, as a local variable subscript, or the value of a local variable node.
 
 Action: Correct the coding issue resulting in the incorrect $ZYSQLNULL usage.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MessageRecovery.png" />

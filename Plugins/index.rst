@@ -40,4 +40,4 @@ Indices and tables
 
 .. raw:: html
 
-    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/yottadb-pixel.png" />
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/plugins.png" />

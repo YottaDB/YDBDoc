@@ -3024,3 +3024,6 @@ DSE Command Summary
 \* Use these qualifiers only with instructions from YottaDB.
 
 
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

@@ -125,3 +125,7 @@ The files are as follows:
 - ``zversion.txt`` is the output of $ZVERSION, and for YottaDB releases, ``zyrelease.txt`` is the outpyt of $ZYRELEASE.
 
 We suggest that you download ``ydb_support.sh`` and run it to ensure that you are comfortable with the metadata it is collecting. If not, please adapt it as befits your situation.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/plugins.png" />

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -231,3 +231,7 @@ Temporary global variables are those which need not persist beyond the lifetime 
 For temporary global variables, use :code:`mktemp -d` (or equivalent alternative) to create a temporary directory, preferably in non-persistent storage (so that if the system crashes, there is not a need to separately delete the space). In that directory, create a global directory file and database using the MM access method.
 
 If an application uses a `permanent global variable`_ to share the location of the temporary directory, remember to include logic in the design of the plugin to delete the information once the temporary directory is no longer relevant.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

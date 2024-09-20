@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -344,3 +344,6 @@ MUPIP INTEG Error Messages
 .. note::
    Section * refers to the specified section in  the `Finding and Fixing Database Errors <../AdminOpsGuide/integrity.html#find-fix-db-errs>`_ chapter of the Administration and Operations Guide. The section details a description along with the action item to be taken on encountering the error message.
 
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MessageRecovery.png" />

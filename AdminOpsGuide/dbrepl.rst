@@ -5070,3 +5070,7 @@ Update Writer Trigger Factor
 One of the parameters used by YottaDB to manage the database is the flush trigger. One of several conditions that causes normal YottaDB processes to initiate flushing dirty buffers from the database global buffer cache is when the number of dirty buffers crosses the flush trigger. YottaDB processes dynamically tune this value in normal use. In an attempt to never require the update process itself to flush dirty buffers, when the number of dirty global buffers crosses the Update Writer Trigger Factor of the flush trigger, writer helper processes start flushing dirty buffers to disk. The default value is 33, i.e., 33%.
 
 The DSE command change -file_header -upd_writer_trigger_factor=n sets the value of Update Writer Trigger Factor to n for the current region.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

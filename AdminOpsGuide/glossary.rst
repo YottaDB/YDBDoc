@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -46,3 +46,7 @@ S
 **Source Instance** : Within the context of a replication connection between two instances, an originating instance is referred to as source instance or source side. For example, in an B←A→C replication configuration, A is the source instance for B and C.
 
 **Supplementary Instance** : A supplementary instance is an instance that processes business logic, generates logical updates to the database, and at the same time receives updates from another instance.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

@@ -10,6 +10,10 @@
 .. #                                                             #
 .. ###############################################################
 
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/programmingnotes.png" />
+
 .. _Programming Notes:
 
 ============================================

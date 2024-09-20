@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2020-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -414,3 +414,7 @@ To insert an image into the documentation, use the following syntax:
 .. code-block:: none
 
    .. image:: picture.jpg
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/StyleGuide.png" />

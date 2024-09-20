@@ -2040,3 +2040,6 @@ The following table summarizes all qualifiers for the ADD, CHANGE, and TEMPLATE 
 
 
 
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

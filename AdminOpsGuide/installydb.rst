@@ -298,3 +298,7 @@ For YottaDB to correctly operate on Linux systems using `systemd <https://system
 
   * If :code:`--preserveRemoveIPC` is set to no, the script changes the setting in :code:`/etc/systemd/logind.conf` and outputs a message to indicate the change. A restart of :code:`systemd-logind` is required to complete the installation.
   * If :code:`--preserveRemoveIPC` is set to yes, then change :code:`RemoveIPC` to no and restart :code:`systemd-logind` to complete the installation.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

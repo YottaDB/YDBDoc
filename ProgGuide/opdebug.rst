@@ -866,3 +866,7 @@ For more information on syntax and run-time errors during Direct Mode, see `Chap
 +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 
 
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

@@ -2320,3 +2320,7 @@ The code in SFeeplnACN50.m handles changes to piece 15.
      If processMode<2 Do
      . Kill ^XREF("FEEPLN",oldfeepln,cid) Set ^XREF("FEEPLN",feepln,cid)=""
      Quit
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

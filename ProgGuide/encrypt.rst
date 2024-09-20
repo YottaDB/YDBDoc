@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -97,3 +97,7 @@ YottaDB provides the following functions to defer interrupts, invoke the SSL/TLS
 * :code:`void gtm_tls_fini(gtm_tls_ctx_t **ctx)` - Frees up any memory allocated by the SSL/TLS context. This function should typically be invoked at process exit.
 
 For detailed explanation on the above functions refer to `ydb_tls_interface.h <https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydb_tls_interface.h>`_ file.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

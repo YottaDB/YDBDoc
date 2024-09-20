@@ -1215,3 +1215,7 @@ Adhere to the following rules of thumb to design and develop Unicode-based appli
 
 
 
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

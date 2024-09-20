@@ -1691,3 +1691,7 @@ For example:
 .. code-block::
 
         D setError^%ydbwebutils("400","Input parameters not correct") Q
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/plugins.png" />

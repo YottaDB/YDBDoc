@@ -1237,3 +1237,6 @@ Using the Reference Implementation with Older Releases
 The interface between YottaDB and the encryption libraries has changed over time. Custom encryption libraries should be verified to work with newer version before deployment into production.
 
 
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

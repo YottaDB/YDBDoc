@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -91,4 +91,8 @@ We have made a conscientious effort to present intuitive examples and related er
 With the M examples, an effort was made to construct examples where command lines did not wrap, in many cases using the argumentless DO.
 
 The examples make frequent use of literals in an attempt to focus attention on particular points. In normal usage, arguments are far more frequently variables.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />
 

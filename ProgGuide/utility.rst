@@ -3403,3 +3403,7 @@ Utilities Summary Table
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
 | :ref:`zshowvtolcl-util`           | Restores ZSHOW "V":gvn data into its original local variables.                                           |
 +-----------------------------------+----------------------------------------------------------------------------------------------------------+
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

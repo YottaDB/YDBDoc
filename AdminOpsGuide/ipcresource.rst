@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -283,4 +283,7 @@ If there are multiple YottaDB versions active on a system, YottaDB recommends di
 .. note::
    A given database file can only be opened by processes of a single version of YottaDB at any given time. Contemporary releases of YottaDB protect against concurrent access to YottaDB files by processes executing different versions of YottaDB. Since historical versions of YottaDB did not protect against this condition, YottaDB recommends procedural safeguards against inadvertent concurrent access by processes of multiple versions on systems on which old versions of YottaDB are installed and active, since such concurrent usage can cause structural damage to the database.
 
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />
 

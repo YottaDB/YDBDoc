@@ -1360,3 +1360,7 @@ Examples:
    dist=/usr/local/lib/yottadb/r132; src=2; uid=998877665; euid=998877665; pid=123456; command=set a=789
 
 Click `here <https://gitlab.com/YottaDB/DB/YDBDoc/blob/master/AdminOpsGuide/dm_audit_listener.zip>`_ to download sample listener programs.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

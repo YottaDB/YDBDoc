@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -146,3 +146,8 @@ The following suggestions may help with configuring core dump files:
 * As YottaDB core dumps are not configured for use with automated crash reporting systems such as apport, you might want to adjust the core naming conventions settings in such a way that core dumps are preserved safely until the time you engage your YottaDB support channel.
 
 Before sharing a core dump file with anyone, you must determine whether the files contain NPI and whether the recipient is permitted to view the information in the files. YottaDB Support does not accept NPI.
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />
+

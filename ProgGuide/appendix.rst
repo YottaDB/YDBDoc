@@ -325,4 +325,7 @@ Never SET $ZWRTACn "variables". They are used by YottaDB to make ZWRITE output m
 
 You can use SET @ to process ZWRITE or ZSHOW "V" output containing $ZWRTACn variables for restoring an alias container variable to a prior state. While processing the output, never attempt to inject or manipulate $ZWRTACn lines as it may lead to unintended consequences or undermine the benefit you might achieve from using alias containers. Lines containing SET $ZWRTACn=<value> are no-ops unless they have a preceding SET $ZWRTAC="" and an alias container variable association. In the ZWRITE or ZSHOW "V" output of an alias container, SET $ZWRTAC lines appear in the order that YottaDB expects for restoration. YottaDB can change the use of $ZWRTAC in YottaDB at any time.
 
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />
 

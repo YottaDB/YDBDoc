@@ -2027,3 +2027,7 @@ Legend (All hexadecimal fields have a 0x prefix. All numeric fields otherwise ar
 |                                          | written in this journal file.                                    |
 +------------------------------------------+------------------------------------------------------------------+
 
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

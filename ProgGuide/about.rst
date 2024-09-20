@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -177,4 +177,6 @@ Internationalization
 
 YottaDB allows the definition of alternative collation sequences and pattern matching codes for use with languages other than English. `Chapter 12: “Internationalization” <./internatn.html>`_ describes the details and requirements of this functionality.
 
+.. raw:: html
 
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

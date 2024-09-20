@@ -2858,3 +2858,7 @@ The following table summarizes the qualifiers.
 | VERSION={V4|V5}                              | :ref:`mupip-downgrade`                                                       | * file-name                                                          |
 |                                              | and :ref:`mupip-upgrade`                                                     |                                                                      |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/AdminOpsGuide.png" />

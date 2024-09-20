@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2023 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2023-2024 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -254,3 +254,7 @@ Then, run the app again and return your browser to ``localhost:5000``. You shoul
 
 That's it! You've now got a very basic web application with YottaDB as the datastore and, hopefully, a idea of how YottaDB can be used for applications development.
 
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/ApplicationsManual.png" />

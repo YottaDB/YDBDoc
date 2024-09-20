@@ -143,3 +143,7 @@ Although there are many ways to script gathering data from multiple systems usin
 
 The default configuration of UseYDBSyslog creates an unjournaled database that uses the MM access method. If you use journaling for recoverability, remember to monitor space used by prior generation journal files, and to delete those old journal files when they are no longer needed.
 
+
+.. raw:: html
+
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/plugins.png" />
