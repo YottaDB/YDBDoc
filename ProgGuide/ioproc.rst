@@ -3317,7 +3317,7 @@ Note that WRAP is enabled by default for SD, NULL, FIFO, PIPE and SOCKET. For TR
 
 NOWRAP causes YottaDB to require a WRITE ! to terminate the record. NOWRAP allows $X to become greater than the device WIDTH for terminals and null devices.
 
-The combination of STREAM and NOWRAP on disk files allows you to write data of arbitrary length without truncation. Without the STREAM option, the WRAP option determines the action taken when the record length exceeds the device WIDTH. NOWRAP causes YottaDB to truncate the record, while WRAP causes YottaDB to insert a format control character except for FIXED format.
+For disk files, the combination of STREAM and NOWRAP allows you to write data of arbitrary length without truncation; without the STREAM option, the WRAP option determines the action taken when the record length exceeds the device WIDTH: NOWRAP causes YottaDB to truncate the record, while WRAP causes YottaDB to insert a format control character except for FIXED format.
 
 NOTE: FIFO, SD and SOCKET devices opened as $PRINCIPAL (at process start-up) default to NOWRAP and for SD and FIFO devices, STREAM.
 
