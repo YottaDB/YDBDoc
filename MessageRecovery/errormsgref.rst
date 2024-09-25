@@ -34,7 +34,7 @@ Standard Error Codes
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
 | M5, _lineref_ less than zero                               | TEXTARG, Invalid argument to $TEXT function                                        |
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
-| M6, Undefined _lvn_                                        | UNDEF, Undefined local variable: xxxx                                              |
+| M6, Undefined _lvn_                                        | LVUNDEF, Undefined local variable: xxxx                                            |
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
 | M7, Undefined _gvn_                                        | GVUNDEF, Global variable undefined: xxxx                                           |
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
@@ -168,7 +168,7 @@ Standard Error Codes
 | M61, Attempt to OPEN file with conflicting ACCESS          | None                                                                               |
 | parameters                                                 |                                                                                    |
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
-| M62, Illegal value for ACCESS parameter while attempting to| UNDEF, Undefined local variable: xxxx                                              |
+| M62, Illegal value for ACCESS parameter while attempting to| LVUNDEF, Undefined local variable: xxxx                                            |
 | OPEN file                                                  |                                                                                    |
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
 | M63, Illegal value for DISPOSITION parameter while         | None                                                                               |
@@ -313,9 +313,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383434 | AIMGBLKFAIL, After image build for block bbbb in region rrrr failed in DSE or MUPIP                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384002 | AIOBUFSTUCK, Waited mmmm minutes for PID: pppp to finish AIO disk write of block: bbbb                                                                                 |
+| 150384002 | AIOBUFSTUCK, Waited mmmm minutes for PID: pppp to finish AIO disk write of block: bbbb xxxx aio_error=yyyy                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383906 | AIOCANCELTIMEOUT, Pid pppp timed out waiting for a pending asynchronous IO operation to complete/cancel in database file ffff                                          |
+| 150383906 | AIOCANCELTIMEOUT, Pid pppp timed out waiting for pending async io to complete/cancel in database file ffff                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384530 | AIOQUEUESTUCK, Waited mmmm minutes for AIO work queue to complete (cr = rrrr)                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -335,13 +335,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383728 | ARCTLMAXLOW, The environment variable XXXX = YYYY is too low. Assuming the minimum acceptable value of ZZZZ                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028112 | ARGSLONGLINE, Entered line is greater than maximum characters allowed nnnn                                                                                             |
+| 151028112 | ARGSLONGLINE, Entered line is greater than maximum characters allowed (nnnn)                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381803 | ARROWNTDSP, Unable to display ^----- due to length of source line                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374524 | ASSERT, Assert failed xxxx line yyyy                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150634522 | ASSERT, Assert failed xxxx line yyyy                                                                                                                                   |
+| 150634522 | ASSERT, Assert failed in xxxx line yyyy for expression zzzz                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383930 | ASYNCIONOMM, Database file ffffssss cannot cccc                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -351,7 +351,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384730 | AUDINITFAIL, Audit XXXX facility failed to initialize audit information                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384746 | AUDLOGFAIL, Audit XXXX facility failed to log activity                                                                                                                 |
+| 150384746 | AUDLOGFAIL, Audit XXXX facility failed to log command                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384034 | AUTODBCREFAIL, Automatic creation of database file DDDD associated with region RRRR failed; see associated messages for details                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -365,25 +365,25 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375059 | BACKUPREPL, Replication Instance file iiii backed up in file rrrr                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375067 | BACKUPSEQNO, Journal Seqnos up to 0xhhhh are backed up                                                                                                                 |
+| 150375067 | BACKUPSEQNO, Journal Seqnos up to hhhh are backed up                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373419 | BACKUPSUCCESS, Backup completed successfully                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375259 | BACKUPTN, Transactions from 0xbbbb to 0xeeee are backed up                                                                                                             |
+| 150375259 | BACKUPTN, Transactions from bbbb to eeee are backed up                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372379 | BADACCMTHD, Invalid access method was specified, file not created                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381058 | BADCASECODE, xxxx is not a valid case conversion code.                                                                                                                 |
+| 150381058 | BADCASECODE, xxxx is not a valid case conversion code                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381066 | BADCHAR, XXX is not a valid character in the YYY encoding form.                                                                                                        |
+| 150381066 | BADCHAR, $ZCHAR(XXX) is not a valid character in the YYY encoding form                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381050 | BADCHSET, xxxx is not a valid character mapping in this context.                                                                                                       |
+| 150381050 | BADCHSET, xxxx is not a valid character mapping in this context                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384610 | BADCONNECTPARAM, Error parsing or invalid parameter. [XXXX]                                                                                                            |
+| 150384610 | BADCONNECTPARAM, Error parsing or invalid XXXX                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375098 | BADDBVER, Incorrect database version: xxxx                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377650 | BADGBLSECVER, Global section xxxx does not match the current database version                                                                                          |
+| 150377650 | BADGBLSECVER, Global Section xxxx does not match the current database version                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375218 | BADGTMNETMSG, Invalid message sent to GT.CM server, type: xxxx                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -393,7 +393,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375490 | BADLOCKNEST, Unsupported nesting of LOCK commands                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384618 | BADPARAMCOUNT, CONNECTPARAMS accepts one to six parameter values                                                                                                       |
+| 150384618 | BADPARAMCOUNT, -CONNECTPARAMS accepts one to six parameter values                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374618 | BADQUAL, Unrecognized qualifier: xxxx                                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -401,7 +401,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375210 | BADSRVRNETMSG, Invalid message received from GT.CM server                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372394 | BADSYIPARAM, xxxx is not a legal parameter to $ZGETSYI()                                                                                                               |
+| 150372394 | BADSYIPARAM, xxxx is not a legal parameter for $ZGETSYI()                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375274 | BADTRNPARAM, xxxx is not a legal parameter to $ZTRNLNM                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -415,17 +415,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375627 | BEGINST, Beginning LOAD at record number: xxxx                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380522 | BEGSEQGTENDSEQ, Journal file xxxx has beginning sequence number aaaa greater than end sequence number bbbb                                                             |
+| 150380522 | BEGSEQGTENDSEQ, Journal file xxxx has beginning sequence number [aaaa] greater than end sequence number [bbbb]                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375786 | BFRQUALREQ, The [NO]BEFORE qualifier is required for this command                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375603 | BINHDR, gggg Date: dddd TIME: tttt Extract Region Characteristics rrrr Blk Size: xxxx Rec Size: yyyy Key Size: kkkk                                                    |
-+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372402 | BITMAPSBAD, Database bit maps are incorrect                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384722 | BKUPFILEPERM, Backup file dddd does not have write permission                             .                                                                            |
+| 150384722 | BKUPFILEPERM, Backup file dddd does not have write permission                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384715 | BKUPPROGRESS, Transfer : cccc / tttt (pppp%) ; Speed : zzzz MiB/sec ; Transactions : nnnn ; Estimated left : tt minutes                                                |
+| 150384715 | BKUPPROGRESS, Transfer : cccc / tttt (pppp%) ; Speed : zzzz MiB/sec ; Transactions : nnnn ; Estimated time left : tt minutes                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384707 | BKUPRETRY, Retrying MUPIP BACKUP for region: rrrr (database file: dddd). Attempt: #nnnn of mmmm                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -435,7 +433,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418816290 | BKUPTMPFILWRITE, Write to backup temporary file aaaa failed                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379435 | BLKCNTEDITFAIL, MUPIP recover or rollback failed to correct the block count field in the file header for file xxxx                                                     |
+| 150379435 | BLKCNTEDITFAIL, Mupip recover or rollback failed to correct the block count field in the file header for file xxxx                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383418 | BLKINVALID, bbbb is not a valid block as database file ffff has nnnn total blocks                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -445,15 +443,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375584 | BLKTOODEEP, Block level too deep                                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381130 | BOMMISMATCH, XXX Byte Order Marker found when YYY character set specified.                                                                                             |
+| 150381130 | BOMMISMATCH, XXX Byte Order Marker found when YYY character set specified                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027994 | BOOLEXPRTOODEEP, Boolen expression depth exceeds maximum supported limit of 2047.                                                                                      |
+| 151027994 | BOOLEXPRTOODEEP, Boolean expression depth exceeds maximum supported limit of 2047                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381928 | BOOLSIDEFFECT, Extrinsic ($$), External call ($&) or $INCREMENT() with potential side effects in Boolean expression                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380514 | BOVTMGTEOVTM, Journal file xxxx has beginning timestamp aaaa greater than end timestamp bbbb                                                                           |
+| 150380514 | BOVTMGTEOVTM, Journal file xxxx has beginning timestamp [aaaa] greater than end timestamp [bbbb]                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380506 | BOVTNGTEOVTN, Journal file xxxx has beginning transaction yyyy which is greater than end transaction zzzz                                                              |
+| 150380506 | BOVTNGTEOVTN, Journal file xxxx has beginning transaction [yyyy] which is greater than end transaction [zzzz]                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372411 | BREAK, Break instruction encountered                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -465,21 +463,21 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372442 | BTFAIL, The database block table is corrupt; error type xxxx                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377666 | BUFFLUFAILED, Errors flushing buffers from uuuu for database file dddd                                                                                                 |
+| 150377666 | BUFFLUFAILED, Error flushing buffers from uuuu for database file dddd                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379226 | BUFOWNERSTUCK, PID xxxx waiting for PID yyyy to finish disk read of block zzzz. Been waiting for aaaa minutes.                                                         |
+| 150379226 | BUFOWNERSTUCK, Pid xxxx waiting for Pid yyyy to finish disk-read of block zzzz aaaa. Been waiting for bbbb minutes.  read_in_progress=cccc : rip_latch = dddd.         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376882 | BUFRDTIMEOUT, Pid xxxx timed out waiting for buffered read by process yyyy to complete in database file zzzz                                                           |
+| 150376882 | BUFRDTIMEOUT, Pid xxxx timed out waiting for buffered read of blk yyyy into cr zzzz by process aaaa to complete in database file bbbb                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503803 | BUFSIZIS, Journal Buffer size is xxxx                                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384520 | BUFSPCDELAY, Request for bbbb blocks in region rrrr delayed.                                                                                                           |
+| 150384520 | BUFSPCDELAY, Request for bbbb blocks in region rrrr delayed                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503811 | BUFTOOSMALL, But block size xxxx requires buffer size yyyy                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377099 | CALLERID, Routine xxxx called from yyyy                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381530 | CALLINAFTERXIT, After a ydb_exit, a process can never create a valid YottaDB context                                                                                   |
+| 150381530 | CALLINAFTERXIT, After a ydb_exit(), a process cannot create a valid YottaDB context                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151027858 | CALLINTCOMMIT, TCOMMIT at call-in-level=xxxx not allowed as corresponding TSTART was done at lower call-in-level=yyyy                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -497,17 +495,17 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376250 | CEUSRERROR, Compiler escape user routine returned error code xxxx                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384019 | CHANGELOGINTERVAL, ssss Server now logging to ffff with a IIII second interval                                                                                         |
+| 150384019 | CHANGELOGINTERVAL, ssss Server is now logging to ffff every IIII transactions                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380795 | CHNGTPRSLVTM, MUPIP will change tp_resolve_time from xxxx to yyyy because expected EPOCH or EOF record was not found in Journal File zzzz.                             |
+| 150380795 | CHNGTPRSLVTM, Mupip will change tp_resolve_time from xxxx to yyyy because expected EPOCH or EOF record was not found in Journal File zzzz                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383402 | CHSETALREADY, Socket device already contains sockets with iCHSET=xxxx, oCHSET=xxxx                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379642 | CIDIRECTIVE, Invalid directive parameter passing. Expected I, O or IO.                                                                                                 |
+| 150379642 | CIDIRECTIVE, Invalid directive parameter passing.  Expected I, O or IO.                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379610 | CIENTNAME, No label reference found for this entry in call-in table                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380266 | CIMAXLEVELS, Too many nested Call-ins. Nested resources exhausted at level llll                                                                                        |
+| 150380266 | CIMAXLEVELS, Too many nested Call-ins. Nested resources exhausted at level xxxx.                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380250 | CIMAXPARAM, Exceeded maximum number of parameters in the call-in table entry. An M routine cannot accept more than 32 parameters.                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -533,7 +531,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381410 | CLOSEFAIL, Error while closing file descriptor dddd                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375130 | CLSTCONFLICT, Cluster conflict opening database file xxxx; could not secure access. Already open on node yyyy.                                                         |
+| 150375130 | CLSTCONFLICT, Cluster conflict opening database file xxxx; could not secure access.  Already open on node yyyy.                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372458 | CMD, Command expected but not found                                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -541,19 +539,19 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150569002 | CMEXCDASTLM, Exceeded AST limit. Cannot open database.                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150634532 | CMICHECK, Internal CMI error. Report to YottaDB Support                                                                                                                |
+| 150634532 | CMICHECK, Internal CMI error. Report to your GT.M Support Channel.                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150568988 | CMINTQUE, Interlock failure accessing GT.CM server queue                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150569010 | CMSYSSRV, Error doing system service, status:                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374978 | CNOTONSYS, command is not supported by this operating system                                                                                                           |
+| 150374978 | CNOTONSYS, Command is not supported by this operating system                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375746 | COLLARGLONG, Collation sequence nnn does not contain routines for long strings                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376282 | COLLATIONUNDEF, Collation type xxxx is not defined                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373626 | COLLDATAEXISTS, Collation type cannot be changed while data exists                                                                                                     |
+| 150373626 | COLLDATAEXISTS, Collation type cannot be changed while xxxxyyyy data exists                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375802 | COLLFNMISSING, Routine xxx is not found for collation sequence nnn                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -567,23 +565,23 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372482 | COMMAORRPAREXP, Comma or right parenthesis expected but not found                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372491 | COMMENT, Comment line. Placed zbreak at next executable line.                                                                                                          |
+| 150372491 | COMMENT, Comment line.  Placed zbreak at next executable line.                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384346 | COMMFILTERERR, Error executing the command filter for FFFF DDDD                                                                                                        |
+| 150384346 | COMMFILTERERR, Error executing the command filter for FFFF. DDDD                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381290 | COMMITWAITPID, Pid wwww waited tttt minute(s) for pid pppp to finish commits in database file dddd                                                                     |
+| 150381290 | COMMITWAITPID, Pid wwww waited tttt minute(s) for pid pppp to finish commits to block dddd in database file xxxx                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381282 | COMMITWAITSTUCK, Pid wwww timed out after waiting tttt minute(s) for nnnn concurrent YottaDB process(es) to finish commits in database file dddd                       |
+| 150381282 | COMMITWAITSTUCK, Pid wwww waited tttt minute(s) for nnnn concurrent YottaDB process(es) to finish commits in database file dddd                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374642 | COMPILEQUALS, Error in compiler qualifiers: xxxx                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378922 | CONNSOCKREQ, Socket not connected                                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382074 | COREINPROGRESS, Previous core attempt failed; core generation bypassed.                                                                                                |
+| 150382074 | COREINPROGRESS, Previous core attempt failed; core generation bypassed                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372890 | CORRUPT, Corrupt input in Blk #xxxx, Key #yyyy; resuming with next global block                                                                                        |
+| 150372890 | CORRUPT, Corrupt input in Blk # xxxx, Key #yyyy; resuming with next global block                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373018 | CORRUPTNODE, Corrupt input in Record # rrrr, Key #yyyy; resuming with next global node                                                                                 |
+| 150373018 | CORRUPTNODE, Corrupt input in Record #rrrr, Key #yyyy; resuming with next global node                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377026 | CPBEYALLOC, Attempt to copy beyond the allocated buffer                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -597,21 +595,21 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383498 | CRYPTBADWRTPOS, Encrypted WRITE disallowed from a position different than where the last WRITE completed                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381434 | CRYPTDLNOOPEN, Failed to load encryption library while opening encrypted file ffff. eeee                                                                               |
+| 150381434 | CRYPTDLNOOPEN, Could not load encryption library while opening encrypted file ffff. eeee                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382930 | CRYPTDLNOOPEN2, Failed to load encryption library dddd. Eeee                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381482 | CRYPTHASHGENFAILED, Failed to generate cryptographic hash for symmetric key corresponding to file ffff. eeee                                                           |
+| 150381482 | CRYPTHASHGENFAILED, Could not generate cryptographic hash for symmetric key corresponding to file ffff. eeee                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381418 | CRYPTINIT, Failed to initialize encryption library while opening encrypted file ffff. eeee                                                                             |
+| 150381418 | CRYPTINIT, Could not initialize encryption library while opening encrypted file ffff. eeee                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382922 | CRYPTINIT2, Failed to initialize encryption library during YottaDB startup. eeee                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376362 | CRYPTJNLMISMATCH, Encryption settings mismatch between journal file jjjj and corresponding database file dddd                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 418816922 | CRYPTKEYFETCHFAILED, Failed to retrieve encryption key corresponding to file ffff. eeee                                                                                |
+| 418816922 | CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ffff. eeee                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381474 | CRYPTKEYFETCHFAILEDNF, Cannot obtain encryption key. xxxx                                                                                                              |
+| 150381474 | CRYPTKEYFETCHFAILEDNF, Could not retrieve encryption key during xxxx operation key. yyyy                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418819290 | CRYPTKEYRELEASEFAILED, Could not safely release encryption key corresponding to file ffff. eeee                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -645,7 +643,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372515 | CTRLY, User interrupt encountered                                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377426 | CURRSOCKOFR, Current socket of index xxxx is out of range. There are only yyyy sockets.                                                                                |
+| 150377426 | CURRSOCKOFR, Current socket of index xxxx is out of range.  There are only yyyy sockets.                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382714 | CUSTERRNOTFND, Error mnemonic eeee specified in custom errors file is not valid for this version of YottaDB                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -653,15 +651,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382706 | CUSTOMFILOPERR, Error while doing oooo operation on file ffff                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380531 | DBADDRALIGN, Database file xxxx, element location aaaa: blk = bbbb: [yyyy] control cccc was unaligned relative to base dddd and element size eeee                      |
+| 150380531 | DBADDRALIGN, Database file xxxx, element location aaaa: blk = bbbb: yyyy control cccc was unaligned relative to base dddd and element size eeee                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376547 | DBADDRANGE, Database file xxxx, element location yyyy: control zzzz was outside aaaa range bbbb to cccc                                                                |
+| 150376547 | DBADDRANGE, Database file rrrr, element location aaaa: blk = xxxx: control vvvv was outside qqqq range bbbb to tttt                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378739 | DBADDRANGE8, Database file xxxx, element location yyyy: control zzzz was outside aaaa range bbbb to cccc.                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379024 | DBBADFREEBLKCTR, Database xxxx free blocks counter in file header: oooo appears incorrect; should be nnnn. Auto-corrected.                                             |
+| 150379024 | DBBADFREEBLKCTR, Database xxxx free blocks counter in file header: oooo appears incorrect, should be nnnn.  Auto-corrected.                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378146 | DBBADKYNM, xxxx is an invalid key name                                                                                                                                 |
+| 150378146 | DBBADKYNM, xxxx Bad key name                                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378138 | DBBADNSUB, xxxx Bad numeric subscript                                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -684,13 +682,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376475 | DBBMINV, xxxx Bit map contains an invalid pattern                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379730 | DBBMLCORRUPT, Database xxxx: Bitmap blk yyyy is corrupt (Size = aaaa, levl = bbbb, tn = cccc: Dbtn = dddd): Database integrity errors likely                           |
+| 150379730 | DBBMLCORRUPT, Database xxxx : Bitmap blk [yyyy] is corrupt (size = aaaa, levl = bbbb, tn = [cccc]) : Dbtn = [dddd] : Database integrity errors likely                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376483 | DBBMMSTR, xxxx Bit map does not match master map                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376459 | DBBMSIZE, xxxx Bit map has incorrect size                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378162 | DBBNPNTR, Bit map block number as pointer                                                                                                                              |
+| 150378162 | DBBNPNTR, xxxx Bit map block number as pointer                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378250 | DBBPLMGT2K, Blocks per local map is greater than 2k                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -702,7 +700,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374690 | DBBSIZMX, xxxx Block larger than file block size                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378210 | DBBSIZZRO, Block size equals zero                                                                                                                                      |
+| 150378210 | DBBSIZZRO, xxxx Block size equals zero                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380587 | DBBTUFIXED, The blocks-to-upgrade file-header field has been changed to the correct value                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -710,19 +708,19 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372522 | DBCCERR, Interlock instruction failure in critical mechanism for region xxxx                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377451 | DBCLNUPINFO, Database file xxxx / yyyy                                                                                                                                 |
+| 150377451 | DBCLNUPINFO, Database file xxxx yyyy                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374760 | DBCMPBAD, xxxx yyyy Compression count not maximal                                                                                                                      |
+| 150374760 | DBCMPBAD, xxxx Compression count not maximal                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374739 | DBCMPMX, xxxx yyyy Record compression count is too large                                                                                                               |
+| 150374739 | DBCMPMX, xxxx Record compression count is too large                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374714 | DBCMPNZRO, xxxx yyyy First record of block has nonzero compression count                                                                                               |
+| 150374714 | DBCMPNZRO, xxxx First record of block has nonzero compression count                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376611 | DBCNTRLERR, Database file xxxx: control error suspected but not found                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382944 | DBCOLLREQ, JOURNAL EXTRACT proceeding without collation information for globals in database. eeee ffff .                                                               |
+| 150382944 | DBCOLLREQ, JOURNAL EXTRACT proceeding without collation information for globals in database. eeee ffff                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375779 | DBCOMMITCLNUP, Pid dddd [hhhh] handled error (code = eeee) during commit of xxxx transaction in database file yyyy                                                     |
+| 150375779 | DBCOMMITCLNUP, Pid dddd hhhh handled error (code = eeee) during commit of xxxx transaction in database file yyyy                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378554 | DBCOMPTOOLRG, xxxx Record has too large compression count                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -732,13 +730,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378723 | DBCRERR8, Database file xxxx, or location yyyy blk = zzzz error: aaaa was bbbb, expecting cccc -- called from module yyy at line xxx                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378976 | DBDANGER, Process pppp killed while committing update for database file xxxx. Possibility of damage to block yyyy.                                                     |
+| 150378976 | DBDANGER, Process pppp xxxx killed while committing update for database file yyyy.  Possibility of damage to block zzzz.                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382754 | DBDATAMX, xxxx Record too large                                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376515 | DBDIRTSUBSC, <xxxx Directory tree block contains non name-level entries>                                                                                               |
+| 150376515 | DBDIRTSUBSC, xxxx Directory tree block contains non name-level entries                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378307 | DBDSRDFMTCHNG, Database file xxx, Desired DB Format set to yyy by zzz with pid ppp [0xppp] at transaction number [0xttt]                                               |
+| 150378307 | DBDSRDFMTCHNG, Database file xxx, Desired DB Format set to yyy by zzz with pid ppp ppp at transaction number [ttt]                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384010 | DBDUPNULCOL, Discarding kkkk=vvvv key due to duplicate null collation record                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -756,23 +754,23 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384115 | DBFILECREATED, Database file DDDD created                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372546 | DBFILERR, Error with database file. xxxx.                                                                                                                              |
+| 150372546 | DBFILERR, Error with database file xxxx                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377491 | DBFILEXT, Database file xxxx extended from yyyy blocks to zzzz blocks at transaction aaaa                                                                              |
+| 150377491 | DBFILEXT, Database file xxxx extended from yyyy blocks to zzzz at transaction aaaa                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384600 | DBFILNOFULLWRT, Disabling fullblock writes. iiii tttt: bbbb                                                                                                            |
+| 150384600 | DBFILNOFULLWRT, Disabling fullblock writes. iiii tttt bbbb                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375378 | DBFILOPERR, Error doing database I/O to region xxxx                                                                                                                    |
+| 150375378 | DBFILOPERR, Error doing database I/O to database file xxxx                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378346 | DBFLCORRP, xxxx Header indicates database file is corrupt                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384267 | DBFREEZEOFF, Region rrrr is UNFROZEN ([NO]OVERRIDE [NO]AUTOREL)                                                                                                        |
+| 150384267 | DBFREEZEOFF, Database file ffff is UNFROZEN ([NO]OVERRIDE [NO]AUTOREL)                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384259 | DBFREEZEON, Region rrrr is FROZEN ([NO]OVERRIDE [NO]ONLINE [NO]AUTOREL)                                                                                                |
+| 150384259 | DBFREEZEON, Database file ffff is FROZEN ([NO]OVERRIDE [NO]ONLINE [NO]AUTOREL)                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380474 | DBFRZRESETFL, Freeze release failed on database file xxxx                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379835 | DBFRZRESETSUC, Unfreeze successfully done on database file xxxx.                                                                                                       |
+| 150379835 | DBFRZRESETSUC, Freeze released successfully on database file xxxx                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378322 | DBFSTBC, xxxx File size smaller than block count would indicate                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -784,7 +782,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378354 | DBHEADINV, xxxx Header size not valid for database                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379346 | DBIDMISMATCH, Database file xxxx ID (region yyyy) does not match file ID in shared memory (ID=zzzz). Ensure region is properly rundown.                                |
+| 150379346 | DBIDMISMATCH, Database file xxxx (region yyyy) id does not match file id in shared memory (id = zzzz).                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378170 | DBINCLVL, xxxx Block at incorrect level                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -816,15 +814,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378522 | DBMAXKEYEXC, xxxx Maximum key size for database exceeds design maximum                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377995 | DBMAXNRSUBS, XXXX Maximum number of subscripts exceeded.                                                                                                               |
+| 150377995 | DBMAXNRSUBS, XXXX Maximum number of subscripts exceeded                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380594 | DBMAXREC2BIG, Maximum record size (xxx) is too large for this block size (yyy) - Maximum is zzz                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378464 | DBMBMINCFRE, xxxx Master bit map incorrectly asserts this local map has free space                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383056 | DBMBMINCFREFIXED, Master bitmap incorrectly marks local bitmap 0xAAAA as free. Auto-corrected                                                                          |
+| 150383056 | DBMBMINCFREFIXED, Master bitmap incorrectly marks local bitmap AAAA as free. Auto-corrected                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378496 | DBMBPFLDIS, xxxx Master bit map shows this map full, in disagreement with both disk and INTEG results                                                                  |
+| 150378496 | DBMBPFLDIS, xxxx Master bit map shows this map full, in disagreement with both disk and INTEG result                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378480 | DBMBPFLDLBM, xxxx Master bit map shows this map full, agreeing with disk local map                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -844,17 +842,18 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380634 | DBMINRESBYTES, Minimum RESERVED BYTES value required for certification/upgrade is xxx - Currently is yyy                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381098 | DBMISALIGN, Database file xxxx has yyyy blocks which does not match alignment rules. Reconstruct the database from a backup or extend it by at least zzzz blocks.      |
+| 150381098 | DBMISALIGN, File header indicates total blocks is xxxx but file size indicates total blocks would be between yyyy and zzzz. Reconstruct the database from a backup or  |
+|           | extend it by at least aaaa blocks.                                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378200 | DBMRKBUSY, xxxx Block incorrectly marked busy                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378194 | DBMRKFREE, xxxx Block incorrectly marked free                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379338 | DBNAMEMISMATCH, Database file xxxx (region yyyy) referenced by shared memory (ID=zzzz) is not accessible. Ensure region is properly rundown                            |
+| 150379338 | DBNAMEMISMATCH, Database file xxxx points to shared memory (id = (yyyy) which in turn points to an inaccessible database file zzzz)                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375762 | DBNOCRE, Not all specified databases, or their associated journal files were created                                                                                   |
+| 150375762 | DBNOCRE, Not all specified database files, or their associated journal files were created                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384026 | DBNONUMSUBS, kkkk key contains a numeric form of subscript in a global defined to collate all subscripts as strings                                                    |
+| 150384026 | DBNONUMSUBS, kkkk Key contains a numeric form of subscript in a global defined to collate all subscripts as strings                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418814106 | DBNOREGION, None of the database regions accessible                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -864,7 +863,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378226 | DBNOTMLTP, xxxx Block size not a multiple of 512 bytes                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383946 | DBNULCOL, NULL collation representation for record rrrr in block bbbb is RRRR which differs from the database file header settings of hhhh                             |
+| 150383946 | DBNULCOL, xxxx NULL collation representation differs from the database file header setting                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418808018 | DBOPNERR, Error opening database file xxxx                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -884,13 +883,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378586 | DBRBNNEG, xxxx Root block number negative                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378570 | DBRBNTOOLRG, xxxx Root block number greater than the last block number in file                                                                                         |
+| 150378570 | DBRBNTOOLRG, xxxx Root block number greater than last block number in file                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418808026 | DBRDERR, Cannot read database file xxxx after opening                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418812490 | DBRDONLY, Database file xxxx read only                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378546 | DBREADBM, xxxx Read error on bitmap                                                                                                                                    |
+| 150378546 | DBREADBM, xxxx Read error on bit map                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376418 | DBREMOTE, Database region xxxx is remote; perform maintenance on the server node                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -898,11 +897,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378594 | DBRLEVTOOHI, xxxx Root level higher than maximum                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378946 | DBRNDWN, Error during global database rundown for region xxxx. Please notify those responsible for proper database operation.                                          |
+| 150378946 | DBRNDWN, Error during global database rundown for region xxxx. Notify those responsible for proper database operation.                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151552026 | DBRNDWNBYPASS, YottaDB database rundown may have been bypassed due to timeout - run MUPIP JOURNAL ROLLBACK BACKWARD / MUPIP JOURNAL RECOVER BACKWARD / MUPIP RUNDOWN   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379240 | DBRNDWNWRN, Global database xxxx not rundown successfully by PID yyyy [zzzz]. Global section was not removed.                                                          |
+| 150379240 | DBRNDWNWRN, Global section of database file xxxx not rundown successfully by pid yyyy zzzz.  Global section was not removed.                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382418 | DBROLLEDBACK, Concurrent ONLINE ROLLBACK detected on one or more regions. The current operation is no longer valid                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -912,13 +911,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374706 | DBRSIZMX, xxxx Physical record too large                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382026 | DBSHMNAMEDIFF, Database file ffff points to shared memory mmmm which points to a different database file                                                               |
+| 150382026 | DBSHMNAMEDIFF, Database file ffff points to shared memory (id = mmmm) which points to a different database file xxxx                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382746 | DBSPANCHUNKORD, xxxx Chunk of yyyy blocks is out of order                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382738 | DBSPANGLOINCMP, xxxx Spanning node is missing. Block no yyyy of spanning node is missing                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374731 | DBSTARCMP, DBSTARCMP xxxx Star record has nonzero compression count                                                                                                    |
+| 150374731 | DBSTARCMP, xxxx Star record has nonzero compression count                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374723 | DBSTARSIZ, xxxx Star record has wrong size                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -948,9 +947,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378560 | DBVERPERFWARN2, Peformance warning: Database aaaa is not fully upgraded. Run MUPIP REORG UPGRADE for best overall performance.                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380547 | DBWCVERIFYEND, Database file xxxx, write cache verification finished by pid pppp [aaaa] at transaction number yyyy                                                     |
+| 150380547 | DBWCVERIFYEND, Database file xxxx, write cache verification finished by pid pppp aaaa at transaction number yyyy                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380539 | DBWCVERIFYSTART, Database file xxxx, write cache verification started by pid pppp [aaaa] at transaction number bbbb                                                    |
+| 150380539 | DBWCVERIFYSTART, Database file xxxx, write cache verification started by pid pppp aaaa at transaction number bbbb                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150634508 | DCNINPROG, Attempt to initiate operation while disconnect was in progress                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -960,11 +959,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380034 | DEVICEOPTION, Option xxxx on yyyy command: zzzz                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373618 | DEVICEREADONLY, Cannot write to a read-only device                                                                                                                     |
+| 150373618 | DEVICEREADONLY, Cannot write to read-only device                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382042 | DEVICEWRITEONLY, Cannot read from a write-only device                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384458 | DEVNAMERESERVED, Cannot use NNNN as device name. Reserved for internal usage.                                                                                          |
+| 150384458 | DEVNAMERESERVED, Cannot use NNNN as device name. Reserved for internal usage                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376402 | DEVNOTIMP, XXXX device not implemented on in this environment                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -972,9 +971,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372586 | DEVPARINAP, Device parameter inappropriate to this command                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372658 | DEVPARMNEG, Device parameter must be a positive value                                                                                                                  |
+| 150372658 | DEVPARMNEG, Deviceparameter must be a positive value                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383170 | DEVPARMTOOSMALL, Device parameter must be greater than zero (0)                                                                                                        |
+| 150383170 | DEVPARMTOOSMALL, Deviceparameter must be greater than zero (0)                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151028042 | DEVPARPARSE, Error parsing device parameter specification                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -982,7 +981,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372634 | DEVPARTOOBIG, String deviceparameter exceeds 255 character limit                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372642 | DEVPARUNK, Device parameter unknown                                                                                                                                    |
+| 150372642 | DEVPARUNK, Deviceparameter unknown                                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372650 | DEVPARVALREQ, A value is required for this device parameter                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -990,11 +989,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374594 | DIRONLY, Directories only are allowed in file specs: xxxx                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377682 | DISTPATHMAX, $ydb_dist path is greater than maximum (xxxx)                                                                                                             |
+| 150377682 | DISTPATHMAX, Executable path length is greater than maximum (xxxx)                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373210 | DIVZERO, Attempt to divide by zero                                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379738 | DLCKAVOIDANCE, Possible deadlock detected: Database pppp: Dbtn qqqq: t_tries rrrr: dollar_trestart ssss: now_crit tttt: TP transaction restarted                       |
+| 150379738 | DLCKAVOIDANCE, Possible deadlock detected: Database pppp : Dbtn [qqqq] : t_tries rrrr : dollar_trestart ssss : now_crit tttt : TP transaction restarted                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381114 | DLLCHSETM, Routine XXX in library YYY was compiled with CHSET=M which is different from $ZCHSET                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1006,11 +1005,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379258 | DLLNORTN, Failed to look up the location of the symbol xxxx                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380210 | DLLVERSION, Routine aaaa in library bbbb was compiled with an incompatible version of YottaDB. Recompile with the current version and re-link.                         |
+| 150380210 | DLLVERSION, Routine aaaa in library bbbb was compiled with an incompatible version of GT.M/YottaDB.  Recompile with the current version of YottaDB and re-link         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381074 | DLRCILLEGAL, Illegal $CHAR() value xxxx                                                                                                                                |
+| 150381074 | DLRCILLEGAL, xxxx Illegal $CHAR() value yyyy                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375834 | DLRCTOOBIG, xxxx value cannot be greater than 255                                                                                                                      |
+| 150375834 | DLRCTOOBIG, xxxx yyyy value cannot be greater than 255                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375826 | DLRCUNXEOR, xxxx unexpected end of record in $CHAR()/$ZCHAR() subscript                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1018,7 +1017,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372666 | DSEBLKRDFAIL, Failed attempt to read block                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372674 | DSEFAIL, DSE failed. Failure code: xxxx.                                                                                                                               |
+| 150372674 | DSEFAIL, DSE failed.  Failure code: xxxx.                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377138 | DSEINVALBLKID, Trying to edit DB with 64-bit block IDs using pre-GT.M-V7/pre-YottaDB-r2.00 DSE                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1040,9 +1039,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382682 | DSKNOSPCBLOCKED, Retry of write to file FFFF suspended due to new instance freeze. Waiting for instance to be unfrozen.                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377531 | DSKSPACEFLOW, Disk space for file xxxx nearing maximum size. YYYY blocks available.                                                                                    |
+| 150377531 | DSKSPACEFLOW, Disk Space for file xxxx nearing maximum size.  YYYY blocks available.                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382691 | DSKSPCAVAILABLE, Write to file FFFF succeeded after out-of-space condition cleared.                                                                                    |
+| 150382691 | DSKSPCAVAILABLE, Write to file FFFF succeeded after out-of-space condition cleared                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384082 | DSKSPCCHK, Error while checking for available disk space to create file DDDD                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1052,11 +1051,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372706 | DVIKEYBAD, $ZGETDVI("xxxx","yyyy") contains an illegal keyword                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380698 | DYNUPGRDFAIL, Unable to dynamically upgrade block 0xaaa in database yyy due to lack of free space in block                                                             |
+| 150380698 | DYNUPGRDFAIL, Unable to dynamically upgrade block aaa in database yyy due to lack of free space in block                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381914 | DZTRIGINTRIG, $ZTRIGGER() is not allowed inside trigger context. Trigger name: nnnn                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381394 | DZWRNOALIAS, $ZWRTAC cannot be aliased.                                                                                                                                |
+| 150381394 | DZWRNOALIAS, $ZWRTAC cannot be aliased                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381386 | DZWRNOPAREN, $ZWRTACxxx is not allowed inside a parenthesized SET target                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1072,7 +1071,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372914 | EORNOTFND, xxxx End of record not found                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380786 | EPOCHTNHI, At the EPOCH record at offset xxxx of yyyy transaction number [0xaaaa] is higher than database transaction number [0xbbbb]                                  |
+| 150380786 | EPOCHTNHI, At the EPOCH record at offset xxxx of yyyy transaction number [aaaa] is higher than database transaction number [bbbb]                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372722 | EQUAL, Equal sign expected but not found                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1098,7 +1097,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384402 | EXCEEDSPREALLOC, Preallocated size ssss for M external call label LLLL exceeded by string of length SSSS                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377592 | EXCLUDEREORG, Global: xxxx is present in the EXCLUDE option. REORG will skip the global.                                                                               |
+| 150377592 | EXCLUDEREORG, Global: xxxx is present in the EXCLUDE option.  REORG will skip the global.                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503443 | EXECOM, Executing command file xxxx                                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1110,15 +1109,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374138 | EXTGBLDEL, Invalid delimiter for extended global syntax                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375163 | EXTRACTCTRLY, User interrupt encountered during extract, halting                                                                                                       |
+| 150375163 | EXTRACTCTRLY, User interrupt encountered during extract -- halting                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374866 | EXTRACTFILERR, Error with extract file xxxx                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374890 | EXTRFAIL, Extract failed for the global gggg. MUPIP INTEG should be run.                                                                                               |
+| 150374890 | EXTRFAIL, Extract failed for the global ^gggg. MUPIP INTEG should be run.                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382242 | EXTRFILEXISTS, Error opening output file: ffff -- File exists                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377090 | EXTRFMT, Extract error: bad format type. Must be ZWR, GO, or BINARY.                                                                                                   |
+| 150377090 | EXTRFMT, Extract error: invalid record format - no records found.                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383826 | EXTRINTEGRITY, Database ffff potentially contains spanning nodes or data encrypted with two different keys                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1134,7 +1133,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151027828 | FATALERROR2, Fatal error raised. Bypassing core generation and terminating process                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372802 | FCHARMAXARGS, Argument count of $CHAR() function exceeded the maximum of 255                                                                                           |
+| 150372802 | FCHARMAXARGS, Argument count of $CHAR function exceeded the maximum of 255                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372810 | FCNSVNEXPECTED, Function or special variable expected in this context                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1148,7 +1147,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379914 | FILEEXISTS, File xxxx already exists                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377634 | FILEIDGBLSEC, File ID in global section does not match with the database file                                                                                          |
+| 150377634 | FILEIDGBLSEC, File ID in global section does not match with the database file xxxx                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376690 | FILEIDMATCH, Saved File ID does not match the current ID - the file appears to have been moved                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1160,7 +1159,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503450 | FILENOTFND, File xxxx not found                                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 418813146 | FILEOPENFAIL, Failed to open file ffff.                                                                                                                                |
+| 418813146 | FILEOPENFAIL, Failed to open file ffff                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374602 | FILEPARSE, Error parsing file specification: xxxx                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1168,11 +1167,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378835 | FILERENAME, File xxxx is renamed to yyyy                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379290 | FILTERBADCONV, Bad conversion of transaction xxxx by filter                                                                                                            |
+| 150379290 | FILTERBADCONV, Bad conversion of seqno xxxx by filter                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379282 | FILTERCOMM, Error communicating transaction xxxx with the filter                                                                                                       |
+| 150379282 | FILTERCOMM, Error communicating seqno xxxx with the filter                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379274 | FILTERNOTALIVE, Replication server detected that the filter is not alive while attempting to send transaction xxxx                                                     |
+| 150379274 | FILTERNOTALIVE, Replication server detected that the filter is not alive while attempting to send seqno xxxx                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383242 | FILTERTIMEDOUT, Replication server timed out attempting to read seqno ssss from external filter                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1184,17 +1183,17 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375026 | FNOTONSYS, Function or special variable is not supported by this operating system                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384066 | FNTRANSERROR, Buffer too small error occurred trying to translate filename FFFF                                                                                        |
+| 150384066 | FNTRANSERROR, Filename including path exceeded 255 chars while trying to resolve filename FFFF                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372842 | FNUMARG, $FNUMBER format specifier xxxx contains an illegal character: yyyy                                                                                            |
+| 150372842 | FNUMARG, $FNUMBER format specifier "xxxx" contains an illegal character: "yyyy"                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374364 | FORCEDHALT, Image HALTed by MUPIP STOP                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372850 | FOROFLOW, FOR commands nested too deeply                                                                                                                               |
+| 150372850 | FOROFLOW, FOR commands nested more than xxxx deep on a line                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376960 | FREEBLKSLOW, Only bbbb free blocks left out of tttt total blocks for ffff                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379050 | FREEMEMORY, Error occurred freeing memory                                                                                                                              |
+| 150379050 | FREEMEMORY, Error occurred freeing memory from xxxx                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374875 | FREEZE, Region: xxxx is already frozen                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1206,11 +1205,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379418 | FTOKERR, Error getting ftok of the file xxxx                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382995 | FTOKKEY, FTOK key 0xnnnn                                                                                                                                               |
+| 150382995 | FTOKKEY, FTOK key nnnn                                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381882 | GBLEXPECTED, Global variable reference expected in this context                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377306 | GBLMODFAIL, Global variable Conflict Test failed. Failure code: xxxx.                                                                                                  |
+| 150377306 | GBLMODFAIL, Global variable Conflict Test failed.  Failure code: xxxx.                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150504082 | GBLNAMCOLLRANGE, Collation sequence #nnnn is out of range (0 thru 255)                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1220,23 +1219,23 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372874 | GBLNAME, Either an identifier or a left parenthesis is expected after a ^ in this context                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503907 | GBLNAMEIS, is gblname gggg                                                                                                                                             |
+| 150503907 | GBLNAMEIS, in gblname gggg                                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379779 | GBLNOEXIST, Global xxxx no longer exists                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383202 | GBLNOMAPTOREG, Global gggg does not map to region rrrr in current global directory                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372882 | GBLOFLOW, Database segment is full                                                                                                                                     |
+| 150372882 | GBLOFLOW, Database file FFFF is full                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377642 | GBLSECNOTGDS, Global section xxxx is not a YottaDB global section                                                                                                      |
+| 150377642 | GBLSECNOTGDS, Global Section xxxx is not a YottaDB global section                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503459 | GDCREATE, Creating global directory File xxxx                                                                                                                          |
+| 150503459 | GDCREATE, Creating Global Directory file xxxx                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150504106 | GDEASYNCIONOMM, ssss segment has ASYNCIO turned on. Cannot support MM access method                                                                                    |
+| 150504106 | GDEASYNCIONOMM, ssss segment has ASYNCIO turned on. Cannot support MM access method.                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503467 | GDECHECK, Internal GDE consistency check                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503874 | GDECRYPTNOMM, ssss segment has encryption turned on. Cannot support MM access method                                                                                   |
+| 150503874 | GDECRYPTNOMM, ssss segment has encryption turned on. Cannot support MM access method.                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150504122 | GDELOGFAIL, GDE failed to log command. Check operator log for more information                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1246,9 +1245,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503835 | GDREADERR, Error reading Global Directory: xxxx                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503475 | GDUNKNFMT, xxxx is not formatted as a global directory                                                                                                                 |
+| 150503475 | GDUNKNFMT, xxxx is not formatted as a Global Directory                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503483 | GDUPDATE, Updating Global Directory File xxxx                                                                                                                          |
+| 150503483 | GDUPDATE, Updating Global Directory file xxxx                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503491 | GDUSEDEFS, Using defaults for Global Directory xxxx                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1260,27 +1259,27 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379178 | GETSOCKOPTERR, Getting the socket attribute xxxx failed: (errno == yyyy) zzzz                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375611 | GOQPREC, Numeric precision in key error: Blk #xxxx, Key #yyyy. Record not loaded.                                                                                      |
+| 150375611 | GOQPREC, Numeric precision in key error:  Blk #xxxx, Key #yyyy.  Record not loaded.                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376532 | GTMASSERT, xxxx - assert failed yyyy line zzzz                                                                                                                         |
+| 150376532 | GTMASSERT, xxxx - Assert failed yyyy line zzzz                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382164 | GTMASSERT2, YottaDB eeee - Assert failed LLLL for expression (eeee)                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372900 | GTMCHECK, Internal YottaDB error. Report to YottaDB Support.                                                                                                           |
+| 150372900 | GTMCHECK, Internal YottaDB error--Report to your YottaDB Support Channel                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373442 | GTMCURUNSUPP, The requested operation is unsupported                                                                                                                   |
+| 150373442 | GTMCURUNSUPP, The requested operation is unsupported in this version of YottaDB                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382866 | GTMEISDIR, dddd : Is a directory                                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376938 | GTMSECSHR, xxxx Error during GTMSECSHR operation                                                                                                                       |
+| 150376938 | GTMSECSHR, xxxx : Error during gtmsecshr operation                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382796 | GTMSECSHRBADDIR, gtmsecshr is not running from $ydb_dist/gtmsecshrdir or $ydb_dist cannot be determined                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381986 | GTMSECSHRCHDIRF, GTMSECSHR process error: GTMSECSHR is not able to change directory to its temporary directory, dddd                                                   |
+| 150381986 | GTMSECSHRCHDIRF, gtmsecshr unable to chdir to its temporary directory (dddd)                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373907 | GTMSECSHRDMNSTARTED, [client pid pppp] File (ffff) removed                                                                                                             |
+| 150373907 | GTMSECSHRDMNSTARTED, gtmsecshr daemon started (key: kkkk) for version vvvv from dddd                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378076 | GTMSECSHRFORKF, GTMSECSHR server unable to fork off a child process                                                                                                    |
+| 150378076 | GTMSECSHRFORKF, gtmsecshr server unable to fork off a child process                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377016 | GTMSECSHRGETSEMFAIL, error getting semaphore errno = xxxx                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1288,11 +1287,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382780 | GTMSECSHRNOARG0, gtmsecshr cannot identify its origin - argv[0] is null                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378044 | GTMSECSHROPCMP, GTMSECSHR operation may be compromised                                                                                                                 |
+| 150378044 | GTMSECSHROPCMP, gtmsecshr operation may be compromised                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377706 | GTMSECSHRPERM, The GTMSECSHR module in $ydb_dist does not have the correct permission and UID                                                                          |
+| 150377706 | GTMSECSHRPERM, The gtmsecshr module in $ydb_dist (DDDD) does not have the correct permission: PPPP, and UID: UUUU                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378018 | GTMSECSHRRECVF, GTMSECSHR receive on server socket failed                                                                                                              |
+| 150378018 | GTMSECSHRRECVF, gtmsecshr receive on server socket failed                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375699 | GTMSECSHRREMFILE, [client pid pppp] File (ffff) removed                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1302,79 +1301,79 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375691 | GTMSECSHRREMSHM, [client pid pppp] Shared memory segment (ssss) removed, nattch = nnnn                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378002 | GTMSECSHRSCKSEL, GTMSECSHR select on socket failed                                                                                                                     |
+| 150378002 | GTMSECSHRSCKSEL, gtmsecshr select on socket failed                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373892 | GTMSECSHRSEMGET, semget error errno = xxxx                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378026 | GTMSECSHRSENDF, GTMSECSHR send on server socket failed                                                                                                                 |
+| 150378026 | GTMSECSHRSENDF, gtmsecshr send on server socket failed                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378056 | GTMSECSHRSGIDF, GTMSECSHR server setGID to root failed                                                                                                                 |
+| 150378056 | GTMSECSHRSGIDF, gtmsecshr server setgid to root failed                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375648 | GTMSECSHRSHMCONCPROC, More than one process attached to Shared memory segment (ssss) not removed (nnnn)                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378755 | GTMSECSHRSHUTDN, GTMSECSHR process has received a shutdown request. Shutting down.                                                                                     |
+| 150378755 | GTMSECSHRSHUTDN, gtmsecshr process has received a shutdown request -- shutting down                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374818 | GTMSECSHRSOCKET, xxxx - yyyy; Error initializing GTMSECSHR socket                                                                                                      |
+| 150374818 | GTMSECSHRSOCKET, xxxx - yyyy : Error initializing gtmsecshr socket                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376298 | GTMSECSHRSRVF, Client - yyyy; Attempt to service request failed (retry = zzzz)                                                                                         |
+| 150376298 | GTMSECSHRSRVF, xxxx - yyyy : Attempt to service request failed (retry = zzzz)                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376944 | GTMSECSHRSRVFID, xxxx: yyyy - Attempt to service request failed. Client ID: zzzz, mesg ID: aaaa, mesg code: bbbb                                                       |
+| 150376944 | GTMSECSHRSRVFID, xxxx: yyyy - Attempt to service request failed. client id: zzzz, mesg type: aaaa, mesg data: bbbb                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376952 | GTMSECSHRSRVFIL, xxxx: yyyy; Attempt to service request failed. Client ID: zzzz, mesg type: aaaa, file: bbbb                                                           |
+| 150376952 | GTMSECSHRSRVFIL, xxxx: yyyy - Attempt to service request failed. client id: zzzz, mesg type: aaaa file: bbbb                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378064 | GTMSECSHRSSIDF, GTMSECSHR server setSID failed                                                                                                                         |
+| 150378064 | GTMSECSHRSSIDF, gtmsecshr server setsid failed                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377618 | GTMSECSHRSTART, xxxx - yyyy; GTMSECSHR failed to startup                                                                                                               |
+| 150377618 | GTMSECSHRSTART, xxxx - yyyy : gtmsecshr failed to startup                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378048 | GTMSECSHRSUIDF, GTMSECSHR server setUID to root failed                                                                                                                 |
+| 150378048 | GTMSECSHRSUIDF, gtmsecshr server setuid to root failed                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378011 | GTMSECSHRTMOUT, GTMSECSHR exiting due to idle timeout                                                                                                                  |
+| 150378011 | GTMSECSHRTMOUT, gtmsecshr exiting due to idle timeout                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381251 | GTMSECSHRTMPPATH, gtmsecshr path is pppp                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375875 | GTMSECSHRUPDDBHDR, [client pid pppp] database fileheader (dddd) updated iiii                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372906 | GVDATAFAIL, Global variable $DATA function failed. Failure code: xxxx                                                                                                  |
+| 150372906 | GVDATAFAIL, Global variable $DATA function failed.  Failure code: xxxx.                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381714 | GVDATAGETFAIL, Global variable DATAGET sub-operation (in KILL function) failed. Failure code: cccc.                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379818 | GVFAILCORE, A core file is being generated for later analysis if necessary                                                                                             |
+| 150379818 | GVFAILCORE, A core file is being created for later analysis if necessary                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372922 | GVGETFAIL, Global variable retrieval failed. Failure code: xxxx.                                                                                                       |
+| 150372922 | GVGETFAIL, Global variable retrieval failed.  Failure code: xxxx.                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377538 | GVINCRFAIL, Global variable $INCR failed. Failure code: xxxx                                                                                                           |
+| 150377538 | GVINCRFAIL, Global variable $INCR failed.  Failure code: xxxx.                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372626 | GVINVALID, xxxx Invalid global name                                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372931 | GVIS, Global variable: xxxx                                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372938 | GVKILLFAIL, Global variable kill failed. Failure code: xxxx.                                                                                                           |
+| 150372938 | GVKILLFAIL, Global variable kill failed.  Failure code: xxxx.                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372946 | GVNAKED, Illegal naked global reference                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374130 | GVNAKEDEXTNM, Cannot reference different Global Directory in a naked reference                                                                                         |
+| 150374130 | GVNAKEDEXTNM, Cannot reference different global directory in a naked reference                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151028074 | GVNUNSUPPORTED, Global variable name xxxx not supported in yyyy call                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372962 | GVORDERFAIL, Global variable $ORDER or $NEXT function failed. Failure code: xxxx.                                                                                      |
+| 150372962 | GVORDERFAIL, Global variable $ORDER or $NEXT function failed.  Failure code: xxxx.                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372970 | GVPUTFAIL, Global variable put failed. Failure code: xxxx.                                                                                                             |
+| 150372970 | GVPUTFAIL, Global variable put failed.  Failure code: xxxx.                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375178 | GVQUERYFAIL, Global variable $QUERY function failed. Failure code: xxxx.                                                                                               |
+| 150375178 | GVQUERYFAIL, Global variable $QUERY function failed.  Failure code: xxxx.                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379306 | GVQUERYGETFAIL, Global variable QUERY and GET failed. Failure code: xxxx.                                                                                              |
+| 150379306 | GVQUERYGETFAIL, Global variable QUERY and GET failed.  Failure code: xxxx.                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375946 | GVREPLERR, Error replicating global in region xxxx                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374314 | GVRUNDOWN, Error during global database rundown                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372986 | GVSUBOFLOW, Maximum combined length of global subscripts exceeded                                                                                                      |
+| 150372986 | GVSUBOFLOW, Maximum combined length of subscripts exceeded                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372994 | GVUNDEF, Global variable undefined: xxxx                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374410 | GVZPREVFAIL, Global variable $ZPREVIOUS function failed. Failure code: xxxx                                                                                            |
+| 150374410 | GVZPREVFAIL, Global variable $ZPREVIOUS function failed.  Failure code: xxxx.                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381890 | GVZTRIGFAIL, ZTRIGGER of a global variable failed. Failure code: cccc.                                                                                                 |
+| 150381890 | GVZTRIGFAIL, ZTRIGGER of a global variable failed.  Failure code: cccc.                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373402 | HEX64ERR, Error: cannot convert VVVV value to 64 bit hexadecimal number                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1384,7 +1383,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383106 | HOSTCONFLICT, Host hhhh could not open database file dddd because it is marked as already open on node nnnn                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376442 | HTOFLOW, Hash table overflow, local or region name space exceeded                                                                                                      |
+| 150376442 | HTOFLOW, Hash table overflow: Failed to allocate xxxx elements                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380560 | HTSHRINKFAIL, Hash table compaction failed to allocate new smaller table due to lack of memory                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1392,7 +1391,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377504 | ICUNOTENABLED, ICU libraries not loaded                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381514 | ICUSYMNOTFOUND, Symbol xxxxx not found in ICU libraries. ICU needs to be built with symbol-renaming disabled or ydb_icu_version environment variable needs to be       |
+| 150381514 | ICUSYMNOTFOUND, Symbol xxxxx not found in the ICU libraries. ICU needs to be built with symbol-renaming disabled or xxxxx environment variable needs to be properly    |
 |           | specified                                                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381506 | ICUVERLT36, Type 1 - $ydb_icu_version is aaa.bbb. ICU version greater than or equal to 3.6 should be used. Type 2 - libicuio has version aaa.bbb. ICU version greater  |
@@ -1406,7 +1405,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503498 | ILLCHAR, xxxx is not a legal character in this context                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-|           | ILLEGALUSE, Illegal use of the special character “?” in %GSEL                                                                                                          |
+|           | ILLEGALUSE, Illegal use of the special character "?" in %GSEL                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379154 | ILLESOCKBFSIZE, The specified socket buffer size is xxxx, which is either 0 or too big                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1424,9 +1423,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382194 | INSROLECHANGE, Supplementary Instance SSSS and non-Supplementary Instance IIII belong to the same Group                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383139 | INSTFRZDEFER, Instance Freeze initiated by eeee error on region rrrrr deferred due to critical resource conflict.                                                      |
+| 150383139 | INSTFRZDEFER, Instance Freeze initiated by eeee error on region rrrrr deferred due to critical resource conflict                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027778 | INSUFFSUBS, Return subscript array for an API call too small                                                                                                           |
+| 151027778 | INSUFFSUBS, Return subscript array for xxxx call too small - needs at least yyyy entries for this call                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382202 | INSUNKNOWN, Supplementary Instance SSSS has no instance definition for non-Supplementary Instance IIII                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1438,7 +1437,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 |           | INVALIDGBL, Search pattern is invalid in %GSEL                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376890 | INVALIDRIP, Invalid read-in-progress field in Cache Record. Resetting and continuing. Region: xxxx.                                                                    |
+| 150376890 | INVALIDRIP, Invalid read-in-progress field in Cache Record.  Resetting and continuing.  Region: xxxx.                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376154 | INVBITLEN, Invalid size of the bit string                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1450,27 +1449,27 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376986 | INVCTLMNE, Invalid control mnemonics                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381090 | INVDLRCVAL, Invalid $CHAR() value.                                                                                                                                     |
+| 150381090 | INVDLRCVAL, Invalid $CHAR() value xxxx                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379498 | INVECODEVAL, Invalid value for $ECODE (xxxx).                                                                                                                          |
+| 150379498 | INVECODEVAL, Invalid value for $ECODE (xxxx)                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380354 | INVERRORLIM, Invalid ERROR_LIMIT qualifier value. Must be at least zero                                                                                                |
+| 150380354 | INVERRORLIM, Invalid ERROR_LIMIT qualifier value.  Must be at least zero                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373058 | INVFCN, Invalid function name                                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503851 | INVGBLDIR, Invalid Global Directory spec: xxxx. Continuing with yyyy.                                                                                                  |
+| 150503851 | INVGBLDIR, Invalid Global Directory spec: xxxx. Continuing with yyyy                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375738 | INVGLOBALQUAL, Error in GLOBAL qualifier : Parse error at offset xxxx in yyyy                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384538 | INVGVPATQUAL, Invalid Global Value Pattern file qualifier value                                                                                                        |
+| 150384538 | INVGVPATQUAL, Invalid Global Value Pattern file qualifier value.  xxxx                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380362 | INVIDQUAL, Invalid ID qualifier value xxxx                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150568994 | INVINTMSG, Invalid interrupt message received                                                                                                                          |
+| 150568994 | INVINTMSG, Invalid interrupt message received.                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383522 | INVLINKTMPDIR, Value for $ydb_linktmpdir is either not found or not a directory: dddd                                                                                  |
+| 150383522 | INVLINKTMPDIR, Value for $ydb_linktmpdir/$gtm_linktmpdir is either not found or not a directory(dddd) - Reverting to default value                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383802 | INVLOCALE, Attempt to reset locale to supplied value of $ydb_locale xxxx failed                                                                                        |
+| 150383802 | INVLOCALE, Attempt to reset locale to supplied value of $ydb_locale/$gtm_locale (xxxx) failed                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151028010 | INVMAINLANG, Invalid main routine language id specified: xxxx                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1480,7 +1479,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375636 | INVMVXSZ, Invalid block size for GOQ load format                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027818 | INVNAMECOUNT, Number of varnames cannot be less than zero                                                                                                              |
+| 151027818 | INVNAMECOUNT, Number of varnames (namecount parameter in a xxxx call) cannot be less than zero                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375194 | INVNETFILNM, Invalid file name following node designation in global directory                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1492,19 +1491,19 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150568970 | INVPROT, Invalid protocol specified by remote partner                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380330 | INVQUALTIME, Invalid time qualifier value. Specify as xxxx=delta_or_absolute_time.                                                                                     |
+| 150380330 | INVQUALTIME, Invalid time qualifier value.  Specify as xxxx=delta_or_absolute_time.                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380346 | INVREDIRQUAL, Invalid REDIRECT qualifier value. xxxx                                                                                                                   |
+| 150380346 | INVREDIRQUAL, Invalid REDIRECT qualifier value.  xxxx                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377746 | INVROLLBKLVL, Rollback level (xxxx) not less than the current $tlevel (yyyy). Cannot rollback.                                                                         |
+| 150377746 | INVROLLBKLVL, Rollback level (xxxx) not less than current $TLEVEL(yyyy).  Can't rollback.                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384314 | INVSEQNOQUAL, Invalid SEQNO qualifier value xxxx                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384666 | INVSHUTDOWN, Shutdown timeout should be from 0 to 3600 seconds                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374058 | INVSPECREC, Invalid global modifier record                                                                                                                             |
+| 150374058 | INVSPECREC, pppp Invalid global modifier record                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379514 | INVSTACODE, Invalid value for second parameter of $STACK (xxxx).                                                                                                       |
+| 150379514 | INVSTACODE, Invalid value for second parameter of $STACK (xxxx)                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384146 | INVSTATSDB, Database file SSSS associated with statistics database region RRRR is not a valid statistics database                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1512,26 +1511,25 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373074 | INVSVN, Invalid special variable name                                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383714 | INVTMPDIR, Value for $ydb_tmp is either not found or not a directory: dddd - Reverting to default value                                                                |
+| 150383714 | INVTMPDIR, Value or default for $ydb_tmp/$gtm_tmp is either not found or not a directory (dddd) - Reverting to default value                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151027938 | INVTPTRANS, Invalid TP transaction - either invalid TP token or transaction not in progress                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382114 | INVTRCGRP, Invalid trace group specified in $ydb_trace_groups: gggg                                                                                                    |
+| 150382114 | INVTRCGRP, Invalid trace group specified in $ydb_trace_groups/$gtm_trace_groups: gggg                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380370 | INVTRNSQUAL, Invalid TRANSACTION qualifier. Specify only one of TRANSACTION=[NO]SET or TRANSACTION=[NO]KILL.                                                           |
+| 150380370 | INVTRNSQUAL, Invalid TRANSACTION qualifier.  Specify only one of TRANSACTION=[NO]SET or TRANSACTION=[NO]KILL.                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027970 | INVVALUE, VVVV is invalid DEC value for $ZCONVERT(). Range is -9223372036854775808 to 18446744073709551615.                                                            |
-|           | INVVALUE, VVVV is invalid HEX value for $ZCONVERT(). Range is 1 to 16 unsigned hexadecimal digits                                                                      |
+| 151027970 | INVVALUE, VVVV is invalid xxxx value for yyyy                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027762 | INVVARNAME, Invalid local/global/ISV variable name supplied to API call                                                                                                |
+| 151027762 | INVVARNAME, Invalid local/global/ISV variable name xxxx supplied to API call                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380242 | INVYDBEXIT, Inappropriate invocation of ydb_exit. ydb_exit cannot be invoked from external calls                                                                       |
+| 150380242 | INVYDBEXIT, Inappropriate invocation of ydb_exit(). Calls to ydb_exit() cannot be made from external calls.                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383706 | INVZBREAK, Cannot set ZBREAK in direct mode routine (GTM$DMOD)                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151027978 | INVZCONVERT, Translation supported only between DEC/HEX OR between UTF-8/UTF-16/UTF-16LE/UTF-16BE                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379762 | INVZDIRFORM, Illegal value (xxxx) specified for ZDIR_FORM                                                                                                              |
+| 150379762 | INVZDIRFORM, Invalid value (xxxx) specified for ZDIR_FORM                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380218 | INVZROENT, xxxx is neither a directory nor an object library(DLL)                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1539,17 +1537,17 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373082 | IOEOF, Attempt to read past an end-of-file                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381546 | IOERROR, Error occurred while doing aaaa in oooo operation -- called from module mmmm at line LLLL                                                                     |
+| 150381546 | IOERROR, Error occured while doing aaaa in oooo operation -- called from module mmmm at line LLLL                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373090 | IONOTOPEN, Attempt to USE an I/O device which has not been opened                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374330 | IORUNDOWN, Error during image rundown                                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379010 | IOWRITERR, IO write by PID xxxx to block yyyy of database zzzz failed. PID aaaa retrying the IO.                                                                       |
+| 150379010 | IOWRITERR, IO Write by pid xxxx to blk yyyy of database file zzzz failed.  Pid aaaa retrying the IO.                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379363 | IPCNOTDEL, xxxx : yyyy did not delete IPC resources for region zzzz                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377546 | ISOLATIONSTSCHN, Error changing NOISOLATION status for global xxxx within a TP transaction from aaaa to bbbb                                                           |
+| 150377546 | ISOLATIONSTSCHN, Error changing NOISOLATION status for global ^xxxx within a TP transaction from aaaa to bbbb                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383210 | ISSPANGBL, Operation cannot be performed on global ^gggg as it spans multiple regions in current global directory                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1557,37 +1555,38 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151028066 | ISVUNSUPPORTED, ISV variable name xxxx not supported in yyyy call                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382154 | JIUNHNDINT, An error during $ZINTERRUPT processing was not handled: eeee;                                                                                              |
+| 150382154 | JIUNHNDINT, An error during $ZINTERRUPT processing was not handled: eeee                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373818 | JNI, xxxx                                                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 418808282 | JNLACCESS, Error accessing journal file xxxx                                                                                                                           |
+| 418808282 | JNLACCESS, Error accessing journal file jjjj                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375808 | JNLACTINCMPLT, Mupip journal action might be incomplete                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379803 | JNLALIGNSZCHG, Journal ALIGNSIZE is rounded up to xxxx blocks (closest next higher power of two)                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380392 | JNLALIGNTOOSM, Alignsize xxxx (bytes) is smaller than block size yyyy (bytes) for aaaa bbbb. Using alignsize of cccc (bytes) instead.                                  |
+| 150380392 | JNLALIGNTOOSM, Alignsize xxxx (bytes) is too small for a block size of yyyy (bytes) for aaaa bbbb.  Using alignsize of cccc (bytes) instead.                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382107 | JNLALLOCGROW, Increased Journal ALLOCATION from [ssss blocks] to [aaaa blocks] to match AUTOSWITCHLIMIT for ffff nnnn                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503883 | JNLALLOCGROW, Increased Journal ALLOCATION from [ssss blocks] to [aaaa blocks] to match AUTOSWITCHLIMIT for ffff nnnn                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375562 | JNLBADLABEL, Specified File xxxx does not have a YottaDB Journal File Label                                                                                            |
+| 150375562 | JNLBADLABEL, Journal file xxxx has a bad YottaDB Journal File Label. Expected yyyy. Found zzzz.                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377362 | JNLBADRECFMT, Journal Record Format Error encountered for file xxxx at disk address yyyy                                                                               |
+| 150377362 | JNLBADRECFMT, Journal File Record Format Error encountered for file jjjj at disk address yyyy                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382808 | JNLBUFFDBUPD, Journal file buffer size for database file dddd has been adjusted from xxxx to yyyy                                                                      |
+| 150382808 | JNLBUFFDBUPD, Journal file buffer size for database file dddd has been adjusted from xxxx to yyyy.                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384235 | JNLBUFFPHS2SALVAGE, Salvaged journal records from process PPPP for database file DDDD at transaction number NNNN and journal-sequence-number/unique-token JJJJ with    |
 |           | journal file starting at offset OOOO and length LLLL                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382800 | JNLBUFFREGUPD, Journal file buffer size for region rrrr has been adjusted from xxxx to yyyy                                                                            |
+| 150382800 | JNLBUFFREGUPD, Journal file buffer size for region rrrr has been adjusted from xxxx to yyyy.                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378843 | JNLBUFINFO, Pid aaaa dsk bbbb free cccc bytcnt dddd io_in_prog eeee fsync_in_prog ffff dskaddr gggg freeaddr hhhh qiocnt iiii now_writer xxxx fsync_pid yyyy filesize  |
-|           | zzzz cycle oooo errcnt pppp wrtsize qqqq fsync_dskaddr rrrr                                                                                                            |
+|           | zzzz cycle oooo errcnt pppp wrtsize qqqq fsync_dskaddr rrrr rsrv_free jjjj rsrv_freeaddr kkkk phase2_commit_index1 llll phase2_commit_index2 mmmm next_align_addr nnnn |
+|           | size ssss                                                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373466 | JNLCLOSE, Error closing journal file: xxxx                                                                                                                             |
+| 150373466 | JNLCLOSE, Error closing journal file xxxx                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381210 | JNLCLOSED, Journaling closed for database file dddd at transaction number xxx                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1597,19 +1596,19 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380192 | JNLCRESTATUS, xxxx at line aaaa for journal file yyyy, database file zzzz encountered error                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380482 | JNLCYCLE, Journal file xxxx causes cycle in the journal file generations of database file yyyy                                                                         |
+| 150380482 | JNLCYCLE, Journal file jjjj causes cycle in the journal file generations of database file dddd                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383786 | JNLDBSEQNOMATCH, Journal file ffff has beginning region sequence number jjjj but database dddd has region sequence number ssss                                         |
+| 150383786 | JNLDBSEQNOMATCH, Journal file ffff has beginning region sequence number [jjjj], but database dddd has region sequence number [ssss]                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374210 | JNLDBTNNOMATCH, Journal file xxxx has beginning transaction number aaaa but database yyyy has current transaction number bbbb                                          |
+| 150374210 | JNLDBTNNOMATCH, Journal file xxxx has zzzz transaction number aaaa, but database yyyy has current transaction number bbbb and journal end transaction number cccc      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379904 | JNLDISABLE, Specified journal option(s) cannot take effect as journaling is DISABLED on database file xxxx                                                             |
+| 150379904 | JNLDISABLE, Specified journal option(s) cannot take effect as journaling is DISABLED on database file dddd                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381690 | JNLENDIANBIG, Journal file jjjj is BIG endian on a LITTLE endian system                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381682 | JNLENDIANLITTLE, Journal file jjjj is LITTLE endian on a BIG endian system                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372794 | JNLEXTEND, Journal file extension error for file xxxx.                                                                                                                 |
+| 150372794 | JNLEXTEND, Journal file extension error for file jjjj                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384306 | JNLEXTRCTSEQNO, Journal Extracts based on sequence numbers are restricted to a single region when replication is OFF                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1623,13 +1622,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377338 | JNLFILNOTCHG, Journal file not changed                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373306 | JNLFILOPN, Error opening journal file xxxx for database file yyyy                                                                                                      |
+| 150373306 | JNLFILOPN, Error opening journal file jjjj for database file dddd                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382978 | JNLFILRDOPN, Error opening journal file xxxx for read for database file yyyy                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376315 | JNLFLUSH, Error flushing journal buffers to journal file xxxx                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379120 | JNLFLUSHNOPROG, No progress while attempting to flush journal file xxxx                                                                                                |
+| 150379120 | JNLFLUSHNOPROG, No progress while attempting to flush journal file jjjj                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379955 | JNLFNF, Journal file xxxx not found                                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1637,29 +1636,29 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379712 | JNLFSYNCLSTCK, Journaling fsync lock is stuck in journal file jjjj                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373322 | JNLINVALID, xxxx is not a valid journal file Region: yyyy                                                                                                              |
+| 150373322 | JNLINVALID, jjjj is not a valid journal file for database file: rrrr                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375656 | JNLINVALLOC, Journal file allocation xxxx is not within the valid range of yyyy to zzzz. Journal file not created.                                                     |
+| 150375656 | JNLINVALLOC, Journal file allocation xxxx is not within the valid range of yyyy to zzzz.  Journal file not created.                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375664 | JNLINVEXT, Journal file extension xxxx is greater than the maximum allowed size of yyyy. Journal file not created.                                                     |
+| 150375664 | JNLINVEXT, Journal file extension xxxx is greater than the maximum allowed size of yyyy.  Journal file not created.                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379674 | JNLINVSWITCHLMT, Specified AUTOSWITCHLIMIT xxxx falls outside of allowed limits aaaa and bbbb                                                                          |
+| 150379674 | JNLINVSWITCHLMT, Journal AUTOSWITCHLIMIT xxxx falls outside of allowed limits aaaa and bbbb                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377176 | JNLMINALIGN, Journal Record Alignment xxxx is less than the minimum value of yyyy                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377082 | JNLMOVED, Journal file appears to have been moved. Journaling activity will not be done.                                                                               |
+| 150377082 | JNLMOVED, Journal file appears to have been moved.  Journaling activity will not be done.                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378882 | JNLNEWREC, Target system cannot recognize journal record of type xxxx. Last recognized type is yyyy.                                                                   |
+| 150378882 | JNLNEWREC, Target system cannot recognize journal record of type xxxx, last recognized type is yyyy                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377258 | JNLNMBKNOTPRCD, Journal file xxxx does not match the current journal file yyyy of database file zzzz                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380378 | JNLNOBIJBACK, MUPIP JOURNAL BACKWARD cannot continue as journal file xxxx does not have before image journaling                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379946 | JNLNOCREATE, Journal file xxxx not created                                                                                                                             |
+| 150379946 | JNLNOCREATE, Journal file jjjj not created                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382090 | JNLNOREPL, Replication not enabled for journal file jjjj (database file dddd)                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376650 | JNLOPNERR, Error opening journal file xxxx for region yyyy                                                                                                             |
+| 150376650 | JNLOPNERR, Error opening journal file xxxx  for database yyyy                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418817450 | JNLORDBFLU, Error flushing database blocks to dddd. See related messages in the operator log                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1668,8 +1667,8 @@ Some messages can have more than one number,, depending on where they are issued
 | 150384243 | JNLPOOLPHS2SALVAGE, Salvaged journal records from process PPPP for replication instance file iiii at journal sequence number JJJJ with journal pool starting offset    |
 |           | OOOO and length LLLL                                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383866 | JNLPOOLRECOVERY, The size of the data written to the journal pool (xxxx) does not match the size of the data in the journal record (yyyy) for the replication instance |
-|           | file zzzz. The journal pool has been recovered.                                                                                                                        |
+| 150383866 | JNLPOOLRECOVERY, The size of the data written to the journal pool (xxxx) does not match the size of the data in the journal files (yyyy) at journal sequence number    |
+|           | zzzz for the replication instance file xxxx. The journal pool has been recovered.                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377194 | JNLPOOLSETUP, Journal Pool setup error                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1679,9 +1678,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378795 | JNLPVTINFO, Pid aaaa cycle mmmm fd_mismatch nnnn channel rrrr sync_io ssss pini_addr xxxx qio_active yyyy old_channel zzzz                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383011 | JNLQIOSALVAGE, Journal IO lock salvaged                                                                                                                                |
+| 150383011 | JNLQIOSALVAGE, Journal IO lock for database file xxxx salvaged from dead process yyyy                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 418808682 | JNLRDERR, Error reading journal file xxxx: unable to initialize.                                                                                                       |
+| 418808682 | JNLRDERR, Error reading journal file xxxx.  Unable to initialize.                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418812842 | JNLRDONLY, Journal file xxxx read only                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1689,7 +1688,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372698 | JNLREADBOF, Beginning of journal file encountered for xxxx                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375570 | JNLREADEOF, End of journal file encountered for xxxx                                                                                                                   |
+| 150375570 | JNLREADEOF, End of journal file encountered                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375578 | JNLRECFMT, Journal file record format error encountered                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1701,7 +1700,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378874 | JNLSETDATA2LONG, SET journal record has data of length xxxx. Target system cannot handle more than yyyy bytes.                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375771 | JNLSPACELOW, Journal file xxxx nearing maximum size, aaaa blocks to go                                                                                                 |
+| 150375771 | JNLSPACELOW, Journal file jjjj nearing maximum size, nnnn blocks to go                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379923 | JNLSTATE, Journaling state for <database/region> xxxx is now yyyy                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1713,9 +1712,10 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384179 | JNLSWITCHRETRY, Retrying previously abandoned switch of journal file jjjj for database dddd                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380011 | JNLSWITCHSZCHG, Journal AUTOSWITCHLIMIT [aaaa blocks] is rounded down to [bbbb blocks] to equal the sum of journal ALLOCATION                                          |
+| 150380011 | JNLSWITCHSZCHG, Journal AUTOSWITCHLIMIT [aaaa blocks] is rounded down to [bbbb blocks] to equal the sum of Journal ALLOCATION [cccc blocks] and a multiple of Journal  |
+|           | EXTENSION [dddd blocks] for database file xxxx                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380002 | JNLSWITCHTOOSM, Journal AUTOSWITCHLIMIT [aaaa blocks] is less than journal ALLOCATION [bbbb blocks] for database file xxxx                                             |
+| 150380002 | JNLSWITCHTOOSM, Journal AUTOSWITCHLIMIT [aaaa blocks] is less than Journal ALLOCATION [bbbb blocks] for database file dddd                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374354 | JNLTMQUAL1, Time qualifier BEFORE_TIME=xxxx is less than SINCE_TIME=yyyy                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1725,29 +1725,29 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375682 | JNLTMQUAL4, Time qualifier BEFORE_TIME="xxxx is less than AFTER_TIME="yyyy"                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374282 | JNLTNOUTOFSEQ, End transaction aaaa of journal xxxx different from Begin transaction bbbb of next generation journal yyyy                                              |
+| 150374282 | JNLTNOUTOFSEQ, End transaction [aaaa] of journal xxxx different from Begin transaction [bbbb] of next generation journal yyyy                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380304 | JNLTPNEST, Mupip journal command found nested TP transactions for journal file jjjj at offset oooo at transaction number nnnn                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379994 | JNLTRANS2BIG, Transaction needs an estimated [aaaa blocks] in journal file xxxx which exceeds the AUTOSWITCHLIMIT of bbbb                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376666 | JNLTRANSGTR, Transaction number in journal is greater than in database                                                                                                 |
+| 150376666 | JNLTRANSGTR, Transaction number xxxx in journal header is greater than yyyy in database header                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376674 | JNLTRANSLSS, Transaction number in journal is less than in database                                                                                                    |
+| 150376674 | JNLTRANSLSS, Transaction number xxxx in journal header is less than yyyy in database header                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380802 | JNLUNXPCTERR, Unexpected error encountered for Journal aaaa at disk address 0xbbbb                                                                                     |
+| 150380802 | JNLUNXPCTERR, Unexpected error encountered for Journal aaaa at disk address bbbb                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376914 | JNLVSIZE, Journal File xxxx has incorrect virtual_filesize aaaa Allocation is bbbb extension is cccc filesize is dddd file_system_block_size is eeee                   |
+| 150376914 | JNLVSIZE, Journal File xxxx has incorrect virtual_filesize aaaa.  Allocation : bbbb, Extension : cccc, Filesize : dddd, File system block size : eeee                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376682 | JNLWRERR, Error writing journal file xxxx. Undable to update header Region: yyyy                                                                                       |
+| 150376682 | JNLWRERR, Error writing journal file jjjj.  Unable to update header.                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373691 | JNLWRTDEFER, Journal write start deferred                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379690 | JOBACTREF, Actual parameter in job command passed by reference                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379851 | JOBEXAMDONE, YottaDB process aaaa completed job examine to xxxx                                                                                                        |
+| 150379851 | JOBEXAMDONE, YottaDB process aaaa successfully executed $ZJOBEXAM() into xxxx                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379858 | JOBEXAMFAIL, YottaDB process aaaa executing $ZJOBEXAM function failed with the preceding error message                                                                 |
+| 150379858 | JOBEXAMFAIL, YottaDB process aaaa failed while executing $ZJOBEXAM(). Check the preceding error message for more information.                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373114 | JOBFAIL, JOB command failure                                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1770,15 +1770,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378714 | JOBSETUP, Error receiving aaaa from parent process                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377186 | JOBSTARTCMDFAIL, JOB command STARTUP script invocation failed.                                                                                                         |
+| 150377186 | JOBSTARTCMDFAIL, JOB command STARTUP script invocation failed                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382610 | JRTNULLFAIL, Applying NULL journal record failed. Failure code: xxxx.                                                                                                  |
+| 150382610 | JRTNULLFAIL, Applying NULL journal record failed.  Failure code: xxxx.                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373170 | JUSTFRACT, Fraction specifier to $JUSTIFY cannot be negative                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373178 | KEY2BIG, Key size (xxxx) is greater than maximum (yyyy) for region zzzz                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503891 | KEYFORBLK, But block size bbbb and reserved bytes rrrr limit key size to kkkk.                                                                                         |
+| 150503891 | KEYFORBLK, But block size bbbb and reserved bytes rrrr limit key size to kkkk                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503523 | KEYSIZIS, Key size is xxxx                                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1790,7 +1790,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381336 | KILLABANDONED, Abandoned kills counter is greater than zero for file ffff, tttt                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377788 | KILLBYSIG, Process xxxx has been killed by a signal yyyy                                                                                                               |
+| 150377788 | KILLBYSIG, xxxx process yyyy has been killed by a signal zzzz                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377804 | KILLBYSIGSINFO1, iiii process xxxx has been killed by a signal yyyy at address aaaa (vaddr bbbb)                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1798,15 +1798,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381244 | KILLBYSIGSINFO3, iiii process xxxx has been killed by a signal yyyy accessing vaddress aaaa                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377796 | KILLBYSIGUINFO, Process xxxx has been killed by a signal yyyy from process zzzz with userid number aaaa                                                                |
+| 150377796 | KILLBYSIGUINFO, xxxx process yyyy has been killed by a signal ssss from process zzzz with userid number aaaa                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373186 | LABELEXPECTED, Label expected in this context                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373194 | LABELMISSING, Label referenced but not defined : xxxx                                                                                                                  |
+| 150373194 | LABELMISSING, Label referenced but not defined: xxxx                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383506 | LABELNOTFND, GOTO referenced a label that does not exist                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374394 | LABELONLY, Routine xxxx was compiled for label-only entry.                                                                                                             |
+| 150374394 | LABELONLY, Routine xxxx was compiled for label-only entry                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373202 | LABELUNKNOWN, Label referenced but not defined                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1818,55 +1818,55 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375145 | LCKGONE, Lock removed: xxxx                                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375186 | LCKSCANCELLED, Error on remote node holding locks or zallocates. All locks and zallocates cancelled.                                                                   |
+| 150375186 | LCKSCANCELLED, Error on remote node holding LOCKs or ZALLOCATEs.  All LOCKs and ZALLOCATEs cancelled.                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375361 | LCKSGONE, Locks selected for deletion removed                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375880 | LCKSTIMOUT, DAL timed lock request expired                                                                                                                             |
+| 150375880 | LCKSTIMOUT, DAL timed LOCK request expired                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374898 | LDBINFMT, Unrecognized header for load file                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375618 | LDGOQFMT, Corrupt GOQ format header information                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382834 | LDSPANGLOINCMP, Incomplete spanning node found during load!/!_!_at File offset : oooo                                                                                  |
+| 150382834 | LDSPANGLOINCMP, Incomplete spanning node found during load at File offset : [oooo]                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027738 | LIBYOTTAMISMTCH, $ydb_dist/libyottadb.so does not match the shared library path                                                                                        |
+| 151027738 | LIBYOTTAMISMTCH, $ydb_dist/libyottadb.so xxxx does not match the shared library path yyyy                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375108 | LINKVERSION, This image must be relinked with the current version of YottaDB                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377442 | LISTENPASSBND, Controlmnemonic LISTEN can be applied to PASSIVE socket which is in the state BOUND ONLY                                                                |
+| 150377442 | LISTENPASSBND, Controlmnemonic LISTEN can be applied to PASSIVE socket in the state BOUND only                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381304 | LITNONGRAPH, standard requires graphics in string literals; found non-printable: $ZCHAR(cccc)                                                                          |
+| 150381304 | LITNONGRAPH, M standard requires graphics in string literals; found non-printable: $ZCHAR(cccc)                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379202 | LKENOFINISH, LKE unable to finish all requested actions                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373218 | LKNAMEXPECTED, An identifier is expected after a ^ in this context                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374322 | LKRUNDOWN, Error during lock database rundown                                                                                                                          |
+| 150374322 | LKRUNDOWN, Error during LOCK database rundown                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375050 | LKSECINIT, Error creating lock section for database xxxx                                                                                                               |
+| 150375050 | LKSECINIT, Error creating LOCK section for database xxxx                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150634516 | LNKNOTIDLE, Attempt to initiate operation before previous operation completed                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375018 | LOADABORT, Aborting load at record xxxx                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374826 | LOADBGSZ, Load error: BEGIN too small. No records loaded.                                                                                                              |
+| 150374826 | LOADBGSZ, Load error: BEGIN too small.  No records loaded.                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375123 | LOADCTRLY, Control Y encountered during load. Load halting.                                                                                                            |
+| 150375123 | LOADCTRLY, User interrupt encountered during load.  Load halting.                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374386 | LOADEDBG, Load error: END smaller than BEGIN. No records loaded.                                                                                                       |
+| 150374386 | LOADEDBG, Load error: END smaller than BEGIN.  No records loaded.                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374538 | LOADEDSZ, Load error: END too small. No records loaded.                                                                                                                |
+| 150374538 | LOADEDSZ, Load error: END too small.  No records loaded.                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374370 | LOADEOF, Load error: EOF reached prior to BEGIN record xxxx No records loaded                                                                                          |
+| 150374370 | LOADEOF, Load error: EOF reached prior to BEGIN record xxxx.  No records loaded.                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374842 | LOADFILERR, Error with load file xxxx                                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374834 | LOADFMT, Load error: bad format type. Must be GO, BINARY, or GOQ.                                                                                                      |
+| 150374834 | LOADFMT, Load error: invalid format type.  Must be ZWR, GO, BINARY, or GOQ.                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503547 | LOADGD, Loading Global Directory xxxx                                                                                                                                  |
+| 150503547 | LOADGD, Loading Global Directory file xxxx                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381106 | LOADINVCHSET, Extract file CHSET xxx is incompatible with ydb_chset.                                                                                                   |
+| 150381106 | LOADINVCHSET, Extract file CHSET (xxx) is incompatible with ydb_chset/gtm_chset                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384339 | LOADRECCNT, Last EXTRACT record processed by LOAD: RRRR                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1882,9 +1882,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381538 | LOCKSPACEFULL, No more room for LOCK slots on database file ffff                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382603 | LOCKSPACEINFO, Region: rrrr: processes on queue: pppp/qqqq; LOCK slots in use: llll/kkkk; name space not full                                                          |
+| 150382603 | LOCKSPACEINFO, Region: rrrr: processes on queue: pppp/qqqq; LOCK slots in use: llll/kkkk; SUBSCRIPT slot bytes in use: ssss/tttt                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382147 | LOCKSPACEUSE, Estimated free lock space: xxx% of pppp pages.                                                                                                           |
+| 150382147 | LOCKSPACEUSE, Estimated free lock space: xxx% of pppp pages                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382618 | LOCKSUB2LONG, Following subscript is xxxx bytes long which exceeds 255 byte limit.                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1896,9 +1896,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381354 | LOGTOOLONG, Environment variable eeee is too long. Maximum length allowed is llll bytes.                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378768 | LOWSPACECRE, Disk space for database file xxxx is not enough for yyyy future extension. aaaa blocks are needed, only bbbb available.                                   |
+| 150378768 | LOWSPACECRE, Disk space for database file xxxx is not enough for yyyy future extensions.  aaaa bbbb-byte blocks are needed, only zzzz available.                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384323 | LOWSPC, WARNING: Database DDDD has less than PPPP% of the total block space remaining. Blocks Used: UUUU Total Blocks Available: AAAA                                  |
+| 150384323 | LOWSPC, WARNING: Database DDDD has PPPP% or less of the total block space remaining. Blocks Used: UUUU Total Blocks Available: AAAA                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373242 | LPARENMISSING, Left parenthesis expected                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1918,9 +1918,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383096 | MALLOCCRIT, Memory allocation critical due to request for bbbb bytes from aaaa                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503579 | MAPBAD, xxxx for yyyy does not exist                                                                                                                                   |
+| 150503579 | MAPBAD, xxxx aaaa for yyyy bbbb does not exist                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503587 | MAPDUP, xxxx and yyyy both map to zzzz                                                                                                                                 |
+| 150503587 | MAPDUP, xxxx aaaa and yyyy both map to aaaa bbbb                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374490 | MAXACTARG, Maximum number of actual arguments exceeded                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1940,17 +1940,17 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373290 | MAXSTRLEN, Maximum string length exceeded                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381650 | MAXTRIGNEST, Maximum trigger nesting level LLLL exceeded                                                                                                               |
+| 150381650 | MAXTRIGNEST, Maximum trigger nesting level (LLLL) exceeded                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418808770 | MBXRDONLY, Mailbox is read only, cannot write to it                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418808786 | MBXWRTONLY, Mailbox is write only, cannot read from it                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373340 | MEMORY, Central memory exhausted during request for xxxx bytes                                                                                                         |
+| 150373340 | MEMORY, Central memory exhausted during request for xxxx bytes from yyyy                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377116 | MEMORYRECURSIVE, Memory Subsystem called recursively                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379322 | MERGEDESC, Merge operation not possible. xxxx is descendent of yyyy.                                                                                                   |
+| 150379322 | MERGEDESC, Merge operation not possible.  xxxx is descendent of yyyy.                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379328 | MERGEINCOMPL, Error encountered during MERGE; operation may be incomplete                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1958,7 +1958,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503946 | MISSINGDELIM, Delimiter dddd expected before qqqq vvvv                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027730 | MIXIMAGE, Cannot load more than one base image function on a process                                                                                                   |
+| 151027730 | MIXIMAGE, Cannot load xxxx image on process that already has yyyy image loaded                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384443 | MLKCLEANED, LOCK garbage collection freed aaaa lock slots for region rrrr                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1968,15 +1968,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384362 | MLKHASHTABERR, A LOCK control structure is damaged and could not be corrected. Lock entry for LLLL is invalid.                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384378 | MLKHASHWRONG, A LOCK control structure has an invalid state; LOCK table failed integrity check. TTTT                                                                   |
+| 150384378 | MLKHASHWRONG, A LOCK control structure has an invalid value; LOCK table failed integrity check. TTTT                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384555 | MLKREHASH, LOCK hash table rebuilt for region rrrr (seed = ssss)                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381320 | MMBEFOREJNL, BEFORE image journaling cannot be set with MM access method in database file ffff                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383026 | MMFILETOOLARGE, Size of rrrr region (ffff) is larger than maximum size supported for memory mapped I/O on this platform.                                               |
+| 150383026 | MMFILETOOLARGE, Size of rrrr region (ffff) is larger than maximum size supported for memory mapped I/O on this platform                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503819 | MMNOBEFORIMG, MM segments do not support before image journaling                                                                                                       |
+| 150503819 | MMNOBEFORIMG, MM segments do not support before image jounaling                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381328 | MMNOBFORRPL, Replication cannot be used in database file ffff which uses MM access method and NOBEFORE image journaling                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1988,7 +1988,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383602 | MPROFRUNDOWN, Error during M-profiling rundown                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381202 | MRTMAXEXCEEDED, Maximum value of xxxx for SOCKET deviceparameter MOREREADTIME exceeded.                                                                                |
+| 150381202 | MRTMAXEXCEEDED, Maximum value of xxxx for SOCKET device parameter MOREREADTIME exceeded                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376290 | MSTACKCRIT, User-specified M stack size critical threshold of xxxx not appropriate; must be between mmmm and nnnn; reverting to kkkk                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2000,17 +2000,17 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418819682 | MUCREFILERR, Error in/at EEEE creating database DDDD (region RRRR)                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380738 | MUDWNGRDNOTPOS, Start VBN value is [xxx] while downgraded YottaDB version can support only [yyy]. Downgrade not possible                                               |
+| 150380738 | MUDWNGRDNOTPOS, Start VBN value is xxx while downgraded YottaDB version can support only yyy. Downgrade not possible                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380722 | MUDWNGRDNRDY, Database xxx is not ready to downgrade - still yyy database blocks to downgrade                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380730 | MUDWNGRDTN, Transaction number 0xaaa in database xxx is too big for MUPIP [REORG] DOWNGRADE. Renew database with MUPIP INTEG TN_RESET                                  |
+| 150380730 | MUDWNGRDTN, Transaction number aaa in database xxx is too big for MUPIP [REORG] DOWNGRADE. Renew database with MUPIP INTEG TN_RESET                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374346 | MUFILRNDWNFL, File: xxxx rundown failed                                                                                                                                |
+| 150374346 | MUFILRNDWNFL, File xxxx rundown failed                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382842 | MUFILRNDWNFL2, Database section (id = dddd) belonging to database file ffff rundown failed                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374531 | MUFILRNDWNSUC, File successfully rundown                                                                                                                               |
+| 150374531 | MUFILRNDWNSUC, File xxxx successfully rundown                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378275 | MUINFOSTR, xxxx : aaaa                                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2022,7 +2022,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382851 | MUINSTFROZEN, tttt : Instance iiii is frozen. Waiting for instance to be unfrozen before proceeding with writes to database file ffff                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382859 | MUINSTUNFROZEN, tttt : Instance iiii is now unfrozen. Continuing with writes to database file ffff                                                                     |
+| 150382859 | MUINSTUNFROZEN, tttt : Instance iiii is now Unfrozen. Continuing with writes to database file ffff                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380427 | MUJNLPREVGEN, Previous generation journal file xxxx included for database file yyyy                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2034,13 +2034,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384570 | MUKEEPNODEC, Expected decimal integer input for keep                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384578 | MUKEEPNOTRUNC, Keep issued without TRUNCATE                                                                                                                            |
+| 150384578 | MUKEEPNOTRUNC, Keep issued without -truncate                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384562 | MUKEEPPERCENT, Keep threshold percentage should be from 0 to 99                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377376 | MUKILLIP, Kill in progress indicator is set for file xxxx, incorrectly marked busy errors should follow                                                                |
+| 150377376 | MUKILLIP, Kill in progress indicator is set for file xxxx - this yyyy operation is likely to result in incorrectly marked busy errors                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379218 | MULOGNAMEDEF, logical name xxxx, needed to start replication server is already defined for this job. Check for an existing or improperly terminated server.            |
+| 150379218 | MULOGNAMEDEF, Logical name xxxx, needed to start replication server is already defined for this job.  Check for an existing or improperly terminated server.           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374418 | MULTFORMPARM, This formal parameter is multiply defined                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2052,7 +2052,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375706 | MUNODBNAME, A database name or the region qualifier must be specified                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377458 | MUNODWNGRD, MUPIP downgrade did not occur because of preceding errors                                                                                                  |
+| 150377458 | MUNODWNGRD, Database not downgraded because of preceding errors                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377482 | MUNOFINISH, MUPIP unable to finish all requested actions                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2062,7 +2062,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374088 | MUNOTALLSEC, WARNING: not all global sections accessed were successfully rundown                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376018 | MUNOUPGRD, MUPIP upgrade did not occur because of preceding errors                                                                                                     |
+| 150376018 | MUNOUPGRD, Database not upgraded because of preceding errors                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375674 | MUPCLIERR, Action not taken due to CLI errors                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2074,25 +2074,25 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378536 | MUPIPSET2SML, vvvv too small, minimum tttt allowed is mmmm                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380555 | MUPIPSIG, STOP (signal xxxx) issued from process yyyy to process zzzz                                                                                                  |
+| 150380555 | MUPIPSIG, aaaa (signal xxxx) issued from process yyyy [0xbbbb] to process zzzz [0xcccc]                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380434 | MUPJNLINTERRUPT, Database file xxxx indicates interrupted MUPIP JOURNAL command. Restore from backup for forward recover/rollback.                                     |
+| 150380434 | MUPJNLINTERRUPT, Database file xxxx indicates interrupted MUPIP JOURNAL command.  Restore from backup for forward recover/rollback.                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372450 | MUPRECFLLCK, Database file xxxx is locked by MUPIP RECOVER. Could not secure access.                                                                                   |
+| 150372450 | MUPRECFLLCK, Database file xxxx is locked by MUPIP RECOVER.  Could not secure access.                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376130 | MUPRESTERR, MUPIP RESTORE aborted due to preceding errors                                                                                                              |
+| 150376130 | MUPRESTERR, MUPIP restore aborted due to preceding errors                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377674 | MUQUALINCOMP, Incompatible qualifiers - FILE and REGION                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379378 | MURAIMGFAIL, MUPIP RECOVER failed while processing after-image journal record. Failure code: xxxx.                                                                     |
+| 150379378 | MURAIMGFAIL, Mupip recover or rollback failed while processing an after-image journal record.  Failure code: xxxx.                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376355 | MUREENCRYPTEND, Database ffff : MUPIP REORG ENCRYPT finished by pid pppp at transaction number 0xtttt                                                                  |
+| 150376355 | MUREENCRYPTEND, Database ffff : MUPIP REORG ENCRYPT finished by pid pppp at transaction number [tttt]                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383843 | MUREENCRYPTSTART, Database ffff : MUPIP REORG ENCRYPT started by pid pppp at transaction number 0xtttt                                                                 |
+| 150383843 | MUREENCRYPTSTART, Database ffff : MUPIP REORG ENCRYPT started by pid pppp at transaction number [tttt]                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383850 | MUREENCRYPTV4NOALLOW, Database (re)encryption supported only on fully upgraded V5 databases. ffff has V4 format blocks                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374402 | MUREORGFAIL, MUPIP REORG failed. Failure code: xxxx.                                                                                                                   |
+| 150374402 | MUREORGFAIL, MUPIP REORG failed.  Failure code: xxxx.                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379107 | MUREPLPOOL, Error with replpool section xxxx                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2100,7 +2100,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379067 | MUREPLSECNOTDEL, Replication section xxxx not deleted                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378419 | MUREUPDWNGRDEND, Region xxxx : MUPIP REORG UPGRADE/DOWNGRADE finished by pid aaaa [0xbbbb] at transaction number [0xcccc]                                              |
+| 150378419 | MUREUPDWNGRDEND, Region xxxx : MUPIP REORG UPGRADE/DOWNGRADE finished by pid aaaa bbbb at transaction number [cccc]                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384251 | MURNDWNARGLESS, Argumentless MUPIP RUNDOWN started with process id PPPP by userid UUUU from directory DDDD                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2116,7 +2116,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378970 | MUSELFBKUP, Database file xxxx can not be backed upon itself                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382906 | MUSIZEFAIL, MUPIP SIZE : failed. Failure code: xxxx.                                                                                                                   |
+| 150382906 | MUSIZEFAIL, MUPIP SIZE : failed.  Failure code: xxxx.                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382898 | MUSIZEINVARG, MUPIP SIZE : Invalid parameter value for: xxxx                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2124,15 +2124,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376906 | MUTEXERR, Mutual Exclusion subsystem failure                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376928 | MUTEXFRCDTERM, Mutual Exclusion subsystem detected forced termination of process xxxx. Crit salvaged from region yyyy.                                                 |
+| 150376928 | MUTEXFRCDTERM, Mutual Exclusion subsystem detected forced termination of process xxxx.  Crit salvaged from database file dddd.                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376920 | MUTEXLCKALERT, Mutual Exclusion subsystem ALERT - Lock attempt threshold crossed for region rrrr. Process pppp is in crit cycle cccc.                                  |
+| 150376920 | MUTEXLCKALERT, Mutual Exclusion subsystem ALERT - lock attempt threshold crossed for region rrrr.  Process pppp is in crit cycle cccc.                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380186 | MUTEXRELEASED, Process xxxx [aaaa] has released the critical section for database yyyy to avoid deadlock. $TLEVEL: pppp t_tries: qqqq                                  |
+| 150380186 | MUTEXRELEASED, Process xxxx aaaa has released the critical section for database yyyy to avoid deadlock. $TLEVEL: pppp  t_tries: qqqq                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378683 | MUTEXRSRCCLNUP, Mutex subsystem leftover resource xxxx removed.                                                                                                        |
+| 150378683 | MUTEXRSRCCLNUP, Mutex subsystem leftover resource xxxx removed                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375864 | MUTNWARN, Database file xxxx has 0xaaa more transactions to go before reaching the transaction number limit (0xbbbb). Renew database with MUPIP INTEG TN_RESET.        |
+| 150375864 | MUTNWARN, Database file xxxx has aaa more transactions to go before reaching the transaction number limit (bbbb). Renew database with MUPIP INTEG TN_RESET             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382483 | MUTRUNC1ATIME, Process with PID iiii already performing truncate in region rrrr                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2142,7 +2142,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382498 | MUTRUNCERROR, Truncate of region rrrr encountered service error eeee                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382506 | MUTRUNCFAIL, Truncate failed after reorg                                                                                                                               |
+| 150382506 | MUTRUNCFAIL, Truncate failed after reorg.  Failure code: xxxx.                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382515 | MUTRUNCNOSPACE, Region rrrr has insufficient space to meet truncate target percentage of yyyy                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2170,7 +2170,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503594 | NAMENDBAD, Subscripted name ssss must end with right parenthesis                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150504074 | NAMGVSUBOFLOW, Subscripted name hhhh...tttt is too long to be represented in the database using collation value #nnnn                                                  |
+| 150504074 | NAMGVSUBOFLOW, Subscripted name hhhh...tttt is too long to represent in the database using collation value #nnnn                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150504002 | NAMGVSUBSMAX, Subscripted Name specification nnnn has more than the maximum # of subscripts (mmmm)                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2202,7 +2202,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150504018 | NAMSTRSUBSFUN, Subscript #nnnn with value vvvv in name specification uses function other than $C/$CHAR/$ZCH/$ZCHAR                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150504026 | NAMSTRSUBSLPAREN, Subscript nnn with value vvv in name specification does not have left parenthesis following $ specification                                          |
+| 150504026 | NAMSTRSUBSLPAREN, Subscript #nnn with value vvv in name specification does not have left parenthesis following $ specification                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503922 | NAMSUBSBAD, Subscript #nnnn with value vvvv in name specification is an invalid number or string                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2226,7 +2226,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375242 | NETLCKFAIL, Lock operation across Net failed                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377523 | NEWJNLFILECREAT, Journal file xxxx nearing maximum size. New journal file created.                                                                                     |
+| 150377523 | NEWJNLFILECREAT, Journal file xxxx nearing maximum size.  New journal file created.                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378114 | NLMISMATCHCALC, Location of xxxx expected at yyyy, but found at zzzz                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2236,11 +2236,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381362 | NOALIASLIST, Parenthetical lists of multiple arguments cannot have a preceding alias introducer or include alias (*) forms                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379530 | NOCANONICNAME, Value is not a canonic name (xxxx).                                                                                                                     |
+| 150379530 | NOCANONICNAME, Value is not a canonic name (xxxx)                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375346 | NOCCPPID, Cannot find CCP process ID                                                                                                                                   |
+| 150375346 | NOCCPPID, Cannot find CCP process id                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379212 | NOCHLEFT, Unhandled condition exception (all handlers exhausted) process terminating                                                                                   |
+| 150379212 | NOCHLEFT, Unhandled condition exception (all handlers exhausted) - process terminating                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384090 | NOCREMMBIJ, MM access method not compatible with BEFORE image journaling; Database file DDDD not created                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2262,11 +2262,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384354 | NOFILTERNEST, Filter nesting not allowed                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377160 | NOFORKCORE, Unable to fork off process to create core. Core creation postponed.                                                                                        |
+| 150377160 | NOFORKCORE, Unable to fork off process to create core.  Core creation postponed.                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383362 | NOGTCMDB, ffff does not support operation on GT.CM database region: rrrr                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503827 | NOJNL, ssss segments do not support journaling.                                                                                                                        |
+| 150503827 | NOJNL, ssss segments do not support journaling                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379402 | NOJNLPOOL, No journal pool info found in the replication instance of xxxx                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2274,9 +2274,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382131 | NOLOCKMATCH, No matching locks were found in rrrr                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503627 | NOLOG, Logging is currently disabled. Log file is xxxx.                                                                                                                |
+| 150503627 | NOLOG, Logging is currently disabled Log file is xxxx.                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383811 | NOMORESEMCNT, SSSS counter semaphore has reached its maximum and stopped counting for database DDDD. Run MUPIP JOURNAL -ROLLBACK -BACKWARD, MUPIP JOURNAL -RECOVER     |
+| 150383811 | NOMORESEMCNT, SSSS counter semaphore has reached its maximum and stopped counting for DDDD xxxx. Run MUPIP JOURNAL -ROLLBACK -BACKWARD, MUPIP JOURNAL -RECOVER         |
 |           | -BACKWARD or MUPIP RUNDOWN to restore the database files and shared resources to a clean state                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503866 | NONASCII, ssss is illegal for a oooo as it contains non-ASCII characters                                                                                               |
@@ -2295,7 +2295,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374906 | NOPREVLINK, Journal file xxxx has a null previous link                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376332 | NOPRINCIO, Unable to write to principal device                                                                                                                         |
+| 150376332 | NOPRINCIO, Unable to dddd principal device: DDDD at LLLL due to: SSSS                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379410 | NORECVPOOL, No receiver pool info found in the replication instance of xxxx                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2309,23 +2309,23 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377330 | NORTN, Routine name missing                                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374880 | NOSELECT, None of the selected variables exist, halting                                                                                                                |
+| 150374880 | NOSELECT, None of the selected variables exist -- halting                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379162 | NOSOCKETINDEV, There is no socket in the current socket device                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383338 | NOSOCKHANDLE, No socket handle specified in WRITE /PASS                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378762 | NOSPACECRE, Not enough space to create database file xxxx. aaaa blocks are needed, only bbbb available.                                                                |
+| 150378762 | NOSPACECRE, Not enough space to create database file xxxx.  aaaa blocks are needed, only bbbb available.                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378802 | NOSPACEEXT, Not enough disk space for file xxxx to extend. aaaa blocks needed. bbbb blocks available.                                                                  |
+| 150378802 | NOSPACEEXT, Not enough disk space for file xxxx to extend.  aaaa blocks needed.  bbbb blocks available.                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380290 | NOSTARFILE, Only star(*) argument can be specified with xxxx                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379538 | NOSUBSCRIPT, No such subscript found (xxxx)                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379187 | NOSUCHPROC, Process xxxx does not exist no need to yyyy it                                                                                                             |
+| 150379187 | NOSUCHPROC, Process xxxx does not exist - no need to yyyy it                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382226 | NOSUPPLSUPPL, Instance ssss is configured to perform local updates, so it cannot receive from Supplementary Instance iiii                                              |
+| 150382226 | NOSUPPLSUPPL, Instance ssss is configured to perform local updates so it cannot receive from Supplementary Instance iiii                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378964 | NOTALLDBOPN, Not all required database files were opened                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2335,13 +2335,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372680 | NOTALLREPLON, Replication off for dddd regions                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376627 | NOTERMENTRY, TERM = "xxxx" has no "terminfo" entry. Possible terminal handling problems.                                                                               |
+| 150376627 | NOTERMENTRY, TERM = "xxxx" has no "terminfo" entry.  Possible terminal handling problems.                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376619 | NOTERMENV, Environment variable TERM not set. Assuming "unknown."                                                                                                      |
+| 150376619 | NOTERMENV, Environment variable TERM not set.  Assuming "unknown."                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376635 | NOTERMINFODB, No "terminfo" database. Possible terminal handling problems.                                                                                             |
+| 150376635 | NOTERMINFODB, No "terminfo" database.  Terminal handling problems likely.                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374450 | NOTEXTRINSIC, Quit does not return to an extrinsic function, argument not allowed                                                                                      |
+| 150374450 | NOTEXTRINSIC, QUIT/ZHALT does not return to an extrinsic function: argument not allowed                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372602 | NOTGBL, Expected a global variable name starting with an up-arrow (^): xxxx                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2363,19 +2363,19 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373491 | NOZBRK, No zbreak at that location                                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381666 | NOZTRAPINTRIG, Use of $ZTRAP in a database trigger environment ($ZTLEVEL greater than 0) is not supported.                                                             |
+| 150381666 | NOZTRAPINTRIG, Use of $ZTRAP in a database trigger environment ($ZTLEVEL greater than 0) is not supported                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377370 | NULLCOLLDIFF, Null collation order cannot be different for all regions                                                                                                 |
+| 150377370 | NULLCOLLDIFF, Null collation order must be the same for all regions                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383066 | NULLENTRYREF, JOB command did not specify entryref                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384544 | NULLPATTERN, Empty line found in the Pattern file                                                                                                                      |
+| 150384544 | NULLPATTERN, Empty line found in the Pattern file.                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373498 | NULSUBSC, Null subscripts are not allowed for region: xxxx                                                                                                             |
+| 150373498 | NULSUBSC, XXXX Null subscripts are not allowed for database file: yyyy                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373378 | NUM64ERR, Error: cannot convert VVVV value to 64 bit decimal or hexadecimal number                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373370 | NUMERR, Error: cannot convert VVVV value to 64 bit decimal or hexadecimal number                                                                                       |
+| 150373370 | NUMERR, Error: cannot convert VVVV value to decimal or hexadecimal number                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373506 | NUMOFLOW, Numeric overflow                                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2387,11 +2387,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376210 | OBJFILERR, Error with object file I/O on file xxxx                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503658 | OBJNOTADD, Not adding xxxx                                                                                                                                             |
+| 150503658 | OBJNOTADD, Not adding xxxx yyyy                                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503666 | OBJNOTCHG, Not changing xxxx                                                                                                                                           |
+| 150503666 | OBJNOTCHG, Not changing xxxx yyyy                                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503674 | OBJNOTFND, xxxx does not exist                                                                                                                                         |
+| 150503674 | OBJNOTFND, xxxx yyyy does not exist                                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503682 | OBJREQD, xxxx required                                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2399,19 +2399,19 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383960 | OFRZACTIVE, Region aaaa has an Online Freeze                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383968 | OFRZAUTOREL, Online Freeze automatically released for region aaaa                                                                                                      |
+| 150383968 | OFRZAUTOREL, Online Freeze automatically released for database file aaaa                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383976 | OFRZCRITREL, Proceeding with a write to region aaaa after Online Freeze while holding crit                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383984 | OFRZCRITSTUCK, Unable to proceed with a write to region !AD with Online Freeze while holding crit. Region stuck until freeze is removed.                               |
+| 150383984 | OFRZCRITSTUCK, Unable to proceed with a write to region rrrr with Online Freeze while holding crit. Region stuck until freeze is removed.                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383992 | OFRZNOTHELD, Online Freeze had been automatically released for at least one region                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377752 | OLDBINEXTRACT, Loading an older version (xxxx) of binary extract                                                                                                       |
+| 150377752 | OLDBINEXTRACT, Loading an older version(xxxx) of binary extract. Database or global collation changes since the extract, if any, will result in database corruption.   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380811 | OMISERVHANG, GTCM OMI server is hung                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381275 | OPCOMMISSED, n errors and m MBFULLs sending prior operator messages                                                                                                    |
+| 150381275 | OPCOMMISSED, NNN errors and MMM MBFULLs sending prior operator messages                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376394 | OPENCONN, Error opening socket connection                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2439,14 +2439,14 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382370 | ORLBKTERMNTD, ONLINE ROLLBACK terminated on instance iiii corresponding to dddd with the above errors                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378788 | OUTOFSPACE, Database file xxxx ran out of disk space. Detected by process aaaa. Exit without clearing shared memory due to the disk space constraints. Make space and  |
-|           | then perform mupip rundown to ensure database integrity.                                                                                                               |
+| 150378788 | OUTOFSPACE, Database file xxxx ran out of disk space.  Detected by process aaaa.  Exit without clearing shared memory due to the disk space constraints.  Make space   |
+|           | and then perform mupip rundown to ensure database integrity.                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381154 | PADCHARINVALID, PAD deviceparameter cannot be greater than 127.                                                                                                        |
+| 150381154 | PADCHARINVALID, PAD deviceparameter cannot be greater than 127                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027770 | PARAMINVALID, Invalid parameter specified in an API call                                                                                                               |
+| 151027770 | PARAMINVALID, xxxx parameter specified in yyyy call                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373514 | PARFILSPC, Parameter: xxxx file specification: yyyy                                                                                                                    |
+| 150373514 | PARFILSPC, Parameter: xxxx  file specification: yyyy                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376177 | PARNORMAL, Parse successful                                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2488,7 +2488,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382274 | PEERPIDMISMATCH, Local socket peer with PID=pppp does not match specified PID=qqqq                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382475 | PERMGENDIAG, Permissions: Proc(uid:uuuu,gid:gggg), DB File(uid:vvvv,gid:hhhh,perm:pppp), Lib File(gid:iiii,perm:qqqq), Group Mem(opener:jjjj,owner:kkkk)               |
+| 150382475 | PERMGENDIAG, Permissions: Proc(uid:uuuu,gid:gggg)vvvv, DB File(uid:hhhh,gid:pppp),perm:iiii, Lib File(gid:qqqq),perm:jjjj                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418817922 | PERMGENFAIL, Failed to determine access permissions to use for creation of xxxx for file yyyy                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2498,7 +2498,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383658 | PREALLOCATEFAIL, Disk space reservation for SSSS segment has failed                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503690 | PREFIXBAD, xxxx must start with an alphabetic character to be a yyyy                                                                                                   |
+| 150503690 | PREFIXBAD, xxxx - yyyy zzzz must start with an alphabetic character                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372618 | PREMATEOF, Premature end of file detected                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2512,7 +2512,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380466 | PRIMARYNOTROOT, Attempted operation not valid on non-root primary instance xxxx                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381784 | PROCTERM, uuuu process termination due to cccc from eeee                                                                                                               |
+| 150381784 | PROCTERM, uuuu process termination due to cccc (return code eeee) from pppp                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376970 | PROTNOTSUP, Protocol xxxx not supported                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2550,7 +2550,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151027928 | READLINELONGLINE, Entered line is greater than 32Kb long, exceeding maximum allowed                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027754 | READONLYLKFAIL, Failed to get a lock on READ_ONLY database file                                                                                                        |
+| 151027754 | READONLYLKFAIL, Failed to get xxxx lock on READ_ONLY database file yyyy                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381458 | READONLYNOBG, Read-only cannot be enabled on non-MM databases                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2562,9 +2562,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377410 | RECLOAD, Error loading record number: nnnn                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372595 | RECORDSTAT, gggg: Key cnt: kkkk max subsc len: ssss max rec len: dddd max node len: rrrr                                                                               |
+| 150372595 | RECORDSTAT, gggg:  Key cnt: kkkk  max subsc len: ssss  max rec len: dddd  max node len: rrrr                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377658 | RECSIZENOTEVEN, RECORDSIZE [xxxx] needs to be a multiple of 2 if ICHSET or OCHSET is UTF-16, UTF-16LE or UTF-16BE                                                      |
+| 150377658 | RECSIZENOTEVEN, RECORDSIZE xxxx needs to be a multiple of 2 if ICHSET or OCHSET is UTF-16, UTF-16LE or UTF-16BE                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150503731 | RECSIZIS, Record size is xxxx                                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2580,7 +2580,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383154 | REGOPENFAIL, Failed to open region rrrr (dddd) due to conflicting database shutdown activity                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381618 | REGSSFAIL, Process pppp encountered error eeee contributing to the snapshot for region rrrr - the snapshot is no longer valid.                                         |
+| 150381618 | REGSSFAIL, Process pppp encountered error eeee contributing to the snapshot for region rrrr - the snapshot is no longer valid                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383514 | RELINKCTLERR, Error with relink control structure for $ZROUTINES directory dddd                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2588,13 +2588,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383178 | REMOTEDBNOSPGBL, Database region rrrr contains portion of a spanning global and so cannot point to a remote file                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383562 | REMOTEDBNOTRIG, Trigger operations on global gggg not supported as it maps to database region rrrr that points to a remote file                                        |
+| 150383562 | REMOTEDBNOTRIG, Trigger operations are not supported on global ^gggg as it maps to database region rrrr that points to a remote file                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378824 | RENAMEFAIL, Rename of file xxxx to yyyy failed                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376027 | REORGCTRLY, User interrupt encountered during database reorg -- halting                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377600 | REORGINC, Reorg was incomplete. Not all globals were reorged.                                                                                                          |
+| 150377600 | REORGINC, Reorg was incomplete.  Not all globals were reorged.                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384649 | REPL0BACKLOG, Total backlog for the specified replicating instance(s) is 0                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2602,13 +2602,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379114 | REPLACCSEM, Error with replication access semaphore (id = xxxx) for instance file aaaa                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378530 | REPLAHEAD, Replicating instance is ahead of the originating instance. aaaa                                                                                             |
+| 150378530 | REPLAHEAD, Replicating instance is ahead of the originating instance.aaaa                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384624 | REPLALERT, Source Server could not connect to replicating instance [XXXX] for [NNNN] seconds                                                                           |
+| 150384624 | REPLALERT, Source Server could not connect to replicating instance XXXX for NNNN seconds                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384658 | REPLBACKLOG, Timeout occurred while there was a backlog                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377274 | REPLBRKNTRANS, Replication subsystem found transaction xxxx broken or missing in the journal files                                                                     |
+| 150377274 | REPLBRKNTRANS, Replication subsystem found seqno xxxx broken or missing in the journal files                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377218 | REPLCOMM, Replication subsystem communication failure                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2630,9 +2630,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379130 | REPLINSTCREATE, Error creating replication instance file xxxx                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380882 | REPLINSTDBMATCH, Replication instance file xxxx has seqno xxxx while database has a different seqno yyyy                                                               |
+| 150380882 | REPLINSTDBMATCH, Replication instance file xxxx has seqno [xxxx] while database has a different seqno [yyyy]                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382346 | REPLINSTDBSTRM, Replication instance file rrrr has seqno xxxx for Stream nnnn while database has a different seqno XXXX                                                |
+| 150382346 | REPLINSTDBSTRM, Replication instance file rrrr has seqno [xxxx] for Stream nnnn while database has a different seqno [XXXX]                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379450 | REPLINSTFMT, Format error encountered while reading replication instance file xxxx. Expected yyyy. Found zzzz.                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2640,7 +2640,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382650 | REPLINSTFROZEN, Instance xxxx is now Frozen                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380866 | REPLINSTMISMTCH, Process has replication instance file ffff (jnlpool shmid = ssss) open but database dddd is bound to instance file gggg (jnlpool shmid =tttt)         |
+| 150380866 | REPLINSTMISMTCH, Process has replication instance file ffff (jnlpool shmid = ssss) open but database dddd is bound to instance file gggg (jnlpool shmid = tttt)        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380906 | REPLINSTNMLEN, Replication instance name xxxx should be 1 to 15 characters long                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2648,13 +2648,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380898 | REPLINSTNMUNDEF, Replication instance name not defined                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380914 | REPLINSTNOHIST, History record for xxxx not found in replication instance file yyyy                                                                                    |
+| 150380914 | REPLINSTNOHIST, History information for xxxx not found in replication instance file yyyy                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383162 | REPLINSTNOSHM, Database dddd has no active connection to a replication journal pool                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418814154 | REPLINSTOPEN, Error opening replication instance file xxxx                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 418816330 | REPLINSTREAD, Error reading xxxx bytes at offset yyyy from replication instance file ffff                                                                              |
+| 418816330 | REPLINSTREAD, Error reading xxxx bytes at offset [yyyy] from replication instance file ffff                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380922 | REPLINSTSECLEN, Secondary replication instance name xxxx should be 1 to 15 characters long                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2664,49 +2664,49 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380946 | REPLINSTSECUNDF, Secondary replication instance name not defined                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380954 | REPLINSTSEQORD, ssss has seqno xxxx which is less than last record seqno yyyy in replication instance file zzzz                                                        |
+| 150380954 | REPLINSTSEQORD, ssss has seqno [xxxx] which is less than last record seqno [yyyy] in replication instance file zzzz                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380962 | REPLINSTSTNDALN, Could not get exclusive access to replication instance file xxxx                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379386 | REPLINSTUNDEF, Replication instance environment variable $ydb_repl_instance is undefined                                                                               |
+| 150379386 | REPLINSTUNDEF, Replication instance environment variable $ydb_repl_instance/$gtm_repl_instance is undefined                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382667 | REPLINSTUNFROZEN, Instance xxxx is now Unfrozen                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 418814474 | REPLINSTWRITE, Error writing xxxx bytes at offset yyyy from replication instance file ffff                                                                             |
+| 418814474 | REPLINSTWRITE, Error writing xxxx bytes at offset [yyyy] in replication instance file ffff                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378818 | REPLJNLCLOSED, Replication in jeopardy as journaling for database file ddd. Current region seqno is xxx[XXX] and system seqno is yyy[YYY]                              |
+| 150378818 | REPLJNLCLOSED, Replication in jeopardy as journaling got closed for database file ddd. Current region seqno is xxx [XXX] and system seqno is yyy [YYY]                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379896 | REPLJNLCNFLCT, Journaling cannot be turned nnnn on database file ffff as the replication state is rrrr and must also be turned nnnn in the same command                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 418812746 | REPLLOGOPN, Replication subsystem could not open log file LLLL : eeee. Logging done to OOOO                                                                            |
+| 418812746 | REPLLOGOPN, Replication subsystem could not open log file LLLL: eeee.  Logging done to OOOO.                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382018 | REPLMULTINSTUPDATE, Previous updates in the current transaction are to xxxx so updates to yyyy (in rrrr) not allowed                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379888 | REPLNOBEFORE, NOBEFORE option cannot be used when the current replication state is ON for a database file xxxx                                                         |
+| 150379888 | REPLNOBEFORE, NOBEFORE option cannot be used when the current replication state is ON for database file xxxx                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383554 | REPLNOHASHTREC, Sequence number NNNN contains trigger definition updates. IIII side must be at least V6.2-000 for replication to continue                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384640 | REPLNORESP, No sequence number confirmation from the replicating instance xxxx after waiting for nnnn second(s)                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383306 | REPLNOTLS, xxxx requested TLS/SSL communication but the yyyy was either not started with the TLSID qualifier or does not support TLS/SSL protocol                      |
+| 150383306 | REPLNOTLS, xxxx requested TLS/SSL communication but the yyyy was either not started with TLSID qualifier or does not support TLS/SSL protocol                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377074 | REPLNOTON, Replication is not on for journal file xxxx, rollback will not continue                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380314 | REPLOFFJNLON, Replication state for database file <xxx> is OFF but journaling state is enabled.                                                                        |
+| 150380314 | REPLOFFJNLON, Replication state for database file xxx is OFF but journaling state is enabled                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377058 | REPLPOOLINST, Error with replication pool xxxx for instance file yyyy                                                                                                  |
+| 150377058 | REPLPOOLINST, Error with replication pool (id = xxxx) for instance file yyyy                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380460 | REPLRECFMT, Replication journal record format error encountered                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380970 | REPLREQROLLBACK, Replication instance file xxxx indicates abnormal shutdown. Run MUPIP JOURNAL ROLLBACK first.                                                         |
+| 150380970 | REPLREQROLLBACK, Replication instance file xxxx indicates abnormal shutdown or an incomplete ROLLBACK. Run MUPIP JOURNAL ROLLBACK first                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379426 | REPLREQRUNDOWN, Error accessing replication instance xxxx. Must be rundown on cluster node yyyy.                                                                       |
+| 150379426 | REPLREQRUNDOWN, Error accessing replication instance xxxx.  Must be rundown on cluster node yyyy.                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383696 | REPLSRCEXITERR, Source server for secondary instance xxxx exited abnormally. See log file yyyy for details.                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379931 | REPLSTATE, Replication state for region/database file xxxx is now yyyy                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376498 | REPLSTATEERR, Replication state cannot be changed to the specified value for database file <xxx>.                                                                      |
+| 150376498 | REPLSTATEERR, Replication state cannot be changed to the specified value for database file xxx                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380418 | REPLSTATEOFF, MUPIP JOURNAL -ROLLBACK -BACKWARD cannot proceed as database xxxx does not have replication ON                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2720,21 +2720,21 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375794 | REQDVIEWPARM, Required View parameter is missing                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379986 | REQRECOV, Error accessing database dddd. Must be recovered on cluster node ccccc.                                                                                      |
+| 150379986 | REQRECOV, Error accessing database dddd.  Must be recovered on cluster node ccccc.                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383578 | REQRLNKCTLRNDWN, Error accessing relinkctl file rrrr for $ZROUTINES directory dddd. Must be rundown                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380978 | REQROLLBACK, Error accessing database dddd. Run MUPIP JOURNAL -ROLLBACK -NOONLINE on cluster node cccc.                                                                |
+| 150380978 | REQROLLBACK, Error accessing database dddd.  Run MUPIP JOURNAL -ROLLBACK -NOONLINE on cluster node cccc.                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374954 | REQRUNDOWN, Error accessing database dddd. Must be rundown on cluster node ccccc.                                                                                      |
+| 150374954 | REQRUNDOWN, Error accessing database dddd.  Must be rundown on cluster node ccccc.                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380499 | RESOLVESEQNO, Resolving until sequence number dddd [0xxxxx]                                                                                                            |
+| 150380499 | RESOLVESEQNO, Resolving until sequence number dddd [xxxxx]                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382339 | RESOLVESEQSTRM, Resolving until stream sequence number Stream nnnn : Seqno dddd xxxx                                                                                   |
+| 150382339 | RESOLVESEQSTRM, Resolving until stream sequence number Stream nnnn : Seqno dddd [xxxx]                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382635 | RESRCINTRLCKBYPAS, tttt with PID qqqq bypassing the ssss semaphore for region rrrr (ffff) currently held by PID pppp.                                                  |
+| 150382635 | RESRCINTRLCKBYPAS, tttt with PID qqqq bypassing the ssss semaphore for region rrrr (ffff) was held by PID pppp.                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382627 | RESRCWAIT, Waiting briefly for the tttt semaphore for region rrrr (ffff) was held by PID pppp (Sem. ID: ssss)                                                          |
+| 150382627 | RESRCWAIT, Waiting briefly for the tttt semaphore for region rrrr (ffff) was held by PID pppp (Sem. ID: ssss).                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377003 | RESTORESUCCESS, Restore completed successfully                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2744,21 +2744,21 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382354 | RESUMESTRMNUM, Error with stream number specified in RESUME qualifier                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383938 | RESYNCSEQLOW, MUPIP JOURNAL -ROLLBACK -FORWARD -RESYNC=NNNN [0xXXXX] requested is lower than LLLL which is the starting sequence number for the instance               |
+| 150383938 | RESYNCSEQLOW, MUPIP JOURNAL -ROLLBACK -FORWARD -RESYNC=NNNN [0xXXXX] requested is lower than LLLL yyyy which is the starting sequence number of the instance           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382306 | REUSEINSTNAME, Error with instance name specified in REUSE qualifier                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373610 | RHMISSING, Right-hand side of expression expected                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381227 | RLBKJNLNOBIMG, Journal file jjjj has NOBEFORE_IMAGE journaling.                                                                                                        |
+| 150381227 | RLBKJNLNOBIMG, Journal file jjjj has NOBEFORE_IMAGE journaling                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380451 | RLBKJNSEQ, Journal seqno of the instance after rollback is xxxx[yyyy]                                                                                                  |
+| 150380451 | RLBKJNSEQ, Journal seqno of the instance after rollback is xxxx [yyyy]                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381235 | RLBKLOSTTNONLY, ROLLBACK will only create a lost transaction file (database and journal files will not be modified)                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381218 | RLBKNOBIMG, ROLLBACK cannot proceed as database dddd has NOBEFORE_IMAGE journaling                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382331 | RLBKSTRMSEQ, Stream journal seqno of the instance after rollback is Stream nnnn : Seqno dddd xxxx                                                                      |
+| 150382331 | RLBKSTRMSEQ, Stream journal seqno of the instance after rollback is Stream nnnn : Seqno dddd [xxxx]                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383594 | RLNKCTLRNDWNFL, Relinkctl file for $ZROUTINES directory dddd failed to rundown as it is open by nnnn process(es)                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2772,19 +2772,19 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383634 | RLNKSHMLATCH, Failed to get latch on relinkctl shared memory for $ZROUTINES directory dddd                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376586 | RMBIGSHARE, File with BIGRECORD specified may only be SHARED if READONLY                                                                                               |
+| 150376586 | RMBIGSHARE, File with BIGRECORD specified may only be shared if READONLY                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376450 | RMNOBIGRECORD, RMNOBIGRECORD File record size requires BIGRECORD parameter                                                                                             |
+| 150376450 | RMNOBIGRECORD, File record size requires BIGRECORD parameter                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375962 | RMWIDTHPOS, File record size or width must be greater than zero                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376194 | RMWIDTHTOOBIG, File record size too big                                                                                                                                |
+| 150376194 | RMWIDTHTOOBIG, File record size or width too big                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378747 | RNDWNSEMFAIL, Attempting to acquire gds_rundown semaphore when it is already owned                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384042 | RNDWNSTATSDBFAIL, Rundown of statistics database region RRRR (DB DDDD) failed at/in LLLL with following error: EEEE                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380442 | ROLLBKINTERRUPT, Database file xxxx indicates interrupted ROLLBACK. Reissue the MUPIP JOURNAL ROLLBACK command.                                                        |
+| 150380442 | ROLLBKINTERRUPT, Database file xxxx indicates interrupted ROLLBACK.  Reissue the MUPIP JOURNAL ROLLBACK command.                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373634 | ROUTINEUNKNOWN, Routine could not be found                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2810,13 +2810,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373682 | RWFORMAT, A valid format expression (!!, #, or ?expr) expected here                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378098 | SCNDDBNOUPD, Database updates not allowed on the secondary                                                                                                             |
+| 150378098 | SCNDDBNOUPD, Database Updates not allowed on the secondary                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378850 | SDSEEKERR, Sequential device seek error                                                                                                                                |
+| 150378850 | SDSEEKERR, Sequential device seek error - xxxx                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382258 | SECNOTSUPPLEMENTARY, ssss is a Supplementary Instance and so cannot act as a source to non-Supplementary Instance iiii                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028098 | SECSHRPATHMAX, gtmsecshr executable path length is greater than maximum nnnnn                                                                                          |
+| 151028098 | SECSHRPATHMAX, gtmsecshr executable path length is greater than maximum (nnnnn)                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379810 | SEFCTNEEDSFULLB, Current side effect setting does not permit full Boolean to be turned off                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2840,8 +2840,8 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151027890 | SETENVFAIL, VIEW "SETENV":"eeee" failed in setenv() system call                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382954 | SETEXTRENV, Database files are missing or Instance is frozen; supply the database files, wait for the freeze to lift or define ydb_extract_nocol to extract possibly   |
-|           | incorrect collation                                                                                                                                                    |
+| 150382954 | SETEXTRENV, Database files are missing or Instance is frozen; supply the database files, wait for the freeze to lift or define ydb_extract_nocol/gtm_extract_nocol to  |
+|           | extract possibly incorrect collation                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381906 | SETINSETTRIGONLY, ISV iiii can only be modified in a 'SET' type trigger                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2855,7 +2855,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379170 | SETSOCKOPTERR, Setting the socket attribute xxxx failed: (errno == aaaa) yyyy                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 418815138 | SETZDIR, Cannot change working directory to xxxx.                                                                                                                      |
+| 418815138 | SETZDIR, Cannot change working directory to xxxx                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151028050 | SETZDIRTOOLONG, $ZDIR value specified is xxxx bytes long which is greater than the allowed maximum of yyyy bytes                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2880,13 +2880,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377884 | SIGADRALN, Signal was caused by invalid address alignment                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377892 | SIGADRERR, Signal was caused by non-existent physical address                                                                                                          |
+| 150377892 | SIGADRERR, Signal was caused by a non-existent physical address                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377876 | SIGBADSTK, Signal was caused by an internal stack error                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377868 | SIGCOPROC, Signal was caused by a coprocessor error                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377924 | SIGFLTDIV, Signal was caused by a floating point divided by zero                                                                                                       |
+| 150377924 | SIGFLTDIV, Signal was caused by a floating point divide by zero                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377956 | SIGFLTINV, Signal was caused by an invalid floating point operation                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2918,7 +2918,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377860 | SIGPRVREG, Signal was caused by a privileged register                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027850 | SIMPLEAPINEST, Attempt to nest a SimpleAPI call with another SimpleAPI call                                                                                            |
+| 151027850 | SIMPLEAPINEST, Attempt to nest call of xxxx with a call to yyyy - nesting calls is not permitted in the Simple API                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151027954 | SIMPLEAPINOTALLOWED, Process cannot switch to using Simple API while already using threaded Simple API                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2932,13 +2932,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376378 | SOCKACPT, Error accepting socket connection                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379146 | SOCKBFNOTEMPTY, Socket buffer size cannot be set to xxxx due to aaaa bytes of buffered data. Read first.                                                               |
+| 150379146 | SOCKBFNOTEMPTY, Socket buffer size cannot be set to xxxx due to aaaa bytes of buffered data.  Read first.                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383130 | SOCKBIND, Error in binding socket                                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384674 | SOCKBLOCKERR, WRITE /BLOCK error: dddd                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384754 | SOCKCLOSE, Error closing socket: (errno = aaaa) xxxx                                                                                                                   |
+| 150384754 | SOCKCLOSE, Error closing socket: (errno == aaaa) xxxx                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377434 | SOCKETEXIST, Socket xxxx already exists                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2946,7 +2946,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376994 | SOCKLISTEN, Error listening on a socket                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381146 | SOCKMAX, Attempt to exceed maximum sockets xxx for the SOCKET device                                                                                                   |
+| 150381146 | SOCKMAX, Attempt to exceed maximum sockets (xxx) for the SOCKET device                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377418 | SOCKNOTFND, Socket xxxx not found                                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2966,11 +2966,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373706 | SPOREOL, Either a space or an end-of-line was expected but not found                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384699 | SRCBACKLOGSTATUS, Instance RRRR SSSS NNNN transaction(s)                                                                                                               |
+| 150384699 | SRCBACKLOGSTATUS, Instance RRRR SSSS                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418811674 | SRCFILERR, Error with source file I/O on file xxxx                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373715 | SRCLIN, xxxx                                                                                                                                                           |
+| 150373715 | SRCLIN, xxxx yyyy                                                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381795 | SRCLNNTDSP, Source lines exceeding wwww character width are not displayed                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2982,7 +2982,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381002 | SRCSRVNOTEXIST, Source server for secondary instance xxxx is not alive                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381010 | SRCSRVTOOMANY, Cannot start more than xxxx source servers in primary instance file yyyy                                                                                |
+| 150381010 | SRCSRVTOOMANY, Cannot start more than xxxx source servers in replication instance yyyy                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382450 | SRVLCKWT2LNG, PID pppp is holding the source server lock. Waited for mmmm minute(s). Now exiting                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3012,7 +3012,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380282 | STARFILE, Star(*) argument cannot be specified with xxxx                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150372435 | STATCNT, xxxx: Key cnt: yyyy max subsc len: zzzz max data len: wwww                                                                                                    |
+| 150372435 | STATCNT, xxxx:  Key cnt: yyyy  max subsc len: zzzz  max data len: wwww                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384154 | STATSDBERR, Error in/at LLLL attempting to use a statistics database: SSSS                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3024,13 +3024,13 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384050 | STATSDBNOTSUPP, Attempted operation is not supported on statistics database file SSSS                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027882 | STDERRALREADYOPEN, STDERR deviceparameter specifies an already open device                                                                                             |
+| 151027882 | STDERRALREADYOPEN, STDERR deviceparameter specifies an already open device xxxx                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150504091 | STDNULLCOLLREQ, Region rrrr needs Standard Null Collation enabled because global gggg spans through it                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384274 | STPCRIT, String pool space critical                                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380570 | STPEXPFAIL, Stringpool expansion failed. It could not expand to xxxx bytes                                                                                             |
+| 150380570 | STPEXPFAIL, Stringpool expansion failed. It could not expand to xxxx bytes.                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384284 | STPOFLOW, String pool space overflow                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3044,9 +3044,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382586 | STRMNUMMISMTCH2, Stream nnnn exists on the source instance file but is unknown on the receiver instance                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382594 | STRMSEQMISMTCH, Unable to play update on Stream nnnn with seqno xxxx as receiving instance has a different stream seqno XXXX                                           |
+| 150382594 | STRMSEQMISMTCH, Unable to play update on Stream nnnn with seqno [xxxx] as receiving instance has a different stream seqno [XXXX]                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379562 | STRNOTVALID, Error: cannot convert xxxx value to valid yyyy value.                                                                                                     |
+| 150379562 | STRNOTVALID, Error: cannot convert xxxx value to valid value                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150372786 | STRUNXEOR, xxxx unexpected end of record in string subscript                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3054,11 +3054,11 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375154 | SUB2LONG, Subscript invalid, too long                                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151027794 | SUBSARRAYNULL, Non-zero number of subscripts xxxx specified but subscript array parameter is NULL in API call                                                          |
+| 151027794 | SUBSARRAYNULL, Non-zero number of subscripts xxxx specified but subscript array parameter is NULL in yyyy call                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382266 | SUPRCVRNEEDSSUPSRC, Instance iiii is not configured to perform local updates, so it cannot act as a receiver for non-Supplementary Instance ssss                       |
+| 150382266 | SUPRCVRNEEDSSUPSRC, Instance iiii is not configured to perform local updates so it cannot act as a receiver for non-Supplementary Instance ssss                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379139 | SUSPENDING, Suspending processing on user request or attempt to do terminal I/O while running in the background                                                        |
+| 150379139 | SUSPENDING, Process Received Signal xxxx. Suspending processing on user request or attempt to do terminal I/O while running in the background                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381170 | SVNEXPECTED, Special variable expected in this context                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3066,7 +3066,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373770 | SVNOSET, Cannot SET this special variable                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377722 | SYSCALL, Error received from system call xxxx -- called from module yyyy at line zzzz                                                                                  |
+| 150377722 | SYSCALL, Error received from system call cccc -- called from module xxxx at line yyyy                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379546 | SYSTEMVALUE, Invalid value for $SYSTEM (vvvv)                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3084,7 +3084,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384594 | TERMHANGUP, Terminal has disconnected                                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375922 | TERMWRITE, Error writing to terminal, status:                                                                                                                          |
+| 150375922 | TERMWRITE, Error writing to terminal                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375539 | TEXT, xxxx                                                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3094,15 +3094,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151027834 | TIME2LONG, Specified time value exceeds supported maximum limit xxxx allowed                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379040 | TIMERHANDLER, Incorrect SIGALRM handler xxxx found by yyyy                                                                                                             |
+| 150379040 | TIMERHANDLER, Incorrect SIGALRM handler (xxxx) found by yyyy                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376522 | TIMEROVFL, Timer overflow; interval probably too large                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375307 | TIMRBADVAL, Bad value specified. Timer not changed.                                                                                                                    |
+| 150375307 | TIMRBADVAL, Bad value specified.  Timer not changed.                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383280 | TLSCONNINFO, Failed to obtain information on the TLS/SSL connection                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383266 | TLSCONVSOCK, Failed to convert UNIX TCP/IP socket to TLS/SSL aware socket>/error                                                                                       |
+| 150383266 | TLSCONVSOCK, Failed to convert Unix TCP/IP socket to TLS/SSL aware socket                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383250 | TLSDLLNOOPEN, Failed to load YottaDB TLS/SSL library for secure communication                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3122,19 +3122,19 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373802 | TMPSTOREMAX, Maximum space for temporary values exceeded                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380762 | TNTOOLARGE, Database file xxx has reached the transaction number limit (0xaaa). Renew database with MUPIP INTEG TN_RESET                                               |
+| 150380762 | TNTOOLARGE, Database file xxx has reached the transaction number limit (aaa). Renew database with MUPIP INTEG TN_RESET                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150380752 | TNWARN, Database file xxx has 0xaaa more transactions to go before reaching the transaction number limit (0xaaa). Renew database with MUPIP INTEG TN_RESET             |
+| 150380752 | TNWARN, Database file xxx has aaa more transactions to go before reaching the transaction number limit (aaa). Renew database with MUPIP INTEG TN_RESET                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377570 | TOOMANYCLIENTS, YottaDB is serving the maximum number of clients. Try again later.                                                                                     |
+| 150377570 | TOOMANYCLIENTS, GT.CM is serving the maximum number of clients.  Try again later.                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375114 | TOTALBLKMAX, Extension exceeds maximum total blocks, not extending                                                                                                     |
+| 150375114 | TOTALBLKMAX, Extension exceeds maximum total blocks.  Not extending.                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151028002 | TPCALLBACKINVRETVAL, Invalid return type for TP callback function                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376090 | TPFAIL, Transaction COMMIT failed. failure code: xxxx.                                                                                                                 |
+| 150376090 | TPFAIL, Transaction COMMIT failed.                                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376074 | TPLOCK, Cannot release lock(s) held prior to current TSTART                                                                                                            |
+| 150376074 | TPLOCK, Cannot release LOCK(s) held prior to current TSTART                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376434 | TPMIXUP, xxxx transaction cannot be started within yyyy transaction                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3142,20 +3142,20 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383218 | TPNOSUPPORT, Operation cannot be performed while inside of a TP transaction                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150378867 | TPNOTACID, tttt at xxxx in a final TP retry violates ACID properties of a TRANSACTION; indefinite RESTARTs may occur                                                   |
+| 150378867 | TPNOTACID, tttt at xxxx violates ACID properties of a TRANSACTION and could exceed yyyy seconds; $TRESTART = zzzz and indefinite RESTARTs may occur                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376082 | TPQUIT, Cannot QUIT out of a routine with an active transaction                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376595 | TPRESTART, Database mmmm; code: xxxx; blk: yyyy in glbl: zzzz; pvtmods: aaaa, blkmods: bbbb, blklvl: cccc, type: dddd, readset: eeee, writeset: ffff, local_tn: gggg,  |
+| 150376595 | TPRESTART, Database mmmm; code: xxxx; blk: yyyy in glbl: ^zzzz; pvtmods: aaaa, blkmods: bbbb, blklvl: cccc, type: dddd, readset: eeee, writeset: ffff, local_tn: gggg, |
 |           | zpos: hhhh                                                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382970 | TPRESTNESTERR, TP restart signaled while handing error - treated as nested error - Use TROLLBACK in error handler to avoid this                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377322 | TPTIMEOUT, Transaction timeout                                                                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376106 | TPTOODEEP, $TLEVEL cannot exceed 127                                                                                                                                   |
+| 150376106 | TPTOODEEP, $TLEVEL cannot exceed xxxx                                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377562 | TRACEON, Missing global name (with optional subscripts) to dump M-tracing information into                                                                             |
+| 150377562 | TRACEON, Missing global name (with optional subscripts) for recording M-tracing information                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379587 | TRACINGON, Tracing already turned on                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3181,20 +3181,20 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381827 | TRIGDATAIGNORE, Ignoring trigger data tttt. Use MUPIP TRIGGER to load trigger definitions                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381810 | TRIGDEFBAD, Trigger initialization failed for global ^gggg. Error while processing ^#t("xxxx",yyyy[,zzzz])                                                             |
+| 150381810 | TRIGDEFBAD, Trigger initialization failed for global ^gggg. Error while processing ^#t("xxxx",yyyy)                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381856 | TRIGDEFNOSYNC, Global ^gggg has triggers defined on the [originating/replicating] instance but none on the [replicating/originating] instance. Current journal sequence|
 |           | number is 0xjjjj                                                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381698 | TRIGINVCHSET, Trigger tttt for global gggg was created with CHSET=cccc which is different from the current $ZCHSET of this process                                     |
+| 150381698 | TRIGINVCHSET, Trigger tttt for global ^gggg was created with CHSET=cccc which is different from the current $ZCHSET of this process                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381835 | TRIGIS, Trigger name: tttt                                                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383346 | TRIGLOADFAIL, MUPIP TRIGGER or $ZTRIGGER operation failed. Failure code: xxxx                                                                                          |
+| 150383346 | TRIGLOADFAIL, MUPIP TRIGGER or $ZTRIGGER operation failed. Failure code: xxxx.                                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 418817634 | TRIGMODREGNOTRW, Trigger(s) cannot be added/changed/deleted because region rrrr is read-only                                                                           |
+| 418817634 | TRIGMODREGNOTRW, Trigger(s) cannot be added/changed/deleted/upgraded because region rrrr is read-only                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376874 | TRIGNAMBAD, Trigger initialization failed. Error while processing ^#t(tttt,cccc)                                                                                       |
+| 150376874 | TRIGNAMBAD, Trigger initialization failed. Error while processing ^#t("tttt",cccc)                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376042 | TRIGNAMENF, Trigger name nnnn not found with the current default global directory                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3212,7 +3212,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376048 | TRIGZBREAKREM, ZBREAK in trigger tttt removed due to trigger being reloaded                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377978 | TRNLOGFAIL, Translation of environmental variable xxxx failed                                                                                                          |
+| 150377978 | TRNLOGFAIL, Translation of (VMS) logical name or (UNIX) environment variable xxxx failed                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377738 | TROLLBK2DEEP, Intended rollback (xxxx) deeper than the current $tlevel (yyyy)                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3254,7 +3254,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383538 | UPDPROC, Update Process error                                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381298 | UPDREPLSTATEOFF, Error replicating global gggg as it maps to database xxxx which has replication turned OFF.                                                           |
+| 150381298 | UPDREPLSTATEOFF, Error replicating global ^gggg as it maps to database xxxx which has replication turned OFF                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382290 | UPDSYNC2MTINS, Can only UPDATERESYNC with an empty instance file                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3290,15 +3290,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373898 | VIEWARGCNT, View parameter xxxx has inappropriate number of subparameters                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383146 | VIEWARGTOOLONG, The argument length LLLL to VIEW command vvvv exceeds the maximum mmmm                                                                                 |
+| 150383146 | VIEWARGTOOLONG, The argument length (LLLL) to VIEW command vvvv exceeds the maximum mmmm                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373810 | VIEWCMD, View parameter is not valid with VIEW command                                                                                                                 |
+| 150373810 | VIEWCMD, View parameter pppp is not valid with the VIEW command                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373778 | VIEWFN, View parameter is not valid with $VIEW()                                                                                                                       |
+| 150373778 | VIEWFN, View parameter xxxx is not valid with the $VIEW() function                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373658 | VIEWGVN, Invalid global key name used with VIEW/$VIEW(): xxxx                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381378 | VIEWLVN, Invalid local variable name used with VIEW or $VIEW(): vvvv                                                                                                   |
+| 150381378 | VIEWLVN, Invalid local variable name used with VIEW/$VIEW(): vvvv                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374042 | VIEWNOTFOUND, View parameter xxxx not valid                                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3308,25 +3308,25 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150378808 | WCBLOCKED, Field xxxx is set by process yyyy at transaction number aaaa for database file zzzz                                                                         |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375842 | WCERRNOTCHG, Not all specified databases were changed                                                                                                                  |
+| 150375842 | WCERRNOTCHG, Not all specified database files were changed                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375266 | WCSFLUFAIL, Error flushing buffers -- called from module MMMM at line LLLL                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028019 | WCSFLUFAILED, EEEE error while flushing buffers at transaction number TTTT for database file DDDD                                                                      |
+| 151028019 | WCSFLUFAILED, xxxx error while flushing buffers at transaction number nnnn for database file yyyy                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375848 | WCWRNNOTCHG, Not all specified databases were changed                                                                                                                  |
+| 150375848 | WCWRNNOTCHG, Not all specified database files were changed                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383690 | WEIRDSYSTIME, Time reported by the system clock is outside the acceptable range. Please check and correct the system clock.                                            |
+| 150383690 | WEIRDSYSTIME, Time reported by the system clock is outside the acceptable range.  Please check and correct the system clock                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381138 | WIDTHTOOSMALL, WIDTH should be at least 2 when device ICHSET or OCHSET is UTF-8 or UTF-16.                                                                             |
+| 150381138 | WIDTHTOOSMALL, WIDTH should be at least 2 when device ICHSET or OCHSET is UTF-8 or UTF-16                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374586 | WILDCARD, Wild cards are prohibited: xxxx                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151028026 | WORDEXPFAILED, wordexp() call for string ssss returned tttt error. See wordexp() man pages for details                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150503859 | WRITEERROR, Cannot exit because of write failure. Reason for failure: xxxx.                                                                                            |
+| 150503859 | WRITEERROR, Cannot exit because of write failure.  Reason for failure: xxxx                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379746 | WRITERSTUCK, Buffer flush stuck waiting for [xxxx] concurrent writers to finish writing to database file aaaa                                                          |
+| 150379746 | WRITERSTUCK, Buffer flush stuck waiting for xxxx concurrent writers to finish writing to database file aaaa                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381946 | WRITEWAITPID, PID wwww waited mmmm minute(s) for PID hhhh to finish writing block bbbb in database file ffff                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3334,15 +3334,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150379370 | XCVOIDRET, Attempt to return a value from function xxxx, which is declared void in external call table yyyy                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379490 | XTRNRETSTR, Return string from extended reference translation algorithm is NULL.                                                                                       |
+| 150379490 | XTRNRETSTR, Return string from extended reference translation algorithm is NULL                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379482 | XTRNRETVAL, Length of return value from extended reference translation algorithm is out of bounds                                                                      |
+| 150379482 | XTRNRETVAL, Length of return value (xxxx) from extended reference translation algorithm is not in the range [0,yyyy]                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379474 | XTRNTRANSDLL, Error during extended reference environment translation. Please check the above message.                                                                 |
+| 150379474 | XTRNTRANSDLL, Error during extended reference environment translation.  Check the above message.                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150379466 | XTRNTRANSERR, Error attempting to generate an environment using an external algorithm.                                                                                 |
+| 150379466 | XTRNTRANSERR, Error attempting to generate an environment using an external algorithm                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150377714 | YDBDISTUNDEF, Environmental variable $ydb_dist is not defined                                                                                                          |
+| 150377714 | YDBDISTUNDEF, Environment variable $ydb_dist is not defined                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383442 | YDBDISTUNVERIF, Environment variable $ydb_dist (dddd) could not be verified against the executables path (pppp)                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3350,15 +3350,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383234 | ZATRANSERR, The input string is too long to convert                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373914 | ZATTACHERR, Error attaching to xxxx                                                                                                                                    |
+| 150373914 | ZATTACHERR, Error attaching to "xxxx"                                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150380203 | ZBREAKFAIL, Could not set breakpoint at xxxx due to insufficient memory                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151028090 | ZBRKCNTNEGATIVE, Count xxx, of transits through a ZBREAK breakpoint before activating it, cannot be negative                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374218 | ZCALLTABLE, External call: Table format error                                                                                                                          |
+| 150374218 | ZCALLTABLE, External call Table format error                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374226 | ZCARGMSMTCH, External call: Actual argument count, xxxx is greater than formal argument count, yyyy                                                                    |
+| 150374226 | ZCARGMSMTCH, External call: Actual argument count, xxxx, is greater than formal argument count, yyyy                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382002 | ZCCLNUPRTNMISNG, External call: Cleanup routine name missing. Cannot continue                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3366,7 +3366,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374234 | ZCCONMSMTCH, External call: Too many input arguments                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150374298 | ZCCONVERT, External call: error converting output argument                                                                                                             |
+| 150374298 | ZCCONVERT, External call: error converting output argument from external call xxxx                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376834 | ZCCSQRBR, Closing Square bracket expected                                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3376,15 +3376,15 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418812194 | ZCCTOPN, Unable to open external call table: xxxx                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376762 | ZCENTNAME, No entry found in external call table                                                                                                                       |
+| 150376762 | ZCENTNAME, No entry name found in external call table                                                                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374274 | ZCINPUTREQ, External call: Required input argument missing                                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150382010 | ZCINVALIDKEYWORD, External call: Invalid keyword found. Cannot continue. Invalid keyword encountered in the ext call config file.                                      |
+| 150382010 | ZCINVALIDKEYWORD, External call: Invalid keyword found. Cannot continue                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376826 | ZCMAXPARAM, Exceeded maximum number of external call parameters                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381162 | ZCNOPREALLOUTPAR, Parameter xxxx in external call yyyy.zzzz is an output only parameter requiring pre-allocation.                                                      |
+| 150381162 | ZCNOPREALLOUTPAR, Parameter xxxx in external call yyyy.zzzz is an output only parameter requiring pre-allocation                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374242 | ZCOPT0, External call: Qualifier OPTIONAL_0 can be used only with mechanisms REFERENCE or DESCRIPTOR                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3414,7 +3414,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374186 | ZCUNKTYPE, External call: Unknown argument type                                                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150376802 | ZCUNTYPE, Unknown type entered                                                                                                                                         |
+| 150376802 | ZCUNTYPE, Unknown type encountered                                                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377064 | ZCVECTORINDX, Invalid Vector Index xxxx                                                                                                                                |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3438,7 +3438,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373954 | ZFILNMBAD, xxxx is not a legal file name                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 418809578 | ZGBLDIRACC, Cannot access global directory xxxx. Continuing with yyyy.                                                                                                 |
+| 418809578 | ZGBLDIRACC, Cannot access global directory xxxxyyyyzzzz.                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151028122 | ZGBLDIRUNDEF, Global Directory env var $ydb_gbldir/$gtmgbldir is undefined                                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3454,7 +3454,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381194 | ZINTRECURSEIO, Attempt to do IO to the active device in $ZINTERRUPT                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373978 | ZLINKFILE, Error while ZLINKing "xxxx"                                                                                                                                 |
+| 150373978 | ZLINKFILE, Error while zlinking "xxxx"                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374658 | ZLMODULE, Object file name does not match module name: xxxx                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3474,9 +3474,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150374634 | ZROSYNTAX, $ZROUTINES syntax error: xxxx                                                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150375474 | ZSHOWBADFUNC, An illegal function was specified for ZSHOW                                                                                                              |
+| 150375474 | ZSHOWBADFUNC, An invalid information code was specified with ZSHOW or $ZJOBEXAM()                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150383386 | ZSOCKETATTR, Attribute "xxxx" invalid for $ZSOCKET function msg name                                                                                                   |
+| 150383386 | ZSOCKETATTR, Attribute "xxxx" invalid for $ZSOCKET function                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383394 | ZSOCKETNOTSOCK, $ZSOCKET function called but device is not a socket                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3484,9 +3484,9 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375514 | ZSTEPARG, ZSTEP argument expected                                                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150384408 | ZTIMEOUT, ZTIMEOUT Time expired                                                                                                                                        |
+| 150384408 | ZTIMEOUT, Time expired                                                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150381762 | ZTRIGINVACT, Missing or invalid subcode (first) parameter given to $ZTRIGGER()                                                                                         |
+| 150381762 | ZTRIGINVACT, Missing or invalid parameter in position xxxx given to $ZTRIGGER()                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 418817626 | ZTRIGNOTRW, ZTRIGGER cannot operate on read-only region rrrr                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

@@ -51,6 +51,10 @@ test: html
 		git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto.git ../YDBOcto; \
 		else (cd ../YDBOcto && git pull); \
 	fi
+	@if [ ! -d ../YDB ]; then \
+		git clone --depth 1 https://gitlab.com/YottaDB/DB/YDB.git ../YDB; \
+		else (cd ../YDB && git pull); \
+	fi
 	@+./buildall.sh
 	@if [ ! -f ./deadlinks ]; then \
 		echo "Downloading deadlinks..."; \
