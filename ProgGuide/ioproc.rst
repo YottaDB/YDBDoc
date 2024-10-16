@@ -3345,7 +3345,13 @@ ZDELAY
 
 Z[NO]DELAY Applies to: SOC(TCP)
 
-Controls buffering of data packets by the system TCP stack using the TCP_NODELAY option to the setsockopt system call. This behavior is sometimes known as the Nagle algorithm. The default is ZDELAY. This delays sending additional packets until either an acknowledgment of previous packets is received or an interval passes. If several packets are sent from one end of a connection before the other end responds, setting ZNODELAY may be desirable though at the cost of additional packets being transmitted over the network. ZNODELAY must be fully spelled out.
+Controls buffering of data packets by the system TCP stack also known as the `Nagle algorithm <https://en.wikipedia.org/wiki/Nagle%27s_algorithm>`_.
+
+ZDELAY enables the Nagle algorithm by delaying sending additional packets until either an acknowledgment of previous packets is received or an interval passes. ZNODELAY does not delay sending additional packets even if an acknowledgement of previous packets is not received. It does this using the TCP_NODELAY option to the setsockopt() system call.
+
+If several packets are sent from one end of a connection before the other end responds, setting ZNODELAY may be desirable though at the cost of additional packets being transmitted over the network. ZNODELAY must be fully spelled out.
+
+The default is ZDELAY.
 
 LOCAL sockets ignore the ZDELAY deviceparameter.
 
