@@ -565,6 +565,12 @@ ydb_gdscert
 ++++++++++++++
 **ydb_gdscert (gtm_gdscert)** specifies the initial setting that controls whether YottaDB processes should test updated database blocks for structural damage. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", YottaDB performs a block-level integrity check on every block as a process commits it. Within a running process, `VIEW "GDSCERT":value <../ProgrammersGuide/commands.html#gdscert-value>`_ controls this setting. By default, YottaDB does not check database blocks for structural damage, because the impact on performance is usually unwarranted.
 
+++++++++++++++
+ydb_hostname
+++++++++++++++
+
+If the environment variable **ydb_hostname** is set, YottaDB uses its value instead of the actual hostname, to record in each database file header as to which host has that file open. This allows multiple `Kubernetes <https://kubernetes.io/>`_ pods which have random hostnames, but share IPC resources, to access database files across pods. Note that pods accessing a database file with the same :code:`ydb_hostname`, but without sharing IPC resources, will result in structural damage to that database file. So use this feature with caution.
+
 .. _ydb-hugetlb-shm:
 
 ++++++++++++++++

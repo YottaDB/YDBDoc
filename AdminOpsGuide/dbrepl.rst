@@ -4227,7 +4227,7 @@ Example:
 -log_interval=<integer>
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Specifies the number of transactions for which the Source Server should wait before writing to the log file. The default logging interval is 10000 transactions.
+Specifies the number of transactions for which the Source Server should wait before writing to the log file. The default logging interval is 10,000 transactions.
 
 -log_interval=0 reverts the logging interval to the default value.
 

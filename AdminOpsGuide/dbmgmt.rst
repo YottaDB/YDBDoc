@@ -181,7 +181,7 @@ The format of the CREATE command is:
 
 .. code-block:: none
 
-   cr[eate] [-r[egion]=region-name | -r[egion] region name]
+   cr[eate] [-[no]v6] [-r[egion]=region-name | -r[egion] region name]
 
 The single optional ``-region`` qualifier specifies a region for which to create a database file.
 
@@ -743,6 +743,7 @@ The optional qualifiers are:
    -ON[LINE] - only valid with -ON
    -OV[ERRIDE]
    -R[ECORD] - only valid with -ON
+   -VERBOSE
 
 ~~~~~
 -OFF
@@ -816,7 +817,7 @@ Controls the behavior of a FREEZE specified with -ONLINE when YottaDB must write
 -DBG
 ~~~~
 
-Produces verbose output to help with debugging.
+Produces verbose output to help with debugging. We recommend using :ref:`VERBOSE <freeze-verbose>` instead.
 
 .. _freeze-online:
 
@@ -885,6 +886,14 @@ The format of the RECORD qualifier is:
 * RECORD replaces the previously RECORDed transaction identifier for the database file.
 
 * Incompatiable with: OFF and OVERRIDE.
+
+.. _freeze-verbose:
+
+~~~~~~~~~
+-VERBOSE
+~~~~~~~~~
+
+Produces verbose output to help with debugging.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP FREEZE
@@ -2551,6 +2560,7 @@ MUPIP Command Summary
 |                                      |                                             | * REPLI[NSTANCE]=OFF | ON                                                                | N                 |
 |                                      |                                             | * S[INCE]={DATABASE|BYTESTREAM|RECORD}                                                   | N                 |
 |                                      |                                             | * T[RANSACTION=hexa;transaction_number]                                                  | N                 |
+|                                      |                                             | * VERBOSE                                                                                | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | CR[EATE]                             | \-                                          | * R[EGION]=region-name \| R[EGION] region-name                                           | N.A.              |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+

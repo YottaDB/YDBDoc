@@ -657,6 +657,8 @@ User Interface
 USE Device Parameters
 ~~~~~~~~~~~~~~~~~~~~~~
 
+.. _use-editing:
+
 **[NO]EDITING**
 
 Applies to : TRM
@@ -1749,7 +1751,7 @@ TCP/IP is a stream-based protocol that guarantees that bytes arrive in the order
 
 If packets arrive infrequently, or at varying rates that are sometimes slow, a short interval can waste CPU cycles checking for an unlikely event. On the other hand, if the handling of packets is time critical, a long interval can introduce an undesirable latency. If packets arrive in a rapid and constant flow (an unusual situation), the interval doesn't matter as much, as there is always something in the buffer for the READ to work with. If you do not specify MOREREADTIME, SOCKET READ implements a dynamic approach of using a longer first interval of 200 ms when it finds no data, then shortening the interval to 10 ms when data starts to arrive. If you specify an interval, the SOCKET device always uses the specified interval and does not adjust dynamically. For more information on MOREREADTIME, refer to `MOREREADTIME`_.
 
-Most SOCKET READ operations terminate as a result of the first condition detected from (a) receipt of delimiters, (b) receipt of the maximum number of characters, or (c) expiration of a timeout. Note that all of these conditions are optional, and a specific READ may specify zero or more of them. This section refers to these three conditions as "defined terminating conditions". If a SOCKET READ is not subject to any of the defined terminating conditions, it terminates after it has received at least one character followed by an interval with no new characters. An error can also terminate a READ. While none of the terminating conditions is satisfied, the READ continues.
+Most SOCKET READ operations terminate as a result of the first condition detected from (a) READ without delimiters, immediately, if there is already data waiting to be read; (b) receipt of delimiters; (c) receipt of the maximum number of characters; or (d) expiration of a timeout. Note that all of these conditions are optional, and a specific READ may specify zero or more of them. This section refers to these four conditions as "defined terminating conditions". If a SOCKET READ is not subject to any of the defined terminating conditions, it terminates after it has received at least one character followed by an interval with no new characters. An error can also terminate a READ. While none of the terminating conditions is satisfied, the READ continues.
 
 The following flowchart represents the logic of a SOCKET READ.
 
@@ -1759,12 +1761,15 @@ The following flowchart represents the logic of a SOCKET READ.
 Socket Read Termination Conditions
 +++++++++++++++++++++++++++++++++++
 
-A SOCKET READ operation terminates if any of the following conditions are met:
+A SOCKET READ operation terminates if any of the following are detected, in the order specified:
 
 +-----------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+----------------+
 | Terminating Conditions            | Argument Conditions                                                                                  | $Device          | $Key            | $Test          |
 +===================================+======================================================================================================+==================+=================+================+
 | Error                             | Empty String                                                                                         | Error String     | Empty String    | 1              |
++-----------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+----------------+
+| No delimiter and data exists\*    | Data in buffer                                                                                       | Empty String     | Empty String    | 1              |
+| in the buffer at the time of READ |                                                                                                      |                  |                 |                |
 +-----------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+----------------+
 | Timeout\*                         | Data received before timeout                                                                         | Empty String     | Empty String    | 0              |
 +-----------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+----------------+
@@ -1784,7 +1789,7 @@ A SOCKET READ operation terminates if any of the following conditions are met:
 
 \* denotes Defined Terminating Conditions
 
-A non-fixed-length read, with no timeout and no delimiters (the sixth row in the above table) requires a complex implementation of sequence of READs to ensure a predictable result. This is because the transport layer stream fragments delivered to the reader has only accidental correspondence with the operations performed by the writer. For example, the following:
+A non-fixed-length read, with no timeout and no delimiters (the last row in the above table) requires a complex implementation of sequence of READs to ensure a predictable result. This is because the transport layer stream fragments delivered to the reader has only accidental correspondence with the operations performed by the writer. For example, the following:
 
 Write "Message 1","Message 2" is presented to the reader as the stream "Message1Message2" but it can take from one (1) to 18 READ commands to retrieve the entire stream.
 
@@ -1806,19 +1811,29 @@ READ Commands
 
 The READ command may be used to obtain data from a socket. A READ operation terminates if any of the following are detected, in the order specified below:
 
-+-------------------------------------+----------------------------------------------------------------------------------------------------+------------------+---------------------+
-| Terminating Conditions              | Argument Conditions                                                                                | $Device          | $Key (Continued)    |
-+=====================================+====================================================================================================+==================+=====================+
-| Error                               | Empty String                                                                                       | Error String     | Empty String        |
-+-------------------------------------+----------------------------------------------------------------------------------------------------+------------------+---------------------+
-| Timeout                             | Data received before timeout                                                                       | Empty String     | Empty String        |
-+-------------------------------------+----------------------------------------------------------------------------------------------------+------------------+---------------------+
-| Delimiter                           | Data up to, but not including the delimiter                                                        | Empty String     | Delimiter String    |
-+-------------------------------------+----------------------------------------------------------------------------------------------------+------------------+---------------------+
-| Fixed Length Met                    | String of fixed length                                                                             | Empty String     | Empty String        |
-+-------------------------------------+----------------------------------------------------------------------------------------------------+------------------+---------------------+
-| Buffer Emptied                      | One (1) to as many characters as happen to be provided by the transport interface                  | Empty String     | Empty String        |
-+-------------------------------------+----------------------------------------------------------------------------------------------------+------------------+---------------------+
++---------------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+-------+
+| Terminating Conditions                | Argument Conditions                                                                                  | $Device          | $Key            | $Test |
++===================================+======================================================================================================+==================+=================+===========+
+| Error                                 | Empty String                                                                                         | Error String     | Empty String    | 1     |
++---------------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+-------+
+| No delimiter and some data available  | Data in buffer                                                                                       | Empty String     | Empty String    | 1     |
+| in the buffer at the time of READ     |                                                                                                      |                  |                 |       |
++---------------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+-------+
+| Timeout                               | Data received before timeout                                                                         | Empty String     | Empty String    | 0     |
++---------------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+-------+
+| Delimiter                             | Data up to, but not including the delimiter                                                          | Empty String     | Delimiter String| 1     |
++---------------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+-------+
+| Fixed Length Met                      | String of Fixed Length                                                                               | Empty String     | Empty String    | 1     |
++---------------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+-------+
+| Width                                 | Full width String                                                                                    | Empty String     | Empty String    | 1     |
++---------------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+-------+
+| Buffer Emptied                        | One (1) to as many characters as provided by the transport interface before waiting for an interval  | Empty String     | Empty String    | 1     |
+|                                       | (in milliseconds) specified by MOREREADTIME with no additional input. If MOREREADTIME is not         |                  |                 |       |
+|                                       | specified, buffer is checked every 200 milliseconds for its first input and then every 10            |                  |                 |       |
+|                                       | milliseconds until no new input arrives and no other terminating conditions are met.                 |                  |                 |       |
+|                                       |                                                                                                      |                  |                 |       |
+|                                       | IF MOREREADTIME is specified, READ uses that value exclusively for buffer checks.                    |                  |                 |       |
++---------------------------------------+------------------------------------------------------------------------------------------------------+------------------+-----------------+-------+
 
 A non-fixed-length read, with no timeout and no delimiters requires a complex implementation of sequence of READs to ensure a predictable result. This is because the transport layer stream fragments delivered to the reader has only accidental correspondence with the operations performed by the writer. For example, the following:
 
@@ -2143,7 +2158,7 @@ TLS on YottaDB
 
 TLS (Transport Layer Security) can be turned on for YottaDB using the following steps:
 
-* To use TLS communication on YottaDB, you need to install the YDBEncrypt plugin, as it is not installed by default. See the `YDBEncrypt README file <https://gitlab.com/YottaDB/Util/YDBEncrypt/-/blob/master/README.md>`_ for instructions.
+* To use TLS communication on YottaDB, you need to install the YDBEncrypt plugin, as it is not installed by default. Use the :code:`--encplugin` option of `ydbinstall <../AdminOpsGuide/installydb.html#ydbinstall-script>`_, or refer to the `YDBEncrypt README file <https://gitlab.com/YottaDB/Util/YDBEncrypt/-/blob/master/README.md>`_ for instructions.
 
 * In your application directory, make a directory for certificates.
 
@@ -2151,7 +2166,7 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
 
      mkdir certs
 
-* Create your certificate with a key that has a password.
+* Create your certificate with a key that optionally has a password (certificates from `ACME <https://en.wikipedia.org/wiki/Automatic_Certificate_Management_Environment>`_ protocol providers such as `Let's Encrypt <https://letsencrypt.org/>`_ do not require a password).
 
   .. code-block:: bash
 
@@ -2160,7 +2175,7 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
       openssl req -x509 -days 365 -sha256 -in ./mycert.csr -key .//mycert.key -passin pass:ydbpass -out ./mycert.pem
       mv cert* certs/
 
-* Create a file called ydb_crypt_config.libconfig with the following contents.
+* Create a file called :code:`ydb_crypt_config.libconfig` with the following contents.
 
   .. code-block:: none
 
@@ -2175,20 +2190,20 @@ TLS (Transport Layer Security) can be turned on for YottaDB using the following 
        };
      }
 
-* Set the environment variable ydb_crypt_config to be the path to your config file:
+* Set the environment variable `ydb_crypt_config <../AdminOpsGuide/basicops.html#ydb-crypt-config>`_ to be the path to your config file:
 
   .. code-block:: bash
 
      export ydb_crypt_config="ydb_crypt_config.libconfig"
 
-* Find out the hash of your key password using the maskpass utility.
+* Find the hash of your key password using the maskpass utility.
 
   .. code-block:: bash
 
      echo "ydbpass" | $ydb_dist/plugin/ydbcrypt/maskpass | cut -d ":" -f2 | tr -d ' '
      7064420FDCAEE313B222
 
-* In your environment file, set ydb_tls_passwd_{server name} to be that hash.
+* In your environment file, set `ydb_tls_passwd_<label> <../AdminOpsGuide/basicops.html#ydb-tls-passwd-label>`_ to be that hash.
 
   .. code-block:: bash
 
@@ -2911,7 +2926,7 @@ Example:
 This enables SO_KEEPALIVE and sets TCP_KEEPIDLE to 50 seconds.
 
 .. note::
-   Please review the man page for setsockopt() for more information on the use of these options. ``man 7 socket`` and ``man 7 tcp`` provide additional information.
+   Please review the man page for setsockopt() for more information on the use of these options. :code:`man 7 socket` and :code:`man 7 tcp` provide additional information.
 
 ~~~~
 PAD

@@ -80,6 +80,8 @@ Here is a sample configuration file:
 
 The environment variable ydb_tls_passwd_<tlsid> must specify an obfuscated version of the password for the client's private key. Use the maskpass utility provided with your YottaDB distribution to create an obfuscated password.
 
+YottaDB does not require a password for the private key associated with TLS Server Certificates, for example, certificates from `ACME <https://en.wikipedia.org/wiki/Automatic_Certificate_Management_Environment>`_ protocol providers such as `Let's Encrypt <https://letsencrypt.org/>`_.
+
 -------------------------
 Supported OpenSSL options
 -------------------------

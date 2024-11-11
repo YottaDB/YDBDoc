@@ -325,6 +325,43 @@ Never SET $ZWRTACn "variables". They are used by YottaDB to make ZWRITE output m
 
 You can use SET @ to process ZWRITE or ZSHOW "V" output containing $ZWRTACn variables for restoring an alias container variable to a prior state. While processing the output, never attempt to inject or manipulate $ZWRTACn lines as it may lead to unintended consequences or undermine the benefit you might achieve from using alias containers. Lines containing SET $ZWRTACn=<value> are no-ops unless they have a preceding SET $ZWRTAC="" and an alias container variable association. In the ZWRITE or ZSHOW "V" output of an alias container, SET $ZWRTAC lines appear in the order that YottaDB expects for restoration. YottaDB can change the use of $ZWRTAC in YottaDB at any time.
 
+=====================================
+Appendix B: Creating Shebang Scripts
+=====================================
+
+The :code:`ydbsh` executable allows you to create `shebang <https://en.wikipedia.org/wiki/Shebang_(Unix)>`_ style scripts with M code. A file with a name ending in :code:`.m`, has execute permissions, and whose first line is:
+
+  - :code:`#!<path to YottaDB installation>/ydbsh`;
+  - :code:`#!/usr/bin/env ydbsh` where :code:`$ydb_dist` or :code:`$gtm_dist` are in `$PATH`; or
+  - :code:`#!/usr/local/bin/ydbsh` assuming that YottaDB was installed with the (default) :code:`--linkexec` option of :code:`ydbinstall`
+
+ and which is followed by M code, executes that code as if it had been invoked with a :code:`yottadb -run` command. The directory in which the shebang script resides does not need to be in the :code:`$ydb_routines` / :code:`$gtmroutines` path.
+
+`$ZCMDLINE <isv.html#zcmdline>`_ contains the command line invoking the shebang script.
+
+ `Qualifiers <../ProgrammersGuide/devcycle.html#qualifiers-for-the-yottadb-command>`_ on the first line after :code:`ydbsh` should not be used and can give unexpected results. Specifically, :code:`-direct` will cause the process to go into direct mode and not execute the rest of the script.
+
+  - If the directory of a shebang script :code:`myscript.m` is a source directory in :code:`$ydb_routines` / :code:`$gtmroutines`, the object file :code:`myscript.o` for that shebang script is placed in object directory associated with that source directory, and any process executing code such as :code:`do ^myscript` executes the object code as it would any other M object code.
+  - If the directory of the shebang script is not a source directory in :code:`$ydb_routines` / :code:`$gtmroutines`, YottaDB creates a temporary directory under one of :code:`$ydb_tmp` / :code:`$gtm_tmp` / :code:"`/tmp` (in that order) and places the object code in that temporary directory. After compiling and linking the program and prior to executing it, :code:`ydbsh` deletes the temporary directory and object file.
+
+  For example:
+
+.. code-block:: none
+
+   $ env | grep -Ei ^\(\(ydb\)\|\(gtm\)\) # No YottaDB environment variables
+   $ cat /tmp/ydbsh.m 
+   #!/usr/local/bin/ydbsh
+	   write $zroutines,!,$zcmdline,!
+	   for  read "Enter text: ",line,! quit:'$zlength(line)  do
+	   . write $reverse(line),!
+   $ /tmp/ydbsh.m ABC DEF
+   /tmp/ydbshUvgzJC(/tmp) /extra/usr/local/lib/yottadb/r201/libyottadbutil.so
+   /tmp/ydbsh.m ABC DEF
+   Enter text: The quick brown fox jumps over the lazy dog
+   god yzal eht revo spmuj xof nworb kciuq ehT
+   Enter text: 
+   $
+
 .. raw:: html
 
     <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />

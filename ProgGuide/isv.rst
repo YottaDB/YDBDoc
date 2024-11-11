@@ -722,7 +722,7 @@ $ZG[BLDIR] contains the value of the current Global Directory filename. When $ZG
 
 YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to the value of the environment variable gtmgbldir, and if that is not defined, then to the empty string (:code:`""`). When $ZGBLDIR is the empty string, any attempt to access the global directory results in a :code:`ZGBLDIRUNDEF` error.
 
-$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR using the same logic as at process startup. Newing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. As with NEWed local variables, QUIT restores the prior value in effect at the time of call. A $ZGBLDIR value may include an environment variable.
+$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the `SET <commands.html#set>`_ command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR using the same logic as at process startup. Newing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. As with all `NEWed <commands.html:new>`_ local variables, `QUIT <commands.html#quit>`_ restores the prior value in effect at the time of call. A $ZGBLDIR value may include an environment variable.
 
 Setting $ZGBLDIR sets the environment variable `ydb_cur_gbldir <../AdminOpsGuide/basicops.html#>`_ to the new value of $ZGBLDIR. This allows a child process to decide whether to use the current global directory of the parent or the :code:`$ydb_gbldir`/ :code:`$gtmgbldir` at parent process startup.
 
@@ -764,7 +764,7 @@ This example defines the environment variable ydb_gbldir. Upon entering YottaDB 
    YDB>halt
    $
 
-The SET command attempts to change the value of $ZGBLDIR to test.gld. Because the file does not exist, YottaDB reports an error and does not change the value of $ZGBLDIR.
+The SET command attempts to change the value of $ZGBLDIR to :code:`test.gld`. Because the file does not exist, YottaDB reports an error and does not change the value of $ZGBLDIR.
 
 To facilitate application migration to YottaDB from other M implementations (for example to convert UCI and VOL specifications to global directories) in the environment specification, YottaDB provides an :ref:`interface to translate strings to global directory filenames <opt-ydb-gbldir-xltn-fac>`. With the exception of the function name, this facility is identical to that :ref:`used for extended references <opt-ydb-env-xltn-fac>`.
 
@@ -1346,7 +1346,7 @@ Establishing the value from $ydb_routines
 
 If the environment variable :code:`ydb_routines` is not set when the :code:`yottadb` process starts, or if it is set to the empty string (:code:`""`), YottaDB sets it in the environment to :code:`$ydb_dist/libyottadbutil.so` in M mode, if it exists, or to :code:`$ydb_dist/utf8/libyottadbutil.so` in UTF-8 mode, if it exists, and to :code:`$ydb_dist` if it does not, and then uses that value.
 
-Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <./devcycle.html>`_ and `“Commands” <commands.html>`_ chapters.
+Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <devcycle.html>`_ and `“Commands” <commands.html>`_ chapters.
 
 +++++++++++++++++++++++++++++++
 Setting a Value for $ZROUTINES
@@ -2205,7 +2205,7 @@ Note that if a trigger sets values of $ZTWORMHOLE or NEW's it within the trigger
 
 Note that if trigger code does not reference/set $ZTWORMHOLE, YottaDB does not make it available in the journal files or replication stream. Therefore, if a replicating secondary has different trigger code than the initiating primary and the triggers on the replicating node require information from $ZTWORMHOLE, the triggers on the initiating node must reference/set $ZTWORMHOLE to ensure YottaDB maintains the data it contains for use by the update process on the replicating node. While you can change $ZTWORMHOLE within trigger code, because of the arbitrary ordering of trigger invocation on the same node, if multiple triggers for the same update modify $ZTWORMHOLE to different values, the final value of $ZTWORMHOLE after all triggers have been invoked (which is what gets stored in the journal file and gets replicated across to the replicating instance update process) becomes unpredictable. Therefore, such an approach requires careful design and implementation.
 
-YottaDB allows $ZTWORMHOLE to be NEW'd. Newing $ZTWORMHOLE is like Newing `$ZGBLDIR <https://docs.yottadb.com/ProgrammersGuide/isv.html#zgbldir>`_ in that the NEW'd value is initialized with the value pushed on the stack (i.e. $ZTWORMHOLE retains its original value after the NEW). However, like other NEWs, YottaDB restores $ZTWORMHOLE's value when the stack level pops.
+YottaDB allows $ZTWORMHOLE to be NEW'd. Newing $ZTWORMHOLE is like Newing `$ZGBLDIR <#zgbldir>`_ in that the NEW'd value is initialized with the value pushed on the stack (i.e. $ZTWORMHOLE retains its original value after the NEW). However, like other NEWs, YottaDB restores $ZTWORMHOLE's value when the stack level pops.
 
 The ability to propagate a value of $ZTWORMHOLE set in a trigger was added in `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
 

@@ -31,6 +31,7 @@ The format of the MUPIP BACKUP command is:
     -SH[OWPROGRESS]
     -S[INCE]={DATABASE|BYTESTREAM|RECORD}
     -T[RANSACTION]=hexadecimal_transaction_number
+    -VERBOSE
    ] region-list[,...] destination-list
 
 .. note::
@@ -168,7 +169,7 @@ The format of the DATABASE qualifier is:
 -DBG
 ^^^^
 
-Produces verbose output to help with debugging.
+Produces verbose output to help with debugging. We recommend using :ref:`VERBOSE <backup-verbose>` instead.
 
 ^^^^^^^^^^^^
 -NETtimeout
@@ -356,6 +357,14 @@ Specifies the transaction number of a starting transaction that causes BACKUP BY
 
 .. note::
    A point in time that is consistent from an application perspective, is unlikely to have the same transaction number in all database regions. Therefore, except for TRANSACTION=1, this qualifier is not likely to be useful for any backup involving multiple regions.
+
+.. _backup-verbose:
+
+^^^^^^^^^
+-VERBOSE
+^^^^^^^^^
+
+Produces verbose output to help with debugging.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP BACKUP
