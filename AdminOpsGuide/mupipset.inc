@@ -34,6 +34,7 @@ The format of the SET command is:
     -N[ULL_SUBSCRIPTS]=value
     -[NO]LCK_SHARES_DB_CRIT
     -PA[RTIAL_RECOV_BYPASS]
+    -PROBLKSPLIT=N
     -[NO]Q[DBRUNDOWN]
     -[NO]REA[D_ONLY]
     -REC[ORD_SIZE]=bytes

@@ -1828,6 +1828,8 @@ VIEW "[NO]FULL_BOOL[EAN|WARN]" takes effect immediately for indirection and XECU
 
 VIEW "NOFULLBOOLEAN" produces an error when ydb_side_effects is on. For more information on the ydb_side_effects environment variable, refer to the `Environment Variables section in the Basic Operations chapter <../AdminOpsGuide/basicops.html#env-vars>`_ of the Administration and Operations Guide.
 
+.. _view-gbldirload:
+
 ~~~~~~~~~~~~~~~~~
 GBLDIRLOAD:str
 ~~~~~~~~~~~~~~~~~

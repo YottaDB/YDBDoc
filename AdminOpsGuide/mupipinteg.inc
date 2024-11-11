@@ -44,6 +44,7 @@ The format of the MUPIP INTEG command is:
     -S[UBSCRIPT]=subscript]
     -TN[_RESET]
     -[NO]TR[ANSACTION][=integer]
+    -VERBOSE
    ]
    {[-FILE] file-name|-REG[ION] region-list}
 
@@ -126,7 +127,7 @@ Displays a single summary report by database file of the total number of directo
 -DBG
 ^^^^
 
-Produces verbose output to help with debugging.
+Produces verbose output to help with debugging. We recommend using :ref:`VERBOSE <integ-verbose>` instead.
 
 ^^^^^^
 -FAST
@@ -377,6 +378,14 @@ Specifies the maximum number of block transaction-number-too-large errors that M
 * A system crash may generate many "block transaction number too large" errors. These errors can cause problems for BACKUP INCREMENTAL and for transaction processing. Normally, the automatic increment of 1000 blocks that YottaDB adds when a database is reopened averts these errors. If a problem still exists after the database is reopened, users can use a value in the DSE CHANGE FILEHEADER CURRENT_TN= command to quickly fix "block transaction number too large" errors.
 
 * By default, INTEG reports a maximum of 10 block transaction errors (TRANSACTION=10).
+
+.. _integ-verbose:
+
+~~~~~~~~~
+-VERBOSE
+~~~~~~~~~
+
+Produces verbose output to help with debugging.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP INTEG

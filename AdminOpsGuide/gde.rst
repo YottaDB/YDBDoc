@@ -70,7 +70,7 @@ GDE Overview
 
 The Global Directory Editor (GDE) is a utility for creating, examining, and modifying a global directory. GDE is a program written in M and you can invoke it from the shell with $ydb_dist/yottadb -run ^GDE. If you invoke it from the shell, GDE returns a status indicating success (zero) or an issue (non-zero).
 
-Because GDE is an M program, you can also invoke GDE from a YottaDB process with DO ^GDE. If you invoke GDE with a DO and modify the map of globals that are currently directly opened by that process, you must HALT and restart the process for the process to pick up the revised mapping. YottaDB expects users to normally run GDE from the shell: --$ydb_dist/yottadb -run GDE.
+Because GDE is an M program, you can also invoke GDE from a YottaDB process with DO ^GDE. If you invoke GDE with a DO and modify the map of globals that are currently directly opened by that process, use `VIEW "GBLDIRLOAD" <../ProgrammersGuide/commands.html#view-gbldirload>`_ for the process to pick up the revised mapping. When run from the shell, e.g., :code:`$ydb_dist/yottadb -run GDE`, GDE starts in `EDITING <../ProgrammersGuide/ioproc.html#use-editing>`_ mode.
 
 The input to GDE can be a command file. In a production environment, YottaDB recommends using command files to define database configurations and putting them under version control.
 

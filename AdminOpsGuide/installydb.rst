@@ -160,87 +160,93 @@ ydbinstall Script
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | Command Line Switches                                   | \* | Description                                                                                                            |
 +=========================================================+====+========================================================================================================================+
-| \-\-aim                                                 |    | Download and install the `YottaDB AIM plugin <https://gitlab.com/YottaDB/Util/YDBAIM>`_                                |
+| \-\-aim                                                 |    | Download and install the `YottaDB AIM plugin <https://docs.yottadb.com/Plugins/ydbaim.html>`_.                         |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-branch branchname                                   |    | Builds YottaDB from a specific git branch; use with \-\-from-source                                                    |
+| \-\-allplugins                                          |    | Installs all YottaDB plugins that :code:`ydbinstall` knows about.                                                      |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-build-type buildtype                                | \* | Type of YottaDB build, default is pro                                                                                  |
+| \-\-branch branchname                                   |    | Builds YottaDB from a specific git branch; use with \-\-from-source.                                                   |
++---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
+| \-\-build-type buildtype                                | \* | Type of YottaDB build, default is pro.                                                                                 |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-copyenv [dirname]                                   |    | Copy ydb_env_set, ydb_env_unset, and gtmprofile files to dirname, default :code:`/usr/local/etc`; incompatible with    |
-|                                                         |    | linkenv                                                                                                                |
+|                                                         |    | linkenv.                                                                                                               |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-copyexec [dirname]                                  |    | Copy ydb and gtm scripts to dirname, default :code:`/usr/local/bin`; incompatible with linkexec                        |
+| \-\-copyexec [dirname]                                  |    | Copy ydb and gtm scripts to dirname, default :code:`/usr/local/bin`; incompatible with linkexec.                       |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-debug                                               | \* | Turn on debugging option with set -x                                                                                   |
+| \-\-curl                                                |    | Installs the YottaDB `plugin <https://gitlab.com/YottaDB/Util/YDBCurl>`_ for `curl <https://curl.se/libcurl/>`_.       |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-distrib dirname or URL                              |    | Source directory for YottaDB distribution tarball, local or remote                                                     |
+| \-\-debug                                               | \* | Turn on debugging option with set -x.                                                                                  |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-dry-run                                             |    | Do everything short of installing YottaDB, including downloading the distribution                                      |
+| \-\-distrib dirname or URL                              |    | Source directory for YottaDB distribution tarball, local or remote.                                                    |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-encplugin                                           | \† | Download and install the `YottaDB encryption plugin <./encryption.html>`_                                              |
+| \-\-dry-run                                             |    | Do everything short of installing YottaDB, including downloading the distribution.                                     |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-filename filename                                   |    | Name of the YottaDB distribution tarball                                                                               |
+| \-\-encplugin                                           | \† | Download and install the `YottaDB encryption plugin <./encryption.html>`_.                                             |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-force-install                                       |    | Install even if the current platform is not supported                                                                  |
+| \-\-filename filename                                   |    | Name of the YottaDB distribution tarball.                                                                              |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-from-source reponame                                |    | Clone the repository specified by reponame in current directory and change to YDB/ subdirectory                        |
+| \-\-force-install                                       |    | Install even if the current platform is not supported.                                                                 |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-group group                                         |    | Group that should own the YottaDB installation                                                                         |
+| \-\-from-source reponame                                |    | Clone the repository specified by reponame in current directory and change to YDB/ subdirectory.                       |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-group-restriction                                   |    | Limit execution to a group; defaults to unlimited if not specified                                                     |
+| \-\-group group                                         |    | Group that should own the YottaDB installation.                                                                        |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-gtm                                                 |    | Install GT.M instead of YottaDB                                                                                        |
+| \-\-group-restriction                                   |    | Limit execution to a group; defaults to unlimited if not specified.                                                    |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-gui                                                 |    | Download and install the `YottaDB GUI <https://gitlab.com/YottaDB/UI/YDBGUI/>`_                                        |
+| \-\-gui                                                 |    | Download and install the `YottaDB GUI <https://gitlab.com/YottaDB/UI/YDBGUI/>`_.                                       |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-help                                                |    | Print this usage information                                                                                           |
+| \-\-help                                                |    | Print this usage information.                                                                                          |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-installdir dirname                                  |    | Directory where YottaDB is to be installed (defaults to :code:`/usr/local/lib/yottadb/release`)                        |
+| \-\-installdir dirname                                  |    | Directory where YottaDB is to be installed (defaults to :code:`/usr/local/lib/yottadb/<release>`), e.g.                |
+|                                                         |    | :code:`/usr/local/lib/yottadb/r202`.                                                                                   |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-keep-obj                                            |    | Keep .o files of M routines (normally deleted on platforms with YottaDB support for routines in shared libraries);     |
+| \-\-keep-obj                                            |    | Keep .o files of M routines (normally deleted on platforms with YottaDB support for routines in shared libraries).     |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-linkenv [dirname]                                   |    | Create or update links in dirname to ydb_env_set, ydb_env_unset and gtmprofile files, default :code:`/usr/local/etc`;  |
-|                                                         |    | incompatible with copyenv                                                                                              |
+|                                                         |    | incompatible with copyenv. Linkenv is the default.                                                                     |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-linkexec [dirname]                                  |    | Create or update links in dirname to ydb and gtm scripts, default :code:`/usr/local/bin`; incompatible with copyexec   |
+| \-\-linkexec [dirname]                                  |    | Create or update links in dirname to ydb and gtm scripts, default :code:`/usr/local/bin`; incompatible with copyexec.  |
+|                                                         |    | Linkexec is the default.                                                                                               |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-nocopyenv                                           |    | Do not copy ydb_env_set, ydb_env_unset, and gtmprofile to another directory                                            |
+| \-\-nocopyenv                                           |    | Do not copy ydb_env_set, ydb_env_unset, and gtmprofile to another directory.                                           |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-nocopyexec                                          |    | Do not copy ydb and gtm scripts to another directory                                                                   |
+| \-\-nocopyexec                                          |    | Do not copy ydb and gtm scripts to another directory.                                                                  |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-nodeprecated                                        |    | Do not install deprecated components, especially %DSEWRAP                                                              |
+| \-\-nodeprecated                                        |    | Do not install deprecated components, especially %DSEWRAP.                                                             |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-nolinkenv                                           |    | Do not create link to ydb_env_set, ydb_env_unset, and gtmprofile from another directory                                |
+| \-\-nolinkenv                                           |    | Do not create link to ydb_env_set, ydb_env_unset, and gtmprofile from another directory.                               |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-nolinkexec                                          |    | Do not create link to ydb and gtm scripts from another directory                                                       |
+| \-\-nolinkexec                                          |    | Do not create link to ydb and gtm scripts from another directory.                                                      |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-nopkg-config                                        |    | Do not create yottadb.pc for pkg-config, or update an existing file                                                    |
+| \-\-nopkg-config                                        |    | Do not create yottadb.pc for pkg-config, or update an existing file.                                                   |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-octo parameters                                     | \† | Download and install `Octo® <https://docs.yottadb.com/Octo/>`_ a YottaDB plugin for SQL access to databases.           |
-|                                                         |    | Also installs required POSIX and AIM plugins. Specify optional cmake parameters for Octo as necessary                  |
+|                                                         |    | Also installs required POSIX and AIM plugins. Specify optional cmake parameters for Octo as necessary.                 |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-overwrite-existing                                  |    | Install into an existing directory, overwriting contents; defaults to requiring new directory                          |
+| \-\-overwrite-existing                                  |    | Install into an existing directory, overwriting contents; defaults to requiring new directory.                         |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 | \-\-plugins-only                                        |    | Add or update specified plugins to an existing YottaDB installation. This option requires the \-\-overwrite-existing   |
 |                                                         |    | option as the YottaDB directory must already exist.                                                                    |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-posix                                               | \† | Download and install the `YottaDB POSIX plugin <https://gitlab.com/YottaDB/Util/YDBPosix>`_                            |
+| \-\-posix                                               | \† | Download and install the `YottaDB POSIX plugin <https://docs.yottadb.com/Plugins/ydbposix.html>`_.                     |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-preserveRemoveIPC                                   |    | Do not allow changes to RemoveIPC in :code:`/etc/systemd/logind.conf` if needed; defaults to allow changes             |
+| \-\-preserveRemoveIPC                                   |    | Do not allow changes to RemoveIPC in :code:`/etc/systemd/logind.conf` if needed; defaults to allow changes.            |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-prompt-for-group                                    | \* | YottaDB installation script prompts for group; default is yes                                                          |
+| \-\-prompt-for-group                                    | \* | YottaDB installation script prompts for group; default is yes.                                                         |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-ucaseonly-utils                                     |    | Install only upper case utility program names; defaults to both if not specified                                       |
+| \-\-ucaseonly-utils                                     |    | Install only upper case utility program names; defaults to both if not specified.                                      |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-user username                                       |    | User who should own YottaDB installation; default is root                                                              |
+| \-\-user username                                       |    | User who should own YottaDB installation; default is root.                                                             |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-utf8                                                |    | Install UTF-8 support using the default ICU version of the system                                                      |
+| \-\-utf8                                                |    | Install UTF-8 support using the default ICU version of the system.                                                     |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-webserver                                           | \† | Install the YottaDB web server plugin                                                                                  |
+| \-\-webserver                                           | \† | Install the YottaDB web server plugin.                                                                                 |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-verbose                                             | \* | Output diagnostic information as the script executes; default is to run quietly                                        |
+| \-\-verbose                                             | \* | Output diagnostic information as the script executes; default is to run quietly.                                       |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
-| \-\-zlib                                                |    | Download and install the `YDBzlib plugin <https://gitlab.com/YottaDB/Util/YDBZlib>`_                                   |
+| \-\-ydbsupport                                          |    | Download and install the `YDBSupport plugin <https://docs.yottadb.com/Plugins/ydbsupport.html>`_.                      |
++---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
+| \-\-zlib                                                |    | Download and install the `YDBzlib plugin <https://docs.yottadb.com/Plugins/ydbzlib.html>`_.                            |
 +---------------------------------------------------------+----+------------------------------------------------------------------------------------------------------------------------+
 
 * Options that take a value (e.g, \-\-group) can be specified as either \-\-option=value or \-\-option value
@@ -250,6 +256,8 @@ ydbinstall Script
 * This script must run as root.
 
 :code:`ydbinstall` / :code:`ydbinstall.sh` creates :code:`usr/share/pkgconfig` (the directory where :code:`pkg-config` by default tracks packages) if it does not exist. Note that this was added effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
+
+When the script installs a plugin, it records a 1-line summary of the last commit for that plugin, including the hash and a summary of the commit in the :code:`$ydb_dist/plugin/version` directory. Since plugins are `continuously released <https://yottadb.com/yottadb-continuous-integration-continuous-delivery/>`_, this makes it easier to identify the exact commit of an installed plugin. 
 
 ++++++++
 Examples
@@ -272,12 +280,6 @@ This example installs the latest YottaDB release with added support for UTF-8 an
    sudo --preserve-env=ydb_icu_version ./ydbinstall.sh --installdir /r120 r1.20
 
 This example installs YottaDB release r1.20 in the r120 directory.
-
-.. code-block:: bash
-
-   sudo ./ydbinstall.sh --gtm
-
-This example installs the latest GT.M version in a subdirectory of :code:`/usr/local/lib/yottadb/`.
 
 The :code:`--encplugin`, :code:`--octo` and :code:`--posix` options were added to the :code:`ydbinstall` / :code:`ydbinstall.sh` script effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
