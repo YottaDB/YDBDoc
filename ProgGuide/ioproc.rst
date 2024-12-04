@@ -1924,7 +1924,7 @@ The TLS plugin uses OpenSSL options in the configuration file specified under th
 YottaDB buffers WRITEs to TLS enabled sockets until a subsequent USE :FLUSH, WRITE !, WRITE #, or an internal 400 millisecond timer expires.
 
 .. note::
-   YDBEncrypt, the encryption plugin <https://gitlab.com/YottaDB/Util/YDBEncrypt>`_ is released as source code, and is built with the specific version of OpenSSL installed on your system. If the OpenSSL API changes, e.g., after a software upgrade, you may have to rebuild YDBEncrypt. YottaDB recommends installing or upgrading YDBEncrypt with `ydbinstall <../AdminOpsGuide/installydb.html#ydbinstall-script>`_.
+   `YDBEncrypt, the encryption plugin <https://gitlab.com/YottaDB/Util/YDBEncrypt>`_ is released as source code, and is built with the specific version of OpenSSL installed on your system. If the OpenSSL API changes, e.g., after a software upgrade, you may have to rebuild YDBEncrypt. YottaDB recommends installing or upgrading YDBEncrypt with `ydbinstall <../AdminOpsGuide/installydb.html#ydbinstall-script>`_.
 
 .. code-block:: none
 
