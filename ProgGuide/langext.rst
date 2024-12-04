@@ -384,6 +384,8 @@ Alias Variables provide access to an array through multiple names. Conceptually 
 * YottaDB treats variables hidden by exclusive NEW as a type of alias.
 * Owing to their implicit behavior, under certain circumstances, pass-by-reference aliases, RESTART variable and exclusive NEW aliases are not entirely symmetrical with respect to explicitly created alias variables (that is, they may come and go at different times, whereas alias variables come and go under application program control).
 
+.. _alias-var-cont:
+
 **Alias Container Variables**
 
 Alias container variables are subscripted lvns that protect arrays for subsequent access by an alias variable. Since accessing an array requires a name, aliasing a name with the alias container regains access to an array stored in a container. For example:

@@ -582,6 +582,8 @@ The conversion utilities are:
 
 %HO: Hexadecimal to octal conversion.
 
+%JSWRITE: Output global and local variables in JSON format.
+
 %LCASE: Converts a string to all lower case.
 
 %OD: Octal to decimal conversion.
@@ -842,6 +844,157 @@ Example:
    303
 
 This example invokes %HO as an extrinsic function with the FUNC label.
+
+.. _jswrite_util:
+
++++++++++
+%JSWRITE
++++++++++
+
+The ^%JSWRITE utility routine converts a glvn structure or a series of SET @ arguments to a string of JSON objects. The format of the ^%JSWRITE utility is:
+
+.. code-block:: none
+		
+   ^%JSWRITE(glvnode,[expr1,expr2])
+
+* glvnode specifies the string containing the subscripted/unsubscripted global or local variable name. When glvnode evaluates to an empty string ("") or there are no arguments, %JSWRITE considers all subscripted local variables in scope for conversion.
+
+* If expr1 evaluates to :code:`"#"`, ^%JSWRITE displays JSON objects of the entire tree starting from the glvnode till the end of the glvn.
+
+* If expr1 evaluates to :code:`"*"`, ^%JSWRITE displays JS objects for all nodes descending from the specified glvn node.
+
+* Specifying :code:`"*"` and :code:`"#"` together produces an ILLEGALEXPR2 error.
+
+* Specifying [expr1], that is, with a leading :code:`"["` and trailing :code:`"]"`, ^%JSWRITE displays the JSON objects in an array collection. Without [], you need to transform the object strings to the desired destination object format.
+
+* If expr2 specifies "noglvname", ^%JSWRITE excludes the first key containing the name of the glvn root from the JS object output.
+
+* The default $ETRAP for %JSWRITE is :code:`if (""=$etrap) new $etrap set $etrap="do errorobj"_"^"_$text(+0),$zstatus=""`. To override the default error handler, set $ETRAP to any non-empty value.
+
+* YottaDB is not a JavaScript runtime environment. Therefore, we recommend parsing all output of ^%JSWRITE either using a JSON parser such as JSON.parse() in an appropriate JavaScript run-time environment, a web server via setting its response header to 'Content-Type:application/json', or an application where JSON parsing is available.
+
+* When appropriate, enclose invocations of ^%JSWRITE in a TSTART/COMMIT boundary to prevent any blurred copy of data that is actively updated.
+
+* When appropriate, use YottaDB `Alias Container Variables <langext.html#alias-var-cont>`_ to take appropriate local variables temporarily out of scope and then run the argumentless form of ^%JSWRITE.
+
+Examples:
+
+.. code-block:: none
+
+   YDB>zwrite demodevtest
+   demodevtest("Developer1","Token1","testSetup")="runtest holt maintest cpipe"
+   demodevtest("Developer1","Token1","testSetup","65401,11987")=1
+   demodevtest("Developer1","Token1","testSetup","holt","t")="mtest"
+   demodevtest("Developer1","Token1","testSetup","holt","t","SendReport",65401,12073)=1
+   demodevtest("Developer1","Token1","testSetup","holt","t","cpipe",65401,12025)=0
+   demodevtest("Developer1","Token2","testSetup")="runtest holt maintest tconv"
+   demodevtest("Developer1","Token2","testSetup","holt","65401,21987")=1
+   demodevtest("Developer1","Token2","testSetup","holt","t")="mtest"
+   demodevtest("Developer1","Token2","testSetup","holt","t","SendReport",65401,22073)=1
+   demodevtest("Developer1","Token2","testSetup","holt","t","tconv",65401,22025)=0
+   demodevtest("Developer2","Token3","testSetup")="runtest holt maintest tconv"
+   demodevtest("Developer2","Token3","testSetup","holt","65401,21987")=1
+   demodevtest("Developer2","Token3","testSetup","holt","t")="mtest"
+   demodevtest("Developer2","Token3","testSetup","holt","t","SendReport",65401,22073)=1
+   demodevtest("Developer2","Token3","testSetup","holt","t","tconv",65401,22025)=0
+   demodevtest("Developer3","Token4","testSetup")="runtest holt maintest tconv"
+   demodevtest("Developer3","Token4","testSetup","holt","65401,31987")=1
+   demodevtest("Developer3","Token4","testSetup","holt","t")="mtest"
+   demodevtest("Developer3","Token4","testSetup","holt","t","SendReport",65401,32073)=1
+   demodevtest("Developer3","Token4","testSetup","holt","t","tconv",65401,32025)=0
+
+   YDB>set glvn="demodevtest(""Developer2"")" 
+
+   YDB>do ^%JSWRITE(glvn,"*") ; JS Object Strings: All descendants of demodevtest("Developer2") 
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}}
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}}
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}}
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"22073":1}}}}}}}}}
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"22025":0}}}}}}}}}
+
+   YDB>do ^%JSWRITE(glvn,"[*]") ; Array: All descendants of demodevtest("Developer2") 
+   [{"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}},
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}},
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}},
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"22073":1}}}}}}}}},
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"22025":0}}}}}}}}}]
+
+   YDB> do ^%JSWRITE(glvn,"#") ; JS Object Strings: All descendants of demodevtest starting from demodevtest("Developer2") 
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}}
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}}
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}}
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"22073":1}}}}}}}}}
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"22025":0}}}}}}}}}
+   {"demodevtest":{"Developer3":{"Token4":{"testSetup":"runtest holt maintest tconv"}}}}
+   {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"65401,31987":1}}}}}}
+   {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":"mtest"}}}}}}
+   {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"32073":1}}}}}}}}}
+   {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"32025":0}}}}}}}}}
+
+   YDB>do ^%JSWRITE(glvn,"[#]") ; Array: All descendants of demodevtest starting from demodevtest("Developer2") 
+   [{"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}},
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}},
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}},
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"22073":1}}}}}}}}},
+   {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"22025":0}}}}}}}}},
+   {"demodevtest":{"Developer3":{"Token4":{"testSetup":"runtest holt maintest tconv"}}}},
+   {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"65401,31987":1}}}}}},
+   {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":"mtest"}}}}}},
+   {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"32073":1}}}}}}}}},
+   {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"32025":0}}}}}}}}}]
+
+**Utility Labels**
+
+STDIN^%JSWRITE [singlesub]
+
+With STDIN, the %JSWRITE utility routine expects a valid SET @ argument (such as the `ZWRITE <commands.html#zwrite>`_ command output) as its standard input (e.g., from a pipe or FIFO) and returns an array of objects. This construct ensures that $ZUSEDSTOR remains consistently low even for processing large data for conversion. STDIN^%JSWRITE automatically terminates the process with a non-zero exit status when it does not receive a READ terminator for 120 seconds from standard input.
+
+Example:
+
+.. code-block:: none
+
+   $ yottadb -run %XCMD 'ZWRITE ^demodevtest' | yottadb -run STDIN^%JSWRITE
+   [{"^demodevtest":{"Developer1":{"Token1":{"testSetup":"runtest holt maintest cpipe"}}}},
+   {"^demodevtest":{"Developer1":{"Token1":{"testSetup":{"65401,11987":1}}}}},
+   {"^demodevtest":{"Developer1":{"Token1":{"testSetup":{"holt":{"t":"mtest"}}}}}},
+   {"^demodevtest":{"Developer1":{"Token1":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"12073":1}}}}}}}}},
+   {"^demodevtest":{"Developer1":{"Token1":{"testSetup":{"holt":{"t":{"cpipe":{"65401":{"12025":0}}}}}}}}},
+   {"^demodevtest":{"Developer1":{"Token2":{"testSetup":"runtest holt maintest tconv"}}}},
+   {"^demodevtest":{"Developer1":{"Token2":{"testSetup":{"holt":{"65401,21987":1}}}}}},
+   {"^demodevtest":{"Developer1":{"Token2":{"testSetup":{"holt":{"t":"mtest"}}}}}},
+   {"^demodevtest":{"Developer1":{"Token2":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"22073":1}}}}}}}}},
+   {"^demodevtest":{"Developer1":{"Token2":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"22025":0}}}}}}}}},
+   {"^demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}},
+   {"^demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}},
+   {"^demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}},
+   {"^demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"22073":1}}}}}}}}},
+   {"^demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"22025":0}}}}}}}}},
+   {"^demodevtest":{"Developer3":{"Token4":{"testSetup":"runtest holt maintest tconv"}}}},
+   {"^demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"65401,31987":1}}}}}},
+   {"^demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":"mtest"}}}}}},
+   {"^demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"32073":1}}}}}}}}},
+   {"^demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"32025":0}}}}}}}}}]
+
+When :code:`singlesub` is specified as an argument, ^%JSWRITE expects ZWRITE lines for single subscript glvns. Here ^%JSWRITE implicitly removes the unsubscripted glvn name and returns an array collection of objects in the form of [{"key1":value,"key2":value,...},{"key1":value,"key2":value,...}] where:
+
+* key1 is the subscript
+* value is the right side of the =.
+
+The subscript first received by STDIN^%JSWRITE singlesub denotes the start of the object. When ^%JSWRITE finds the same subscript, it ends the current object boundary and starts the boundary of a new object.
+
+Example:
+
+.. code-block:: none
+
+   $ yottadb -run ^RTN
+   abc("firstname")="John"
+   abc("lastname")="Doe"
+   abc("firstname")="Jane"
+   abc("lastname")="Doe"
+
+   $ yottadb -run ^RTN | yottadb -run STDIN^%JSWRITE singlesub
+   [{"firstname":"John","lastname":"Doe"},
+   {"firstname":"Jane","lastname":"Doe"}]
 
 .. _lcase-util:
 
@@ -2571,7 +2724,7 @@ The internationalization utilities are:
 
 %PATCODE: Loads pattern definition files for use within an active database.
 
-These utilities are an integral part of the YottaDB functionality that permits you to customize your applications for use with other languages. For a description of these utilities, refer to `Chapter 12: “Internationalization” <./internatn.html>`_.
+These utilities are an integral part of the YottaDB functionality that permits you to customize your applications for use with other languages. For a description of these utilities, refer to `Chapter 12: “Internationalization” <internatn.html>`_.
 
 ----------------------------
 System Management Utilities
