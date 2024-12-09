@@ -14,7 +14,7 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    = -W
+SPHINXOPTS    = -W -q
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = GTMAdminOps
 SOURCEDIRS    = AcculturationGuide AdminOpsGuide ApplicationsManual MessageRecovery MultiLangProgGuide ProgGuide StyleGuide Plugins
@@ -42,6 +42,7 @@ clean:
 	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O) $(newline))
 	@rm -f MultiLangProgGuide/lua-yottadb-ydbdocs.rst
 	@rm -rf ./public/
+	@rm -f err_*.out
 
 # Test target: Create the "tarball" directory and run deadlinks on it
 # Relies on html, which gets passed to the % target below
@@ -50,7 +51,7 @@ test: html
 		git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto.git ../YDBOcto; \
 		else (cd ../YDBOcto && git pull); \
 	fi
-	@./buildall.sh public
+	@+./buildall.sh
 	@if [ ! -f ./deadlinks ]; then \
 		echo "Downloading deadlinks..."; \
 		DEADLINKS_VERSION=$$(wget -q -O - https://api.github.com/repos/deadlinks/cargo-deadlinks/releases/latest | jq --raw-output .tag_name); \

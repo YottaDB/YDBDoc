@@ -15,11 +15,10 @@
 # Expects one argument to specify the (existing) destination path for the copy command, e.g. `./buildall.sh build_dir`
 
 set -euo pipefail
-set -v
 # for rsync; this expands *.c to nothing if there are no matches, rather than '*.c'
 shopt -s nullglob
 
-target="$(realpath "${1:-target}")"
+target="$(realpath "${1:-public}")"
 octo="${2:-../YDBOcto}"
 mkdir -p "$target"
 
@@ -50,25 +49,26 @@ DIRECTORIES=(
 )
 
 rsync() {
-	command rsync --delete -lrtuv --exclude=\*.zip --exclude=.buildinfo --exclude=.nojekyll "$@"
+	command rsync --delete -lrtu --exclude=\*.zip --exclude=.buildinfo --exclude=.nojekyll "$@"
 }
 
 # Copy the HTML files
 for directory in "${DIRECTORIES[@]}"; do
-	pushd $directory
+	pushd $directory >/dev/null
 	output="$target/${directory%?}"
 	rsync _build/html/ "$output/"
 	# Update the following line as additional languages are supported
 	rsync --exclude=conf.py *.c *.m *.go *.pl *.py *.rs *.js *.lua "$output/"
-	popd
+	popd >/dev/null
 done
 cp index.html "$target"
 
 # Build the documentation from other repositories
-pushd "$octo"/doc
-make html
+pushd "$octo"/doc >/dev/null
+echo "Building Octo HTML docs..."
+make html >/dev/null
 rsync _build/html/ "$target/Octo"
-popd
+popd >/dev/null
 
 # The source directory for the programmer's guide does not have the same name
 # as the page the index links to
@@ -97,4 +97,3 @@ if [ -s $outfile ]; then
 	exit 1
 fi
 rm -f $outfile
-
