@@ -825,17 +825,17 @@ When using GPG 2.1.12 and up with prior versions of YottaDB, you can bypass the 
 
    echo "pinentry-mode=loopback" >> $GNUPGHOME/gpg.conf
 
-When using GPG 2.2.24 and up use the option to auto-increase secmem in gpg-agent (https://dev.gnupg.org/T3530)
+When using GPG 2.2.24 and up, use the following option to auto-increase secure memory usage in gpg-agent (https://dev.gnupg.org/T3530). Not doing so has been seen to cause hard-to-debug random CRYPTKEYFETCHFAILED errors (with a `Cannot allocate memory` secondary error detail) when lots of processes try to talk to the gpg-agent at the same time (for example, by opening different encrypted database files).
 
 .. code-block:: bash
 
-   echo "--auto-expand-secmem" >> $GNUPGHOME/gpg-agent.conf
+   echo "auto-expand-secmem" >> $GNUPGHOME/gpg-agent.conf
 
-When using GPG 2.2.24 and up use the option to increase the configurable backlog for sockets (https://dev.gnupg.org/T3473)
+When using GPG 2.2.24 and up use the following option to increase the configurable backlog for sockets (https://dev.gnupg.org/T3473)
 
 .. code-block:: bash
 
-   echo "--listen-backlog 128" >> $GNUPGHOME/gpg-agent.conf
+   echo "listen-backlog 128" >> $GNUPGHOME/gpg-agent.conf
 
 
 .. note::
