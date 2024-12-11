@@ -592,7 +592,7 @@ The format of the JOB command is:
 * The maximum command-line length for a JOB command is 8192 bytes.
 * If the parent process is operating in UTF-8 mode, the JOB'd process also operates in UTF-8 mode.
 * JOB'd processes have the same process name as the parent process, displayed by :code:`ps`.
-* If your background process must have a different mode from its parent, then create a shell script to alter the environment as needed, and spawn it with a ZSYstem command using ZSYstem "/path/to/shell/script &".
+* If the JOB'd process should start with a different environment, use the `VIEW SETENV <#setenv-view-command>`_ command to set the environment prior to the JOB command. Remember to restore it after the JOB command if the parent depends on the value (some environment variables, e.g., `ydb_routines <../AdminOpsGuide/basicops.html#ydb-routines>`_, are only referenced at process startup, and would not need to be restored).
 
 The operating system deletes the resultant process when the execution of its YottaDB process is complete. The resultant process executes asynchronously with the current process. Once YottaDB starts the resultant process, the current process continues.
 
@@ -2018,6 +2018,8 @@ RESETGVSTATS
 ~~~~~~~~~~~~~~
 
 Resets all the process-private global access statistics to 0. This is particularly useful for long running processes which would periodically like to restart the counting without requiring a shut down and restart.
+
+.. _setenv-view-command:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 [UN]SETENV:<expr>[:value]
