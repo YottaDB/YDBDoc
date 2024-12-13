@@ -10,7 +10,7 @@ Homepage: https://gitlab.com/YottaDB/DB/YDBDoc
 Install the necessary prerequisite sphinx. On Ubuntu this is:
 
 ```sh
-apt install sphinx python3-sphinx-rtd-theme python3-sphinx-copybutton
+apt install sphinx python3-sphinx-rtd-theme python3-sphinx-copybutton graphviz
 ```
 
 Now build the documentation:
