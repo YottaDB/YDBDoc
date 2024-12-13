@@ -61,6 +61,9 @@ test: html
 	@touch public/AcculturationGuide/Debian-Hybrid_yottadbworkshop15.zip
 	@./deadlinks -v public
 
+# Set target-specific variable to not fail on warnings, since "table-row-spanning" warning occurs when making manpages
+man: SPHINXOPTS=
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 # All of the $(SOURCEDIRS) are built at once.
@@ -72,7 +75,7 @@ test: html
 	fi ;\
     	cp ../lua-yottadb/docs/lua-yottadb-ydbdocs.rst ./MultiLangProgGuide/
 	@$(foreach dir, $(SOURCEDIRS), ln -sf ../shared/LICENSE.rst ../shared/_static  ../shared/_templates  ../shared/favicon.png ../shared/logo.png "$(dir)" $(newline))
-	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O) $(newline))
+	$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O); echo $(newline))
 
 .PHONY: checklinks
 checklinks: html
