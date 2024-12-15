@@ -4074,7 +4074,7 @@ Applies to: SD
 Performs a SEEK on output when $PRINCIPAL identifies a device that supports SEEK. Use this deviceparameter with $PRINCIPAL when redirected to a file. For more information, refer to `SEEK=strexpr <./ioproc.html#seek-strexpr>`_.
 
 ~~~~~~~~~
-PASSTHRU
+PASTHRU
 ~~~~~~~~~
 
 [NO]PASTHRU Applies to: TRM
