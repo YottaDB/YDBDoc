@@ -14,26 +14,27 @@
 .. ###############################################################
 
 .. index::
-    Database Management
+    MUPIP, Database Management (MUPIP)
 
-===============================
-5. General Database Management
-===============================
+===================================
+5. Database Management Tool (MUPIP)
+===================================
+
 
 .. contents::
    :depth: 5
 
 ----------------------
-Introduction
+Introduction to MUPIP
 ----------------------
 
 This chapter describes common database management operations such as creating database files, modifying database characteristics, database backup and restore, routine integrity checks, extracting or loading data, and optimizing performance.
 
 YottaDB uses M Peripheral Interchange Program (MUPIP) for database management, database journaling, and logical multisite replication (LMS). This chapter summarizes the MUPIP commands pertaining to YottaDB database management and serves as a foundation for more advanced YottaDB functionality described for Journaling and LMS.
 
-For MUPIP commands pertaining to database journaling, refer to `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_.
+For MUPIP commands pertaining to database journaling, refer to `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`__.
 
-For MUPIP commands pertaining to multisite database replication, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_.
+For MUPIP commands pertaining to multisite database replication, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`__.
 
 .. note::
    Two MUPIP operations - INTRPT and STOP - perform process management functions. All other MUPIP operations relate to the operation of the database.
@@ -61,7 +62,7 @@ Some MUPIP commands require information contained in the global directory. There
 
 The environment variable ydb_gbldir specifies the active global directory.
 
-A ydb_gbldir value of yottadb.gld tells MUPIP to look for a global directory file yottadb.gld in the current directory. For more information on the global directory, refer to `“Global Directory Editor” <./gde.html>`_.
+To access database files, MUPIP requires a global directory file, pointed to by the environment variable `ydb_gblir <basicops.html#ydb-gbldir>`_. For more information on the global directory, refer to `“Global Directory Editor (GDE)” <gde.html>`_.
 
 .. note::
    YottaDB recommends against running YottaDB components as root. When run as root, YottaDB components use the owner and group of the database file as the owner and group of newly created journal files, backup files, snapshot files, shared memory, and semaphores. In addition, they set the permissions on the resulting files, shared memory, and semaphores, as if running as the owner of the database file and as a member of the database file group.
@@ -131,7 +132,7 @@ Most MUPIP operations require write access to the database files with which they
 .. _mupip:
 
 +++++++++++
-MUPIP
+Synopsis
 +++++++++++
 
 The general format of MUPIP commands is:
@@ -155,9 +156,11 @@ MUPIP qualifier values are restricted only by the maximum size of the command in
 .. note::
    MUPIP sends its output to stderr not stdout. On shells such as :code:`bash` stderr can be redirected to stdout by `specifying 2>&1 on the command line <https://www.gnu.org/software/bash/manual/bash.html#Redirecting-Standard-Output-and-Standard-Error>`_.
 
---------------------------
-Commands and Qualifiers
---------------------------
+-----------------------------
+MUPIP Commands and Qualifiers
+-----------------------------
+
+Also see: `Quick Reference Summary <#mupip-command-summary>`_.
 
 The MUPIP commands described in this section are used for common database operations and serves as the foundation for more advanced functionality like `Journaling <./ydbjournal.html>`_ and `Replication <./dbrepl.html>`_.
 
@@ -295,9 +298,7 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
    -R[EGION]=region-list | -R[EGION] region-list
 
-* The region-list identifies the target of DUMPFHEAD. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order. INTEG processes regions based on the order specified in the list after wild-card expansion.
-
-* DUMPFHEAD REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_.
+* The region-list identifies the target of DUMPFHEAD. The region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order. INTEG processes regions based on the order specified in the list after wild-card expansion.
 
 * The REGION qualifier is incompatible with the FILE qualifier.
 
@@ -412,7 +413,7 @@ The format of the MUPIP EXTEND command is:
 -Blocks
 ~~~~~~~~
 
-Specifies the number of GDS database blocks by which MUPIP should extend the file. GDS files use additional blocks for bitmaps. MUPIP EXTEND adds the specified number of blocks plus the bitmap blocks required as overhead. For more information about bitmaps, refer to `Chapter 9: “YottaDB Database Structure(GDS)” <./gds.html>`_.
+Specifies the number of GDS database blocks by which MUPIP should extend the file. GDS files use additional blocks for bitmaps. MUPIP EXTEND adds the specified number of blocks plus the bitmap blocks required as overhead. For more information about bitmaps, refer to `Chapter 9: “Database Structure (GDS file)” <gds.html>`_.
 
 The format of the BLOCK qualifier is:
 
@@ -1059,7 +1060,7 @@ Sends an interrupt signal [POSIX] SIGUSR1 to the specified process, whose signal
 JOURNAL
 ++++++++++
 
-Analyzes, extracts, reports, and recovers data using journal files. For a description of the JOURNAL command, refer to `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_.
+Analyzes, extracts, reports, and recovers data using journal files. For a description of the JOURNAL command, refer to `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`__.
 
 +++++++
 LOAD

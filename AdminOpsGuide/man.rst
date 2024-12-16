@@ -56,29 +56,29 @@ Overview
 
 This manual contains twelve chapters and an Appendix. Here is a brief overview of each chapter:
 
-`Chapter 1: “About YottaDB” <./about.html>`_ introduces YottaDB administration and operations.
+`Chapter 1: “About YottaDB” <about.html>`__ introduces YottaDB administration and operations.
 
-`Chapter 2: “Installing YottaDB” <./installydb.html>`_ provides procedures for installing YottaDB.
+`Chapter 2: “Installing YottaDB” <installydb.html>`__ provides procedures for installing YottaDB.
 
-`Chapter 3: “Basic Operations” <./basicops.html>`_ describes operations required to start YottaDB and keep it running.
+`Chapter 3: “Basic Operations” <basicops.html>`__ describes operations required to start YottaDB and keep it running.
 
-`Chapter 4: “Global Directory Editor” <./gde.html>`_ describes global directories, which control placement and access of global variables, and explains how to use the Global Directory Editor (GDE) to create and maintain global directories.
+`Chapter 4: “Global Directory Editor (GDE)” <gde.html>`__ describes global directories, which control placement and access of global variables, and explains how to use the Global Directory Editor (GDE) to create and maintain global directories.
 
-`Chapter 5: “General Database Management” <./dbmgmt.html>`_ describes how to use a YottaDB utility called MUPIP to perform database and non-database operations.
+`Chapter 5: “Database Management Tool (MUPIP)” <dbmgmt.html>`__ describes how to use a YottaDB utility called MUPIP to perform database and non-database operations.
 
-`Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_ describes the journaling capabilities of YottaDB.
+`Chapter 6: “YottaDB Journaling” <ydbjournal.html>`__ describes the journaling capabilities of YottaDB.
 
-`Chapter 7: “Database Replication” <./dbrepl.html>`_ describes how to implement continuous application availability using multiple systems.
+`Chapter 7: “Database Replication” <dbrepl.html>`__ describes how to implement continuous application availability using multiple systems.
 
-`Chapter 8: “M Lock Utility (LKE)”  <./mlocks.html>`_ describes how to use a utility called the M Lock Utility (LKE) to examine and adjust M locks.
+`Chapter 8: “M Lock Editor (LKE)”  <mlocks.html>`__ describes how to use a utility called the M Lock Editor (LKE) to examine and adjust M locks.
 
-`Chapter 9: “YottaDB Database Structure(GDS)” <./gds.html>`_ provides an overview of YottaDB Database Structure (GDS).
+`Chapter 9: “YottaDB Database Structure (GDS file)” <gds.html>`__ provides an overview of YottaDB Database Structure (GDS).
 
-`Chapter 10: “Database Structure Editor” <./dse.html>`_ describes how to use the Database Structure Editor (DSE) to examine and modify sections of the database, should that ever be necessary.
+`Chapter 10: “Database Structure Editor (DSE)” <dse.html>`__ describes how to use the Database Structure Editor (DSE) to examine and modify sections of the database, should that ever be necessary.
 
-`Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_ describes procedures for verifying and maintaining the integrity of GDS databases.
+`Chapter 11: “Maintaining Database Integrity” <integrity.html>`__ describes procedures for verifying and maintaining the integrity of GDS databases.
 
-`Chapter 12: “Database Encryption” <./encryption.html>`_ describes procedures for encrypting data in the database and journal files.
+`Chapter 12: “Database Encryption” <encryption.html>`__ describes procedures for encrypting data in the database and journal files.
 
 -------------------------------
 Conventions Used in this Manual

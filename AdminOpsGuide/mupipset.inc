@@ -118,7 +118,7 @@ Specifies whether replication is on or off. The format of the REPLICATION qualif
 
 Incompatible with: JNLFILE
 
-The following sections describe the action qualifiers of the MUPIP SET command exclusive of the details related to journaling and replication, which are described in `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_ and `Chapter 7: “Database Replication” <./dbrepl.html>`_. All of these qualifiers are incompatible with the JNLFILE and REPLICATION qualifiers.
+The following sections describe the action qualifiers of the MUPIP SET command exclusive of the details related to journaling and replication, which are described in `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`__ and `Chapter 7: “Database Replication” <./dbrepl.html>`__. All of these qualifiers are incompatible with the JNLFILE and REPLICATION qualifiers.
 
 .. _set-access-method:
 

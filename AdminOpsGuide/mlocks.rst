@@ -14,10 +14,10 @@
 .. ###############################################################
 
 .. index::
-   M Lock Utility (LKE)
+   LKE, M Lock Editor (LKE)
 
 ====================================
-8. M Lock Utility (LKE)
+8. M Lock Editor (LKE)
 ====================================
 
 .. contents::
@@ -27,9 +27,9 @@
 Introduction
 -----------------------------
 
-The M Lock Utility (LKE) is a tool for examining and changing the YottaDB LOCK environment. For a description of M LOCKs, refer to the `LOCKs section in the General Language Features of M <../ProgrammersGuide/langfeat.html#m-locks>`_ and the description of the `LOCK command in the Commands chapter of the Programmer's Guide <../ProgrammersGuide/commands.html#lock-command>`_.
+The M Lock Editor (LKE) is a tool for examining and changing the YottaDB LOCK environment. For a description of M LOCKs, refer to the `LOCKs section in the General Language Features of M <../ProgrammersGuide/langfeat.html#m-locks>`_ and the description of the `LOCK command in the Commands chapter of the Programmer's Guide <../ProgrammersGuide/commands.html#lock-command>`_.
 
-The two primary functions of the M Lock Utility (LKE) are:
+The two primary functions of the M Lock Editor (LKE) are:
 
 1. SHOW all or specified LOCKs currently active
 
@@ -106,6 +106,8 @@ LKE Commands and Qualifiers
 ------------------------------------
 
 (Last updated: `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_)
+
+Also see: `Quick Reference Summary <mlocks.html#summary>`_.
 
 The general format of LKE commands is:
 

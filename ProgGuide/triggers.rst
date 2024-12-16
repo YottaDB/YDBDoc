@@ -69,7 +69,7 @@ Suppose you want to set up a trigger called TrigAcct on every s ^Acct("ID") to i
 
 .. image:: accttrig.svg
 
-To apply this trigger definition file to YottaDB, all you do is to load it using MUPIP TRIGGER -TRIGGERFILE or $ZTRIGGER(). YottaDB would invoke trigger name TrigAcct on every SET operation on ^Acct("ID"). Internally, YottaDB stores trigger TrigAcct in the same database file where ^Acct is stored. The syntax of an entry in a trigger definition file is:
+To apply this trigger definition file to YottaDB, all you do is to load it using `MUPIP TRIGGER -TRIGGERFILE <../AdminOpsGuide/dbmgmt.html#trigger>`_ or `$ZTRIGGER() <functions.html#ztrigger>`_. YottaDB would invoke trigger name TrigAcct on every SET operation on ^Acct("ID"). Internally, YottaDB stores trigger TrigAcct in the same database file where ^Acct is stored. The syntax of an entry in a trigger definition file is:
 
 {-triggername\|-triggername-prefix\*\|-\*\|{+|-}trigvn -commands=cmd[,...] -xecute=strlit1 [-[z]delim=expr][-pieces=[lvn=]int1[:int2][;...]] [-options={[no]i[solation]|[no]c[onsistencycheck]}...] [-name=strlit2]}
 
@@ -669,7 +669,7 @@ For any replication stream record indicating triggers were invoked, the Update P
 MUPIP Trigger and $ZTRIGGER()
 -----------------------------
 
-MUPIP TRIGGER provides a facility to examine and update triggers. The $ZTRIGGER() function performs trigger maintenance actions analogous to those performed by MUPIP TRIGGER. $ZTRIGGER() returns the truth value expression depending on the success of the specified action. Your choice of MUPIP TRIGGER or $ZTRIGGER() for trigger maintenance should depend on your current application development model and configuration management practices. Both MUPIP TRIGGER and $ZTRIGGER() use the same trigger definition syntax. You should familiarize yourself with the syntax of an entry in a trigger definition file before exploring MUPIP TRIGGER and $ZTRIGGER(). For more information and usage examples of MUPIP TRIGGER, refer to the `Administration and Operations Guide <../AdminOpsGuide/index.html>`_. For more information and usage examples of $ZTRIGGER(), refer to :ref:`ztrigger-function`.
+`MUPIP TRIGGER <../AdminOpsGuide/dbmgmt.html#trigger>`_ provides a facility to examine and update triggers. The $ZTRIGGER() function performs trigger maintenance actions analogous to those performed by MUPIP TRIGGER. $ZTRIGGER() returns the truth value expression depending on the success of the specified action. Your choice of MUPIP TRIGGER or $ZTRIGGER() for trigger maintenance should depend on your current application development model and configuration management practices. Both MUPIP TRIGGER and $ZTRIGGER() use the same trigger definition syntax. You should familiarize yourself with the syntax of an entry in a trigger definition file before exploring MUPIP TRIGGER and $ZTRIGGER(). For more information and usage examples of MUPIP TRIGGER, refer to the `Administration and Operations Guide <../AdminOpsGuide/dbmgmt.html#trigger>`_. For more information and usage examples of $ZTRIGGER(), refer to :ref:`ztrigger-function`.
 
 
 

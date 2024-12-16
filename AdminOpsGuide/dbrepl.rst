@@ -3370,7 +3370,7 @@ Command Syntax:
 -file and -region
 ~~~~~~~~~~~~~~~~~
 
-Use these qualifiers in the same manner that you would use them for a MUPIP SET. For more information refer to `Chapter 5: “General Database Management” <./dbmgmt.html>`_.
+Use these qualifiers in the same manner that you would use them for a MUPIP SET. For more information refer to `Chapter 5: “Database Management Tool” <dbmgmt.html>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -replication=replication-state

@@ -14,11 +14,11 @@
 .. ###############################################################
 
 .. index::
-   GDS
+   GDS file format, Database Structure
 
-======================================
-9. YottaDB Database Structure (GDS)
-======================================
+========================================
+9. Database Structure (GDS file)
+========================================
 
 .. contents::
    :depth: 5
@@ -66,11 +66,11 @@ The file header data elements are listed as follows in alphabetical order for ea
 | Access method                      | The buffering strategy of the database. Access Method can have 2 values - BG or MM. The default value is BG.                                                  |
 |                                    | Buffered Global (BG) manages the buffers (the OS/file system may also buffer "in series"); MM - the OS/file system manages all the buffering.                 |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Async IO                           | Whether the database file uses Asynchronous or Synchronous I/O. For additional information, see Chapter 4: Global Directory Editor.                           |
+| Async IO                           | Whether the database file uses Asynchronous or Synchronous I/O. For additional information, see Chapter 4: Global Directory Editor (GDE).                     |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Block size (in bytes)              | The size (in bytes) of a GDS block. Block size can have values that are multiples of 512. The default value is 1024.                                          |
 |                                    | Block size should be a multiple of the native block size for the OS file system chosen to accommodate all but outlying large records.                         |
-|                                    | For additional information, see Ch 4: Global Directory Editor.                                                                                                |
+|                                    | For additional information, see Ch 4: Global Directory Editor (GDE).                                                                                          |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Blocks to Upgrade                  | This field should be ignored in r2.00.                                                                                                                        |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -188,7 +188,7 @@ The file header data elements are listed as follows in alphabetical order for ea
 | Master Bitmap Size                 | The size of the Master Bitmap. The current Master Bitmap Size of the database is 496 (512 byte blocks).                                                       |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Maximum key size                   | The minimum key size is 3 bytes and the maximum key size is 1019 bytes. For information on setting the maximum key size for your application design, refer to |
-|                                    | Global Directory Editor.                                                                                                                                      |
+|                                    | Global Directory Editor (GDE).                                                                                                                                |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Maximum record size                | The minimum record size is zero. A record size of zero only allows a global variable node that does not have a value. The maximum is 1,048,576 bytes (1MiB).  |
 |                                    | The default value is 256 bytes.                                                                                                                               |

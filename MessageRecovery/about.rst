@@ -103,7 +103,7 @@ For more information on LOAD and EXTRACT, refer to the `General Database Managem
 
 For information on salvaging damaged extracts, refer to the `Maintaining Database Integrity chapter in the Administration and Operations Guide <../AdminOpsGuide/integrity.html>`_.
 
-For details on the internals of spanning nodes, refer to the `YottaDB Database Structure (GDS) chapter in the Administration and Operations Guide <../AdminOpsGuide/gds.html>`_.
+For details on the internals of spanning nodes, refer to the `Database Structure (GDS) chapter in the Administration and Operations Guide <../AdminOpsGuide/gds.html>`_.
 
 --------------
 Plug-In Errors

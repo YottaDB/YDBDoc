@@ -40,7 +40,7 @@ The chapter describes the following:
 Verifying Database Integrity
 --------------------------------
 
-A consistent verification strategy expedites the process of rapid identification and correction of database damage, while minimizing the overhead of integrity checking. In YottaDB, this strategy is logically developed around MUPIP INTEG and its numerous options for verifying GDS integrity. For detailed information on MUPIP INTEG, refer to the :ref:`MUPIP chapter <mupip>`. The following sections describe situations when executing MUPIP INTEG is the appropriate action.
+A consistent verification strategy expedites the process of rapid identification and correction of database damage, while minimizing the overhead of integrity checking. In YottaDB, this strategy is logically developed around MUPIP INTEG and its numerous options for verifying GDS integrity. For detailed information on MUPIP INTEG, refer to the `MUPIP chapter <dbmgmt.html#integ>`_. The following sections describe situations when executing MUPIP INTEG is the appropriate action.
 
 GTMASSERT sends an operator log message in addition to the usual user message. Because these are potentially dangerous conditions, all GTMASSERTs should be immediately reported to YottaDB. Check database integrity with the -FAST qualifier, if appropriate, as soon as possible. GTMCHECK is similar to GTMASSERT but less sophisticated. It does not send an operation log message; however, it sends a message to the Principal Device.
 
@@ -1098,7 +1098,7 @@ These error messages reflect failures to find, open, or access a database file. 
 
 Use printenv to check ydb_gbldir or use the M command WRITE $ZGBLDIR to verify that the "pointer" identifies the proper Global Directory. If the pointer is not appropriate, reset ydb_gbldir or use the M command SET $ZGBLDIR= to name the proper file.
 
-Examine the Global Directory using GDE. If the Global Directory is not appropriate, correct or recreate it with GDE. For more information on the use of GDE, refer to the `"Global Directory Editor" <./gde.html>`_ chapter.
+Examine the Global Directory using GDE. If the Global Directory is not appropriate, correct or recreate it with GDE. For more information on the use of GDE, refer to the `"Global Directory Editor (GDE)" <gde.html>`_ chapter.
 
 *IF THE GLOBAL DIRECTORY IS DAMAGED BUT ACCESSIBLE WITH GDE*, investigate who may have used GDE to perform the modifications. If the Global Directory is damaged and not accessible with GDE, investigate what program, other than YottaDB and its utilities, might have written to the file. Except for GDE, all YottaDB components treat the Global Directory as static and read-only.
 

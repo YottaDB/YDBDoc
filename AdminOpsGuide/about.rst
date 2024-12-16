@@ -69,9 +69,9 @@ For more information on the YottaDB language and programming environment, see th
 Database Subsystem
 ------------------
 
-The YottaDB database subsystem consists of a run-time library and a set of utilities which operate on one or more user-specified Global Directories (GD) and database files. YottaDB stores M global variables in database files, which are ordinary UNIX files. Internally, the UNIX files are organized as balanced trees (B-trees) in YottaDB Data Structures (GDS). See the `"YottaDB Database Structure" chapter <./gds.html>`_ for more information on B-trees and the GDS file structure.
+The YottaDB database subsystem consists of a run-time library and a set of utilities which operate on one or more user-specified Global Directories (GD) and database files. YottaDB stores M global variables in database files, which are ordinary UNIX files. Internally, the UNIX files are organized as balanced trees (B-trees) in YottaDB Data Structures (GDS). See the `"Database Structure (GDS file)" chapter <gds.html>`_ for more information on B-trees and the GDS file structure.
 
-A directory maps global names to a database file. YottaDB processes use this mapping when storing and retrieving globals from the database. Multiple global directories can reference a single database file, and a database file can be referenced in multiple global directories, with some exceptions, as discussed in `Chapter 4: “Global Directory Editor” <./gde.html>`_. Use the Global Directory Editor (GDE) to create and maintain global directories.
+A directory maps global names to a database file. YottaDB processes use this mapping when storing and retrieving globals from the database. Multiple global directories can reference a single database file, and a database file can be referenced in multiple global directories, with some exceptions, as discussed in `Chapter 4: “Global Directory Editor” <./gde.html>`__. Use the Global Directory Editor (GDE) to create and maintain global directories.
 
 In addition to mapping global variables to database files, global directories also store initial parameters used by the MUPIP CREATE command when creating new database files. YottaDB uses environment variables to locate the global directory or, optionally database files.
 
@@ -85,31 +85,31 @@ YottaDB provides utility programs to administer the system. Each utility is summ
 1. GDE
 ++++++
 
-The Global Directory Editor (GDE) is a YottaDB utility program that creates and maintains global directories. GDE provides commands for operating on the global directory.
+The Global Directory Editor (GDE) is a YottaDB utility program that creates and maintains global directories. GDE provides commands for operating on the global directory. See `Chapter 4: “Global Directory Editor” <gde.html>`_ for more information.
 
 ++++++++
 2. MUPIP
 ++++++++
 
-MUPIP (M Peripheral Interchange Program) is the YottaDB utility program for general database operations, YottaDB Journaling, Multi-site Database Replication, and some non-database operations.
+MUPIP (M Peripheral Interchange Program) is the primary YottaDB tool for managing database operations, as well as a few non-database operations. It is discussed in `Chapter 5: Database Management Tool <dbmgmt.html>`_, as well as in `Chapter 6: YottaDB Journaling <ydbjournal.html>`_ and `Chapter 7: Database Replication <dbrepl.html>`_, the latter two topics being important enough to warrant dedicated chapters.
 
 ++++++
 3. LKE
 ++++++
 
-The M Lock Utility (LKE) is the YottaDB utility program that examines and modifies the lock space where YottaDB maintains the current M LOCK state. LKE can monitor the locking mechanism and remove locks. See `Chapter 8: “M Lock Utility (LKE)” <./mlocks.html>`_ for more information.
+The M Lock Editor (LKE) is the YottaDB utility program that examines and modifies the lock space where YottaDB maintains the current M LOCK state. LKE can monitor the locking mechanism and remove locks. See `Chapter 8: “M Lock Editor (LKE)” <mlocks.html>`_ for more information.
 
 ++++++
 4. DSE
 ++++++
 
-The Database Structure Editor (DSE) is the YottaDB utility program to examine and alter the internal database structures. DSE edits YottaDB Database Structure (GDS) files. It provides an extensive database "patch" facility (including block integrity checks), searches for block numbers and nodes, and provides symbolic examination and manipulation facilities. See `Chapter 10: “Database Structure Editor” <./dse.html>`_ for more information.
+The Database Structure Editor (DSE) is the YottaDB utility for experts to examine and manipulate the internal structure of YottaDB database (Global Database Structure – GDS) files. It provides an extensive database "patch" facility (including block integrity checks), searches for block numbers and nodes, and provides symbolic examination and manipulation facilities. See `Chapter 10: “Database Structure Editor (DSE)” <dse.html>`_ for more information.
 
 +++++++++++++++++++++
 5. Command Qualifiers
 +++++++++++++++++++++
 
-Each utility program has its own set of commands. Qualifiers are used as arguments for a command. A qualifier is always prefixed with a hyphen (-). Some qualifier allow assigning values with an equal (=) sign where as some allow the use of sub-qualifiers as their arguments. If you specify the same qualifier more than once, MUPIP, DSE, and LKE acts upon the qualifier that appears latest. However, you cannot specify qualifiers that have sub-qualifiers more than once. With GDE, specifying the same qualifier more than once produces an error.
+Each utility program has its own set of commands. Qualifiers are used as arguments for a command. A qualifier is always prefixed with a hyphen (-). Some qualifiers allow assigning values with an equal (=) sign whereas some allow the use of sub-qualifiers as their arguments. If you specify the same qualifier more than once, MUPIP, DSE, and LKE acts upon the qualifier that appears latest. However, you cannot specify qualifiers that have sub-qualifiers more than once. With GDE, specifying the same qualifier more than once produces an error.
 
 ------------------
 Database Integrity

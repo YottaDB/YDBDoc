@@ -132,8 +132,19 @@ find $target -iname 'roboto*' -delete
 # containing for example "#id1", "#id2" etc. by Sphinx so we look for that below. And expect NO such lines in "index.html".
 # If we do find such lines, they need to be fixed to remove the duplicate reference thereby every reference will have a
 # named link (which is a much better permalink than a numbered link). See YDBDoc#397 for more details.
-outfile="public/duplicate_reference.out"
-find public -name index.html -exec grep "href.*#id[0-9]" /dev/null {} \; >& $outfile
+# Duplicate references typically come from duplicate heading names when building the index, since Sphinx automatically
+# creates reference names for each heading. cf. Hyperlink Targets:
+#    https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#explicit-hyperlink-targets
+# To fix this, RENAME A HEADING, or give it an explicit reference. For example to give
+# heading GDE the reference name GDE2, prefix it with this (surrounded by blank lines):
+#
+# .. _GDE2:
+#
+# ~~~~~~
+# GDE
+# ~~~~~~
+outfile="$target/duplicate_reference.out"
+find $target -name index.html -exec grep "href.*#id[0-9]" /dev/null {} \; >& $outfile
 if [ -s $outfile ]; then
 	echo "--------------------------------------------------------------------------"
 	echo "Duplicate references found by buildall.sh. List follows. Fix those first."
@@ -141,5 +152,7 @@ if [ -s $outfile ]; then
 	cat $outfile
 	echo "--------------------------------------------------------------------------"
 	exit 1
+else
+	echo "No duplicate references found"
 fi
 rm -f $outfile

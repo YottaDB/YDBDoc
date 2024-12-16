@@ -14,11 +14,11 @@
 .. ###############################################################
 
 .. index::
-   Database Structure Editor
+   DSE, Database Structure Editor (DSE)
 
-=================================
-10. Database Structure Editor
-=================================
+===================================
+10. Database Structure Editor (DSE)
+===================================
 
 .. contents::
    :depth: 5
@@ -116,6 +116,8 @@ Use the DSE EXIT, or QUIT command to leave DSE.
 ----------------------------
 DSE Commands and Qualifiers
 ----------------------------
+
+Also see: `Quick Reference Summary <dse.html#dse-command-summary>`_.
 
 The general format of DSE commands is:
 
@@ -999,7 +1001,7 @@ Use only with: -FILEHEADER
 
 Changes the decimal value for the maximum allowable key size. Reducing KEY_MAX_SIZE can restrict access to existing data and cause YottaDB to report errors. Do not create incompatible key and record sizes.
 
-Before permanently changing the key size using DSE, use GDE to check that the appropriate Global Directory contains the same key size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_.
+Before permanently changing the key size using DSE, use GDE to check that the appropriate Global Directory contains the same key size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor (GDE)” <gde.html>`__.
 
 Use only with: -FILEHEADER
 
@@ -1046,7 +1048,7 @@ For more information, refer to :ref:`region-qualifiers`.
 
 Changes the decimal value for the maximum allowable record size. Use the -RECORD_MAX_SIZE qualifier only in conjunction with the -FILEHEADER qualifier. Reducing RECORD_MAX_SIZE can restrict access to existing data and cause YottaDB to report errors. Do not create incompatible key and record sizes.
 
-Before making a permanent change to the records size using DSE, use GDE to check that the appropriate Global Directory contains the same record size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`_.
+Before making a permanent change to the records size using DSE, use GDE to check that the appropriate Global Directory contains the same record size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor (GDE)” <gde.html>`__.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 -REF[ERENCE_COUNT]=reference_count
@@ -1663,7 +1665,7 @@ This command displays the fileheader elements along with the following helper pr
    Upd reserved area [% global buffers]   50  Avg blks read per 100 records                200
    Pre read trigger factor [% upd rsrvd]    50  Upd writer trigger [%flshTrgr]                 33
 
-For more information, refer to the :ref:`file-header-data-elements` in “YottaDB Database Structure(GDS)”.
+For more information, refer to the :ref:`file-header-data-elements` in “Database Structure (GDS file)”.
 
 .. _dse-evaluate:
 
@@ -1981,7 +1983,7 @@ The format of the INTEGRIT command is:
    I[NTEGRIT] -B[LOCK]=block-number
 
 .. note::
-   Unlike MUPIP INTEG, this command only detects errors internal to a block and cannot detect errors such as indices incorrectly pointing to another block. For information on the utility that checks multiple blocks, refer to the :ref:`mupip-integ` of the General Database Management chapter.
+   Unlike MUPIP INTEG, this command only detects errors internal to a block and cannot detect errors such as indices incorrectly pointing to another block. For information on the utility that checks multiple blocks, refer to the :ref:`mupip-integ` section of the MUPIP chapter.
 
 ~~~~~~~~~~~~~~~~~~~~~~
 Qualifiers of INTEGRIT

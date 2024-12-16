@@ -14,11 +14,11 @@
 .. ###############################################################
 
 .. index::
-   Global Directory Editor
+   GDE, Global Directory Editor (GDE)
 
-=============================
-4. Global Directory Editor
-=============================
+================================
+4. Global Directory Editor (GDE)
+================================
 
 .. contents::
    :depth: 5
@@ -347,7 +347,7 @@ If you select the -JOURNAL option when you ADD or CHANGE a region in a Global Di
    --------------------------------------------------------------------------------------------------------
    DEFAULT           $gtmdir/$ydb_rel/g/yottadb.mjl         Y         2308    2048     2048    8386560
 
-For more information about journaling, see the section on the JOURNAL qualifier in this chapter and `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_.
+For more information about journaling, see the section on the JOURNAL qualifier in this chapter and `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`__.
 
 -----------------------
 Using GDE
@@ -510,8 +510,10 @@ To exit the Global Directory and save your changes, use the EXIT command. GDE pe
 Only MUPIP CREATE uses the database specifications; run-time processes and other utility functions only use the map.
 
 -------------------------------
-Global Director Editor Commands
+GDE Commands and Qualifiers
 -------------------------------
+
+Also see: `Quick Reference Summary <gde.html#gde-command-summary>`_.
 
 This section describes GDE commands. GDE allows abbreviations of commands. The section describing each command provides the minimum abbreviation for that command and a description of any qualifiers that are not object-related. The section discussing the object-type describes all the associated object-related qualifiers.
 
@@ -1328,7 +1330,7 @@ This qualifier establishes characteristics for the journal file on newly created
 
 Although you do not have to establish the criteria for your journaling process at this point, it is efficient to do so, even if you are not entirely sure you will use journaling. The options available for -JOURNAL set up the environment, so it is ready for you to enable with MUPIP SET -JOURNAL. You can also change or add any of the established options at that time.
 
-For more information about journaling, see `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_.
+For more information about journaling, see `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`__.
 
 The journal-option-list includes:
 
@@ -1559,9 +1561,9 @@ Specifies the access method or the YottaDB buffering strategy for storing and re
 
 * code can have 2 values - Buffered Global (BG) or Memory Mapped (MM). The default value is BG.
 
-* With BG, the global buffer pool manages the buffers (the OS/file system may also provide additional buffering). You get the choice of using BEFORE_IMAGE or NOBEFORE_IMAGE journaling for your database. For details on the implications of these forms of Journaling, see `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`_.
+* With BG, the global buffer pool manages the buffers (the OS/file system may also provide additional buffering). You get the choice of using BEFORE_IMAGE or NOBEFORE_IMAGE journaling for your database. For details on the implications of these forms of Journaling, see `Chapter 6: “YottaDB Journaling” <ydbjournal.html>`__.
 
-  - BG supports both forward and backward recovery and rollback to recover a database without a restore. For more information on forward and backward recovery and rollback, see `Chapter 5: “General Database Management” <./dbmgmt.html>`_.
+  - BG supports both forward and backward recovery and rollback to recover a database without a restore. For more information see `forward and backward recovery <ydbjournal.html#recovery-from-a-journal-file>`__.
 
   - BG is a likely choice when you need faster recovery times from system failures.
 

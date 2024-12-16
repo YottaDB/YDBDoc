@@ -135,7 +135,7 @@ Null Subscripts
 
 YottaDB has an option to have databases where existing nodes with null subscripts are accepted, but updates with null subscripts (except Kill) are not allowed. At the same time, an option at database creation time exists to collate null subscripts before numeric and string subscripts, as specified by the M standard.
 
-The NULL SUBSCRIPTS database file header field has the values TRUE, FALSE, ALWAYS (synonymous with TRUE, which is deprecated but continues to be supported), NEVER (synonymous with FALSE, which is also deprecated and also continues to be supported) and EXISTING. Please note that TRUE and ALWAYS are internally the same, as are FALSE and NEVER. This means that GDE and DSE will only display the values as ALWAYS and NEVER.
+The NULL SUBSCRIPTS database file header field has the values TRUE, FALSE, ALWAYS (synonymous with TRUE, which is deprecated but continues to be supported), NEVER (synonymous with FALSE, which is also deprecated and also continues to be supported) and EXISTING. Please note that TRUE and ALWAYS are internally the same, as are FALSE and NEVER. This means that `GDE <../AdminOpsGuide/gde.html>`_ and `DSE <../AdminOpsGuide/dse.html>`_ will only display the values as ALWAYS and NEVER.
 
 For any region for which the NULL SUBSCRIPTS field has the value EXISTING:
 
@@ -154,7 +154,7 @@ For any region for which the NULL SUBSCRIPTS field has the value EXISTING:
 
 The DSE FILEHEADER qualifier NULL_SUBSCRIPTS permits the new keywords for values in the NULL_SUBSCRIPTS field. Also, the DSE DUMP command displays the new keywords in the file header output.
 
-The GDE REGION qualifier NULL_SUBSCRIPTS accepts the keywords ALWAYS, NEVER and EXISTING. The existing argument-less qualifiers NULL_SUBSCRIPTS (synonymous with NULL_SUBSCRIPTS=ALWAYS) and NONULL_SUBSCRIPTS (synonymous with -NULL_SUBSCRIPTS=NEVER) are deprecated but continue to be supported. Also, the GDE SHOW command displays the new keywords in the “Null Subs” column.
+The `GDE REGION <../AdminOpsGuide/gde.html#region-qualifiers>`_ qualifier NULL_SUBSCRIPTS accepts the keywords ALWAYS, NEVER and EXISTING. The existing argument-less qualifiers NULL_SUBSCRIPTS (synonymous with NULL_SUBSCRIPTS=ALWAYS) and NONULL_SUBSCRIPTS (synonymous with -NULL_SUBSCRIPTS=NEVER) are deprecated but continue to be supported. Also, the GDE SHOW command displays the new keywords in the “Null Subs” column.
 
 MUPIP CREATE creates database files with the new values for NULL_SUBSCRIPTS.
 
@@ -188,11 +188,11 @@ To establish a default collation version for local variables within the process,
 
 Also using set^%LCLCOL(,ncol), the null collation order can be changed while keeping the alternate collation order unchanged. If subscripted local variables exist, null collation order cannot be changed. In this case, YottaDB issues YDB-E-COLLDATAEXISTS.
 
-~~~~~~
-GDE
-~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+GDE sets Null Subscripts
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-The -REGION qualifier –[NO]NULL_SUBCRIPTS accepts new values with change, add and template commands, default is –NONULL_SUBSCRIPTS, e.g.:
+The `GDE -REGION <../AdminOpsGuide/gde.html#region-qualifiers>`_ qualifier –[NO]NULL_SUBCRIPTS accepts new values with change, add and template commands, default is –NONULL_SUBSCRIPTS, e.g.:
 
 .. code-block:: bash
 
@@ -291,18 +291,18 @@ The other region qualifier is –[NO]STDNULLCOLL with add, change and template c
                                                               FILE=yottadb.dat
    GDE>
 
-~~~~~~
-DSE
-~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+DSE views Null Subscripts
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The -null_subscripts qualifier accepts never, always and existing. The default qualifier is never.
+The `DSE CHANGE -fileheader -null_subscripts <../AdminOpsGuide/dse.html#change>`_ qualifier accepts never, always and existing. The default qualifier is never.
 
 .. note::
    The null subscript collation order cannot be changed using DSE.
 
 dump –fileheader output reflects this for null_subscripts as well as null collation order.
 
-For a region, “Standard Null Collation” in DSE dump output corresponds to -stdnullcoll field in .gld file. DSE displays TRUE for “Standard Null Collation” if the region has –STDNULLCOLL, otherwise it displays FALSE.
+For a region, “Standard Null Collation” in DSE dump output corresponds to the -stdnullcoll field in the .gld file. DSE displays TRUE for “Standard Null Collation” if the region has –STDNULLCOLL, otherwise it displays FALSE.
 
 From the example above, the output of dump –fileheader for TEAGLOBALS.dat will be as follows:
 
@@ -467,9 +467,9 @@ For more details about the behavior of these functions with historical null coll
 MUPIP Binary Extract and Load
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* MUPIP EXTRACT BINARY issues NULLCOLLDIFF error if it needs to extract from multiple databases with different STDNULCOLL settings.
+* `MUPIP EXTRACT <../AdminOpsGuide/dbmgmt.html#extract>`_ BINARY issues NULLCOLLDIFF error if it needs to extract from multiple databases with different STDNULCOLL settings.
 * MUPIP EXTRACT BINARY writes a new field in the binary extract header to note down the first database's STDNULCOLL setting.
-* MUPIP LOAD BINARY on a binary extract transforms the null subscripts appropriately if the STDNULCOLL setting of the target database is different from the setting in the binary extract header.
+* `MUPIP LOAD <../AdminOpsGuide/dbmgmt.html#load>`_ BINARY on a binary extract transforms the null subscripts appropriately if the STDNULCOLL setting of the target database is different from the setting in the binary extract header.
 * MUPIP LOAD BINARY is able to successfully load onto multiple databases with different STDNULCOLL settings.
 * MUPIP EXTRACT ZWR and MUPIP LOAD ZWR will work no matter what the YottaDB version of the source and destination databases, and no matter what the null (or other) collation setting of the source and destination databases.
 

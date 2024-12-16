@@ -308,7 +308,7 @@ Backup Journal Files
 
 YottaDB recommends separate backup schemes for database files and journal files. :ref:`MUPIP BACKUP <mupip-backup>` creates a backup copy of the database. You should back up journal files separately.
 
-MUPIP BACKUP uses the BKUPDBJNL and NEWJNLFILES to interact with journal files. As stated in the `General Database Management chapter <./dbmgmt.html>`_, BKUPDBJNL enables or turns off the journaling characteristics of the backup database and NEWJNLFILES sets the journaling characteristics of the database being backed up. The following illustration describes how :code:`mupip backup -newjnlfiles=noprevlink` cuts the back link between the newly created journal file and the prior generation journal files.
+MUPIP BACKUP uses the BKUPDBJNL and NEWJNLFILES to interact with journal files. As stated in the `Database Management Tool chapter <dbmgmt.html>`_, BKUPDBJNL enables or turns off the journaling characteristics of the backup database and NEWJNLFILES sets the journaling characteristics of the database being backed up. The following illustration describes how :code:`mupip backup -newjnlfiles=noprevlink` cuts the back link between the newly created journal file and the prior generation journal files.
 
 .. image:: noprevlink.svg
 
@@ -457,7 +457,7 @@ MUPIP CREATE copies existing journaling information from the Global Directory to
 
 :ref:`DSE DUMP FILEHEADER <dse-dump-fileheader>` displays the current values for all established journaling characteristics.
 
-This section provides a description of the MUPIP SET command with specific reference to the journaling related qualifiers. For information on the other MUPIP SET qualifiers, refer to `Chapter 5: “General Database Management” <./dbmgmt.html>`_.
+This section provides a description of the MUPIP SET command with specific reference to the journaling related qualifiers. For information on the other MUPIP SET qualifiers, refer to `Chapter 5: “Database Management Tool” <dbmgmt.html>`_.
 
 MUPIP SET JOURNAL can change some database characteristics when journaling is active for a specific file or region(s). The first run of MUPIP SET JOURNAL on an older database automatically changes the maximum/minimum journal settings to match those required by the current YottaDB version. MUPIP SET operates on database files, journal files, regions or replication state.
 
@@ -570,7 +570,7 @@ Change the replication state of a journal file; this command is intended for use
 SET Action Qualifiers
 ++++++++++++++++++++++
 
-The JOURNAL and REPLICATION qualifiers are the only SET qualifiers relevant for journaling. For information on the other MUPIP SET qualifiers, refer to `Chapter 5: “General Database Management” <./dbmgmt.html>`_.
+The JOURNAL and REPLICATION qualifiers are the only SET qualifiers relevant for journaling. For information on the other MUPIP SET qualifiers, refer to `Chapter 5: “Database Management Tool” <dbmgmt.html>`_.
 
 .. _set-action-journal:
 
