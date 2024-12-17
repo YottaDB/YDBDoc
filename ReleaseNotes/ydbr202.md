@@ -1,4 +1,4 @@
-!---
+<!---
 .. ###############################################################
 .. #                                                             #
 .. # Copyright (c) 2024 YottaDB LLC and/or its subsidiaries.     #
@@ -344,21 +344,21 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-005](http://ti
   ```
 
   The argument (expr) is a string which contains a comma separated list of setsockopt options. If the option takes a value, it is given after an equal sign (=) following the option. The supported options are:
-  
+
   ```
-  KEEPALIVE   a positive value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.    
-  KEEPIDLE    sets the TCP_KEEPIDLE socket value.    
-  KEEPCNT     sets the TCP_KEEPCNT socket value.    
-  KEEPINTVL   sets the TCP_KEEPINTVL socket value.    
+  KEEPALIVE   a positive value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.
+  KEEPIDLE    sets the TCP_KEEPIDLE socket value.
+  KEEPCNT     sets the TCP_KEEPCNT socket value.
+  KEEPINTVL   sets the TCP_KEEPINTVL socket value.
   SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
   ```
 
   Examples:
-  
+
   ```
   USE dev:OPTIONS="KEEPALIVE=1,KEEPIDLE=50"
   ```
-  
+
   This enables SO\_KEEPALIVE and set TCP\_KEEPIDLE to 50 seconds.
 
   ```
@@ -366,9 +366,9 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-005](http://ti
   ```
 
   This disables SO_KEEPALIVE.
-  
+
   **Note**
-  
+
     For more information on the use of these options, please review the man page for setsockopt(). On Linux, `man 7 socket` and `man 7 tcp` provide additional information.
 
   The [\$ZSOCKET()](https://docs.yottadb.com/ProgrammersGuide/functions.html#zsocket) function supports an "OPTIONS" keyword which takes an index argument and returns a string of the OPTIONS previously specified for the selected socket. The string may not exactly match the string originally specified but has the same meanings.
@@ -376,7 +376,7 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-005](http://ti
   The keywords "KEEPALIVE", "KEEPCNT", "KEEPIDLE", "KEEPINTVL", and "SNDBUF" return the individual items. If the system's current value for the item doesn't match the value previously specified with the OPTIONS device parameter, both values are returned separated by a semicolon (";"): "uservalue;systemvalue".
 
   The "ZIBFSIZE" keyword may return the system value for SO_RCVBUF in addition to the value from the ZIBFSIZE device parameter. Note that the operating system may modify the values specified for SO_RCVBUF and SO_SNDBUF so the returned values for those options obtained with POSIX getsockopt() service may be different than those specified using setsockopt().
-	  
+
   ([GTM-F135169](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135169))
 
 * <a name="GTM-F135292"></a>As YottaDB already implemented [this functionality in r1.30](https://gitlab.com/YottaDB/DB/YDB/-/issues/482), the following appears here for completeness.
@@ -388,7 +388,7 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-005](http://ti
   - When the value is zero (0), YottaDB imposes no limit, although the OS still does.
   - A positive value specifies a byte limit with a minimum of 2.5MB.
   - A value of minus one (-1) provides a value of half the system imposed limit if any.
-  
+
   When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces a trappable [MALLOCCRIT](https://docs.yottadb.com/MessageRecovery/errors.html#malloccrit) warning. By default, some later request for memory is likely to produce a fatal [MEMORY](https://docs.yottadb.com/MessageRecovery/errors.html#memory) error, unless subsequent to MALLOCCRIT, a limit has been reestablished by SET \$ZMALLOCLIM to the same or higher limit, but one not exceeding any system limit. Note that YottaDB allocates memory from the OS in large blocks so the interaction of \$ZMALLOCLIM with memory growth is not exact. In the case of a MEMORY error, YottaDB makes an attempt to marshal available memory to enable as graceful a termination as possible. Note that independent of this mechanism, the OS may kill the process without recourse if it determines the greed of the process for memory jeopardizes the viability of the system. When the integer byte value specified in a SET \$ZMALLOCLIN=intexpr or, at process startup, by the [\$ydb_malloc_limit](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-malloc-limit) environment variable (\$gtm_malloc_limit, if it specified and \$ydb_malloc_limit is not), specifies a positive value, YottaDB uses the smaller of that value and any OS defined amount for the value of \$ZMALLOCLIM. YottaDB does not give errors or messages about its choice for \$ZMALLOCLIM between a specified value and some other more appropriate value, so if the application needs to verify the outcome, it should examine the resulting ISV value. MEMORY errors are fatal and terminate the process. Previously, fatal MEMORY errors were not preceded by a trappable MALLOCCRIT warning. ([GTM-F135393](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html#GTM-DE197637393))
 
 * <a name="GTM-F135424"></a>In [NOUNDEF](https://docs.yottadb.com/ProgrammersGuide/commands.html#no-undef) mode, YottaDB assigns the value of an empty string to an undefined [FOR](https://docs.yottadb.com/ProgrammersGuide/commands.html#for) control variable. Previously, YottaDB provided an UNDEF error for this condition even when the mode was NOUNDEF. Note that [KILL](https://docs.yottadb.com/ProgrammersGuide/commands.html#kill) or [NEW](https://docs.yottadb.com/ProgrammersGuide/commands.html#new) of a control variable is a questionnable programming practice that can result in an unintended infinite loop. ([GTM-F135424](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html#GTM-F135424))
@@ -514,7 +514,7 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-005](http://ti
   ```
   AZA_ENABLE:LGDE:/path/to/sock/file/audit.sock
   ```
-  
+
   The AZA\_ENABLE facility enables the use of the \$ZAUDITLOG() function which GDE uses for logging commands. Refer to [GTM-F170998](#GTM-F170998) for information on the \$ZAUDITLOG() function and for other possible use in application audit logging. Previously, GDE did not provide an audit logging option. ([GTM-F135382](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135382))
 
 * <a name="GTM-F135418"></a>The YottaDB restrictions facility recognizes ZLINK, ZRUPDATE and SET \$ZROUTINES. When an explicit ZLINK (not auto-zlink), ZRUPDATE, or SET \$ZROUTINES restriction conditions are configured, the restricted command issues a RESTRICTEDOP error message. Previously, the restrictions facility did not support ZLINK, ZRUPDATE, or SET \$ZROUTINES. ([GTM-F135418](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html#GTM-F135418))
@@ -597,7 +597,7 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-005](http://ti
 
   ```
   $ env | grep -Ei ^\(\(ydb\)\|\(gtm\)\) # No YottaDB environment variables
-  $ cat /tmp/ydbsh.m 
+  $ cat /tmp/ydbsh.m
   #!/usr/local/bin/ydbsh
 	  write $zroutines,!,$zcmdline,!
 	  for  read "Enter text: ",line,! quit:'$zlength(line)  do
@@ -607,7 +607,7 @@ YottaDB r2.02 incorporates enhancements and fixes from [GT.M V7.0-005](http://ti
   /tmp/ydbsh.m ABC DEF
   Enter text: The quick brown fox jumps over the lazy dog
   god yzal eht revo spmuj xof nworb kciuq ehT
-  Enter text: 
+  Enter text:
   $
   ```
 
