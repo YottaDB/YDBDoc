@@ -37,8 +37,8 @@ project = "Plugins"
 copyright = "2017-2024, YottaDB LLC. Portions Copyright Fidelity National Information Services, Inc"
 author = "YottaDB LLC"
 
-# The short X.Y version
-version = ""
+# The short X.Y version -- substitute 1 simply because it is required to build epub
+version = "1"
 # The full version, including alpha/beta/rc tags
 release = ""
 
@@ -193,3 +193,6 @@ epub_exclude_files = ["search.html"]
 # Disable smart quotes for quote characters
 smartquotes = True
 smartquotes_action = "De" # dashes and ellipses only
+
+# Prevents epub build from complaining "unknown mimetype for .nojekyll" file
+suppress_warnings = ['epub.unknown_project_files']
