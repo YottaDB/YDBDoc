@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -3395,6 +3395,8 @@ Some messages can have more than one number,, depending on where they are issued
 | 150377514 | ZCPREALLVALINV, The pre-allocation value exceeded the maximum string length                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376850 | ZCPREALLVALPAR, Pre-allocation allowed only for variables passed by reference                                                                                          |
++-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 151028138 | ZCPREALLVALSTR, Pre-allocation allowed only for output or input/output variables of type ydb_buffer_t*, ydb_string_t*, or ydb_char_t*                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376786 | ZCRCALLNAME, Routine name expected but not found                                                                                                                       |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
