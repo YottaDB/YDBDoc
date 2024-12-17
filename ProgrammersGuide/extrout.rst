@@ -194,12 +194,18 @@ YottaDB preallocates space for data returned by means of pointer-type output par
 | void                  |               | Yes               | No                                                          | Specifies that the function does not return a value.                                      |
 +-----------------------+---------------+-------------------+-------------------------------------------------------------+-------------------------------------------------------------------------------------------+
 
+.. _missing-args-default-values:
+
 .. note::
-   If an external call's function argument is defined in the external call table, YottaDB allows invoking that function without specifying a value of the argument. All non-trailing and output-only arguments which do not specify a value translate to the following default values in C:
+   If an external call's function argument is defined in the external call table, YottaDB allows invoking that function without specifying a value of the argument. For example, the following M code is allowed: :code:`do &printf.puts()  do &printf.sprintf(,"%d",3)`:. All non-trailing arguments which do not specify a value translate to the following default values in C:
 
    * All numeric types: 0
-   * :code:`ydb_char_t *` and :code:`ydb_char_t **`: Empty string
-   * :code:`ydb_string_t *`: A structure with 'length' field matching the pre-allocation size and 'address' field being a NULL pointer.
+   * :code:`ydb_char_t *` and :code:`ydb_char_t **`: Empty string.
+   * :code:`ydb_string_t *`: A structure with 'length' set to 0 and address' field being a NULL pointer.
+   * :code:`ydb_buffer_t *`: A structure with 'len_alloc' and 'len_used' set to 0, and 'address' field being a NULL pointer.
+
+.. note::
+   For O type parameters only, YottaDB allows invoking the call-out function without first initializing the M variable. For example, the following M code is allowed even if 'x' is not previously defined: :code:`do &sprintf(.x,"%d",3)`.
 
 .. note::
    ydb_char_t\*\* is typically used as a parameter, not a return type. As a parameter it may return a pointer to a literal or static C string. As a return type this is impossible because YottaDB will free the returned address, as noted in the table. The ability to return ydb_char_t\*\* is retained purely for backward compatibility since no practical use is envisaged.
@@ -245,18 +251,29 @@ The first parameter of each called routine is an int (for example, int argc in d
 Pre-allocation of Output Parameters
 ++++++++++++++++++++++++++++++++++++
 
-The definition of parameters passed by reference with direction output can include specification of a pre-allocation value. This is the number of bytes of memory that the user wants YottaDB to allocate before passing the parameter to the external routine. For example, :code:`ydb_char_t *[1000]` would allocate a block of 1000 bytes and pass its address to the external routine.
+The definition of parameters passed by reference with direction output or input-output can include specification of a pre-allocation value. This is the number of bytes of memory that the user wants YottaDB to allocate before passing the parameter to the external routine. For example, :code:`ydb_buffer_t *[1000]` would allocate a block of 1000 bytes and pass its address and allocation size to the external routine.
 
 Specification of a pre-allocation value should follow these rules:
 
 * Pre-allocation is an unsigned integer value specifying the number of bytes to be allocated on the system heap with a pointer passed into the external call.
-* Pre-allocating on a type with a direction of input (I) or input/output (IO) results in a YottaDB error.
-* Input-output (IO) parameters are pre-allocated only the space required to pass the input string.
-* Pre-allocation is meaningful only on types ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*. On all other types the pre-allocation value specified will be ignored and the parameter will be allocated enough space for its type. Make sure to set the 'length' field for ydb_string_t \* arguments and 'len_used' field for ydb_buffer_t * appropriately before returning control to YottaDB. On return from the external call, YottaDB uses the value in the length field as the length of the returned value, in bytes.
-* Specification of pre-allocation of non-pointer types is an error.
+* Pre-allocating on a type with a direction of input (I) results in a YottaDB error.
+* Pre-allocation is meaningful only on string types (ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*). On all other types specifying a pre-allocation value results in a ZCNOPREALLOUTSTR error.
+* Pre-allocation is mandatory for output (O) parameters of string type. Make sure to set the 'length' field for ydb_string_t \* arguments and 'len_used' field for ydb_buffer_t \* appropriately before returning control to YottaDB. On return from the external call, YottaDB uses the value in the length field as the length of the returned value, in bytes.
+* If no pre-allocation is specified for Input-output (IO) string type parameters, the arguments are pre-allocated only the space required to pass the input string.
+* If a pre-allocation is specified for Input-output (IO) string type parameters *and* an input is present, YottaDB behaves as follows:
+
+  * For all string types, the amount allocated will be the larger of the pre-allocation specified and the size of the input string.
+  * ydb_char_t \* strings do not indicate the amount allocated. The external call must know ahead of time the allocation size specified in the external call table.
+  * ydb_string_t \* strings will have 'length' set to the size of the input, and the external call must know ahead of time the allocation size specified in the external call table.
+  * ydb_buffer_t \* strings will have 'len_used' set to the size of the input and 'len_alloc' set to the size of the pre-allocation.
+
+* See  :ref:`the note above <missing-args-default-values>` for the behavior when no input is present.
 
 .. note::
-   Pre-allocation is optional for all output-only parameters except ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*. Pre-allocation yields better management of memory for the external call. When an external call exceeds its specified pre-allocation (ydb_char_t \*, ydb_string_t \*, and ydb_buffer_t \*), YottaDB produces the EXCEEDSPREALLOC error. In the case that the user allocates space for the character pointer inside a ydb_string_t * type output parameter, a length field longer than the specified preallocated size for the output parameter does not cause an EXCEEDSPREALLOC error.
+   Because ydb_string_t \* and ydb_char_t \* do not allow querying the size of the allocation at runtime, YottaDB recommends avoiding their use for pre-allocated IO parameters, and using ydb_buffer_t \* instead.
+
+.. note::
+   Pre-allocation yields better management of memory for the external call. When an external call exceeds its specified pre-allocation for a string type, YottaDB produces the EXCEEDSPREALLOC error. In the case that the user allocates space for the character pointer inside a ydb_string_t \* type output parameter, a length field longer than the specified preallocated size for the output parameter does not cause an EXCEEDSPREALLOC error.
 
 .. _callback-mechanism:
 
