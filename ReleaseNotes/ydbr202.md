@@ -19,15 +19,21 @@
 
 ## Binary Distributions
 
-| sha256sum | file |
-|-----------|------|
-|           |      |
+| sha256sum                                                          | file                                                                                                                     |
+|--------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `7c1297c1ad505361f4777800b5d7e931490492c2632017b019a1229491dbd465` | [yottadb_r202_aarch64_debian12_pro.tgz](/uploads/2abe2cdf9cbdd3917524e4eebc724001/yottadb_r202_aarch64_debian12_pro.tgz) |
+| `7032cb3d2724a127881fcfced641d46ed54d5834b658d2e9bc13da1854021dff` | [yottadb_r202_armv6l_debian12_pro.tgz](/uploads/40647e8edbe67fbf6af5f5794951052a/yottadb_r202_armv6l_debian12_pro.tgz)   |
+| `3ed8fa5a86be270af8875d738cdcd8c94a13814088c8e8efb7ad6f6d6a81aba0` | [yottadb_r202_x8664_debian12_pro.tgz](/uploads/fb6a79942e0ef2257532cf58008280fb/yottadb_r202_x8664_debian12_pro.tgz)     |
+| `94f273cd29a572d62c151dd3b554f041dc48b127461201e22518d5b6222b6c8d` | [yottadb_r202_x8664_rhel8_pro.tgz](/uploads/ca4f3fadfe5fb5808d1c1496c6b8656d/yottadb_r202_x8664_rhel8_pro.tgz)           |
+| `8b713bf41c058301ecfadd17bba60205d4a02c02792df39644601144a4203384` | [yottadb_r202_x8664_rhel9_pro.tgz](/uploads/a53f6a00d1f4bf5f0799e185f59715e7/yottadb_r202_x8664_rhel9_pro.tgz)           |
+| `d40477628b616a4376c01cd3ee915f065b9137364ad20a3ff3328fdb909c01d8` | [yottadb_r202_x8664_sle15_pro.tgz](/uploads/9c9a24536e52b7c9e26a23c697ac4c63/yottadb_r202_x8664_sle15_pro.tgz)           |
+| `610e391c2a1ae4c738ee19b1451e135b149c0f129633dc14ed35f6d8fb17acd9` | [yottadb_r202_x8664_ubuntu2204_pro.tgz](/uploads/055be38a20d8fc89b873c9ffbe8d93e0/yottadb_r202_x8664_ubuntu2204_pro.tgz) |
 
 ## Release Note Revision History
 
-| Revision | Date | Summary |
-|----------|------|---------|
-|          |      |         |
+| Revision | Date              | Summary              |
+|----------|-------------------|----------------------|
+| 1.0      | December 17, 2024 | Initial Release Note |
 
 ## Contact Information
 ### YottaDB LLC
@@ -75,6 +81,7 @@ Recent releases of major GNU/Linux distributions with contemporary kernels, glib
 - [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) recognizes [Rocky Linux](https://rockylinux.org/) as equivalent to RHEL, and [OpenSUSE Leap](https://www.opensuse.org/#Leap) as equivalent to SUSE Linux Enterprise, installing the releases for the corresponding distributions. Note that Rocky Linux and OpenSUSE Leap are Supportable, not Supported.
 - On [Arch Linux](https://www.archlinux.org/) and other leading edge distributions such as [OpenSUSE Tumbleweed](https://www.opensuse.org/#Tumbleweed), as well as new versions of Linux distributions, YottaDB will need to be recompiled from source code owing to library and tool chain versions newer than those used in building Supported distributions. The `--from-source` option of [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) simplifies the process.
 - While YottaDB is Supportable on other ARMv6, [ARMv7-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv7-A_cores), and [ARMv8-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv8-A_cores) CPUs, owing to variations in the implementations of ARM microarchitectures, we recommend that you ensure the software runs correctly before committing to any specific hardware other than those listed above. Please [contact us](mailto:info@yottadb.com) if you want a specific combination of OS and CPU microarchitecture to be Supported.
+- As we are not aware of uptake of YottaDB on the ARMv6 platform, we are considering dropping it from the list of Supported platforms in future releases. If YottaDB on this platform has value to you, please contact us.
 
 ### Installation
 See our [Get Started page](https://yottadb.com/product/get-started) to use YottaDB.
