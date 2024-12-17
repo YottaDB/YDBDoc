@@ -15736,6 +15736,16 @@ Compile Time Error: This indicates that the program specified a pre-allocation f
 
 Action: Determine if the program should use a pre-allocation or should be passed by value. If it uses a pre-allocation, the variable must be passed by reference. If the variable must be passed by value, the program cannot use a pre-allocation for that variable.
 
+------------------
+ZCPREALLVALSTR
+------------------
+
+ZCPREALLVALSTR, Pre-allocation allowed only for output or input/output variables of type ydb_buffer_t*, ydb_string_t*, or ydb_char_t*
+
+Compile Time Error: This indicates that the program specified a pre-allocation for non-string-type variable. In particular, pre-allocation is not allowed for :code:`ydb_char_t**`, which always has a fixed size.
+
+Action: Remove the pre-allocation.
+
 -------------------
 ZCRCALLNAME
 -------------------
