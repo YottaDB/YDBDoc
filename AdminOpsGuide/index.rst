@@ -1,8 +1,3 @@
-.. GTMAdminOps documentation master file, created by
-   sphinx-quickstart on Mon Nov 27 09:22:04 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 .. ###############################################################
 .. #                                                             #
 .. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
@@ -14,6 +9,11 @@
 .. #     the license, please stop and do not read further.       #
 .. #                                                             #
 .. ###############################################################
+
+.. GTMAdminOps documentation master file, created by
+   sphinx-quickstart on Mon Nov 27 09:22:04 2017.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
 Welcome to the Administration and Operations Guide!
 ====================================================

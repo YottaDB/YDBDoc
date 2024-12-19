@@ -1,8 +1,3 @@
-.. Plugins documentation master file, created by
-   sphinx-quickstart on Tue Apr  6 13:32:36 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 .. ###############################################################
 .. #                                                             #
 .. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.#
@@ -14,6 +9,11 @@
 .. #     the license, please stop and do not read further.       #
 .. #                                                             #
 .. ###############################################################
+
+.. Plugins documentation master file, created by
+   sphinx-quickstart on Tue Apr  6 13:32:36 2021.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
 Welcome to Plugins documentation!
 ===================================
