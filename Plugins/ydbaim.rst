@@ -164,18 +164,17 @@ The default type parameter in the call to XREFDATA() creates metadata for straig
 * Creating new trigger templates as needed, and creating triggers from new and existing trigger templates.
 * Adding logic in XREFDATA() to create the initial metadata.
 
-With a value of 1 for type, AIM creates and manages metadata for a schema used by the `VistA Fileman software <https://www.va.gov/vdl/application.asp?appid=5>`_.
+With a value of 1 or 3 for type, AIM creates and manages metadata for a schema used by the `VistA Fileman software <https://www.va.gov/vdl/application.asp?appid=5>`_.
 
-For a type 1 schema, when
+For a Fileman schema (i.e., type 1 or type 3), when
 
 * the last subscript specification specifies a constant;
 * a node with that constant subscript does not exist; and
 * other nodes exist at the level of that constant subscript, i.e., there is at least one other node whose subscripts are identical except for that constant last subscript.
 
-AIM creates and maintains metadata nodes for the requested pieces using the empty string ("") as the last subscript intead of the specified constant.
-If omitfix=1 (the default), the metadata omits that last empty string subscript.
+AIM creates and maintains metadata nodes for the requested pieces using the empty string ("") as the last subscript intead of the specified constant. For example, the node :code:`^ORD(100.01,0)="ORDER STATUS^100.01I^99^16"` when cross referenced with the call :code:`$$XREFDATA^%YDBAIM("^ORD",.sub,"^",1,0,0,1,0,1,0)` where :code:`sub(1)=100.01,sub(2)=":"" """,sub(3)=.1` produces the cross reference :code:`^%ydbAIMDu1oVZCaYBv7SgPmwQNP201(1,"",0)=""` even though there is no :code:`^ORD(100.01,0,.1)` node.
 
-Metadata for nodes with that constant subscript that do exist have the same schema as metadata for the default type ("").
+While type 1 and type 3 both apply to Fileman schemas, the cross references for type 1 are the actual data, whereas the cross references for type 3 use :ref:`transformation`.
 
 .. _forcing:
 
@@ -214,6 +213,23 @@ Notes:
 * Applications using AIM globals, for example, `$ORDER() <../ProgrammersGuide/functions.html#order>`_, `ydb_subscript_next_s() / ydb_subscript_next_st() <../MultiLangProgGuide/cprogram.html#ydb-subscript-next-s-ydb-subscript-next-st>`_ and related functions in other languages should remove the leading :code:`"#"` from the subscripts reported by AIM when traversing application globals, and prepend a leading :code:`"#"` to locate cross referenced data.
 
 * YottaDB recommends using 1 as the :code:`force` parameter for forcing string collation, to allow other values to be used for other types of forcing.
+
+.. _transformation:
+
+------------------------
+Transformation Functions
+------------------------
+
+The most common use of cross reference is to find global nodes that contain the data being cross referenced, for example to traverse that data in order. But cross references are useful for many reasons. For example:
+
+* There are multiple formats for storing dates and times, and comparing values directly can slow Octo queries. But if the cross reference for each time stamp is its `UNIX time <https://en.wikipedia.org/wiki/Unix_time>`_ (i.e., its `$ZUT <../ProgrammersGuide/isv.html#zut>`_ value), then comparing time stamps, or choosing dates and times within a range becomes a much simpler proposition.
+* Cross referencing a hash allows an application to locate the original data for a hash.
+
+Transformation is accomplished by provding the M code for a function in the :code:`force` parameter with a value of 2 or 3 for the :code:`type` parameter. For example, if :code:`"$$ABC^DEF()"` is the value passed in :code:`force`, triggers for cross referenced nodes will use the value returned by the transformation function as the value to cross reference. When the function is called at runtime by the trigger, the first parameter is the actual node or piece value, e.g., :code:`$$ABC^DEF("2024-02-21T13:31:48.05098021+07:00")` would be the actual cross-referenced value if the timestamp in the global node is :code:`2024-02-21T13:31:48.05098021+07:00`. If the function requires additional parameters, they can be specified as comma separated values for the second and subsequent parameters, e.g., :code:`"$$ABC^DEF(,1,""two"")"`. As local variables cannot be passed to triggers, these additional parameters can only be constants, global variable references, or function calls whose parameters are constants, global variables, or function calls. Application code that needs to pass local variable values to the transformation function should use `$ZTWORMHOLE <../ProgrammersGuide/isv.html#ztwormhole-isv>`_.
+
+For example, with the ^USPresidents global variable mentioned earlier, the node :code:`^USPresidents(1797,1801)="John||Adams"` would generate the cross refence :code:`^%ydbAIMDHgTwbHgcmyZEIfADw7Xq07(3,"0x5d156e592ad2e9a83eb48043c59213d0",1797,1801)=""` with a call to :code:`$$XREFDATA^%YDBAIM("^USPresidents",2,"|",3,0,0,0,0,2,"$ZYHASH()"`.
+
+A value of 2 for :code:`type`, informs AIM that the schema for the global nodes is an ordinary schema; a value of 3, informs AIM that the global nodes have a Fileman schema.
 
 ------------
 Functions
