@@ -115,35 +115,41 @@ pre.literal-block {
     font-family: "FiraGO";
     src: url("https://docs.yottadb.com/Fonts/FiraGO-SemiBoldItalic.woff");
     font-weight: 700;
+    font-display: "fallback"
 }
 
 @font-face {
     font-family: "FiraGO";
     src: url("https://docs.yottadb.com/Fonts/FiraGO-SemiBold.woff");
     font-weight: 700;
+    font-display: "fallback"
 }
 
 @font-face {
     font-family: "FiraGO";
     src: url("https://docs.yottadb.com/Fonts/FiraGO-LightItalic.woff");
+    font-display: "fallback"
     font-weight: 200;
 }
 
 @font-face {
     font-family: "FiraGO";
     src: url("https://docs.yottadb.com/Fonts/FiraGO-Light.woff");
+    font-display: "fallback"
     font-weight: 200;
 }
 
 @font-face {
     font-family: "Inconsolata";
     src: url("https://docs.yottadb.com/Fonts/Inconsolata-Regular.ttf");
+    font-display: "fallback"
     font-weight: 400;
 }
 
 @font-face {
     font-family: "Lora";
     src: url("https://docs.yottadb.com/Fonts/Lora-Bold.ttf");
+    font-display: "fallback"
     font-weight: 700;
 }
 
