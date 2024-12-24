@@ -4974,13 +4974,15 @@ Action: Verify that the environment provides the desired dddd, that dddd exists 
 .. note::
    The permissions on dddd should not matter (as long as it is a directory) since GTMSECSHR runs as root.
 
+.. _gtmsecshrdmnstarted:
+
 ------------------------
 GTMSECSHRDMNSTARTED
 ------------------------
 
-GTMSECSHRDMNSTARTED, gtmsecshr daemon started (key: kkkk) for version vvvv from dddd
+GTMSECSHRDMNSTARTED, gtmsecshr daemon started for version vvvv from dddd using socket file ssss
 
-GTMSECSHR Information: This message indicates that GTMSECSHR daemon was started for the version vvvv from the installation directory dddd with the ftok() key kkkk.
+GTMSECSHR Information: This message indicates that GTMSECSHR daemon was started for the version vvvv from the installation directory dddd and is expecting to receive client messages in the socket file whose full path is indicated by ssss. This message is immediately followed by a GTMSECSHRTMPPATH message which records the value of the :code:`ydb_tmp` env var this daemon/server started with. In case a client later encounters a GTMSECSHRSRVF error, it would issue a GTMSECSHRTMPPATH message as well which records the value of the :code:`ydb_tmp` env var the client started with. Most often, the cause is a mismatch between the ydb_tmp env var values between the server and the client. The GTMSECSHRTMPPATH messages of the server and client would help in identifying such a mismatch.
 
 Action: N/A
 
@@ -5241,7 +5243,7 @@ GTMSECSHRTMPPATH
 
 GTMSECSHRTMPPATH, gtmsecshr path is pppp
 
-Information: YottaDB displays this message when different users of an instance of YottaDB connect using a socket or a semaphore and when gtmsecshr is started and it detects an existing gtmsecshr. pppp indicates the ydb_tmp path set in the clients. Gtmsecshr inherits the path from the first YottaDB process that uses its services.
+Information: YottaDB displays this message when different users of an instance of YottaDB connect using a socket or a semaphore and when gtmsecshr is started and it detects an existing gtmsecshr. pppp indicates the ydb_tmp path set in the clients. Gtmsecshr inherits the path from the first YottaDB process that uses its services. Also see :ref:`gtmsecshrdmnstarted` for the GTMSECSHRTMPPATH message issued by the gtmsecshr daemon/server as that would help in identifying mismatched values of the env var between client and server.
 
 Action: If different clients of the same instance of YottaDB are using different gtmsecshr paths, then set a common value for the environment variable ydb_tmp for all users of an instance of YottaDB, then stop and restart the processes that were using incorrect paths. If gtmsecshr itself has the incorrect path, all processes that are using that incorrect path must be stopped first - then stop gtmsecshr with a kill command.
 
