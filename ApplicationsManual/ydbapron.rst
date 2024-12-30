@@ -20,7 +20,7 @@ YDBApron
 
 YDBApron uses the YottaDB Python API, `YDBPython <https://gitlab.com/YottaDB/Lang/YDBPython>`_, in conjuction with the `Flask <https://flask.palletsprojects.com/>`_ web development framework and the `Bootstrap <https://getbootstrap.com/docs>`_ frontend toolkit.
 
-Accordingly, the tutorial assumes a working knowledge of Python and passing familiarity with Flask and the `Jinja2 <https://svn.python.org/projects/external/Jinja-2.1.1/docs/_build/html/templates.html>`_ templating engine it uses.
+Accordingly, the tutorial assumes a working knowledge of Python and passing familiarity with Flask and the `Jinja2 <https://palletsprojects.com/projects/jinja/>`_ templating engine it uses.
 
 In particular, this tutorial assumes you are familiar the following Python concepts:
 

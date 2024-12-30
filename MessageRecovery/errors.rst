@@ -8165,7 +8165,7 @@ MALLOCCRIT
 
 MALLOCCRIT, Memory allocation critical due to request for bbbb bytes from aaaa
 
-All YottaDB Components Warning: Indicates a YottaDB process exceeded the memory allocation threshold established with `$ydb_malloc_limit <https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-malloc-limit>`_ / `$ZMALLOCLIM <https://docs.yottadb.com/ProgrammersGuide/isv.html#zmalloclim>`_ with a request for bbbb bytes. The address aaaa gives a location in a YottaDB executable, likely only useful to your YottaDB support channel.
+All YottaDB Components Warning: Indicates a YottaDB process exceeded the memory allocation threshold established with `$ydb_malloc_limit <../AdminOpsGuide/basicops.html#ydb-malloc-limit>`_ / `$ZMALLOCLIM <../ProgrammersGuide/isv.html#zmalloclim>`_ with a request for bbbb bytes. The address aaaa gives a location in a YottaDB executable, likely only useful to your YottaDB support channel.
 
 Action: Consider diagnosing the process behavior. For example, look for a resource leak, or a more resource efficient approach. The size of the request may be helpful in indicating how aggressively the process is growing. The MALLOCCRIT invokes the error handler, and may need special handling to resume execution at the point it was detected. By default, some later request for memory is likely to produce a fatal :ref:`memory-err` error, unless a subsequent set of $ZMALLOCLIM reestablishes the same or higher limit not exceeding any system limit. MEMORY errors are fatal and terminate the process. Independent of this mechanism, the OS may kill the process without recourse if it determines the greed of the process for memory jeopardizes the viability of the system.
 

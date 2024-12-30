@@ -224,10 +224,10 @@ Other
 
 Depending on application requirements, other packaging technologies for consideration include:
 
-* Choosing a restricted shell for the login of a captive user, such as rbash, instead of /bin/sh (for example, see http://en.wikipedia.org/wiki/Restricted_shell).
-* Setting up a chroot environment for an application used by captive users (for example, see http://en.wikipedia.org/wiki/Chroot).
+* Choosing a restricted shell for the login of a captive user, such as rbash, instead of /bin/sh (for example, see https://en.wikipedia.org/wiki/Restricted_shell).
+* Setting up a chroot environment for an application used by captive users (for example, see https://en.wikipedia.org/wiki/Chroot).
 * Using TCP wrappers to filter incoming requests (for example, see https://www.cyberciti.biz/faq/tcp-wrappers-hosts-allow-deny-tutorial/).
-* Configuring mandatory access controls, such as SELinux (for example, http://opensource.com/business/13/11/selinux-policy-guide).
+* Configuring mandatory access controls, such as SELinux (for example, https://opensource.com/business/13/11/selinux-policy-guide).
 
 
 

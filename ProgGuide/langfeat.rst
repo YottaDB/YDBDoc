@@ -1440,7 +1440,7 @@ YottaDB process execution is interruptible with the following events:
 * A terminal disconnect ("hangup").
 * A terminal output error during an asynchronous flush.
 * A `GT.CM <../AdminOpsGuide/gtcm.html>`_ network error.
-* A `MALLOCLIM <https://docs.yottadb.com/MessageRecovery/errors.html#malloclim>`_ error
+* A `MALLOCRIT <../MessageRecovery/errors.html#malloccrit>`_ error
 * `+$ZTEXIT <isv.html#ztexit>`_ evaluates to a truth value at the outermost `TCOMMIT <commands.html#tcommit>`_ or `TROLLBACK <commands.html#trollback>`_.
 
 When YottaDB detects any of these events, it transfers control to a vector that depends on the event. For most events, YottaDB uses the `$ETRAP <isv.html#etrap>`_ or `$ZTRAP <isv.html#ztrap>`_ vectors described in more detail in the `Error Processing <errproc.html>`_ chapter. For INTRPT and $ZTEXit, it XECUTEs the interrupt handler code placed in `$ZINTERRUPT <isv.html#zinterrupt>`_. If $ZINTERRUPT is an empty string, the process ignores any MUPIP INTRPT directed at it. The default value of $ZINTERRUPT is :code:`"IF $ZJOBEXAM()"` which redirects a dump of :code:`ZSHOW "*"` to a file and reports each such occasion to the syslog. For $ZTIMEOUT, the value may specify a vector that takes precedence over the current error handling vector. <CTRL-C> without CENABLE transfers control as if there was an error; with CENABLE, YottaDB enters Direct Mode to give the programmer control. Without CENABLE or CTRAP, YottaDB ignores <CTRL-C> on a $PRINCIPAL terminal. The YottaDB terminal handler only recognizes other <CTRL> characters if CTRAP enabled when the OS terminal handling delivers them and they appear in the terminal input stream.

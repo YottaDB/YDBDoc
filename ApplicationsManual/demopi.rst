@@ -482,7 +482,7 @@ Then, configure remote access with Rocto:
     # Finally, start Rocto with the verbose flag.
     rocto -v
 
-Next, on a Windows with Microsoft Excel installed, install version 13 of the Postgres ODBC driver from `the PostgreSQL ODBC driver downloads page <https://www.postgresql.org/ftp/odbc/versions/msi/>`_. Then, using the ODBC administrator (``odbcad32.exe``) create a User DSN and set "Postgres Unicode(x64)" as the driver.
+Next, on a Windows with Microsoft Excel installed, install version 13 of the Postgres ODBC driver from the `PostgreSQL ODBC downloads page <https://www.postgresql.org/ftp/odbc/releases/>`_. Then, using the ODBC administrator (``odbcad32.exe``) create a User DSN and set "Postgres Unicode(x64)" as the driver.
 
 Next, set the following settings: adjust server, port, user name and password:
 

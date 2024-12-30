@@ -1445,6 +1445,8 @@ The following table shows the names of this field in various contexts.
 
 A specification of LOCK_CRIT_SEPARATE shows up as "Sep" in the "Lock Crit" column in a GDE SHOW -REGION output. A specification of NOLOCK_CRIT_SEPARATE shows up as "DB" in the "Lock Crit" column in a GDE SHOW -REGION output.
 
+.. _gde-null-subs-opts:
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -[NO]N[ULL_SUBSCRIPTS]=[ALWAYS|NEVER|EXISTING]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
