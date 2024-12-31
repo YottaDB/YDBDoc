@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2024 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2024-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -27,7 +27,7 @@ Overview
 When you contact your YottaDB support channel, they will often ask for metadata to establish context around the issue for which you want support. The YDBSupport plugin is a shell script that captures general metadata about the system and database that you can submit to your YottaDB support channel along with your support request. Submitting it with your support request may get an answer sooner since your support channel team may not need to come back with a request for metadata. The script works with both YottaDB as well as the upstream GT.M.
 
 - If `$ydb_dist <../AdminOpsGuide/basicops.html#ydb-dist>`_, or failing that, $gtm_dist, is set, it uses that as the location of the YottaDB/GT.M installation. If neither are set, it checks whether the script is installed in the ``plugin`` subdirectory of a YottaDB/GT.M installation. If that is also not the case, it looks for a ``/usr/share/pkgconfig/yottadb.pc`` file. If it cannot find a YottaDB/GT.M installation, it reports system metadata that does not rely on access to YottaDB/GT.M.
-- With a YottaDB installation, it reports both `$ZYRELEASE <../ProgrammersGuide/isv.html#zyrelease>`_ and `$ZVERSION <../ProgrammersGuide/isv.html#zversion>`_. With a GT.M installation, it only reports $ZVERSION.
+- With a YottaDB installation, it reports both `$ZYRELEASE <../ProgrammersGuide/isv.html#zyrelease-isv>`_ and `$ZVERSION <../ProgrammersGuide/isv.html#zversion>`_. With a GT.M installation, it only reports $ZVERSION.
 - If `$ydb_gbldir <../AdminOpsGuide/basicops.html#ydb-gbldir>`_, or failing that, $gtmgbldir, is set it reports metadata about the database. If neither is set, it reports metadata about the system and the YottaDB release / GT.M version.
 - If run as root, the system metadata includes the output of the ``dmesg`` command; if run as a normal user, this is not available. Running as root also provides more diagnostic information about processes and core files.
 - In the environment variables that it captures and reports, it omits any environment variable whose name includes the case-insensitive substrings ``key``, ``passp``, or ``passw``, in order to avoid inadvertently reporting environment variables that may contain sensitive information.

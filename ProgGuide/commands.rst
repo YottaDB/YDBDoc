@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -3676,7 +3676,7 @@ A ZSHOW argument is an expression containing codes selecting one or more types o
 | Code   | Description                                                                                                                                                                                                 |
 +========+=============================================================================================================================================================================================================+
 | A      | A stands for Autorelink and provides output in the same format as MUPIP RCTLDUMP, but restricted to the routines contained in the relinkctl areas in use by the process issuing the command.                |
-|        | ZSHOW "*" does not include ZSHOW "A" because of an expectation that the typical volume of the information does not provide a good return for its value. If you wish your error handling or INTRPT routines  |
+|        | ZSHOW "\*" does not include ZSHOW "A" because of an expectation that the typical volume of the information does not provide a good return for its value. If you wish your error handling or INTRPT routines |
 |        | to dump this information, ask for it explicitly, possibly by doing a ZSHOW "A" into a local variable before doing a ZSHOW "*".                                                                              |
 +--------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | B      | Displays active ZBREAK breakpoints                                                                                                                                                                          |
@@ -4106,76 +4106,83 @@ Example:
    $DEVICE=""
    $ECODE=""
    $ESTACK=0
-   $ETRAP=""
-   $HOROLOG="64813,13850"
-   $IO="/dev/pts/0"
-   $JOB=20264
+   $ETRAP="Write:(0=$STACK) ""Error occurred: "",$ZStatus,!"
+   $HOROLOG="67205,50567"
+   $IO="/dev/pts/4"
+   $JOB=666530
    $KEY=""
-   $PRINCIPAL="/dev/pts/0"
+   $PRINCIPAL="/dev/pts/4"
    $QUIT=0
    $REFERENCE=""
    $STACK=0
    $STORAGE=2147483647
-   $SYSTEM="47,ydb_sysid"
+   $SYSTEM="47,gtm_sysid"
    $TEST=1
    $TLEVEL=0
    $TRESTART=0
    $X=0
-   $Y=20
+   $Y=22
    $ZA=0
-   $ZALLOCSTOR=671584
+   $ZALLOCSTOR=827499
+   $ZAUDIT=0
    $ZB=""
    $ZCHSET="M"
    $ZCLOSE=0
    $ZCMDLINE=""
    $ZCOMPILE=""
-   $ZCSTATUS=0
+   $ZCSTATUS=1
    $ZDATEFORM=0
-   $ZDIRECTORY="/path/to/the/current/directory"
+   $ZDIRECTORY="/home/ydbuser/"
    $ZEDITOR=0
    $ZEOF=0
    $ZERROR="Unprocessed $ZERROR, see $ZSTATUS"
-   $ZGBLDIR="/path/to/the/global/directory/$ydb_gbldir.gld"
-   $ZHOROLOG="64813,13850,790453,14400"
+   $ZGBLDIR="/tmp/test/r2.02_x86_64/g/yottadb.gld"
+   $ZHOROLOG="67205,50567,322036,18000"
    $ZININTERRUPT=0
    $ZINTERRUPT="IF $ZJOBEXAM()"
-   $ZIO="/dev/pts/0"
+   $ZIO="/dev/pts/4"
    $ZJOB=0
    $ZKEY=""
    $ZLEVEL=1
+   $ZMALLOCLIM=0
    $ZMAXTPTIME=0
+   $ZMLKHASH=2333956397
    $ZMODE="INTERACTIVE"
    $ZONLNRLBK=0
    $ZPATNUMERIC="M"
-   $ZPIN="/dev/pts/0"
+   $ZPIN="/dev/pts/4"
    $ZPOSITION="+1^GTM$DMOD"
-   $ZPOUT="/dev/pts/0"
+   $ZPOUT="/dev/pts/4"
    $ZPROMPT="YDB>"
    $ZQUIT=0
-   $ZREALSTOR=694280
-   $ZRELDATE="20180614 00:33"
-   $ZROUTINES=". /usr/local/lib/yottadb/r132 /usr/local/lib/yottadb/r132/plugin/o(/usr/local/lib/yottadb/r132/plugin/r)"
+   $ZREALSTOR=837971
+   $ZRELDATE="20241230 15:59 6b6853170ca3b3bf71176d2802573d4410d83dad"
+   $ZROUTINES="/tmp/test/r2.02_x86_64/o*(/tmp/test/r2.02_x86_64/r /tmp/test/r) /opt/yottadb/r2.02/libyottadbutil.so"
    $ZSOURCE=""
    $ZSTATUS=""
    $ZSTEP="B"
    $ZSTRPLLIM=0
    $ZSYSTEM=0
+   $ZTIMEOUT=-1
    $ZTDATA=0
    $ZTDELIM=""
    $ZTEXIT=""
    $ZTLEVEL=0
    $ZTNAME=""
    $ZTOLDVAL=""
-   $ZTRAP="B"
+   $ZTRAP=""
    $ZTRIGGEROP=""
    $ZTSLATE=""
    $ZTUPDATE=""
    $ZTVALUE=""
    $ZTWORMHOLE=""
-   $ZUSEDSTOR=666047
-   $ZUT=1528962650791332
-   $ZVERSION="YottaDB r1.24 Linux x86_64"
+   $ZUSEDSTOR=829899
+   $ZUT=1735671767325502
+   $ZVERSION="GT.M V7.0-005 Linux x86_64"
    $ZYERROR=""
+   $ZYINTRSIG=""
+   $ZYRELEASE="YottaDB r2.02 Linux x86_64"
+   $ZYSQLNULL=$ZYSQLNULL
 
 This example displays the current value of all intrinsic special variables.
 

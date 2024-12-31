@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -226,9 +226,9 @@ The other region qualifier is –[NO]STDNULLCOLL with add, change and template c
 
    Segment             Active             Acc      Typ    Block                Alloc    Exten     Options
    ---------------------------------------------------------------------------------------------------------
-   <default>             *                BG       DYN    1024                 100       100      GLOB=1024
+   <default>             *                BG       DYN    4096                 100       100      GLOB=1024
                                                                                                   LOCK=40
-   <default>                              MM       DYN    1024                 100       100      DEFER
+   <default>                              MM       DYN    4096                 100       100      DEFER
                                                                                                   LOCK=40
 
                          *** Names ***
@@ -252,12 +252,12 @@ The other region qualifier is –[NO]STDNULLCOLL with add, change and template c
 
    Segment             File (def ext: .dat)     Acc  Typ   Block            Alloc   Exten     Options
    -----------------------------------------------------------------------------------------------------
-   DEFAULT               yottadb.dat              BG   DYN   1024              100     100      GLOB=1024
-                                                                                              LOCK=40
-                                                                                              RES=0
-   TEAGLOBALS            TEAGLOBALS.dat         BG   DYN   1024              100     100      GLOB=1024
-                                                                                              LOCK=40
-                                                                                              RES=0
+   DEFAULT               yottadb.dat              BG   DYN   4096              100     100      GLOB=1024
+                                                                                                LOCK=40
+                                                                                                RES=0
+   TEAGLOBALS            TEAGLOBALS.dat           BG   DYN   4096              100     100      GLOB=1024
+                                                                                                LOCK=40
+                                                                                                RES=0
 
                                  *** MAP ***
 

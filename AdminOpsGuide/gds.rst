@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -68,7 +68,7 @@ The file header data elements are listed as follows in alphabetical order for ea
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Async IO                           | Whether the database file uses Asynchronous or Synchronous I/O. For additional information, see Chapter 4: Global Directory Editor (GDE).                     |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Block size (in bytes)              | The size (in bytes) of a GDS block. Block size can have values that are multiples of 512. The default value is 1024.                                          |
+| Block size (in bytes)              | The size (in bytes) of a GDS block. Block size can have values that are multiples of 512. The default value is 4096.                                          |
 |                                    | Block size should be a multiple of the native block size for the OS file system chosen to accommodate all but outlying large records.                         |
 |                                    | For additional information, see Ch 4: Global Directory Editor (GDE).                                                                                          |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+

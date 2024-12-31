@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -61,7 +61,7 @@ In contexts where a string is coerced to a number (for example :ref:`ydb-incr-s-
 Canonical Numbers
 +++++++++++++++++
 
-Conceptually, a canonical number is a string from the Latin character set that represents a decimal number in a standard, concise, form.
+Conceptually, a canonical number is a string from the Latin character set that represents a decimal number in a standard form.
 
 #. Any string of decimal digits, optionally preceded by a minus sign ("-"), the first of which is not "0" (except for the number zero itself), that represents an integer of no more than 18 significant digits.
 
@@ -72,8 +72,6 @@ Conceptually, a canonical number is a string from the Latin character set that r
 
    - The following are canonical numbers: "-.1", ".3", ".99999999999999999999".
    - The following are not canonical numbers "+.1" (starts with "+"), "0.3" (first digit is "0"), ".999999999999999999990" (last digit is "0"), ".999999999999999999999" (more than 18 significant digits).
-
-#. Any of the above two forms followed by "E" (upper case only) followed by a canonical integer in the range -43 to 47 such that the magnitude of the resulting number is between 1E-43 through .1E47.
 
 Checking whether the string :code:`'\0'` follows a value in subscript collation order determines whether the value is a canonical string. In M code, if :code:`x` is the value, this would be written :code:`$zlength(x)&($char(0)]]x)` (see `String Relational Operators <../ProgrammersGuide/langfeat.html#string-relational-operators>`_).
 

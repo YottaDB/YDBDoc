@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -1959,7 +1959,7 @@ Example:
 
 This example displays the current version identifier for GT.M.
 
-See the $ZYRELEASE intrinsic special variable to identify the YottaDB release.
+In order to ensure drop-in compatibility with GT.M for applications, YottaDB reports a $ZVERSION identical with GT.M. See the `$ZYRELEASE <#zyrelease-isv>`_ intrinsic special variable to identify the YottaDB release.
 
 .. _zyerror-isv:
 
@@ -1982,6 +1982,8 @@ $ZYINTRSIG is a read only ISV that holds the value :code:`"SIGUSR1"` or :code:`"
 :code:`$ZYINTRSIG` allows M code inside :code:`$ZINTERRUPT` differentiate whether it was a :code:`SIGUSR1` or :code:`SIGUSR2` that invoked the :code:`$ZINTERRUPT` mechanism and take different actions if necessary.
 
 $ZYINTRSIG was added to YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
+
+.. _zyrelease-isv:
 
 ------------------
 $ZYRELEASE

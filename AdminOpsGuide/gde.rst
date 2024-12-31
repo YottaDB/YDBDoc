@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -1659,7 +1659,7 @@ The maximum BLOCK_SIZE is 65,024 bytes.
 .. note::
    YottaDB recommends against using databases with block sizes larger than 16KiB. If a specific global variable has records that have large record sizes, YottaDB recommends placing that global variable in a file by itself with large block sizes and using more appropriate block sizes for other global variables. 4KiB and 8KiB are popular database block sizes.
 
-By default, GDE uses a BLOCK_SIZE of 1024 bytes.
+By default, GDE uses a BLOCK_SIZE of 4096 bytes.
 
 ~~~~~~~~~~~~~~~~~~~~~~
 -[NO]DEFER[_ALLOCATE]
@@ -1795,7 +1795,7 @@ The following table summarizes GDE segment qualifiers. It provides abbreviations
 +------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
 | -[NO]AS[YNCIO]                                                         | FALSE                  | \-                         | \-                             |
 +------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
-| -BL[OCK_SIZE]=size (bytes)                                             | 1024                   | 512                        | 65024                          |
+| -BL[OCK_SIZE]=size (bytes)                                             | 4096                   | 512                        | 65024                          |
 +------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
 | -[NO]DEFER[_ALLOCATE]                                                  | TRUE                   | \-                         | \-                             |
 +------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
@@ -1990,7 +1990,7 @@ The following table summarizes all qualifiers for the ADD, CHANGE, and TEMPLATE 
 +-----------------------------------------------------+----------------+----------------+---------------------------+--------------------+--------------+---------------+
 | -[NO]AU[TODB]                                       | FALSE          | \-             | \-                        | \-                 | X            | \-            |
 +-----------------------------------------------------+----------------+----------------+---------------------------+--------------------+--------------+---------------+
-| -BL[OCK_SIZE]=size(bytes)                           | 1024           | 512            | 65024                     | \-                 | \-           | X             |
+| -BL[OCK_SIZE]=size(bytes)                           | 4096           | 512            | 65024                     | \-                 | \-           | X             |
 +-----------------------------------------------------+----------------+----------------+---------------------------+--------------------+--------------+---------------+
 | -C[OLLATION_DEFAULT]=id-number (integer)            | 0              | 0              | 255                       | \-                 | X            | \-            |
 +-----------------------------------------------------+----------------+----------------+---------------------------+--------------------+--------------+---------------+
