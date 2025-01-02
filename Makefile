@@ -47,7 +47,10 @@ clean:
 # Test target: Create the "tarball" directory and run deadlinks on it
 # Relies on html, which gets passed to the % target below
 test: html
-	ci/error-check.sh
+	# TODO(jyn514): This check compares the error reference to YDB master. But YDBDoc master refers to the latest
+	# published release of YDB, not the latest development commit. I tried disabling it in CI when making an MR against master,
+	# but it is also causing issues when building locally. Disable the check for now.
+	#ci/error-check.sh
 	@+./buildall.sh
 	@if [ ! -f ./deadlinks ]; then \
 		echo "Downloading deadlinks..."; \
