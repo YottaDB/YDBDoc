@@ -51,6 +51,6 @@ else
 	cd "$workdir"
 	git fetch --depth 1 upstream
 	git checkout upstream/HEAD
-fi
+fi >&2
 
 echo "$workdir"
