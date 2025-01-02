@@ -17,13 +17,15 @@ commit-verify:
   stage: build
   image: ubuntu:22.04
   interruptible: true
+  only:
+  - merge_requests
   before_script:
     - apt-get update -qq && apt-get install -y -qq git wget gnupg
   script:
     # Copy commit gpg key verify script to build directory and execute
     - wget https://gitlab.com/YottaDB/DB/YDB/-/raw/master/ci/commit_verify.sh
     - chmod +x commit_verify.sh
-    - ./commit_verify.sh ./ci/needs_copyright.sh https://gitlab.com/YottaDB/DB/YDBDoc.git
+    - ./commit_verify.sh ./ci/needs_copyright.sh https://gitlab.com/YottaDB/DB/YDBDoc.git $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
 
 pages:
   stage: build
