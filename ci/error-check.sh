@@ -14,7 +14,7 @@
 # This section of script responsible for detecting undocumented or incorrectly documented messages
 # More details on https://gitlab.com/YottaDB/DB/YDBDoc/-/issues/409
 
-ydb=$(ci/needs-clone.sh https://github.com/YottaDB/DB/YDB)
+ydb=$(ci/needs-clone.sh https://gitlab.com/YottaDB/DB/YDB)
 
 # Check if every message documented in errors.rst is also documented with one error number
 # (or more error numbers in rare cases) in errormsgref.rst
