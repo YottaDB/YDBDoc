@@ -34,6 +34,7 @@
 import argparse
 import itertools
 import re
+import shlex
 import shutil
 import sys
 import tempfile
@@ -392,7 +393,7 @@ def maybe_bless(corrections, failures, rst, bless, corrector):
         if len(corrections) != failures:
             print(f"NOTE: {failures-len(corrections)} errors could not be fixed automatically and need to be fixed manually.")
         print(f"HELP: use `git diff --no-index {rst} {tmp.name}` to see the changes")
-        print(f"HELP: use `{sys.argv[0]} --bless` to automatically replace {rst}")
+        print(f"HELP: use `{shlex.join(sys.argv)} --bless` to automatically replace {rst}")
     print("NOTE: placeholders are approximate. you may manually edit placeholder names and this script will not change them back.")
 
 def check_missing_errors(args, msgs, documented, undocumented, make_span):

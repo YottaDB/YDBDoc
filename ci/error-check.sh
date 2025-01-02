@@ -45,4 +45,4 @@ fi
 # Check of 1-line message text in errors.rst for each message is
 # in sync with the message text in YDB/sr_port/*.msg in the YDB project,
 # and with the message text in errormsgref.rst.
-ci/error_sync.py "$ydb" || exit 1
+ci/error_sync.py "$ydb" "$@" || exit 1
