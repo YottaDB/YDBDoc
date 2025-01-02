@@ -1,6 +1,6 @@
 #################################################################
 #                                                               #
-# Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 # Portions Copyright (c) Fidelity National                      #
@@ -33,8 +33,10 @@
 
 # -- Project information -----------------------------------------------------
 
+from datetime import datetime
+
 project = "Messages and Recovery Manual"
-copyright = "2017-2024, YottaDB LLC. Portions Copyright Fidelity National Information Services, Inc"
+copyright = "2017-{}, YottaDB LLC. Portions Copyright Fidelity National Information Services, Inc".format(datetime.today().year)
 author = "YottaDB LLC"
 
 # The short X.Y version -- substitute 1 simply because it is required to build epub

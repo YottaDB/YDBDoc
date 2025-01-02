@@ -2,7 +2,7 @@
 #
 #################################################################
 #                                                               #
-# Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2021-2025 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -16,9 +16,9 @@
 # Pre-commit hook that
 #	1) Enforces YottaDB Copyright in changed modules
 #
-set nocopyright_extensions = "png gif svg css c m go pl py rs"	# List of extensions that need not have copyrights.
+set nocopyright_extensions = "png gif svg css c m go pl rs"	# List of extensions that need not have copyrights.
 						                # .png, .gif and .svg are image format files
-						                # .c, .m, .go, .pl, .py and .rs are example program files
+						                # .c, .m, .go, .pl, and .rs are example program files
 
 set filelist = `git diff --name-only HEAD`
 set fixlist = ""
@@ -34,6 +34,9 @@ foreach file ($filelist)
 		set extension = $file:e
 		foreach ext ($nocopyright_extensions)
 			if ($ext == $extension) then
+				set skip = 1
+				break
+			else if ($ext == "py" && $file:t != "conf.py") then
 				set skip = 1
 				break
 			endif
@@ -85,14 +88,5 @@ foreach file ($filelist)
 		endif
 	endif
 end
-
-# ------------------------------------------------------------------------------------------
-# 3) Verify that the shared files have updated copyrights
-# ------------------------------------------------------------------------------------------
-./ci/verify_shared_copyright.sh
-if ($status) then
-	@ exitstatus = 1
-	echo "Shared files don't have updated copyrights. Run ./ci/verify_shared_copyright.sh --verbose manually."
-endif
 
 exit $exitstatus

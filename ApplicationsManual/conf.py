@@ -1,6 +1,6 @@
 #################################################################
 #                                                               #
-# Copyright (c) 2023-2024 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2023-2025 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -30,8 +30,10 @@
 
 # -- Project information -----------------------------------------------------
 
+from datetime import datetime
+
 project = "Applications Manual"
-copyright = "2017-2024, YottaDB LLC"
+copyright = "2017-{}, YottaDB LLC".format(datetime.today().year)
 author = "YottaDB LLC"
 
 # The short X.Y version -- substitute 1 simply because it is required to build epub
