@@ -189,6 +189,9 @@ Below are examples illustrating how to handle exceptions both with and without u
 
 .. code-block:: python
 
+    import yottadb
+    from yottadb import YDBError
+
     try:
         yottadb.get(varname="^myglobal", subsarray=("sub1", "sub2"))
     except YDBError:
@@ -198,6 +201,14 @@ Below are examples illustrating how to handle exceptions both with and without u
         yottadb.node_next(varname="^myglobal", subsarray=("sub1", "sub2"))
     except YDBNodeEnd:
         print("Specific case: handle YDB_ERR_NODEEND differently")
+
+    try:
+        yottadb.Key("^\x80").data
+    except YDBError as e:
+        if yottadb.YDB_ERR_INVVARNAME == e.code():
+            print("Invalid variable name")
+        else:
+            print("Unexpected error")
 
 There are, however, a few special exceptions in YDBPython that are used to signal events that are not necessarily errors, but may need special handling. These are distinguished by unique exception classes apart from :code:`yottadb.YDBError`:
 
