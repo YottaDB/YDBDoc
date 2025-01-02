@@ -45,7 +45,10 @@ if [ ! -d "$workdir" ]; then \
 		)
 	else
 		git clone --depth 1 "$remote" "$workdir"
-		(cd "$workdir" && git remote add upstream "$remote")
+		cd "$workdir"
+		git remote add upstream "$remote"
+		git fetch upstream
+		git remote set-head upstream -a
 	fi
 else
 	cd "$workdir"
