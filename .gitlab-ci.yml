@@ -17,8 +17,8 @@ commit-verify:
   stage: build
   image: ubuntu:22.04
   interruptible: true
-  only:
-  - merge_requests
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   before_script:
     - apt-get update -qq && apt-get install -y -qq git wget gnupg
   script:
