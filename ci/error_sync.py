@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #################################################################
 #                                                               #
-# Copyright (c) 2024 YottaDB LLC and/or its subsidiaries.       #
+# Copyright (c) 2024-2025 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -141,10 +141,10 @@ def parse_ydb_msg_file(filename):
                 name, desc = match.groups()
                 yield name, (f"{filename}:{i+1}", desc)
 
-def load_known_errors():
+def load_known_errors(ydb):
     """Returns a list of all known errors emitted by YDB."""
     undocumented, documented = {}, {}
-    for f in glob("../YDB/sr_port/*.msg"):
+    for f in glob(f"{ydb}/sr_port/*.msg"):
         if f.endswith("/cmerrors.msg") or f.endswith("/cmierrors.msg"):
             undocumented.update(parse_ydb_msg_file(f))
         else:
@@ -395,7 +395,7 @@ def maybe_bless(corrections, failures, rst, bless, corrector):
         print(f"HELP: use `{sys.argv[0]} --bless` to automatically replace {rst}")
     print("NOTE: placeholders are approximate. you may manually edit placeholder names and this script will not change them back.")
 
-def check_missing_errors(msgs, documented, undocumented, filename, make_span):
+def check_missing_errors(args, msgs, documented, undocumented, make_span):
     failcount = 0
     mismatches = set(documented.keys()).symmetric_difference(set(msgs.keys()))
     for err in mismatches:
@@ -404,7 +404,7 @@ def check_missing_errors(msgs, documented, undocumented, filename, make_span):
                 continue
             failcount += 1
             span = msgs[err][0]
-            print(f"ERROR: {err} was documented in {span} but not in {filename}")
+            print(f"ERROR: {err} was documented in {span} but not in {args.rst}")
         elif err not in NOT_YDB_ERRORS:  # i.e. this error is documented in the RST but not in YDB
             if err in undocumented:
                 # TODO: this case should not be necessary. We should move these errors out of `cmierrors.msg` or change the comment that says they are undocumented.
@@ -412,16 +412,16 @@ def check_missing_errors(msgs, documented, undocumented, filename, make_span):
             assert err not in msgs, err
             failcount += 1
             span = make_span(documented[err][0])
-            print(f"ERROR: {err} was documented in {span} but not in ../YDB/sr_port/*.msg")
+            print(f"ERROR: {err} was documented in {span} but not in {args.YDB}/sr_port/*.msg")
     return failcount
 
 def check_errors_rst(args, msgs, documented, undocumented):
-    print(f"Checking {args.rst} is in sync with YDB/sr_port/*.msg\n")
+    print(f"Checking {args.rst} is in sync with {args.YDB}/sr_port/*.msg\n")
 
     failcount = 0
     corrections = {}
 
-    failcount += check_missing_errors(msgs, documented, undocumented, args.rst, lambda line: f"{args.rst}:{line + 1}")
+    failcount += check_missing_errors(args, msgs, documented, undocumented, lambda line: f"{args.rst}:{line + 1}")
 
     for err, (msg_span, msg) in msgs.items():
         if err not in documented:
@@ -447,13 +447,13 @@ def check_errors_rst(args, msgs, documented, undocumented):
     return True
 
 def check_err_msg_ref_rst(args, msgs, documented, undocumented):
-    print(f"Checking {args.err_msg_ref} is in sync with YDB/sr_port/*.msg\n")
+    print(f"Checking {args.err_msg_ref} is in sync with {args.YDB}/sr_port/*.msg\n")
 
     failcount = 0
     corrections = {}
     err_msg_documented = load_documentation_ref(args.err_msg_ref)
 
-    failcount += check_missing_errors(msgs, err_msg_documented, undocumented, args.rst, lambda line: f"{args.err_msg_ref}:{line + 1}")
+    failcount += check_missing_errors(args, msgs, err_msg_documented, undocumented, lambda line: f"{args.err_msg_ref}:{line + 1}")
 
     for err in err_msg_documented:
         if err not in msgs:
@@ -486,11 +486,12 @@ def check_err_msg_ref_rst(args, msgs, documented, undocumented):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--bless", action="store_true")
+    parser.add_argument("YDB", help="Path to git checkout of YottaDB")
     parser.add_argument("rst", nargs="?", default=ERRORS_RST, help="RST error documentation file")
     parser.add_argument("err_msg_ref", nargs="?", default=ERROR_MSG_RST, help="RST error reference file")
     args = parser.parse_args()
 
-    msgs, undocumented = load_known_errors()
+    msgs, undocumented = load_known_errors(args.YDB)
     undocumented = list(undocumented.keys()) + UNDOCUMENTED_EXCEPTIONS
     documented = load_documented_errors(args.rst)
 

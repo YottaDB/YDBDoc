@@ -1,6 +1,6 @@
  ###############################################################
  #                                                             #
- # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+ # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
  # All rights reserved.                                        #
  #                                                             #
  #     This source code contains the intellectual property     #
@@ -47,14 +47,6 @@ clean:
 # Test target: Create the "tarball" directory and run deadlinks on it
 # Relies on html, which gets passed to the % target below
 test: html
-	@if [ ! -d ../YDBOcto ]; then \
-		git clone --depth 1 https://gitlab.com/YottaDB/DBMS/YDBOcto.git ../YDBOcto; \
-		else (echo "git -C ../YDBOcto pull" && git -C ../YDBOcto pull); \
-	fi
-	@if [ ! -d ../YDB ]; then \
-		git clone --depth 1 https://gitlab.com/YottaDB/DB/YDB.git ../YDB; \
-		else (cd ../YDB && git pull); \
-	fi
 	ci/error-check.sh
 	@+./buildall.sh
 	@if [ ! -f ./deadlinks ]; then \
@@ -75,11 +67,7 @@ man: SPHINXOPTS=-q
 # All of the $(SOURCEDIRS) are built at once.
 # https://www.extrema.is/blog/2021/12/17/makefile-foreach-commands talks about why we use $(newline): to stop make at a specific step if it fails.
 %: Makefile
-	@if [ ! -d ../lua-yottadb ]; then \
-		git clone --depth 1 https://github.com/anet-be/lua-yottadb.git ../lua-yottadb; \
-		else (echo "git -C ../lua-yottadb pull" && git -C ../lua-yottadb pull); \
-	fi ;\
-    	cp ../lua-yottadb/docs/lua-yottadb-ydbdocs.rst ./MultiLangProgGuide/
+	cp "$$(ci/needs-clone.sh https://github.com/anet-be/lua-yottadb.git)/docs/lua-yottadb-ydbdocs.rst" ./MultiLangProgGuide/
 	@$(foreach dir, $(SOURCEDIRS), ln -sf ../shared/LICENSE.rst ../shared/_static  ../shared/_templates  ../shared/favicon.png ../shared/logo.png "$(dir)" $(newline))
 	$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O) $(newline))
 

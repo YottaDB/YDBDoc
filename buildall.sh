@@ -1,7 +1,7 @@
 #!/bin/bash
  ###############################################################
  #                                                             #
- # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
+ # Copyright (c) 2019-2025 YottaDB LLC and/or its subsidiaries.#
  # All rights reserved.                                        #
  #                                                             #
  #     This source code contains the intellectual property     #
@@ -19,25 +19,14 @@ set -euo pipefail
 shopt -s nullglob
 
 target="$(realpath "${1:-public}")"
-octo="${2:-../YDBOcto}"
-ydb="${3:-../YDB}"
 mkdir -p "$target"
 
 usage() {
-	echo "usage: $0 [target [octo]]"
+	echo "usage: $0 [build-dir]"
 	exit 1
 }
 
-needs_clone() {
-	if ! [ -d "$1" ]; then
-		echo "error: $1 is not a directory or does not exist"
-		echo "help: try running \`git clone $2\`"
-		usage
-	fi
-}
-
-needs_clone "$octo" https://gitlab.com/YottaDB/DBMS/YDBOcto
-needs_clone "$ydb" https://gitlab.com/YottaDB/DB/YDB
+octo=$(ci/needs-clone.sh https://gitlab.com/YottaDB/DBMS/YDBOcto.git/)
 
 DIRECTORIES=(
 	AcculturationGuide/
