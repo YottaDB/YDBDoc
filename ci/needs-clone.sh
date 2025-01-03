@@ -41,7 +41,7 @@ if [ ! -d "$workdir" ]; then \
 			fi
 			git fetch upstream
 			git remote set-head upstream -a
-			git worktree add --detach "$workdir_path" upstream/HEAD
+			git worktree add --force --detach "$workdir_path" upstream/HEAD
 		)
 	else
 		git clone --depth 1 "$remote" "$workdir"
