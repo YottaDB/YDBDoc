@@ -14,14 +14,9 @@
 # This section of script responsible for detecting undocumented or incorrectly documented messages
 # More details on https://gitlab.com/YottaDB/DB/YDBDoc/-/issues/409
 
-# The master branch represents the latest *published* release of YDB.
-# So the error messages it documents may be different between the latest release and the latest commit to YDB master.
-# Only run this check when this is a CI pipeline targeting a version branch, not when we are targeting master.
-if [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" = master ]; then
-	exit 0
-fi
+YDB_TARGET_COMMIT=$(ci/target-branch.sh ydb)
 
-ydb=$(ci/needs-clone.sh https://gitlab.com/YottaDB/DB/YDB)
+ydb=$(ci/needs-clone.sh https://gitlab.com/YottaDB/DB/YDB "$YDB_TARGET_COMMIT")
 
 # Check if every message documented in errors.rst is also documented with one error number
 # (or more error numbers in rare cases) in errormsgref.rst

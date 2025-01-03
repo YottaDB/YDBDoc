@@ -15,7 +15,7 @@
 set -euo pipefail
 
 usage() {
-	echo "usage: $0 <remote url> [workdir] [<local dir>]"
+	echo "usage: $0 <remote url> [<target branch>] [workdir] [<local dir>]"
 	exit 1
 }
 
@@ -24,9 +24,10 @@ if [ $# = 0 ] || [ $# -gt 3 ]; then
 fi
 
 remote="$1"
-workdir=${2:-git-checkouts/$(echo "$remote" | sed 's#/$##; s#\.git$##' | rev | cut -d/ -f1 | rev | cut -d. -f1)}
+branch="${2:-upstream/HEAD}"
+workdir=${3:-git-checkouts/$(echo "$remote" | sed 's#/$##; s#\.git$##' | rev | cut -d/ -f1 | rev | cut -d. -f1)}
 workdir_path=$(realpath .)/$workdir
-local_dir="${3:-../$(basename "$workdir")}"
+local_dir="${4:-../$(basename "$workdir")}"
 
 mkdir -p "$(basename "$workdir")"
 
@@ -41,7 +42,7 @@ if [ ! -d "$workdir" ]; then \
 			fi
 			git fetch upstream
 			git remote set-head upstream -a
-			git worktree add --force --detach "$workdir_path" upstream/HEAD
+			git worktree add --force --detach "$workdir_path" "$branch"
 		)
 	else
 		git clone --depth 1 "$remote" "$workdir"
@@ -53,7 +54,12 @@ if [ ! -d "$workdir" ]; then \
 else
 	cd "$workdir"
 	git fetch --depth 1 upstream
-	git checkout upstream/HEAD
 fi >&2
+
+{
+	cd "$workdir_path"
+	git fetch --tags upstream
+	git checkout "$branch"
+} >&2
 
 echo "$workdir"
