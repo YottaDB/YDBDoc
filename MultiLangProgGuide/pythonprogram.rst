@@ -1076,20 +1076,32 @@ The following example demonstrates a simple usage of :code:`tp()`. Specifically,
 
 .. code-block:: python
 
-    # Define a simple callback function that attempts to increment the global variable nodes represented
-    # by the given Key objects. If a YDBTPRestart is encountered, the function will retry the continue
-    # attempting the increment operation until it succeeds.
-    def callback(fruit1: yottadb.Key, fruit2: yottadb.Key, fruit3: yottadb.Key) -> int:
+    import yottadb
+    import multiprocessing
+    import random
+    import time
+
+    from typing import Callable, Tuple, AnyStr, Dict
+
+    # Define a simple callback function that attempts to transfer items between two "accounts", represented
+    # by two global variable nodes that are referenced by the given Key objects. If a YDBTPRestart is encountered,
+    # the function will continue attempting the account transfer operation until it succeeds.
+    def callback(inventory: yottadb.Key, basket: yottadb.Key, fruits: Dict) -> int:
         while True:
             try:
-                fruit1.incr()
-                fruit2.incr()
-                fruit3.incr()
+                for fruit in fruits:
+                    change = random.randint(1, 5)
+                    cur_inventory = inventory[fruit].value
+                    cur_basket = basket[fruit].value
+
+                    inventory[fruit].value = str(int(cur_inventory) - change)
+                    basket[fruit].value = str(int(cur_basket) + change)
                 break
             except yottadb.YDBTPRestart:
                 continue
 
-        return yottadb.YDB_OK
+    return yottadb.YDB_OK
+
 
     # Define a simple wrapper function to call the callback function via tp().
     # This wrapper will then be used to spawn multiple processes, each of which
@@ -1097,27 +1109,33 @@ The following example demonstrates a simple usage of :code:`tp()`. Specifically,
     def wrapper(function: Callable[..., object], args: Tuple[AnyStr]) -> int:
         return yottadb.tp(function, args=args)
 
-    # Create keys
-    apples = yottadb.Key("^fruits")["apples"]
-    bananas = yottadb.Key("^fruits")["bananas"]
-    oranges = yottadb.Key("^fruits")["oranges"]
-    # Initialize nodes
-    apples_init = "0"
-    bananas_init = "5"
-    oranges_init = "10"
-    apples.value = apples_init
-    bananas.value = bananas_init
-    oranges.value = oranges_init
+    # Create a dictionary to store initial keys and values
+    fruits = {
+            "apples": "1500",
+            "bananas": "1000",
+            "oranges": "2000"
+    }
+    # Create keys representing top-level "accounts"
+    inventory = yottadb.Key("^inventory")
+    basket = yottadb.Key("^basket")
+    # Initialize accounts with starting values
+    for key, value in fruits.items():
+        inventory[key].value = value
+        basket[key].value = "0"
 
+    # Initialize the random number generator for use in the callback function
+    random.seed()
     # Spawn some processes that will each call the callback function
     # and attempt to access the same nodes simultaneously. This will
     # trigger YDBTPRestarts, until each callback function successfully
     # updates the nodes.
-    num_procs = 10
+    num_procs = 100
     processes = []
     for proc in range(0, num_procs):
         # Call the callback function that will attempt to update the given nodes
-        process = multiprocessing.Process(target=wrapper, args=(callback, (apples, bananas, oranges)))
+        process = multiprocessing.Process(target=wrapper, args=(callback,
+                                                                (inventory, basket,
+                                                                 fruits)))
         process.start()
         processes.append(process)
     # Gracefully terminate each process and confirm it exited without an error
@@ -1125,10 +1143,10 @@ The following example demonstrates a simple usage of :code:`tp()`. Specifically,
         process.join()
         assert process.exitcode == 0
 
-    # Confirm all nodes incremented by num_procs, i.e. by one per callback process spawned
-    assert int(apples.value) == int(apples_init) + num_procs
-    assert int(bananas.value) == int(apples_init) + num_procs
-    assert int(oranges.value) == int(apples_init) + num_procs
+    # Confirm that the total number of items is the same after transaction processing
+    for key, value in fruits.items():
+        assert int(inventory[key].value) + int(basket[key].value) == int(value)
+
 
 ++++++++++++++++++++
 Python transaction()
@@ -1150,6 +1168,8 @@ Since this function simply wraps the passed function in a new function definitio
 
 .. code-block:: python
 
+    import yottadb
+
     # Wrap a simple function with the transaction
     @yottadb.transaction
     def my_transaction(key1: yottadb.Key, value1: str, key2: yottadb.Key, value2: str) -> None:
@@ -1167,10 +1187,10 @@ Since this function simply wraps the passed function in a new function definitio
         # Transaction successful
         print(key1.value)  # Prints 'val1'
         print(key2.value)  # Prints 'val2'
-    else if yottadb.YDB_TP_RESTART == status:
+    elif yottadb.YDB_TP_RESTART == status:
         # Restart the transaction
         print(status)
-    else if yottadb.YDB_TP_ROLLBACK == status:
+    elif yottadb.YDB_TP_ROLLBACK == status:
         # Do not commit the transaction
         print(status)
     else:
