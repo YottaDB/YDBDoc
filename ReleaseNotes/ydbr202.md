@@ -1,7 +1,7 @@
 <!---
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2024 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2024-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -31,9 +31,10 @@
 
 ## Release Note Revision History
 
-| Revision | Date              | Summary              |
-|----------|-------------------|----------------------|
-| 1.0      | December 17, 2024 | Initial Release Note |
+| Revision | Date              | Summary                                                      |
+|----------|-------------------|--------------------------------------------------------------|
+| 1.0      | December 17, 2024 | Initial Release Note                                         |
+| 1.1      | January 7, 2025   | Document Supported, Supportable, and Unsupported filesystems |
 
 ## Contact Information
 ### YottaDB LLC
@@ -78,6 +79,7 @@ A platform is a combination of a CPU architecture and an operating system. A pla
 
 Recent releases of major GNU/Linux distributions with contemporary kernels, glibc and ncurses are Supportable; however you may have to build YottaDB from source. Specific notes:
 
+- Supported filesystems are ext4 and xfs. f2fs is Supportable. btrfs, zfs, and NFS are Unsupported, and known to have issues.
 - [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) recognizes [Rocky Linux](https://rockylinux.org/) as equivalent to RHEL, and [OpenSUSE Leap](https://www.opensuse.org/#Leap) as equivalent to SUSE Linux Enterprise, installing the releases for the corresponding distributions. Note that Rocky Linux and OpenSUSE Leap are Supportable, not Supported.
 - On [Arch Linux](https://www.archlinux.org/) and other leading edge distributions such as [OpenSUSE Tumbleweed](https://www.opensuse.org/#Tumbleweed), as well as new versions of Linux distributions, YottaDB will need to be recompiled from source code owing to library and tool chain versions newer than those used in building Supported distributions. The `--from-source` option of [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) simplifies the process.
 - While YottaDB is Supportable on other ARMv6, [ARMv7-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv7-A_cores), and [ARMv8-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv8-A_cores) CPUs, owing to variations in the implementations of ARM microarchitectures, we recommend that you ensure the software runs correctly before committing to any specific hardware other than those listed above. Please [contact us](mailto:info@yottadb.com) if you want a specific combination of OS and CPU microarchitecture to be Supported.
