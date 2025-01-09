@@ -15,8 +15,8 @@
 # So the error messages it documents may be different between the latest release and the latest commit to YDB master.
 # NOTE: this script hardcodes both the current development version and the latest published version of YDB.
 
-CURRENT_DEV_VERSION=r2.04
-LATEST_PUBLISHED_VERSION=r2.02
+YDB_CURPRO_TAG=r2.02	# the YDB project tag corresponding to the latest production release
+YDBDOC_DEV_BRANCH=r2.04	# the YDBDoc branch name with documentation for the upcoming/next YDB release
 
 case $1 in
 	ydb) ydb=1;;
@@ -29,39 +29,38 @@ if ! git remote | grep -q upstream; then
 fi
 git fetch upstream
 
-# We depend on upstream/master not being a base of CURRENT_DEV_VERSION.
-# If it is, we will get a false positive with `--is-ancestor` below and compare against the wrong branch.
-# Error out with a useful message instead of silently doing the wrong thing.
-if git merge-base --is-ancestor upstream/master upstream/$CURRENT_DEV_VERSION; then
-	echo "ERROR: $CURRENT_DEV_VERSION should not be based off the master branch."
-	echo "ERROR: this script will not work correctly until the situation is fixed."
-	exit 1
-fi >&2
+if ! git merge-base --is-ancestor upstream/$YDBDOC_DEV_BRANCH HEAD; then
+	# If we reach here, it means HEAD is NOT based off the YDBDoc r2.04 branch.
+	if ! git merge-base --is-ancestor upstream/master HEAD; then
+		# If we reach here, it means HEAD is NOT based off the YDBDoc master branch either.
+		echo "ERROR: HEAD should be based off [$YDBDOC_DEV_BRANCH] or [master] branch."
+		echo "ERROR: This script will not work correctly until the situation is fixed."
+		exit 1
+	fi >&2
+fi
 
-git merge-base --is-ancestor upstream/$CURRENT_DEV_VERSION HEAD
-head_is_ancestor_of_dev_version=$?
 if [ "$ydb" = 1 ]; then
 	# This code path is reached if the YDBDoc pipeline "pages" job is being run.
 	# Caller script ci/error-check.sh wants to know which YDB commit to compare error messages of YDBDoc HEAD against.
 	# Check if current commit YDBDoc HEAD is based off the YDBDoc r2.04 branch.
-	if [ 0 = $head_is_ancestor_of_dev_version ]; then
+	if git merge-base --is-ancestor upstream/$YDBDOC_DEV_BRANCH HEAD; then
 		# HEAD is based off the YDBDoc r2.04 branch. In that case, we need to compare error messages against
 		# YDB master. Therefore, return "master" for this case.
 		echo master
 	else
 		# HEAD is based off the YDBDoc master branch. In that case, we need to compare error messages against
 		# the latest production release of YDB. Therefore, return that.
-		echo $LATEST_PUBLISHED_VERSION
+		echo $YDB_CURPRO_TAG
 	fi
 else
 	# This code path is reached if the YDBDoc pipeline "commit-verify" job is being run.
 	# Caller script ci/commit-verify.sh wants to know what is the YDBDoc target branch to use as the base of the MR
 	# and do copyright checks on all commits since that base commit.
 	# Check if current commit YDBDoc HEAD is based off the YDBDoc r2.04 branch.
-	if [ 0 = $head_is_ancestor_of_dev_version ]; then
+	if git merge-base --is-ancestor upstream/$YDBDOC_DEV_BRANCH HEAD; then
 		# HEAD is based off the YDBDoc r2.04 branch. In that case, we need to do copyright checks on all commits
 		# since the YDBDoc r2.04 branch. So return r2.04 in this case.
-		echo $CURRENT_DEV_VERSION
+		echo $YDBDOC_DEV_BRANCH
 	else
 		# HEAD is based off the YDBDoc master branch. In that case, we need to do copyright checks on all commits
 		# since the YDBDoc master branch. So return master in this case.
