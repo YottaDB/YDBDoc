@@ -904,7 +904,7 @@ If the underlying :ref:`ydb-str2zwr-s-st-fn` call returns an error, the function
 .. code-block:: python
 
     print(yottadb.str2zwr(b'X\x00ABC'))  # Prints b'"X"_$C(0)_"ABC"'
-
+    print(yottadb.str2zwr(b'X\x00ABC').decode('utf-8')  # Prints "X"_$C(0)_"ABC"
 
 +++++++++++++++++++++++
 Python subscript_next()
