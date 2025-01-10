@@ -46,10 +46,11 @@ if [ "$ydb" = 1 ]; then
 	if git merge-base --is-ancestor upstream/$YDBDOC_DEV_BRANCH HEAD; then
 		# HEAD is based off the YDBDoc r2.04 branch. In that case, we need to compare error messages against
 		# YDB master. Therefore, return "master" for this case.
-		echo master
+		echo upstream/master
 	else
 		# HEAD is based off the YDBDoc master branch. In that case, we need to compare error messages against
 		# the latest production release of YDB. Therefore, return that.
+		# NOTE: git does not allow tags to contain the prefix of the remote, so we just have to hope that there was no cached pre-existing tag.
 		echo $YDB_CURPRO_TAG
 	fi
 else

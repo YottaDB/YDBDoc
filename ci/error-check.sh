@@ -24,7 +24,7 @@ grep -A 1 '^---' MessageRecovery/errors.rst | grep '^[A-Z]' | grep -vwE "ILLEGAL
 grep '^| [0-9]' MessageRecovery/errormsgref.rst | sed 's/^| [0-9][0-9]* | //;s/,.*//g;' | sort -u > /tmp/err_errormsgref.out
 if ! diff /tmp/err_errors.out /tmp/err_errormsgref.out > err_diff.out; then
 	echo "FATAL: some error message documented with error numbers/more error numbers in errormsgref.rst"
-	echo "Please check diff output below:"
+	echo "Please check diff output below (YDB errors on < left, YDBDoc errors on > right):"
 	cat err_diff.out
 	exit 1
 else
