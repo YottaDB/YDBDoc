@@ -46,7 +46,7 @@ As a matter of vocabulary, note that Python class methods like :code:`__init__()
 Python Quick Start
 ------------------
 
-The YDBPython wrapper requires a minimum YottaDB release of r1.30 installed and used with UTF-8 support, and is tested with a minimum Python version of 3.8. Python 2 is *not* supported. If the Python packages on your operating system are older, and the Python wrapper does not work, please obtain and install a newer Python version.
+The YDBPython wrapper requires a minimum YottaDB release of r1.30, and is tested with a minimum Python version of 3.8. Python 2 is *not* supported. If the Python packages on your operating system are older, and the Python wrapper does not work, please obtain and install a newer Python version.
 
 This section assumes that YottaDB has already been installed. One way to install YottaDB is described in the :ref:`mlpg-quick-start` section. After completing step 2 of that guide, *Installing YottaDB*, follow the instructions below to download, install, and test the Python wrapper:
 
