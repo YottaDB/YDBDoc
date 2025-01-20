@@ -53,7 +53,7 @@ if [ ! -d "$workdir" ]; then \
 	fi
 else
 	cd "$workdir"
-	git fetch --depth 1 upstream
+	git fetch upstream
 fi >&2
 
 {
