@@ -20,7 +20,7 @@ _templates
 # Above is too aggressive and incorrectly includes shared/* files, so fix that problem:
 !shared/*
 
-MultiLangProgGuide/lua-yottadb-ydbdocs.rst
+MultiLangProgGuide/YDBLua-ydbdocs.rst
 /commit_verify.sh
 /deadlinks
 /git-checkouts

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2022-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2022-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -21,9 +21,9 @@ Programming in Lua
 .. contents::
    :depth: 5
 
-Programming YottaDB in `Lua <https://www.lua.org/>`_ is provided by `lua-yottadb <https://github.com/anet-be/lua-yottadb>`_, developed by `Mitchell <https://github.com/orbitalquark/>`_ and `Berwyn Hoyt <https://github.com/berwynhoyt/>`_, and sponsored by the `University of Antwerp <https://www.uantwerpen.be>`_. We acknowledge their contribution and thank them for the value it adds to the YottaDB community.
+Programming YottaDB in `Lua <https://www.lua.org/>`_ is provided by `YDBLua <https://gitlab.com/YottaDB/Lang/YDBLua>`_, developed by `Mitchell <https://github.com/orbitalquark/>`_ and `Berwyn Hoyt <https://github.com/berwynhoyt/>`_, and sponsored by the `University of Antwerp <https://www.uantwerpen.be>`_. We acknowledge their contribution and thank them for the value it adds to the YottaDB community.
 
-lua-yottadb wraps the YottaDB :ref:`c-simple-api` to provide a Lua API.
+YDBLua wraps the YottaDB :ref:`c-simple-api` to provide a Lua API.
 
 --------------
 Installation
@@ -34,8 +34,8 @@ The YottaDB Lua API requires a minimum YottaDB release of r1.34 and is tested wi
 
    sudo apt install lua5.4
    sudo apt install liblua5.4-dev
-   git clone https://github.com/anet-be/lua-yottadb.git
-   cd lua-yottadb
+   git clone https://gitlab.com/YottaDB/Lang/YDBLua
+   cd YDBLua
    make
    make test
    sudo make install
@@ -89,8 +89,8 @@ We can also use other methods of the node object like ``incr() name() has_value(
    n2:__name()  -- uglier but 15x faster access to node object methods
    -- cowboy
 
-(Note: lua-yottadb is able to distinguish n:method(n) from subnode creation n.method. See
-`details in the notes here <https://htmlpreview.github.io/?https://github.com/anet-be/lua-yottadb/blob/master/docs/yottadb.html#Class_node>`_.)
+(Note: YDBLua is able to distinguish n:method(n) from subnode creation n.method. See
+`details in the notes here <https://yottadb.gitlab.io/lang/ydblua/yottadb.html#Class_node>`_.)
 
 Now, let's try ``dump`` to see what we've got so far:
 
@@ -149,7 +149,7 @@ You may also wish to look at ``node:gettree()`` which has multiple uses.
 On first appearances, it just loads a database tree into a Lua table (opposite of ``settree`` above),
 but it also allows you to iterate over a whole database tree and process each node through a filter function.
 For example, to use `print` as a filter function, do ``node:gettree(nil, print)``.
-Incidentally, lua-yottadb itself uses ``gettree``, to implement ``node:dump()``.
+Incidentally, YDBLua itself uses ``gettree``, to implement ``node:dump()``.
 
 **Database transactions are also available**
 
@@ -187,4 +187,4 @@ Incidentally, lua-yottadb itself uses ``gettree``, to implement ``node:dump()``.
 Lua API
 ---------
 
-.. include:: lua-yottadb-ydbdocs.rst
+.. include:: YDBLua-ydbdocs.rst

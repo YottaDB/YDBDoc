@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -140,7 +140,7 @@ For a specified node, it can be queried whether it has data content (1), whether
 
 .. code-block:: python3
 
-    >>> print( yottadb.data("^cmd", ("list",)) )  
+    >>> print( yottadb.data("^cmd", ("list",)) )
     10
     >>> print( yottadb.data("^cmd", ("list", "linux",)) )
     1
@@ -154,7 +154,7 @@ At a given hierarchy level, you can query the first element, or the sibling of a
 .. code-block:: python3
 
     >>> next = yottadb.subscript_next("^cmd", ("list", "linux",))
-    >>> print(next.decode("utf-8"))  
+    >>> print(next.decode("utf-8"))
     windows
 
 ~~~~~~
@@ -272,7 +272,7 @@ With a terminal emulator, initiate an ssh connection to port 2222 on localhost a
    Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
    permitted by applicable law.
    Last login: Fri Feb 23 17:19:42 2024 from 10.0.2.2
-   ydbuser@ydbdev:~$ 
+   ydbuser@ydbdev:~$
 
 As newer versions of packages are likely to have been released after the Acculturation Workshop virtual machine was released, run the following command once before using the virtual machine, to update to current versions of packages, remove old versions, and reboot to use the new packages.
 
@@ -318,7 +318,7 @@ As YottaDB needs a working environment and several environment variables to be s
    ydbuser@ydbdev:~$ source /usr/local/etc/ydb_env_set
    ydbuser@ydbdev:~$ yottadb -run %xcmd 'write $zyrelease,!'
    YottaDB r2.00 Linux x86_64
-   ydbuser@ydbdev:~$ 
+   ydbuser@ydbdev:~$
 
 When you set up environments in YottaDB, you will set up your own scripting, but the default is a good place to start.
 
@@ -344,7 +344,7 @@ The :code:`tree` program shows the environment sourcing :code:`ydb_env_set` crea
        └── r
 
    8 directories, 7 files
-   ydbuser@ydbdev:~$ 
+   ydbuser@ydbdev:~$
 
 We will explore the environment in more detail below.
 
@@ -413,30 +413,30 @@ Download the `sayhelloGo.go <./sayhelloGo.go>`_ program into the :code:`ydbuser`
    ^hello("Go")="สวัสดีชาวโลก"
    %YDB-I-RECORDSTAT, ^hello:	  Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
    %YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 2  max subsc len: 11  max rec len: 36  max node len: 44
-   ydbuser@ydbdev:~$ 
+   ydbuser@ydbdev:~$
 
 ~~~~~~~~~~~~~~~~
 Access from Lua
 ~~~~~~~~~~~~~~~~
 
-YottaDB can be accessed from Lua using `lua-yottadb <https://github.com/orbitalquark/lua-yottadb>`_. Update the Makefile to use the correct path to the Lua headers, the Makefile assumes that they are installed at :code:`/usr/include/lua5.3`.
+YottaDB can be accessed from Lua using `YDBLua <https://gitlab.com/YottaDB/Lang/YDBLua>`_. Update the Makefile to use the correct path to the Lua headers, the Makefile assumes that they are installed at :code:`/usr/include/lua5.3`.
 
 .. code-block:: bash
 
-   ydbuser@ydbdev:~$ git clone --quiet https://github.com/anet-be/lua-yottadb.git
-   ydbuser@ydbdev:~$ cd lua-yottadb/
-   ydbuser@ydbdev:~/lua-yottadb$ sudo make install
+   ydbuser@ydbdev:~$ git clone --quiet https://gitlab.com/YottaDB/Lang/YDBLua
+   ydbuser@ydbdev:~$ cd YDBLua
+   ydbuser@ydbdev:~/YDBLua$ sudo make install
    ...
-   ydbuser@ydbdev:~/lua-yottadb$ make test
+   ydbuser@ydbdev:~/YDBLua$ make test
    ...
-   ydbuser@ydbdev:~/lua-yottadb$ cd ..
+   ydbuser@ydbdev:~/YDBLua$ cd ..
    ydbuser@ydbdev:~$
 
 Download the `sayhelloLua.lua <./sayhelloLua.lua>`_ program into the :code:`ydbuser` directory and run it.
 
 .. code-block:: bash
 
-   ydbuser@ydbdev:~$ lua sayhelloLua.lua 
+   ydbuser@ydbdev:~$ lua sayhelloLua.lua
    ydbuser@ydbdev:~$ mupip extract -format=zwr -label="Hello label" -select=hello -stdout
    Hello label UTF-8
    24-FEB-2024  18:37:05 ZWR
@@ -445,7 +445,7 @@ Download the `sayhelloLua.lua <./sayhelloLua.lua>`_ program into the :code:`ydbu
    ^hello("Lua")="Hallo Wereld"
    %YDB-I-RECORDSTAT, ^hello:	  Key cnt: 3  max subsc len: 12  max rec len: 36  max node len: 44
    %YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 3  max subsc len: 12  max rec len: 36  max node len: 44
-   ydbuser@ydbdev:~$ 
+   ydbuser@ydbdev:~$
 
 ~~~~~~~~~~~~~
 Access from M
@@ -622,7 +622,7 @@ YottaDB can also be accessed from Rust, using the YottaDB wrapper for Rust `YDBR
    ^hello("Rust")="ハローワールド"
    %YDB-I-RECORDSTAT, ^hello:	  Key cnt: 8  max subsc len: 16  max rec len: 37  max node len: 48
    %YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 8  max subsc len: 16  max rec len: 37  max node len: 48
-   (.venv) ydbuser@ydbdev:~$ 
+   (.venv) ydbuser@ydbdev:~$
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Many Languages, One Database
@@ -644,12 +644,12 @@ Northwind dataset, available in the YDBOcto repository, has dummy data you can u
 
 .. code-block:: bash
 
-   ydbuser@ydbdev:~$ source /usr/local/etc/ydb_env_set 
+   ydbuser@ydbdev:~$ source /usr/local/etc/ydb_env_set
    ydbuser@ydbdev:~$ curl -o northwind.zwr https://gitlab.com/YottaDB/DBMS/YDBOcto/-/raw/master/tests/fixtures/northwind.zwr?inline=false
      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
 				    Dload  Upload   Total   Spent    Left  Speed
    100 43924  100 43924    0     0   196k      0 --:--:-- --:--:-- --:--:--  196k
-   ydbuser@ydbdev:~$ mupip load northwind.zwr 
+   ydbuser@ydbdev:~$ mupip load northwind.zwr
    YottaDB MUPIP EXTRACT UTF-8
    21-SEP-2018  14:55:45 ZWR
    Beginning LOAD at record number: 3
@@ -669,7 +669,7 @@ Northwind dataset, available in the YDBOcto repository, has dummy data you can u
    CREATE TABLE
    CREATE TABLE
    CREATE TABLE
-   ydbuser@ydbdev:~$ 
+   ydbuser@ydbdev:~$
 
 You can now query the Northwind database from within the VM using the ``octo`` command from your terminal. Here is a sample query you can run in Octo to confirm that the data was correctly loaded:
 
@@ -694,7 +694,7 @@ Then, from the host machine, connect to the ``rocto`` server using the PostgreSQ
 .. code-block:: bash
 
    $ psql -U ydbuser -h localhost -p 1337
-   Password for user ydbuser: 
+   Password for user ydbuser:
    psql (16.1, server 13.0.0)
    Type "help" for help.
 
