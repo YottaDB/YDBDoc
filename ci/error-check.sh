@@ -18,6 +18,11 @@
 
 ydb=$(ci/needs-clone.sh https://gitlab.com/YottaDB/DB/YDB "$YDB_TARGET_COMMIT")
 
+# Check of 1-line message text in errors.rst for each message is
+# in sync with the message text in YDB/sr_port/*.msg in the YDB project,
+# and with the message text in errormsgref.rst.
+ci/error_sync.py "$ydb" "$@" || exit 1
+
 # Check if every message documented in errors.rst is also documented with one error number
 # (or more error numbers in rare cases) in errormsgref.rst
 grep -A 1 '^---' MessageRecovery/errors.rst | grep '^[A-Z]' | grep -vwE "ILLEGALUSE|INVALIDGBL" > /tmp/err_errors.out
@@ -43,8 +48,3 @@ if ! diff /tmp/err_ydberror.out /tmp/err_errormsgref.out > err_diff2.out; then
 else
 	rm err_diff2.out
 fi
-
-# Check of 1-line message text in errors.rst for each message is
-# in sync with the message text in YDB/sr_port/*.msg in the YDB project,
-# and with the message text in errormsgref.rst.
-ci/error_sync.py "$ydb" "$@" || exit 1
