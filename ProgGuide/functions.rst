@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -1837,6 +1837,18 @@ $ZAHANDLE()
 
 $ZAHANDLE() returns a unique identifier (handle) for the array associated with a name or an alias container; for an subscripted lvn, it returns an empty string. To facilitate debugging, the handle is a printable string representation of a hexadecimal number. The only meaningful operation on the value returned by a call to $ZAHANDLE() is to compare it for equality with the value returned by another call. Changing nodes within the array doesn't change its handle. $ZAHANDLE() returns different results for copies of an array.
 
+The format for the $ZAHANDLE() function is:
+
+.. code-block:: none
+
+   $ZAHA[NDLE](lvn)
+
+* lvn must be a local variable name, or an alias container.
+
+++++++++++++++++++++++++
+Examples of $ZAHANDLE()
+++++++++++++++++++++++++
+
 Example:
 
 .. code-block:: bash
@@ -2536,8 +2548,16 @@ In addition to the four standard M results from $DATA(), $ZDATA() returns:
 
 Existing $DATA() tests for data and descendants report on alias and alias container variables, as well as other variables in the standard fashion. When an application uses alias and alias container variables $ZDATA() supplies additional information when needed.
 
+The format for the $ZDATA() function is:
+
+.. code-block:: none
+
+   $ZDAT[A](glvn)
+
+* The subscripted or unsubscripted global or local variable name specifies the target node.
+
 ++++++++++++++++++++++
-Examples for $ZDATA()
+Examples of $ZDATA()
 ++++++++++++++++++++++
 
 Example:
