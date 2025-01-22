@@ -396,7 +396,7 @@ def maybe_bless(corrections, failures, rst, bless, corrector):
         print(f"HELP: use `{shlex.join(sys.argv)} --bless` to automatically replace {rst}")
     print("NOTE: placeholders are approximate. you may manually edit placeholder names and this script will not change them back.")
 
-def check_missing_errors(args, msgs, documented, undocumented, make_span):
+def check_missing_errors(args, msgs, documented, undocumented, filename):
     failcount = 0
     mismatches = set(documented.keys()).symmetric_difference(set(msgs.keys()))
     for err in mismatches:
@@ -405,14 +405,14 @@ def check_missing_errors(args, msgs, documented, undocumented, make_span):
                 continue
             failcount += 1
             span = msgs[err][0]
-            print(f"ERROR: {err} was documented in {span} but not in {args.rst}")
+            print(f"ERROR: {err} was documented in {span} but not in {filename}")
         elif err not in NOT_YDB_ERRORS:  # i.e. this error is documented in the RST but not in YDB
             if err in undocumented:
                 # TODO: this case should not be necessary. We should move these errors out of `cmierrors.msg` or change the comment that says they are undocumented.
                 continue
             assert err not in msgs, err
             failcount += 1
-            span = make_span(documented[err][0])
+            span = f"{filename}:{documented[err][0] + 1}"
             print(f"ERROR: {err} was documented in {span} but not in {args.YDB}/sr_port/*.msg")
     return failcount
 
@@ -422,7 +422,7 @@ def check_errors_rst(args, msgs, documented, undocumented):
     failcount = 0
     corrections = {}
 
-    failcount += check_missing_errors(args, msgs, documented, undocumented, lambda line: f"{args.rst}:{line + 1}")
+    failcount += check_missing_errors(args, msgs, documented, undocumented, args.rst)
 
     for err, (msg_span, msg) in msgs.items():
         if err not in documented:
@@ -454,7 +454,7 @@ def check_err_msg_ref_rst(args, msgs, documented, undocumented):
     corrections = {}
     err_msg_documented = load_documentation_ref(args.err_msg_ref)
 
-    failcount += check_missing_errors(args, msgs, err_msg_documented, undocumented, lambda line: f"{args.err_msg_ref}:{line + 1}")
+    failcount += check_missing_errors(args, msgs, err_msg_documented, undocumented, args.err_msg_ref)
 
     for err in err_msg_documented:
         if err not in msgs:
