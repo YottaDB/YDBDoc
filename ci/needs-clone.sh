@@ -59,7 +59,7 @@ fi >&2
 {
 	cd "$workdir_path"
 	git fetch --tags upstream
-	git checkout "$branch"
+	git checkout --detach "$branch"
 } >&2
 
 echo "$workdir"

@@ -14,7 +14,7 @@
 # This section of script responsible for detecting undocumented or incorrectly documented messages
 # More details on https://gitlab.com/YottaDB/DB/YDBDoc/-/issues/409
 
-YDB_TARGET_COMMIT=$(ci/target-branch.sh ydb)
+: ${YDB_TARGET_COMMIT:=$(ci/target-branch.sh ydb)}
 
 ydb=$(ci/needs-clone.sh https://gitlab.com/YottaDB/DB/YDB "$YDB_TARGET_COMMIT")
 
