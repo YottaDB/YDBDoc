@@ -424,10 +424,11 @@ There is no reason to avoid aliases in any situation, but in those two contexts,
 ZWRITE/ZSHOW "V" Format
 +++++++++++++++++++++++
 
-ZWRITE as applied to local variables and ZSHOW "V" are conceptually similar, with two differences:
+ZWRITE as applied to local variables and ZSHOW "V" are conceptually similar, with three differences:
 
 * ZWRITE allows the use of patterns to specify the variables and subscripts to display, whereas ZSHOW "V" applies to all local variables.
 * ZSHOW "V" optionally allows the output to be directed to a global or local variable, whereas ZWRITE always directs its output to the current output device.
+* ZSHOW "V" optionally allows a stack level to be specified, whereas ZWRITE always shows the local variables in scope at the current $STACK.
 
 For more information on the ZWRITE/ZSHOW "V" format for alias variables, refer to :ref:`zwrite-format-alias-vars`.
 

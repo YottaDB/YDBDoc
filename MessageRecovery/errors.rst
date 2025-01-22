@@ -16150,6 +16150,16 @@ Run Time Error: This indicates that ZSHOW argument code specified an invalid act
 
 Action: Modify the argument to use a valid code.
 
+-------------------
+ZSHOWSTACKRANGE
+-------------------
+
+ZSHOWSTACKRANGE, Invalid stack level value nnnn for ZSHOW "V"
+
+Run Time Error: This indicates that a ZSHOW argument specified an invalid stack level. The valid range is :code:`[0, $STACK]`, inclusive.
+
+Action: Modify the argument to use a valid value.
+
 ---------------------
 ZSOCKETATTR
 ---------------------
