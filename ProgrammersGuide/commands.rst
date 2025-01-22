@@ -3655,7 +3655,7 @@ The format of the ZSHOW command is:
 
 .. code-block:: none
 
-   ZSH[OW][:tvexpr] [expr[:glvn][,...]]
+   ZSH[OW][:tvexpr] [expr[:glvn[:level]][,...]]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
 * The optional expression specifies one or more codes determining the nature of the information displayed.
@@ -3665,6 +3665,27 @@ The format of the ZSHOW command is:
 * When the destination for the ZSHOW output is a global variable, ZSHOW sets the maximum length of a ZSHOW line output to the maximum database record size. ZSHOW stores information that does not fit within the maximum database record size as immediate descendants, using ordinal subscripts starting at one (1), of the node holding the beginning of the information.
 * When the destination for the ZSHOW "V" output is a global variable, the %ZSHOWVTOLCL utility program can be used to restore data from that global variable into its original local variables. For more information refer to :ref:`zshowvtolcl-util`.
 * An indirection operator and an expression atom evaluating to a list of one or more ZSHOW arguments form a legal argument for a ZSHOW.
+* The optional stack level specifies which stack level from which to print variables when using the "V" information code; if the ZSHOW argument does not contain a stack level, ZSHOW defaults to the current value of $STACK.
+* Specifying a stack level without specifying an output (e.g. :code:`ZSHOW "V"::$STACK-1`) is allowed. In this case, both colons must still be present.
+* The stack level -1 is an alias for $STACK.
+* Specifying a stack level without specifying a "V" information code (e.g. :code:`ZSHOW "S"::1`) is ignored.
+
+.. note::
+   ZSHOW is available in triggers, and triggers are part of the M execution stack. Hence, local variables outside of a trigger environment can now be examined from inside the trigger logic using the ZSHOW "V"::LEVEL feature (where LEVEL is any stack level outside the trigger environment).
+
+.. note::
+   ZSHOW displays *all* variables in a scope, even if they were not set at the time the routine or subroutine made the call. For example, in the code below, a, c, and n will all be printed.
+
+.. code-block:: none
+
+   level2  ;
+   	SET a="The quick brown fox",c="jumps over the lazy dog"
+   	DO print
+   	quit
+
+   print  ;
+   	SET n=2  ZSHOW "V"::$STACK-1
+
 
 .. _zshow-info-codes:
 
