@@ -45,7 +45,7 @@ if [ ! -d "$workdir" ]; then \
 			git worktree add --force --detach "$workdir_path" "$branch"
 		)
 	else
-		git clone --depth 1 "$remote" "$workdir"
+		git clone "$remote" "$workdir"
 		cd "$workdir"
 		git remote add upstream "$remote"
 		git fetch upstream
