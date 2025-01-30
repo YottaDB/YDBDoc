@@ -235,6 +235,16 @@ Run Time Warning: A shell command line longer than MAX_LINE (currently 32,021 by
 Action: Enter a shorter line, or break the needed actions into multiple commands.
 
 ----------
+ARGTRUNC
+----------
+
+ARGTRUNC, UUUU argument number CCCC truncated. Keep the size of total command line within NNNN bytes
+
+DSE/LKE/MUPIP Warning: This warning appears when the YottaDB parser truncates an argument of a YottaDB Utility (DSE, LKE, or MUPIP) executable exceeding the allowed maximum of NNNN bytes. CCCC is the argument number with 1 being the first argument for the YottaDB Utility executable.
+
+Action: Reduce the size of the argument number CCCC.
+
+----------
 ARROWNTDSP
 ----------
 
@@ -263,16 +273,6 @@ ASYNCIONOMM, Database file ffffssss cannot cccc
 MUPIP Error: This indicates that the database file has current state ssss ("has ASYNCIO enabled;" or: "has MM access method;") and therefore cannot change to assume change cccc ("enable MM" or "enable ASYNCIO"). MUPIP SET can also issue the same message with the text: "; cannot enable MM and ASYNCIO at the same time".
 
 Action: Address the blocking state: ASYNCIO by disabling it, or disabling the MM access method by changing it to BG before repeating the MUPIP command that produced this error.
-
------------
-ASYNCIONOV4
------------
-
-ASYNCIONOV4, rrrr database has ssss; cannot cccc
-
-MUPIP Error: This indicates that region rrrr has current state ssss (ASYNCIO enabled) and therefore cannot change to assume change cccc (enable ASYNCIO).
-
-Action: Address the blocking state: ASYNCIO by disabling it, or by completing an upgrade before repeating the MUPIP command that produced this error.
 
 ------------
 AUDCONNFAIL
@@ -1720,16 +1720,6 @@ Run Time Error: An OPEN or USE command specifies a TRUNCATE deviceparameter on a
 Action: When using encryption, because encryption algorithms maintain state as they process text, a TRUNCATE is only permitted at the beginning or end of a file, the former deleting the entire contents, and the latter effectively a no-op.
 
 --------------------
-CRYPTNOV4
---------------------
-
-CRYPTNOV4, ffff is an encrypted database. Cannot downgrade(to V4) with Encryption option enabled.
-
-MUPIP Error: An attempt to downgrade ffff which is an encrypted database to the V4 (GT.M version 4) format failed because the V4 format does not support encrypted database files.
-
-Action: Use the database in the current format. If a V4 format is required, extract the data in unencrypted ZWRite format with MUPIP EXTRACT and load it into a newly created V4 database.
-
---------------------
 CRYPTOPFAILED
 --------------------
 
@@ -2347,6 +2337,16 @@ DBFILECREATED, Database file DDDD created
 Run Time/MUPIP Error: Indicates YottaDB successfully created the database file DDDD.
 
 Action: None required.
+
+---------------------
+DBFILERDONLY
+---------------------
+
+DBFILERDONLY, The database file ffff was opened as read-only (perms pppp)
+
+All YottaDB Components Error: Database file ffff was opened read-only with permissions pppp, but the read-only status is inconsistent with application expectations.
+
+Action: Use the error and any follow-on messages to assess whether or not the read-only status is correct or the rejection is appropriate.
 
 ---------------------
 DBFILERR
@@ -3303,6 +3303,16 @@ DBUNDACCMT, xxxx Cannot determine access method; trying with BG
 MUPIP Error: This is a MUPIP INTEG error. Refer to the topic `MUPIP INTEG Errors in the About This Manual section <./about.html#mupip-integ-errors>`_.
 
 Action: N/A
+
+---------------
+DBUPGRDREQ
+---------------
+
+DBUPGRDREQ, Database file DDDD is not fully upgraded (format FFFF) and cannot be used by this version of YottaDB. Please upgrade the database.
+
+MUPIP Error: The database file DDDD with block format FFFF has the fully upgraded flag set to FALSE indicating that it holds a mix of block versions.
+
+Action: While YottaDB r1.x can use database files with formats as old as GT.M V4.x, YottaDB starting with r2.x does not handle the V4 block format. Use YottaDB r1.x to fully upgrade the database file before using it.
 
 ---------------
 DBVERPERFWARN1
@@ -4278,6 +4288,16 @@ Compile Time Error: This indicates that YottaDB encountered a dollar sign in an 
 
 Action: Look for misspelled functions and special variable names or a missing $ in an extrinsic.
 
+-----------------------
+FDSIZELMT
+-----------------------
+
+FDSIZELMT, Too many nnnn descriptors needed by GT.CM server
+
+GT.CM Error: A large number (nnnn) of regions accessed on behalf of GT.CM clients forced the file descriptor numerical value to its FD_SETSIZE limit. Under Linux as of this writing, this limit is fixed to 1024.
+
+Action: Review the application, the database layout and the number of concurrent clients and adjust conditions to reduce the number of concurrent database files managed by the GT.CM server.
+
 --------------------
 FILECREATE
 --------------------
@@ -4527,6 +4547,16 @@ FORCEDHALT, Image HALTed by MUPIP STOP
 Run Time Warning: This indicates that a YottaDB process recognized the receipt of a MUPIP STOP command and is terminating. This command stops YottaDB processes in an orderly fashion.
 
 Action: Determine who initiated the MUPIP STOP and why they did so. Restart the process, if appropriate.
+
+-------------------------
+FORCEDHALT2
+-------------------------
+
+FORCEDHALT2, Receipt of 3 MUPIP STOP signals within xxxx seconds, process: yyyy shutting down with no exit handling like a kill -9
+
+Run Time Fatal: This indicates that a YottaDB process recognized the receipt of three `MUPIP STOP <../AdminOpsGuide/dbmgmt.html#stop>`_ commands within approximately 60 seconds and is shutting down without normal clean up - very similar to a kill -9 signal. This event doesn't stop YottaDB processes in an orderly fashion, and might cause database damage if the target process is concurrently actively updating. Therefore use it only on processes that are deadlocked or otherwise stuck, say due to some type of FREEZE.
+
+Action: Determine who initiated the MUPIP STOP and why they did so. Run `MUPIP INTEG <../AdminOpsGuide/dbmgmt.html#integ>`_ as appropriate.
 
 -------------------------
 FOROFLOW
@@ -7742,6 +7772,16 @@ Runtime Error: This indicates that the full path of the currently running libyot
 Action: Make sure a C program invokes a base image function of only one libyottadb.so executable.
 
 -----------------------
+LINETOOLONG
+-----------------------
+
+LINETOOLONG, UUUU prompt input exceeds NNNN bytes
+
+DSE/LKE/MUPIP Error: This error appears when the YottaDB parser detects the input to a YottaDB Utility (DSE, LKE, or MUPIP) prompt exceeds the allowed maximum of NNNN bytes.
+
+Action: Reduce the size of input to the utility prompt. If input to the UUUU prompt is from a `PIPE device <../ProgrammersGuide/ioproc.html#using-pipe-devices>`_, set the `RECORDSIZE deviceparameter <../ProgrammersGuide/ioproc.html#pipe-deviceparameter-summary>`_ to a value less than NNNN bytes.
+
+-----------------------
 LINKVERSION
 -----------------------
 
@@ -8488,26 +8528,6 @@ MUPIP Error: You can't turn on replication for MM access method database file ff
 Action: Forgo replication for the file or change the access method to BG.
 
 -----------------------
-MMNODYNDWNGRD
------------------------
-
-MMNODYNDWNGRD, Unable to use dynamic downgrade with MM access method for region xxx. Use BG access method for downgrade
-
-Run Time/MUPIP Error: An attempt was made to use the MM mode on a database that has not completed being downgraded. MM mode is only supported on fully downgraded or fully upgraded databases.
-
-Action: Use MUPIP SET FILE or MUPIP SET REGION with the ACCESS_METHOD parameter to set the access mode to BG. Then complete the file downgrade using MUPIP REORG DOWNGRADE or file upgrade using MUPIP REORG UPGRADE. And finally set the access mode back to MM using the MUPIP SET FILE or MUPIP SET REGION command again.
-
----------------------
-MMNODYNUPGRD
----------------------
-
-MMNODYNUPGRD, Unable to use MM access method for region yyy until all database blocks are upgraded
-
-Run Time/MUPIP Error: An attempt was made to use MM mode on a database that has not completed being upgraded. MM mode is only supported on fully upgraded or fully downgraded databases.
-
-Action: Use MUPIP SET FILE or MUPIP SET REGION with the ACCESS_METHOD parameter to set the access mode to BG. Then complete the file upgrade using MUPIP REORG UPGRADE. And finally set the access mode back to MM using the MUPIP SET FILE or MUPIP SET REGION command again.
-
------------------------
 MMREGNOACCESS
 -----------------------
 
@@ -8596,26 +8616,6 @@ MUDWNGRDNOTPOS, Start VBN value is xxx while downgraded YottaDB version can supp
 MUPIP Error: Older versions of YottaDB require the first GDS block be at Virtual Block Number yyy but it is at VBN xxx. This is likely due to the file initially being created using a newer version of YottaDB and thus cannot be downgraded.
 
 Action: To use the database with an older version of YottaDB, it must be extracted with the current version and loaded into the older version both in ZWR format.
-
-----------------------
-MUDWNGRDNRDY
-----------------------
-
-MUDWNGRDNRDY, Database xxx is not ready to downgrade - still yyy database blocks to downgrade
-
-MUPIP Error: A MUPIP DOWNGRADE was attempted when the file-header blks_to_upgrd counter was not equal to the database used block count. This means that not all database blocks have been converted to the previous format.
-
-Action: Before the database file-header can be downgraded, all of the blocks in the database must be downgraded to the previous format. This is normally accomplished with MUPIP REORG DOWNGRADE. If this fails to set the counter correctly, run MUPIP INTEG (not FAST) on the region which will compute and set the correct counter.
-
-------------------------
-MUDWNGRDTN
-------------------------
-
-MUDWNGRDTN, Transaction number aaa in database xxx is too big for MUPIP [REORG] DOWNGRADE. Renew database with MUPIP INTEG TN_RESET
-
-MUPIP Error: A MUPIP DOWNGRADE or MUPIP REORG DOWNGRADE was attempted when the database transaction number was greater than 4,026,531,839 (the TN_RESET warning limit for previous versions of databases).
-
-Action: Before the database can be downgraded, the transaction number must be reset with the MUPIP INTEG TN_RESET command. This requires standalone access to the database and may take a significant amount of time.
 
 ------------------------
 MUFILRNDWNFL
@@ -9038,16 +9038,6 @@ MUPIP Information: Process pppp used MUPIP REORG -ENCRYPT to start or restart an
 Action: None required.
 
 --------------------
-MUREENCRYPTV4NOALLOW
---------------------
-
-MUREENCRYPTV4NOALLOW, Database (re)encryption supported only on fully upgraded V5 databases. ffff has V4 format blocks
-
-MUPIP Error: MUPIP cannot enable or perform encryption on database file ffff while it contains GDS V4 format blocks.
-
-Action: Upgrade the database to V5 and re-run the action.
-
---------------------
 MUREORGFAIL
 --------------------
 
@@ -9362,16 +9352,6 @@ MUPIP Error: The truncate feature is only supported with the BG access method.
 
 Action: Use the BG access method for files you wish to truncate.
 
--------------------
-MUTRUNCNOV4
--------------------
-
-MUTRUNCNOV4, Region rrrr is not fully upgraded from V4 format.
-
-MUPIP Error: The truncate feature is only available for fully upgraded database files.
-
-Action: In order to use truncate, first upgrade the database file to the current major version.
-
 --------------------
 MUTRUNCPERCENT
 --------------------
@@ -9406,11 +9386,11 @@ Action: -
 MUUPGRDNRDY
 --------------------
 
-MUUPGRDNRDY, Database xxx has not been certified as being ready to upgrade to yyy format
+MUUPGRDNRDY, Database xxxx has not been completely upgraded to yyyy format - still bbbb database blocks to upgrade
 
-MUPIP Error: The named database file is in an older format than is in use by this YottaDB version and has not been certified as ready for use by this YottaDB version.
+MUPIP Error: The named database file is in an older format than is in use by this YottaDB version and has not been certified as ready for use by this YottaDB version. There are still bbbb blocks in the older format that need to be upgraded.
 
-Action: Run DBCERTIFY to certify the database as being ready for upgrade.
+Action: Run `MUPIP UPGRADE <../AdminOpsGuide/dbmgmt.html#mupip-upgrade>`_  to complete the upgrade.
 
 -----------------------
 MUUSERECOV
@@ -10733,6 +10713,16 @@ MUPIP Information: Issued by MUPIP ROLLBACK -ONLINE when it successfully complet
 Action: None required.
 
 ------------------
+ORLBKDBUPGRDREQ
+------------------
+
+ORLBKDBUPGRDREQ, Region RRR (DDDD) is not fully upgraded. ONLINE ROLLBACK cannot continue
+
+MUPIP Error: Region RRR pointing to database file DDDD has the fully upgraded flag set to FALSE and the database format is not r2.x indicating that there are GT.M V4 blocks in the database. `MUPIP JOURNAL ROLLBACK ONLINE <../AdminOpsGuide/ydbjournal.html#on-line>`_ in YottaDB r2.* cannot process these database files.
+
+Action: Because a MUPIP JOURNAL ROLLBACK ONLINE is not possible for this database, stop all access to the database files and perform a ROLLBACK with standalone access.
+
+------------------
 ORLBKFRZOVER
 ------------------
 
@@ -10771,16 +10761,6 @@ ORLBKNOSTP, ONLINE ROLLBACK proceeding with database updates. MUPIP STOP will no
 MUPIP Information: Issued by MUPIP ROLLBACK -ONLINE when it starts processing that cannot be interrupted without jeopardizing database integrity.
 
 Action: Wait for the ROLLBACK to complete.
-
---------------------
-ORLBKNOV4BLK
---------------------
-
-ORLBKNOV4BLK, Region rrrr (dddd) has V4 format blocks. Database upgrade required. ONLINE ROLLBACK cannot continue
-
-MUPIP Error: Issued by MUPIP ROLLBACK -ONLINE when it finds that the region rrrr mapped to the database file dddd contains V4 format blocks - online rollback does not support old format blocks.
-
-Action: Upgrade the database to the current major version before attempting to use online rollback.
 
 -------------------
 ORLBKREL
@@ -11605,6 +11585,16 @@ REORGINC, Reorg was incomplete.  Not all globals were reorged.
 MUPIP Warning: This indicates that MUPIP did not reorg all the globals because of some resource constraint errors.
 
 Action: Review the accompanying message(s) for more information.
+
+-------------
+REORGUPCNFLCT
+-------------
+
+REORGUPCNFLCT, MUPIP AAAA encountered a conflict due to OOOO (PID:PPPP)
+
+MUPIP Error: MUPIP action AAAA encountered a conflict due to a concurrent operation OOOO run as process ID PPPP.
+
+Action: MUPIP operations REORG UPGRADE and ONLINE ROLLBACK cannot run concurrently due to conflicting database changes. REORG UPGRADE exits if an ONLINE ROLLBACK is in progress or if it detects that an ONLINE ROLLBACK has started. ONLINE ROLLBACK pauses while waiting for the REORG UPGRADE to exit. ONLINE ROLLBACK has priority over REORG UPGRADE.
 
 -------------
 REPL0BACKLOG
@@ -12959,9 +12949,9 @@ Action: Rename xxxx with a .m extension and retry the shebang invocation.
 SHMHUGETLB
 -----------
 
-SHMHUGETLB, Could not back shared memory with huge pages, using base pages instead
+SHMHUGETLB, Could not back shared memory with huge pages, using base pages instead ffff
 
-Run Time Warning: When the `ydb_hugetlb_shm <../AdminOpsGuide/basicops.html#ydb-hugetlb-shm>`_ environment variable is defined and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES" in a process creating shared memory, YottaDB attempts to back shared memory segments with hugepages, using the default hugepages size. If huge pages cannot be used, YottaDB outputs the SHMHUGETLB warning and tries to back the shared memory with base pages instead. The warning message specifies the operation of the caller along with the relevant file path for the process requesting shared memory. The warning message also includes either an ENOMEM or an EPERM error, depending on why the request for hugepages failed.
+Run Time Warning: When the `ydb_hugetlb_shm <../AdminOpsGuide/basicops.html#ydb-hugetlb-shm>`_ environment variable is defined and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES" in a process creating shared memory, YottaDB attempts to back shared memory segments with hugepages, using the default hugepages size. If huge pages cannot be used, YottaDB outputs the SHMHUGETLB warning and tries to back the shared memory with base pages instead. The warning message specifies the operation of the caller along with the resource ffff for the process requesting shared memory. The warning message also includes either an ENOMEM or an EPERM error, depending on why the request for hugepages failed.
 
 Action: If the warning includes an ENOMEM error, consider allocating more hugepages. If the EPERM error is specified, make sure the caller is privileged (i.e. has the CAP_IPC_LOCK capability) and is a member of the group specified by the :code:`vm.hugetlb_shm_group` kernel parameter.
 
@@ -13280,16 +13270,6 @@ SIZENOTVALID8, Size (in bytes) must be either 1, 2, 4, or 8
 Run Time Error: Both the DSE CHANGE -FILEHEADER command and MUPIP REPLICATE -SOURCE -JNLPOOL -CHANGE command triggers this error when the SIZE qualifier is not set to 1, 2, 4, or 8.
 
 Action: Specify 1, 2, 4, or 8 as size (in bytes).
-
--------------------
-SNAPSHOTNOV4
--------------------
-
-SNAPSHOTNOV4, Cannot downgrade (to V4) while snapshots are in progress. Currently ssss snapshots are in progress for region rrrr.
-
-MUPIP Error: A request to downgrade a region to V4 occurred while a snapshot is in progress.
-
-Action: Wait for a currently active process using snapshots to complete before running the downgrade. Since a downgrade to V4 would not normally be expected, check to verify that the downgrade invocation is appropriate.
 
 -----------------
 SOCKACCEPT
@@ -13663,16 +13643,6 @@ SSTMPDIRSTAT, Cannot access temporary directory dddd
 MUPIP Error: An action requiring a snapshot file was unable to access the temporary directory.
 
 Action: Verify that the directory exists and has appropriate access permissions for the user performing the action.
-
--------------------
-SSV4NOALLOW
--------------------
-
-SSV4NOALLOW, Database snapshots are supported only on fully upgraded V5 databases. nnnn has V4 format blocks.
-
-MUPIP Error: An action requiring a snapshot was attempted on a database that contains V4 format blocks.
-
-Action: Upgrade the database to V5 and re-run the action.
 
 ------------------
 STACKCRIT
