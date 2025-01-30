@@ -1729,20 +1729,6 @@ Matching `Python lock_incr()`_, :code:`Key.lock_incr()` wraps :ref:`ydb-lock-inc
 
 For an example of how to use this function, see `Key.lock_decr()`_.
 
-+++++++++++++++
-Key.node_next()
-+++++++++++++++
-
-.. code-block:: python
-
-    def node_next(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> Tuple[bytes, ...]
-
-Matching `Python node_next()`_, :code:`Key.node_next()` wraps :ref:`ydb-node-next-s-st-fn` to facilitate traversal of the local or global variable tree represented by the given :code:`Key` object.
-
-- If there is a next node, it returns the subscripts of that next node as a tuple of Python :code:`bytes` objects.
-- If there is no node following the specified node, a :code:`yottadb.YDBNodeEnd` exception will be raised.
-- In the event of an error in the underlying :ref:`ydb-node-next-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
-
 ++++++++++++++++++
 Key.replace_tree()
 ++++++++++++++++++
