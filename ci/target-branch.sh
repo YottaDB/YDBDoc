@@ -11,6 +11,8 @@
 #                                                               #
 #################################################################
 
+set -e
+
 # The master branch represents the latest *published* release of YDB.
 # So the error messages it documents may be different between the latest release and the latest commit to YDB master.
 # NOTE: this script hardcodes both the current development version and the latest published version of YDB.
