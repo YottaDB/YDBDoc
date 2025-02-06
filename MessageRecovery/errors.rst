@@ -8611,11 +8611,11 @@ Action: Use the preceding message to diagnose and correct the problem, which may
 MUDWNGRDNOTPOS
 --------------------
 
-MUDWNGRDNOTPOS, Start VBN value is xxx while downgraded YottaDB version can support only yyy. Downgrade not possible
+MUDWNGRDNOTPOS, Downgrade not possible for a V7 database version
 
-MUPIP Error: Older versions of YottaDB require the first GDS block be at Virtual Block Number yyy but it is at VBN xxx. This is likely due to the file initially being created using a newer version of YottaDB and thus cannot be downgraded.
+MUPIP Error: The database file was probably created or last used by an r2.x release of YottaDB or V7 version of GT.M, and cannot be downgraded to an r1.x format (GT.M V6 format).
 
-Action: To use the database with an older version of YottaDB, it must be extracted with the current version and loaded into the older version both in ZWR format.
+Action: Open the database file with an r2.x release of YottaDB. To use it with an r1.x release, use `MUPIP EXTRACT <../AdminOpsGuide/dbmgmt.html#extract>`_ from an r2.x release to create an extract and `MUPIP LOAD <../AdminOpsGuide/dbmgmt.html#load>`_ from an r1.x release to load it into a database created with an r1.x release.
 
 ------------------------
 MUFILRNDWNFL
@@ -9288,7 +9288,7 @@ MUTRUNCALREADY
 
 MUTRUNCALREADY, Region xxxx: no further truncation possible
 
-MUPIP Information: Issued by `MUPIP REORG TRUNCATE <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#truncate>`_ when it finds that the database file was already truncated.
+MUPIP Information: Issued by `MUPIP REORG TRUNCATE <../AdminOpsGuide/dbmgmt.html#truncate>`_ when it finds that the database file was already truncated.
 
 Action: No action required. The database is defragmented, and space is fully used.
 
@@ -9328,9 +9328,9 @@ MUTRUNCNOSPACE
 
 MUTRUNCNOSPACE, Region rrrr has insufficient space to meet truncate target percentage of yyyy
 
-MUPIP Information: Issued when REORG truncate determines that there is not enough free space at the end of the file; database file not truncated.
+MUPIP Information: `MUPIP REORG TRUNCATE <../AdminOpsGuide/dbmgmt.html#truncate>`_ produces this message in the following conditions when it determines that there is insufficient free space at the end of the database file to meet the requested percentage, the region is almost full or there are globals not mapped to the region, or there is a concurrent `MUPIP EXTEND <../AdminOpsGuide/dbmgmt.html#extend>`_.
 
-Action: If appropriate, specify a larger threshold.
+Action: Specify a less aggressive threshold. If a global is not mapped to the region, REORG cannot perform any operation on that global. Create a separate global directory for the global mapped to the region and then perform the REORG.
 
 -------------------
 MUTRUNCNOSPKEEP
@@ -11061,6 +11061,16 @@ PERMGENFAIL, Failed to determine access permissions to use for creation of xxxx 
 Run Time/MUPIP Error: This message indicates that YottaDB was unable to determine the permissions to use when creating a file or resource associated with database file yyyy. xxxx may be "ipc resources", "journal file", "backup file", or "snapshot file".
 
 Action: Note the user and group ownership of the database file and $ydb_dist/libyottadb.*, and the user and group permissions of the YottaDB process, and report them to your YottaDB support channel.
+
+------------------
+PIDMISMATCH
+------------------
+
+PIDMISMATCH, PID=qqqq has a mismatched internal process id value of pppp
+
+Run Time Warning: pppp is the process_id shown by the internal state, qqqq is the operating system pid reported by `getpid() <https://www.man7.org/linux/man-pages/man2/getpid.2.html>`_. If a child process forked off by a `JOB <../ProgrammersGuide/commands.html#job>`_ command terminates abnormally and prematurely (i.e., before the jobbed off process setup is complete), this message indicates that it skipped exit handing in order to avoid potential damage to the parent processes' statsdb or routine shared memory.
+
+Action: No action is required, unless there is a subsequent REQRUNDOWN or REQRLNKCTLRNDWN shortly afterwards.
 
 ------------------
 PINENTRYERR
