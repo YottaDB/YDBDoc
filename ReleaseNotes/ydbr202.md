@@ -101,7 +101,7 @@ Assuming `$ydb_dist` points to the directory where YottaDB is installed:
  - Delete the directory with `sudo rm -rf $ydb_dist`
 
 ## Upgrading to YottaDB r2.02
-YottaDB r2.02 is upward compatible from YottaDB [r2.00](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.00), GT.M [V7.0-002](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html), GT.M [V7.0-003](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html), and GT.M [V7.0-004](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-004_Release_Notes.html). The minimal upgrade steps are:
+YottaDB r2.02 is upward compatible from YottaDB [r2.00](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.00), GT.M [V7.0-002](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html), GT.M [V7.0-003](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-003_Release_Notes.html), GT.M [V7.0-004](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-004_Release_Notes.html), and GT.M [V7.0-005](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-005_Release_Notes.html). The minimal upgrade steps are:
 
 * Install YottaDB r2.02. Use `ydbinstall` / `ydbinstall.sh` to install YottaDB plugins that you use.
 * Install plugins you need in addition to those installed in the previous step, e.g., non-YottaDB plugins.
