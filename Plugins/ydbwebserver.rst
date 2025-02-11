@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2023-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2023-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -1035,8 +1035,11 @@ To run the YDB Web Server in the background using Systemd, first create a ``/lib
     ExecStop=/usr/bin/env "${ydb_dist}/yottadb" -run stop^%%ydbwebreq --port 9080
     Restart=on-failure
     StandardOutput=tty
+    SuccessExitStatus=241
 
 Replace the paths with paths appropriate to your system. Note that there are many other ways to do this, e.g. using `EnvironmentFile` for YottaDB environment variables or offloading the entire setup process to a script.
+
+The ``SuccessExitStatus`` ensures that Systemd will treat a normal termination using `MUPIP STOP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#stop>`_ (which translated to 256-15 = 241) as a successful termination, not as an error.
 
 After creating the ``ydb-web-server.service`` file, do the following:
 
