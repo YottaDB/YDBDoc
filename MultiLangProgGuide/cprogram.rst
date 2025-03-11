@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -927,7 +927,7 @@ ydb_set_s() / ydb_set_st()
 
 - :code:`YDB_OK` for a normal return;
 - :code:`YDB_ERR_INVSVN` if no such intrinsic special variable exists;
-- :code:`YDB_ERR_PARAMINVALID` when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray` or :code:`increment`; or
+- :code:`YDB_ERR_PARAMINVALID` when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`; or
 - another applicable :ref:`error return code <err-ret-codes>`.
 
 Please see the :ref:`Simple API introduction <c-simple-api>` for details about parameter allocation.

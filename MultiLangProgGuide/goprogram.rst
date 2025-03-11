@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -117,7 +117,7 @@ Go Error Interface
 
 YottaDB has a comprehensive set of error return codes. Each has a unique number and a mnemonic. Thus, for example, to return an error that a buffer allocated for a return value is not large enough, YottaDB uses the INVSTRLEN error code, which has the numeric value :code:`yottadb.YDB_ERR_INVSTRLEN`. YottaDB attempts to maintain stability of the numeric values and mnemonics from release to release, to ensure applications remain compatible when the underlying YottaDB releases are upgraded. While the Go :code:`error` interface provides for a call to return an error as a string (with :code:`nil` for a successful return), applications in other languages, such as C, expect a numeric return value.
 
-The C application code calling YottaDB functions will check the return code. If the return code is not :code:`YDB_OK`, it will access the intrinsic special variable :ref:`zstatus-isv` for more detailed information (though the :code:`errstr` parameter in a multi-threaded application). Whereas, Go application code calling YottaDB methods and functions will check the :code:`error` interface to determine whether it is :code:`nil`. This means that Go application code will never see a :code:`yottadb.YDB_OK` return.
+The C application code calling YottaDB functions will check the return code. If the return code is not :code:`YDB_OK`, it will access the intrinsic special variable :ref:`zstatus-isv` for more detailed information (though the :code:`errstr` parameter in a multi-threaded application). By contrast, Go application code calling YottaDB methods and functions will check the :code:`error` interface to determine whether it is :code:`nil`. This means that Go application code will never see a :code:`yottadb.YDB_OK` return.
 
 The YottaDB Go :code:`error` interface has a structure and a method. Sample usage:
 
@@ -346,9 +346,24 @@ Go Exit()
 
         func Exit() error
 
-For a process that wishes to close YottaDB databases and no longer use YottaDB, the function wraps :ref:`ydb-exit-fn`. If :code:`ydb-exit-fn` does not send a return value of :code:`YDB_OK`, :code:`Exit()` panics.
+This function invokes YottaDB's exit handler ydb_exit() to shut down the database properly.
+It MUST be called prior to process termination by any application that modifies the database.
+This is necessary particularly in Go because Go does not call the C atexit() handler (unless building with certain test options),
+so YottaDB itself cannot automatically ensure correct rundown of the database.
 
-Although in theory typical processes should not need to call :code:`Exit()` because normal process termination should close databases cleanly, in practice, thread shutdown may not always ensure that databases are closed cleanly, especially since the C :code:`atexit()` functionality does not reliably work in Go's multi-threaded environment. Application code should invoke :code:`Exit()` prior to process exit, or when an application intends to continue with other work beyond use of YottaDB, to ensure that databases are closed cleanly. To accomplish this, you should use a "defer yottadb.Exit()" statement early in the main routine's initialization.
+If Exit() is not called prior to process termination, steps must be taken to ensure database integrity as documented in `Database Integrity`_,
+and unreleased locks may cause small subsequent delays (see `relevant LKE documentation <../AdminOpsGuide/mlocks.html#introduction>`_).
+
+Recommended behaviour is for your main routine to :code:`defer yottadb.Exit()` early in the main routine's initialization, and then for the main routine
+to confirm that all goroutines have stopped or have completely finished accessing the database before returning.
+
+- If Go routines that access the database are spawned, it is the main routine's responsibility to ensure that all such threads have
+  finished using the database before it calls :code:`yottadb.Exit()`.
+- The application must not call Go's os.Exit() function which is a very low-level function that bypasses any defers.
+- Care must be taken with any signal notifications (see `Go Using Signals`_) to prevent them from causing premature exit.
+- Note that Go *will* run defers on panic, but not on fatal signals such as :code:`SIGSEGV`.
+
+Exit() may be called multiple times by different threads during an application shutdown.
 
 ++++++++++++
 Go IncrE()
@@ -1257,7 +1272,7 @@ Go KeyT ValST()
 
         func (key *KeyT) ValST(tptoken uint64, errstr *BufferT, retval *BufferT) error
 
-Matching `Go ValE()`_, :code:`ValST()` wraps :ref:`ydb-get-s-st-fn` to return the value at the referenced global or local variable node, or intrinsic special variable, in the buffer referenced by the :code:`BufferT` structure referenced by :code:`retval`.
+Matching `Go ValE()`_, :code:`ValST()` wraps :ref:`ydb-get-s-st-fn` to return the value at the referenced global or local variable node, or intrinsic special variable, in the buffer referenced by :code:`retval`.
 
 - If :ref:`ydb-get-s-st-fn` returns an error such as GVUNDEF, INVSVN, LVUNDEF, the method makes no changes to the structures under :code:`retval` and returns the error.
 - If the length of the data to be returned exceeds :code:`retval.GetLenAlloc()`, the method sets the :code:`len_used` of the :code:`C.ydb_buffer_t` referenced by :code:`retval` to the required length, and returns an INVSTRLEN error.
