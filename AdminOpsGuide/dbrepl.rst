@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -4599,7 +4599,7 @@ To perform an updateresync, the originating instance must have at least one hist
 
 You also need use -updateresync to replace your existing replication instance files if a YottaDB version upgrade changes the instance file format.
 
-Note that :code``-updateresync`` works even when the replication instance file of the originating instance differs in endianness.
+Note that ``-updateresync`` works even when the replication instance file of the originating instance differs in endianness.
 
 For information on the procedures that use -updateresync, refer to :ref:`setup-new-repl-inst-orig-ab-pq-ap`, :ref:`replace-repl-inst-file-repl-ab-pq`, :ref:`replace-repl-inst-file-repl-ap`, and :ref:`setup-new-repl-inst-orig-ap`.
 

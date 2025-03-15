@@ -925,33 +925,37 @@ In the special case where :code:`subsarray` is empty, :code:`subscript_next()` r
 
 .. code-block:: python
 
-    yottadb.set("^myglobal", ("sub1", "sub2"), "val1")
-    yottadb.set("^myglobal", ("sub1", "sub3"), "val2")
-    yottadb.set("^myglobal", ("sub1", "sub4"), "val3")
-    yottadb.set("^myglobal", ("sub1", "sub5"), "val4")
+   import yottadb
 
-    # Get first subscript of the second subscript level
-    subscript = yottadb.subscript_next("^myglobal", ("sub1", ""))
-    print(subscript)  # Prints 'sub2'
-    while True:
-        try:
-            print(yottadb.subscript_next("^myglobal", ("sub1", subscript)))  # Prints 'sub3', 'sub4', and 'sub5', successively
-        except yottadb.YDBNodeEnd:
-            break
+   yottadb.set("^myglobal", ("sub1", "sub2"), "val1")
+   yottadb.set("^myglobal", ("sub1", "sub3"), "val2")
+   yottadb.set("^myglobal", ("sub1", "sub4"), "val3")
+   yottadb.set("^myglobal", ("sub1", "sub5"), "val4")
 
-    # subscript_next() also works with subscripts that include data that is not ASCII or valid UTF-8
-    yottadb.set("mylocal", (b"sub1\x80",)), "val1"),  # Test subscripts with byte strings that are not ASCII or valid UTF-8
-    yottadb.set("mylocal", (b"sub2\x80", "sub7")), "val2"),
-    yottadb.set("mylocal", (b"sub3\x80", "sub7")), "val3"),
-    yottadb.set("mylocal", (b"sub4\x80", "sub7")), "val4"),
-    print(yottadb.subscript_next(varname="mylocal", subsarray=("",)))  # Prints b"sub1\x80"
-    print(yottadb.subscript_next(varname="mylocal", subsarray=("sub1\x80",)))  # Prints b"sub2\x80"
-    print(yottadb.subscript_next(varname="mylocal", subsarray=("sub2\x80",)))  # Prints b"sub3\x80"
-    print(yottadb.subscript_next(varname="mylocal", subsarray=("sub3\x80",)))  # Prints b"sub4\x80"
-    try:
-        print(yottadb.subscript_next(varname="mylocal", subsarray=("sub4\x80",)))
-    except YDBNodeEnd:
-        pass
+   # Get first subscript of the second subscript level
+   subscript = yottadb.subscript_next("^myglobal", ("sub1", ""))
+   print(subscript)  # Prints 'sub2'
+   while True:
+       try:
+	   subscript = yottadb.subscript_next("^myglobal", ("sub1", subscript))
+	   print(subscript)  # Prints 'sub3', 'sub4', and 'sub5', successively
+       except yottadb.YDBNodeEnd:
+	   break
+
+   # subscript_next() also works with subscripts that include data that is not ASCII or valid UTF-8
+   yottadb.set("mylocal", (b"sub1\x80",), "val1")  # Test subscripts with byte strings that are not ASCII or valid UTF-8
+   yottadb.set("mylocal", (b"sub2\x80", "sub7"), "val2")
+   yottadb.set("mylocal", (b"sub3\x80", "sub7"), "val3")
+   yottadb.set("mylocal", (b"sub4\x80", "sub7"), "val4")
+   print(yottadb.subscript_next(varname="mylocal", subsarray=("",)))  # Prints b"sub1\x80"
+   print(yottadb.subscript_next(varname="mylocal", subsarray=("sub1\x80",)))  # Prints b"sub2\x80"
+   print(yottadb.subscript_next(varname="mylocal", subsarray=("sub2\x80",)))  # Prints b"sub3\x80"
+   print(yottadb.subscript_next(varname="mylocal", subsarray=("sub3\x80",)))  # Prints b"sub4\x80"
+
+   try:
+       print(yottadb.subscript_next(varname="mylocal", subsarray=("sub4\x80",)))
+   except yottadb.YDBNodeEnd:
+       pass
 
 +++++++++++++++++++++++++++
 Python subscript_previous()
