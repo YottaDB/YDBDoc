@@ -316,9 +316,9 @@ For examples on the use of special variable $STACK, see :ref:`stack-function`.
 $STORAGE
 --------------
 
-$S[TORAGE] contains an integer value specifying the number of free bytes of address space remaining between the memory currently under management by the process and the theoretical maximum available to the process.
+$S[TORAGE] contains an integer value specifying the number of free bytes of address space remaining between the memory currently under management by the process and the theoretical maximum available to the process. The theoretical maximum is $ZMALLOCLIM if it has a non-zero value, otherwise the smaller of the process's RLIMIT_DATA and 2,147,483,647 bytes.
 
-YottaDB uses memory for code (instructions) and data. If the amount of virtual memory available to the process exceeds 2,147,483,647 bytes, it is reported as 2,147,483,647 bytes.
+YottaDB uses memory for code (instructions) and data. $STORAGE reports that theoretical maximum less :ref:`zrealstor-isv`, or zero if that would be negative.
 
 Instruction space starts out with the original executable image. However, YottaDB may expand instruction space by ZLINKing additional routines.
 

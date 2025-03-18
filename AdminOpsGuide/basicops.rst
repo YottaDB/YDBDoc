@@ -52,7 +52,7 @@ These scripts are designed to give you a friendly out-of-the-box YottaDB experie
 ydb_env_set
 ++++++++++++
 
-On POSIX shells, :code:`ydb_env_set` manages a basic YottaDB environment, and sets reasonable values for environment variables for YottaDB operation:
+On POSIX shells, sourcing :code:`ydb_env_set` manages a basic YottaDB environment, and sets reasonable values for environment variables for YottaDB operation:
 
 .. code-block:: none
 
@@ -78,7 +78,7 @@ The $ydb_routines value set by the :code:`ydb_env_set` script enables auto-relin
 
    %YDB-E-SYSCALL, Error received from system call shmget() failed
 
-Refer to your OS documentation to configure shared memory limits (for example, on common Linux systems, the kernel.shmmax parameter in :code:`/etc/sysctl.conf`).
+Refer to your OS documentation to configure shared memory limits (for example, on many Linux systems, the kernel.shmmax parameter may be in :code:`/etc/sysctl.conf`).
 
 :code:`ydb_env_set` ensures that ydb_dist is set correctly.
 
@@ -126,7 +126,7 @@ If you have installed any plugins that include shared libraries, the :code:`ydb_
    /home/jdoe1/.yottadb/r1.36/o*(/home/jdoe1/.yottadb/r1.36/r /home/jdoe1/.yottadb/r) /usr/local/lib/yottadb/r136/plugin/o/_ydbposix.so /usr/local/lib/yottadb/r136/libyottadbutil.so
 
 .. note::
-   While sourcing :code:`ydb_env_set` provides reasonable defaults, please see `environment variables`_ for more finer-grained control of YottaDB configuration and operation.
+   While sourcing :code:`ydb_env_set` provides reasonable defaults, please see `environment variables`_ for more finer-grained control of YottaDB configuration and operation. As your sophistication with YottaDB and your application complexity grow, you are likely to outgrow :code:`ydb_env_set` and customize your setup.
 
 :code:`ydb_env_set` creates the following alias: :code:`alias gde="$ydb_dist/yottadb -run GDE"`
 
@@ -604,7 +604,8 @@ See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 +++++++++++++++
 ydb_hupenable
 +++++++++++++++
-**ydb_hupenable (gtm_hupenable)** specifies the initial value that determines whether a YottaDB process should recognize a disconnect signal from a PRINCIPAL device that is a terminal. If it is defined and evaluates to a true value, the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has disconnected. Within a running process, `USE $PRINCIPAL:[NO]HUP[ENABLE] <../ProgrammersGuide/ioproc.html#hupenable>`_ controls this behavior. By default, YottaDB ignores such a signal, but a process that ignores the signal may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the syslog.
+
+**ydb_hupenable (gtm_hupenable)** specifies the initial value that determines whether a YottaDB process should recognize a disconnect signal from a PRINCIPAL terminal or socket device. If it is defined and evaluates to a true value, the process receives a TERMHANGUP error if the OS signals that the terminal or socket assigned to the process as the PRINCIPAL device has disconnected. Within a running process, `USE $PRINCIPAL:[NO]HUP[ENABLE] <../ProgrammersGuide/ioproc.html#hupenable>`_ controls this behavior. By default, YottaDB ignores such a signal, but a process that ignores the signal may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the syslog.
 
 ydb_hupenable was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
 

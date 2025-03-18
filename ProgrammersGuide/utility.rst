@@ -2558,7 +2558,7 @@ This example instructs ^%RSE to write all lines where the text string occurs to 
 
 The %RSEL utility selects M routines. %RSEL selects routines using directories and shared libraries specified by the YottaDB special variable $ZROUTINES. $ZROUTINES contains an ordered list of directories that certain YottaDB functions use to locate source and object files. If $ZROUTINES is not defined, YottaDB sets it in the environment to :code:`$ydb_dist/plugin/o/*.so $ydb_dist/libyottadbutil.so` in M mode or to :code:`$ydb_dist/plugin/o/utf8/*.so $ydb_dist/utf8/libyottadbutil.so` in UTF-8 mode. Other YottaDB utilities call %RSEL.
 
-%RSEL prompts for the name of a routine(s).
+%RSEL prompts for the name(s) of one or more routines.
 
 %RSEL accepts the wildcard characters asterisk (*) and question mark (?). The wildcards carry their usual meanings: an asterisk (*) denotes a field or a portion of a field, and a question mark (?) denotes a single character in positions other than the first.
 

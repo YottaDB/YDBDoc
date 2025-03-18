@@ -631,6 +631,8 @@ CMD[LINE]="strlit"
 
 The string literal specifies the $ZCMDLINE of the JOBbed process.
 
+Note that the contents of CMD[LINE] appear in process listings, which can be useful for identifying processes. Ensure that protected information is not exposed by inadvertently including it.
+
 ~~~~~~~~~~~~~~~~~~
 DEF[AULT]=strlit
 ~~~~~~~~~~~~~~~~~~

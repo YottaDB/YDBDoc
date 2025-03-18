@@ -280,7 +280,7 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.1-001](http://ti
 | ([GTM-F135040](#GTM-F135040))   | Languages             | $VIEW("JNLPOOL") with multiple instances                                                                                         |
 | ([GTM-F225097](#GTM-F225097))   | System Administration | Second phase of in-place conversion from V6 to V7 database formats supports operation with concurrent activity                   |
 
-<a name="gtmv71001"></a>
+<a name="gtmv71002"></a>
 ### GT.M V7.1-002
 
 YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.1-002](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html).
@@ -466,6 +466,10 @@ A case-independent `"CMDLINE"` second parameter for the [$ZGETJPI()](https://doc
 
   > [!note]
   > The GT.M enhancement allowed extensions other than `.m`. YottaDB further enhanced the compiler to allow filenames with no extension.
+
+* The following YottaDB release note is adapted from the GT.M release note. YottaDB does not implement the EXTENDED_BOOLEAN setting of [$ydb_boolean](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-boolean) / \$gtm\_boolean, as we could not find any cases where EXTENDED\_BOOLEAN gave different results from FULL\_BOOLEAN.
+
+  * <a name="GTM-DE506257"></a>GT.M appropriately evaluates subscripts containing or depending on side effects in lock resource and global variable names. Previously, due to shifting of evaluations to avoid unnecessary global access while appropriately maintaining $REFERENCE, rare constructs with such subscripts could produce out-of-order side effects. [GTM-DE506257](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE506257)
 
 * The following was fixed in r2.02, and the below release note appears here for completeness.
 

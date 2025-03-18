@@ -2256,6 +2256,8 @@ This section describes the following YottaDB I/O commands:
 * WRITE sends characters to the current device.
 * CLOSE breaks the connection between a YottaDB process and a device.
 
+.. _io-commands-open:
+
 +++++++++++++
 Open
 +++++++++++++
@@ -3995,11 +3997,11 @@ By default, HOSTSYNC is disabled.
 HUPENABLE
 ~~~~~~~~~~
 
-[NO]HUPENABLE Applies to: TRM
+[NO]HUPENABLE Applies to: TRM and SOC
 
-Enables or disables the recognition by the process of the loss ("hang up") a `$PRINCIPAL <isv.html#principal>`_ device terminal. When enabled the process receives a `TERMHANGUP <../MessageRecovery/errors.html#termhangup>`_ error if the OS signals that the terminal assigned to the process as the $PRINCIPAL device has diconnected. If YottaDB is configured to ignore such a signal, a process may subsequently receive an `IOEOF <../MessageRecovery/errors.html#ioeof>`_ or a `TERMWRITE <../MessageRecovery/errors.html#termwrite>`_ error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a `NOPRINCIO <../MessageRecovery/errors.html#noprincio>`_ message to the operator log.
+Enables or disables the recognition by the process of the loss ("hang up") of a `$PRINCIPAL <isv.html#principal>`_ device. When enabled the process receives a `SOCKHANGUP <../MessageRecovery/errors.html#sockhangup>`_ or `TERMHANGUP <../MessageRecovery/errors.html#termhangup>`_ error if the OS signals that the device assigned to the process as the $PRINCIPAL device has disconnected. In addition, a SOCKHANGUP or TERMHANGUP error implicitly sets the device to NOHUPENABLE so if a process anticipates multiple disconnects/hangups, it should explicitly issue a USE $PRINCIPAL:HUPENABLE. If YottaDB is configured to ignore such a signal, a process may subsequently receive an `IOEOF <../MessageRecovery/errors.html#ioeof>`_ or a `SOCKWRITE <../MessageRecovery/errors.html#sockwrite>`_ / `TERMWRITE <../MessageRecovery/errors.html#termwrite>`_ error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a `NOPRINCIO <../MessageRecovery/errors.html#noprincio>`_ message to the operator log.
 
-If defined, the `ydb_hupenable <../AdminOpsGuide/basicops.html#ydb-hupenable>`_ environment variable determines the initial process behavior, and if that is undefined YottaDB does not immediately report a terminal disconnect.
+If defined, the `ydb_hupenable <../AdminOpsGuide/basicops.html#ydb-hupenable>`_ environment variable determines the initial process behavior, and if that is undefined YottaDB does not immediately report a disconnect.
 
 .. _use-ikey:
 
@@ -4499,6 +4501,8 @@ Note that LOCAL sockets ignore the ZIBFSIZE deviceparameter.
 +-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
 | [NO]HOSTSYNC                        | X            |                 |                 |                 |                 |                  |
 +-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]HUPENABLE                       | X            |                 |                 |                 |                 | X                |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
 | IKEY                                |              | X               | X               | X               |                 |                  |
 +-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
 | INREWIND                            |              | X               |                 |                 |                 |                  |
@@ -4697,6 +4701,8 @@ WRITE *
 When the argument of a WRITE command consists of a leading asterisk (*) followed by an integer expression, the WRITE command outputs the character represented by the code-point value of that integer expression.
 
 With character set M specified at device OPEN, the WRITE * command transfers the character (byte) associated with the numeric value of the integer expression. With character UTF-8 specified at device OPEN, the WRITE command outputs the character associated with the numeric code-point value. If character set "UTF-16", "UTF-16LE" or "UTF-16BE" is specified, WRITE * transforms the character code to the mapping specified by that character set.
+
+.. _io-commands-close:
 
 +++++++++++
 CLOSE
@@ -4967,6 +4973,8 @@ The following table lists all of the deviceparameters and shows the commands to 
 | IOERROR=expr                    | X                   | X                   |                     |
 +---------------------------------+---------------------+---------------------+---------------------+
 | [NO]HOSTSYNC                    |                     | X                   |                     |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]HUPENABLE                   |                     | X                   |                     |
 +---------------------------------+---------------------+---------------------+---------------------+
 | [Z]LENGTH=intexpr               |                     | X                   |                     |
 +---------------------------------+---------------------+---------------------+---------------------+

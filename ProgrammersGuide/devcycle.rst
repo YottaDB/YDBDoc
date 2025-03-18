@@ -647,15 +647,6 @@ This qualifier has no effect. It is accepted only for backwards compatibility.
 
 .. _nolist-filename:
 
-~~~~~~~~~~~~~~~~~~~~~~~
-[-]-noin[line_literals]
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Compiles routines to use library code in order to load literals instead of generating in-line code thereby reducing the routine size. At the cost of a small increase in CPU, the use of -NOINLINE_LITERAL may help counteract growth in object size due to -DYNAMIC_LITERALS.
-
-.. note::
-   Both -DYNAMIC_LITERALS and -NOINLINE_LITERALS help optimize performance and virtual memory usage for applications whose source code includes literals. As the scalability and performance from reduced per-process memory usage may or may not compensate for the incremental cost of dynamically loading and unloading the data structures, and as the performance of routines vs. inline code can be affected by the availability of routines in cache, YottaDB suggests benchmarking to determine the combination of qualifiers best suited to each workload. Note that applications can freely mix routines compiled with different combinations of qualifiers.
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 [-]-[no]li[st][=filename]
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -667,14 +658,6 @@ When you do not specify a file name for the listing file, the compiler produces 
 The -space qualifier modifies the format and content of the listing file. The M compiler ignores this qualifier unless the command includes the -list qualifier.
 
 By default, the compiler operates -nolist and does not produce listings.
-
-~~~~~~~~~~~~~~~~~~
-[-]-nolin[e_entry]
-~~~~~~~~~~~~~~~~~~
-
-As M allows calls and control transfers to label±offset^routine targets, YottaDB object code for each line starts with code to ensure that all local variables used in that line are accessible within that line. For application code that uses only label^routine targets, i.e., eschews ±offset forms, with the :code:`-noline_entry` option, instead of this additional code generated for each line, the YottaDB object code generated for each label includes code to ensure that all local variables in the block of code starting with the label are accessible within that block. This option makes the generated object code more compact. Whether this option makes application code execute faster depends on whether typical execution paths through the code block access many or all of the variables whose accessibility is ensured: if typical execution paths bypass accessing many of those local variables (e.g., because of conditional execution or premature exits), then code compiled with the :code:`-noline_entry` can execute slower. If your application does not use offsets for targets, we suggest benchmarking applications using real or simulated workloads to determine whether the option is beneficial.
-
-Any attempt to use a label±offset^routine entryref in code compiled with -noline_entry raises the `LABELONLY error <../MessageRecovery/errors.html#labelonly-error>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 [-]-m[achine]
@@ -690,10 +673,29 @@ This qualifier implies ``-list``. To control the output filename, pass the name 
 By default, the compiler does not produce machine code listings.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~
-[-]-[n]ameofrtn=filename
+[-]-n[ameofrtn]=filename
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Instructs the compiler to produce an output object file with the specified routine name, overriding the default, i.e. M program name minus extension. You can use -NAMEOFRTN and -OBJECT to create two object files with different names from the same .m source file.
+
+.. _noinline-literals:
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-noin[line_literals]
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Compiles routines to use library code in order to load literals instead of generating in-line code thereby reducing the routine size. At the cost of a small increase in CPU, the use of -NOINLINE_LITERAL may help counteract growth in object size due to -DYNAMIC_LITERALS.
+
+.. note::
+   Both -DYNAMIC_LITERALS and -NOINLINE_LITERALS help optimize performance and virtual memory usage for applications whose source code includes literals. As the scalability and performance from reduced per-process memory usage may or may not compensate for the incremental cost of dynamically loading and unloading the data structures, and as the performance of routines vs. inline code can be affected by the availability of routines in cache, YottaDB suggests benchmarking to determine the combination of qualifiers best suited to each workload. Note that applications can freely mix routines compiled with different combinations of qualifiers.
+
+~~~~~~~~~~~~~~~~~~~~
+[-]-nolin[e_entry]
+~~~~~~~~~~~~~~~~~~~~
+
+As M allows calls and control transfers to label±offset^routine targets, YottaDB object code for each line starts with code to ensure that all local variables used in that line are accessible within that line. For application code that uses only label^routine targets, i.e., eschews ±offset forms, with the :code:`-noline_entry` option, instead of this additional code generated for each line, the YottaDB object code generated for each label includes code to ensure that all local variables in the block of code starting with the label are accessible within that block. This option makes the generated object code more compact. Whether this option makes application code execute faster depends on whether typical execution paths through the code block access many or all of the variables whose accessibility is ensured: if typical execution paths bypass accessing many of those local variables (e.g., because of conditional execution or premature exits), then code compiled with the :code:`-noline_entry` can execute slower. If your application does not use offsets for targets, we suggest benchmarking applications using real or simulated workloads to determine whether the option is beneficial.
+
+Any attempt to use a label±offset^routine entryref in code compiled with -noline_entry raises the `LABELONLY error <../MessageRecovery/errors.html#labelonly-error>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 [-]-[no]o[bject][=filename]

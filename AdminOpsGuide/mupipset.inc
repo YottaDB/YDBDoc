@@ -73,8 +73,7 @@ Specifies that the argument is a file-name for a single database file. The forma
 
 .. code-block:: none
 
-   -FI[LE]
-   [-]-F[ILE]
+   [-]-FI[LE]
 
 Incompatible with: JNLFILE, REGION and REPLICATION
 
@@ -230,7 +229,7 @@ Specifies the amount of time between deferred writes of stale cache buffers. The
 
 .. code-block:: none
 
-   [-]-F[LUSH_TIME]=[[[HOURS:]MINUTES:]SECONDS:]CENTISECONDS
+   [-]-FL[USH_TIME]=[[[HOURS:]MINUTES:]SECONDS:]CENTISECONDS
 
 ^^^^^^^^^^^^^^
 [-]-FULLBLKWRT
@@ -298,7 +297,12 @@ The minimum INDEX_RESERVED_BYTES is 0 bytes. The maximum INDEX_RESERVED_BYTES = 
 [-]-INST_FREEZE_ON_ERROR
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Enables or disables custom errors in a region to automatically cause an Instance Freeze. This flag modifies the "Inst Freeze on Error" file header flag. The format of the INST_FREEZE_ON_ERROR qualifier is:
+Enables or disables custom errors in a region to automatically cause an Instance Freeze.
+
+.. note::
+   YottaDB creates a STATSDB region with INST_FREEZE_ON_ERROR disabled, preventing errors associated with such a region from causing an instance freeze even when INST_FREEZE_ON_ERROR for the base region is enabled.
+
+This flag modifies the "Inst Freeze on Error" file header flag. The format of the INST_FREEZE_ON_ERROR qualifier is:
 
 .. code-block:: none
 

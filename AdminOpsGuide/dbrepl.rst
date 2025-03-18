@@ -617,6 +617,8 @@ During an Instance Freeze, attempts to update the database and journal files han
 .. note::
    Because there are a large number of errors that YottaDB can recognize and because YottaDB has several operational states, the YottaDB team has tested errors consistent with what we expect to be common usage. If you experience problems trying to add other errors or have concerns about plans to add other errors, please consult your YottaDB support channel.
 
+   Because they contain tracking information rather than Application data, StatsDB regions do not participate in Instance Freeze.
+
 +++++++++++++++++++++++
 TLS/SSL Replication
 +++++++++++++++++++++++

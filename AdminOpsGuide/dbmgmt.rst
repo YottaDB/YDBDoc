@@ -1312,7 +1312,6 @@ The format of the MUPIP REORG command is:
 
    REO[RG]
    [
-    [-]-DOWNGRADE
     [-]-ENCR[YPT]=key
     [-]-E[XCLUDE]=global-name-list
     [-]-FILE=file-name
@@ -1404,14 +1403,6 @@ This command produces an output like the following:
 Note that there are more and less dense index and data blocks used than in scenario 1. MUPIP REORG addresses such issues and makes the database (depending on the FILL_FACTOR) more compact.
 
 The optional qualifiers for MUPIP REORG are:
-
-.. _reorg-downgrade:
-
-~~~~~~~~~~~~~
-[-]-DOWNGRADE
-~~~~~~~~~~~~~
-
-MUPIP REORG DOWNGRADE is deprecated, and not supported as of r2.00.
 
 .. _mupip-reorg-encrypt:
 
@@ -1701,9 +1692,9 @@ The optional percentage (0-99) provides a minimum amount for the reclamation; in
 
 .. _mupip-reorg-upgrade:
 
-~~~~~~~~~~~
+~~~~~~~~~~~~
 [-]-UPGRADE
-~~~~~~~~~~~
+~~~~~~~~~~~~
 
 Upgrades blocks to current DB version format. A REORG with the UPGRADE option cannot run concurrently on a file or region with any other REORG on the same file or region, but can run concurrently with normal application code. Use REORG UPGRADE when it is a part of a release notes procedure to upgrade the DB version format of a database or when you encounter a database integrity error that requires running REORG UPGRADE.
 
@@ -1861,9 +1852,9 @@ Execute the following command when encryption completes.
 
 Always keep the keys in a secured location. Always set gtmcrypt_config and ydb_passwd to access the encrypted database.
 
-++++++++++++++++++++++
++++++++++++++++++++++++
 [-]-USER_DEFINED_REORG
-++++++++++++++++++++++
++++++++++++++++++++++++
 
 The major REORG operations are COALESCE, SPLIT and SWAP, in terms of how database files are defragmented and reorganized.
 
@@ -2234,7 +2225,7 @@ The format of the STOP command is:
 * A process that receives a MUPIP STOP signal terminates with exit code 241.
 
 .. note::
-   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row within one minute, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a :code:`kill -9` signal, except that the three MUPIP STOP signals might produce a core file. This can result in structural database damage, because exiting a YottaDB process without cleaning up, i.e., one that has open database files, can potentially leave those files in an indeterminate state.
+   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row within one minute, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a :code:`kill -9` signal, except that the three MUPIP STOP signals might produce a core file. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances.
 
    In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Three MUPIP STOP signals received by a process but over a period of more than one minute will cause the process to shut down safely.
 
@@ -2548,7 +2539,7 @@ You have successfully changed the trigger name ValidateAccount to ValidateAcct.
 UPGRADE
 +++++++++
 
-Upgrades the fileheader of an r1.x (or GT.M V6.x) database file to a transitional r2.x format where the fileheader is upgraded, but the database blocks are not. This is the first stage in upgrading an r1.x database file to the r2.x format. This command must be run standalone and is relatively quick. The remainder of the upgrade is done by :ref:`MUPIP REORG UPGRADE <mupip-reorg-upgrade>` upgrades the remaining blocks concurrent with normal application operation.
+Upgrades the fileheader of an r1.x (or GT.M V6.x) database file to a transitional r2.x format where the fileheader is upgraded, but the database blocks are not. This is the first stage in upgrading an r1.x database file to the r2.x format. This command must be run standalone and is relatively quick. The remainder of the upgrade is done by :ref:`MUPIP REORG UPGRADE <mupip-reorg-upgrade>`, which upgrades the remaining blocks concurrent with normal application operation.
 
 The format of the MUPIP UPGRADE command is:
 

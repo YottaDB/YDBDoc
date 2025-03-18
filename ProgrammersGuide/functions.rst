@@ -1602,7 +1602,6 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |                  |                  | "GBLDIRXLATE" was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.                                                     |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "GVACCESS_METHOD"| none             | Access method of the region.                                                                                                                                        |
-|                  |                  |                                                                                                                                                                     |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "GVFILE"         | region           | Name of the database associated with the region.                                                                                                                    |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1714,7 +1713,8 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |                  |                  | The reserved space is used to reduce the active memory usage, for example, when a process uses a large amount of memory then subsequently uses a significantly      |
 |                  |                  | reduced amount.                                                                                                                                                     |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "SPSIZESORT"     | none             | Returns a string with two comma separated integers which indicate the memory usage in bytes of the stringpool if one used the unsorted and the sorted garbage       |
+| "SPSIZESORT"     | none             | Performs a garbage collection, and returns a string with two comma separated integers which indicate the memory usage in bytes of the stringpool if one used        |
+|                  |                  | the unsorted and the sorted garbage                                                                                                                                 |
 |                  |                  | collector approaches respectively. If the application finds these 2 values to be close enough to each other (the sorted value will never be more than the unsorted  |
 |                  |                  | value), it might benefit from the reduced runtimes by switching to the unsorted approach (see https://gitlab.com/YottaDB/DB/YDB/-/issues/1145#note_2507097811 for   |
 |                  |                  | examples). Refer to :ref:`VIEW "STP_GCOL_NOSORT" <view-stpgcolnosort>` for how to choose the sorted or unsorted approach.                                           |
@@ -3295,6 +3295,8 @@ The JNL[REG] and JBL[REG] mnemonics and characteristics are defined by running t
    gtmtypfldindx(<structure-name>.<field-mnemonic>)=<n>
 
 where gtmtypes(<structure-name>,<n>,*) nodes contain the field characteristics. These fields are also available as global variables in the $ydb_dist/gtmhelp.dat database using the $ydb_dist/gtmhelp.gld global directory.
+
+When $ZGBLDIR is set to a global directory specifying a replication instance and replication has started, the Replication Journal Pool for that instance becomes the source of data reported by $ZPEEK(), and thus %PEEKBYNAME(). If a global directory does not specify a Replication Instance, the `ydb_repl_instance <../AdminOpsGuide/basicops.html#ydb-repl-instance>`_ environment variable determines the Instance for its replicated regions. The mnemonics GLF, GSL, JPC, NLREPL, and RIH require a jnlpool. $VIEW("JNLPOOL") returns the Instance for the current Replication Journal Pool.
 
 .. _zpiece-function:
 
