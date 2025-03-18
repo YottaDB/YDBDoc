@@ -1334,7 +1334,7 @@ The format of the OPEN command is:
 * When an OPEN command specifying a timeout contains no deviceparameters, a double colon (::) separates the timeout numeric expression from the device expression.
 * An indirection operator and an expression atom evaluating to a list of one or more OPEN arguments form a legal argument for an OPEN.
 * In UTF-8 mode, the OPEN command recognizes the ICHSET, OCHSET, and CHSET deviceparameters to determine the encoding of the input/output devices.
-* OPEN on a directory produces a GTMEISDIR error in both READONLY and NOREADONLY modes along with the directory name which failed to open. UNIX directories contain metadata that is only available to the file system. Note that you can use the ZSEARCH() function to identify files in a directory, and you can call the POSIX stat() function to access metadata. The optional YottaDB POSIX plug-in packages the stat() function for easy access from M application code.
+* OPEN on a directory produces a GTMEISDIR error in both READONLY and NOREADONLY modes along with the directory name which failed to open. UNIX directories contain metadata that is only available to the file system. Note that you can use the :ref:`zsearch-function` function to identify files in a directory, and you can call the POSIX `stat() <../Plugins/ydbposix.html#statfile-ydbposix-f-s>`_ function to access metadata. The optional YottaDB `POSIX plug-in <../Plugins/ydbposix.html>`_  packages the stat() function for easy access from M application code.
 
 .. _quit-command:
 
@@ -1551,6 +1551,8 @@ Example:
 
 This SET * command creates an alias by dereferencing an alias container.
 
+.. _tcommit-command:
+
 ----------------------
 TCommit
 ----------------------
@@ -1602,6 +1604,8 @@ A TP RESTART, either implicit or explicit, while executing $ZINTERRUPT in respon
 They also restore any local variables named by one or more active TSTARTs to the values they had when they were first named.
 
 For an example of the use of the TRESTART command, see `Chapter 5: "General Language Features of M" <./langfeat.html>`_.
+
+.. _trollback-command:
 
 ----------------------
 TROllback
@@ -2586,6 +2590,8 @@ The format of the WRITE command is:
 * In the UTF-8 mode, the WRITE command uses the character set specified on the device OPEN as the character encoding of the output device. If character set specifies "M" or "UTF-8", YottaDB WRITEs the data with no transformation. If character set specifies "UTF-16", "UTF-16LE" or "UTF-16BE", the data is assumed to be encoded in UTF-8 and WRITE transforms it to the character encoding specified by character set device parameter.
 * If a WRITE command encounters an illegal character in UTF-8 mode, it produces a run-time error irrespective of the setting of VIEW "BADCHAR".
 
+.. _xecute-command:
+
 -----------------------
 Xecute
 -----------------------
@@ -2863,9 +2869,9 @@ This inserts a ZBREAK action of WRITE AVE and BREAK before the third execution o
 ZCOMpile
 ------------------------------
 
-The ZCOMPILE command invokes the YottaDB compiler from within the YottaDB run-time environment.
+The ZCOMPILE command invokes the YottaDB M compiler from within a YottaDB process.
 
-Within YottaDB itself, ZCOMPILE provides the functionality of the yottadb command, except for yottadb -direct.
+Within YottaDB itself, ZCOMPILE provides the functionality of the ``yottadb`` command as invoked to compile M routines.
 
 The format of the ZCOMPILE command is:
 
@@ -2874,11 +2880,13 @@ The format of the ZCOMPILE command is:
    ZCOM[PILE][:tvexpr] expr[,...]
 
 * The optional truth-valued expression immediately following the command is a command postconditional that controls whether or not YottaDB executes the command.
-* The expression argument specifies one or more relative or absolute paths to filenames, which must include the .m extension. If the file specification does not include a .m extension, ZCOMPILE assumes a default file extension of ".m". Wildcards are acceptable in the path specification. The specification can be optionally prefixed by qualifiers valid for a yottadb command.
-
-The $ZCSTATUS intrinsic special variable holds the value of the status code for the compilation performed by a ZCOMPILE command.
+* The expression argument specifies one or more relative or absolute paths to filenames. The specification can be optionally prefixed by qualifiers valid for a yottadb command.
 
 For a description of the arguments and qualifiers of the yottadb command, refer to `Chapter 3: "Development Cycle" <./devcycle.html>`_.
+
+The :ref:`zcstatus-isv` intrinsic special variable holds the value of the status code for the compilation performed by a ZCOMPILE command.
+
+If the argument does not include compilation qualifiers, the commmand uses the :ref:`zcompile-isv` ISV for possible qualifiers.
 
 +++++++++++++++++++++++++++++
 Examples of ZCOMPILE
@@ -3190,6 +3198,8 @@ The functionality of ZKILL is identical to ZWITHDRAW. For a comprehensive descri
 
 .. _zlink-command:
 
+.. _zlink:
+
 -------------------
 ZLink
 -------------------
@@ -3296,6 +3306,8 @@ Example:
    YDB>
 
 This example demonstrates how VIEW "LINK":"RECURSIVE" command ZLINKs a routine when its prior version is already there in the active M virtual stack.
+
+.. _auto-zlink:
 
 ++++++++++++++++++++++
 Auto ZLINK

@@ -412,7 +412,7 @@ In active mode, a Source Server connects to the Receiver Server on its replicati
 
 In passive mode, a Source Server is in a stand-by state. In the diagram, the Rose and Yellow Source Servers are in passive mode. When a passive Source Server receives a command to switch to active mode, it attempts to establish a connection with the specified Receiver Server on its replicating instance.
 
-Under typical operating conditions, with no system or network bottlenecks, YottaDB moves a transaction off the originating instance and into the care of the network moving towards its replicating instance in sub-millisecond time frames. Network transit times then determine how long the transaction message takes to reach the replicating instance. Because it uses a change- or delta-based protocol, YottaDB Replication uses network bandwidth efficiently. Furthermore, the Source Server can compress the byte stream which the Receiver Server then decompresses; alternatively network routers can perform the compression and decompression. You can use standard techniques at the stack or router for encrypting TCP connections to secure replication.
+Under typical operating conditions, with no system or network bottlenecks, YottaDB moves a transaction off the originating instance and into the care of the network moving towards its replicating instance in sub-millisecond time frames. Network transit times then determine how long the transaction message takes to reach the replicating instance. Because it uses a change- or delta-based protocol, YottaDB Replication uses network bandwidth efficiently which makes YottaDB replication less resource intensive than physical replication solutions. Furthermore, the Source Server can compress the byte stream which the Receiver Server then decompresses; alternatively network routers can perform the compression and decompression. You can use standard techniques at the stack or router for encrypting TCP connections to secure replication.
 
 On Rose and Yellow instances, a Receiver Server receives update records sent by the White Source Server and puts them in the Receive Pool, which is in a shared memory segment. Source and Receiver Server processes implement flow control to ensure that the Receive Pool does not overflow. The Update Process picks these update records and writes them to the journal file, the database file, and the Journal Pool. The Update Process on a replicating instance performs operations analogous to "Application Logic" on the originating instance.
 
@@ -434,7 +434,11 @@ There are two types of helper processes:
 A certain number of each type of helper process maximizes throughput. As a practical matter, as long as the file system bandwidth on a replicating instance is equal to or greater than that of the originating instance providing its replication stream, there need be little concern about having too many helper processes.
 
 .. note::
-   There may be other reasons for a replicating instance to lag behind its originating instance during replication. Helper processes cannot improve situations such as the following: There is a bottleneck in the network between the originating and replicating instances (increase the network bandwidth or use compression) or the hardware of the replicating instance is not as capable as that of the hardware on the originating instance (upgrade the hardware of the replicating instance).
+   There may be other reasons for a replicating instance to lag behind its originating instance during replication. Helper processes cannot improve situations such as the following:
+
+     * There is a bottleneck in the network between the originating and replicating instances (increase the network bandwidth or use compression).
+
+     * The hardware of the replicating instance is not as capable as that of the hardware on the originating instance (upgrade the hardware of the replicating instance).
 
 .. _Filters:
 
@@ -3735,7 +3739,13 @@ Journal Pool Setup Qualifiers
 -buffsize=<Journal Pool size in bytes>
 ****************************************
 
-Specifies the size of the Journal Pool. The server rounds the size up or down to suit its needs. Any size less than 1 MiB is rounded up to 1 MiB. If you do not specify a qualifier, the size defaults to the YottaDB default value of 64 MiB. Remember that you cannot exceed the system-provided maximum shared memory. For systems with high update rates, specify a larger buffer size to avoid the overflows and file I/O that occur when the Source Server reads journal records from journal files. The maximum value is 68719476736 (64GiB). MUPIP REPLICATE SOURCE ignores BUFFSIZE if the Journal Pool is already set up. The first Source Server process started on an instance sets up the Journal Pool.
+On the Source Server, BUFFSIZE specifies the size of the Journal Pool. The server rounds the size up or down to align with other specified or implicit requirements. Any size less than 1 MiB is rounded up to 1 MiB. If BUFFSIZE is not specified, MUPIP defaults the Journal Pool size to 64 MiB. Remember that you cannot exceed the system-provided maximum shared memory. For systems with high update rates, specify a larger buffer size to avoid the overflows and file I/O that occur when the Source Server reads journal records from journal files. The maximum value is 68719476736 (64GiB). The first Source Server process started on an instance sets up the Journal Pool. MUPIP REPLICATE SOURCE ignores BUFFSIZE if the Journal Pool is already set up.
+
+On the Receiver Server, BUFFSIZE specifies the size of the Receiver Pool. For applications having periodic spikes in the replication volume, YottaDB recommends having a larger Receiver Pool. The Receiver Pool is a memory structure that temporarily holds updates coming from the Source Server. The Update Process transfers these updates to permanent storage so that they can become accessible by YottaDB processes. As long as the Update Process is alive and running, it is safe to assume that updates in the Receiver Pool will eventually get transferred to permanent storage even if a network failure happens between the Source and Receiver Servers. The Receiver Pool becomes full when the speed of applying updates by the Update Process is slower than the speed of receiving updates from the Source Server. When the Receiver Pool becomes full, the Receiver Server will not accept more updates from the Source Server which increases the backlog on the Source Server. Therefore, a larger size Receiver Pool delays this condition and helps cushion the impact of periodic spikes in replication volumes.
+
+.. note::
+
+   On the originating instance, other processes see updates as soon as an updating process updates the database. However, processes on a Replicating Instance will not see updates from the originating instance until the Source Server sends them, the Receiver Process moves them to the Receive Pool and the Update Process picks and commits them. With adequate IO and network capacity, this should only be a fraction of a second, but bear this distinction in mind.
 
 ******************
 -[no]jnlfileonly
@@ -4704,19 +4714,19 @@ Command Syntax:
 -shutdown
 ~~~~~~~~~
 
-Initiates the shutdown procedures of the Receiver Server, Update Process, and/or helper processes. If the Receiver Server previously shut down abnormally, -shutdown can shut down helper processes left running.
+Initiates the shutdown procedures of the Receiver Server, Update Process, and/or helper processes. If the Receiver Server previously shut down abnormally, ``-shutdown`` can shuts down remaining helper processes.
 
 ~~~~~~~
 -helper
 ~~~~~~~
 
-Shuts down only the Helper Processes and leaves the Receiver Server and Update Process to continue operating as before. All helpers processes shut down even if -helper values are specified.
+Shuts down only the Helper Processes and leaves the Receiver Server and Update Process to continue operating as before. All helpers processes shut down even if ``-helper`` values are specified.
 
 ~~~~~~~~
 -timeout
 ~~~~~~~~
 
-Specifies the period of time (in seconds) the shutdown command should wait before signaling the Receiver Server, Update Process, and/or helper processes to shut down. If you do not specify -timeout, the default timeout period is 30 seconds. If you specify -timeout=0, shutdown occurs immediately.
+Specifies the period of time (in seconds) the shutdown command should wait before signaling the Receiver Server, Update Process, and/or helper processes to shut down. If you do not specify ``-timeout``, the default timeout period is 30 seconds. If you specify ``-timeout=0``, shutdown occurs immediately.
 
 .. _receiver-stop-updateonly:
 
@@ -4724,7 +4734,7 @@ Specifies the period of time (in seconds) the shutdown command should wait befor
 -updateonly
 ~~~~~~~~~~~
 
-Use this qualifier to stop only the Update Process. If neither -updateonly nor -helper are specified, the Update Process, all helper processes (if any), and Receiver Server shut down.
+Use this qualifier to stop only the Update Process. If neither ``-updateonly`` nor ``-helper`` are specified, the Update Process, all helper processes (if any), and Receiver Server shut down.
 
 Example:
 
@@ -4732,7 +4742,7 @@ Example:
 
    $ mupip replicate -receiver -shutdown -helper
 
-This example shuts down only the helper processes of the current Receiver Server. Note that all helpers processes shut down even if HELPER values are specified.
+This example shuts down only the helper processes of the current Receiver Server. Note that all helper processes shut down even if HELPER values are specified.
 
 ++++++++++++++++++++++++++++++
 Stopping the Receiver Filter

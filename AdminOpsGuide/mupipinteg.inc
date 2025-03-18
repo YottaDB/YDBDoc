@@ -168,6 +168,8 @@ Specifies the name of the database file for the MUPIP INTEG operation. FILE requ
 
 * By default, INTEG operates on FILE.
 
+.. _mupip-integ-full:
+
 ^^^^^^
 -FULL
 ^^^^^^

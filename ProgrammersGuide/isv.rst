@@ -553,6 +553,8 @@ Provides termination status of the last PIPE CLOSE as follows:
 
 If positive, $ZCLOSE contains the exit status returned by the last PIPE co-process.
 
+.. _zcmdline-isv:
+
 ------------
 $ZCMDLINE
 ------------
@@ -592,19 +594,21 @@ Example:
 
 This example shows how the utility program `%XCMD <./utility.html#xcmd>`_ takes a line of M code from a shell command and executes it. This mechanism allows shell scripts to run M commands. It is good practice to enclose the command line argument with single quotes to prevent inappropriate shell expansion. Note also how $zcmdline is NEW'd to protect the value from any changes by XECUTE'd M code.
 
+.. _zcompile-isv:
+
 -------------
 $ZCOMPILE
 -------------
 
-$ZCO[MPILE] contains a string value composed of one or more qualifiers that control the YottaDB compiler. Explicit ZLINKs and auto-ZLINKs use these qualifiers as defaults for any compilations that they perform.
+$ZCO[MPILE] contains a string value composed of one or more qualifiers that control the YottaDB run-time compiler. :ref:`zcompile-command`, explicit :ref:`zlink` commands, and :ref:`auto-zlink` use these qualifiers as defaults for any compilations that they perform.
 
-$ZCOMPILE is a read-write ISV, that is, it can appear on the left side of the equal sign (=) in the argument to the SET command. A $ZCOMPILE value has the form of a list of M command qualifiers each separated by a space ( ).
+$ZCOMPILE is a read-write ISV, that is, it can appear on the left side of the equal sign (=) in the argument to the SET command. A $ZCOMPILE value has the form of a list of ``yottadb`` command qualifiers each separated by a space ( ).
 
-When the environment variable ydb_compile is defined, YottaDB initializes $ZCOMPILE to the translation of ydb_compile. Otherwise YottaDB initializes $ZCOMPILE to null. Changes to the value of $ZCOMPILE during a YottaDB invocation only last for the current invocation and do not change the value of the environment variable ydb_compile.
+When the environment variable `ydb_compile <../AdminOpsGuide/basicops.html#ydb-compile>`_ is defined, YottaDB initializes $ZCOMPILE to the translation of ydb_compile. Otherwise YottaDB initializes $ZCOMPILE to the empty string. Changes to the value of $ZCOMPILE in a YottaDB process only last for the duration of that process and do not change the value of the environment variable ydb_compile.
 
 ZCOMPILE returns a status of 1 after any error in compilation.
 
-When $ZCOMPILE is null, YottaDB uses the default M command qualifiers -IGNORE, -LABEL=LOWER, -NOLIST, and -OBJECT. See `Chapter 3: "Development Cycle" <./devcycle.html>`_ for detailed descriptions of the M command qualifiers.
+When $ZCOMPILE is the empty string, YottaDB uses the default M command qualifiers -IGNORE, -LABEL=LOWER, -NOLIST, and -OBJECT. See `Chapter 3: "Development Cycle" <./devcycle.html>`_ for detailed descriptions of the M command qualifiers.
 
 Example:
 
@@ -622,7 +626,7 @@ Example:
    $ echo $ydb_compile
    -LIST -LENGTH=56 -SPACE=2
 
-This example uses the environment variable ydb_compile to set up $ZCOMPILE. Then it modifies $ZCOMPILE with the SET command. The ZLINK argument specifies a file with a .m extension (type), which forces a compile. The compile produces a listing for routine A.m and does not produce an object module if A.m contains compilation errors. After YottaDB terminates, the shell command echo $ydb_compile demonstrates that the SET command did not change the environment variable.
+This example uses the environment variable ydb_compile to initialize $ZCOMPILE. Then it modifies $ZCOMPILE with the SET command. The ZLINK argument specifies a file with a ``.m`` extension, which forces a compilation. The compilation produces a listing for routine ``A.m`` and does not produce an object module if ``A.m`` contains compilation errors. After YottaDB terminates, the shell command ``echo $ydb_compile`` demonstrates that the SET command did not change the environment variable.
 
 .. _zcstatus-isv:
 
@@ -630,7 +634,7 @@ This example uses the environment variable ydb_compile to set up $ZCOMPILE. Then
 $ZCSTATUS
 -----------------
 
-$ZC[STATUS] holds the value of the status code for the last compilation performed by a ZCOMPILE, ZLINK or auto-ZLINK. One (1) indicates a clean compilation, a positive number greater than one is an error code whose text you can ascertain using $ZMESSAGE(), and a negative number is a negated error code that indicates YottaDB was not able to produce an object file. The error details appear in the compilation output, so $ZCSTATUS typically contains the code for `ERRORSUMMARY <../MessageRecovery/errors.html#errorsummary>`_.
+$ZC[STATUS] holds the value of the status code for the last compilation performed by a :ref:`zcompile-command`, :ref:`zlink` or :ref:`auto-zlink`. One (1) indicates a clean compilation, a positive number greater than one is an error code whose text you can ascertain using :ref:`zmessage-function`, and a negative number is a negated error code that indicates YottaDB was not able to produce an object file. The error details appear in the compilation output, so $ZCSTATUS typically contains the code for `ERRORSUMMARY <../MessageRecovery/errors.html#errorsummary>`_.
 
 YottaDB does not permit the SET command to modify $ZSTATUS.
 
@@ -1825,19 +1829,19 @@ $ZTIMEOUT controls a single process wide timer. The format of the $ZTIMEOUT ISV 
 
    $ZTIMeout=([timeout][:expr])
 
-For SET of $ZTIMEOUT:
+For :ref:`set-command` of $ZTIMEOUT:
 
 * If the optional timeout is specified:
 
-  * A positive value specifies a time in seconds, with millisecond resolution, how long from the current time, the timer interrupts the process. When the timer interrupts the process, it XECUTEs the vector.
+  * A positive value specifies a time in seconds, with millisecond resolution, how long from the current time, the timer interrupts the process. When the timer interrupts the process, it :ref:`XECUTEs <xecute-command>` the vector.
   * A negative value cancels the timer.
-  * A zero value causes the vector to be XECUTEd immediately.
+  * A zero value, or a string value, causes the vector to be XECUTEd immediately.
 
 * If the timeout is not specified, a colon (:) must precede an expr. If the optional expr is specified, it is a vector to be XECUTEd when a pending or subsequently set timer interrupts the process.
 
 * If neither the timeout nor the expr are specified, the SET of $ZTIMEOUT to an empty string is a no-op.
 
-Interrupts are only XECUTEd at safe points, such as the beginning of a line, when waiting for a command with a timeout, or when starting a FOR iteration. When an interrupt occurs, if the vector is not valid M code (an empty string vector is not valid M code), YottaDB invokes the current $ETRAP or $ZTRAP. YottaDB rejects an attempted KILL of $ZTIMeout with the `VAREXPECTED <../MessageRecovery/errors.html#varexpected>`_ error and an attempted NEW of $ZTIMeout with the `SVNONEW <../MessageRecovery/errors.html#svnonew>`_ error.
+Interrupts are only XECUTEd at safe points, such as the beginning of a line, when waiting for a command with a timeout, or when starting a FOR iteration. YottaDB defers acting on a timeout interrupt while executing a TP transaction until after a :ref:`trollback-command` or the outermost :ref:`tcommit-command`. When an interrupt occurs, if the vector is not valid M code (an empty string vector is not valid M code), YottaDB invokes the current :ref:`etrap-isv` or :ref:`ztrap-isv`. YottaDB rejects an attempted KILL of $ZTIMeout with the `VAREXPECTED <../MessageRecovery/errors.html#varexpected>`_ error and an attempted :ref:`new-command` of $ZTIMeout with the `SVNONEW <../MessageRecovery/errors.html#svnonew>`_ error.
 
 When accessed, the timeout in $ZTIMEOUT is the remaining time of any pending interrupt, and zero otherwise. Since $ZTIMEOUT is a string intrinsic variable, ``+$ZPIECE($ZTIMEOUT,":",1)`` returns the remaining timeout as a canonic number.
 
@@ -1862,6 +1866,10 @@ Example:
    YDB>write $zpiece($horolog,",",2) set $ztimeout=-1 ; Setting to a negative number cancels the timer
    61392
    YDB>
+
+.. warning::
+
+   A timeout without any code to XECUTE, no $ETRAP, and no $ZTRAP terminates the process.
 
 .. _ztrap-isv:
 
