@@ -240,7 +240,7 @@ ARGTRUNC
 
 ARGTRUNC, UUUU argument number CCCC truncated. Keep the size of total command line within NNNN bytes
 
-DSE/LKE/MUPIP Warning: This warning appears when the YottaDB parser truncates an argument of a YottaDB Utility (DSE, LKE, or MUPIP) executable exceeding the allowed maximum of NNNN bytes. CCCC is the argument number with 1 being the first argument for the YottaDB Utility executable.
+DSE/LKE/MUPIP Warning: This warning appears when the YottaDB parser truncates an argument of a YottaDB Utility (`DSE <../AdminOpsGuide/dse.html>`_, `LKE <../AdminOpsGuide/mlocks.html>`_, or `MUPIP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_) executable exceeding the allowed maximum of NNNN bytes. CCCC is the argument number with 1 being the first argument for the YottaDB Utility executable.
 
 Action: Reduce the size of the argument number CCCC.
 
@@ -4324,7 +4324,7 @@ FDSIZELMT
 
 FDSIZELMT, Too many nnnn descriptors needed by GT.CM server
 
-GT.CM Error: A large number (nnnn) of regions accessed on behalf of GT.CM clients forced the file descriptor numerical value to its FD_SETSIZE limit. Under Linux as of this writing, this limit is fixed to 1024.
+GT.CM Error: A large number (nnnn) of regions accessed on behalf of `GT.CM <../AdminOpsGuide/gtcm.html>`_ clients forced the file descriptor numerical value to its FD_SETSIZE limit. Under Linux as of this writing, this limit is fixed to 1024.
 
 Action: Review the application, the database layout and the number of concurrent clients and adjust conditions to reduce the number of concurrent database files managed by the GT.CM server.
 
@@ -5042,7 +5042,7 @@ GTMSECSHRDMNSTARTED
 
 GTMSECSHRDMNSTARTED, gtmsecshr daemon started for version vvvv from dddd using socket file ssss
 
-GTMSECSHR Information: This message indicates that GTMSECSHR daemon was started for the version vvvv from the installation directory dddd and is expecting to receive client messages in the socket file whose full path is indicated by ssss. This message is immediately followed by a GTMSECSHRTMPPATH message which records the value of the :code:`ydb_tmp` env var this daemon/server started with. In case a client later encounters a GTMSECSHRSRVF error, it would issue a GTMSECSHRTMPPATH message as well which records the value of the :code:`ydb_tmp` env var the client started with. Most often, the cause is a mismatch between the ydb_tmp env var values between the server and the client. The GTMSECSHRTMPPATH messages of the server and client would help in identifying such a mismatch.
+GTMSECSHR Information: This message indicates that GTMSECSHR daemon was started for the version vvvv from the installation directory dddd and is expecting to receive client messages in the socket file whose full path is indicated by ssss. This message is immediately followed by a :ref:`gtmsecshrtmppath` message which records the value of the `ydb_tmp <../AdminOpsGuide/basicops.html#ydb-tmp>`_ environment variable with which this daemon/server process started. In case a client process later encounters a :ref:`gtmsecshrsrvf` error, it would issue a GTMSECSHRTMPPATH message as well which records the value of the $ydb_tmp the client started with. Most often, the cause of the GTMSECSHRSRVF is a mismatch between the ydb_tmp env var values between the server and client processes. The GTMSECSHRTMPPATH messages of the server and client would help in identifying such a mismatch.
 
 Action: N/A
 
@@ -5226,6 +5226,8 @@ Run Time Error: This indicates that a YottaDB process or GTMSECSHR with PID yyyy
 
 Action: Refer to the associated message(s) for more information.
 
+.. _gtmsecshrsrvf:
+
 ------------------
 GTMSECSHRSRVF
 ------------------
@@ -5296,6 +5298,8 @@ GTMSECSHRTMOUT, gtmsecshr exiting due to idle timeout
 Run Time Information: This indicates that the GTMSECSHR had been idle long enough to time out and terminate.
 
 Action: No action is required, another GTMSECSHR is started when it is needed.
+
+.. _gtmsecshrtmppath:
 
 -----------------
 GTMSECSHRTMPPATH
@@ -10748,7 +10752,7 @@ ORLBKDBUPGRDREQ
 
 ORLBKDBUPGRDREQ, Region RRR (DDDD) is not fully upgraded. ONLINE ROLLBACK cannot continue
 
-MUPIP Error: Region RRR pointing to database file DDDD has the fully upgraded flag set to FALSE and the database format is not r2.x indicating that there are GT.M V4 blocks in the database. `MUPIP JOURNAL ROLLBACK ONLINE <../AdminOpsGuide/ydbjournal.html#on-line>`_ in YottaDB r2.* cannot process these database files.
+MUPIP Error: Region RRR pointing to database file DDDD has the fully upgraded flag set to FALSE and the database format is not r2.x indicating that there are GT.M V4 blocks in the database. `MUPIP JOURNAL ROLLBACK ONLINE <../AdminOpsGuide/ydbjournal.html#on-line>`_ in YottaDB r2.x cannot process these database files.
 
 Action: Because a MUPIP JOURNAL ROLLBACK ONLINE is not possible for this database, stop all access to the database files and perform a ROLLBACK with standalone access.
 
@@ -11644,7 +11648,7 @@ REORGUPCNFLCT, MUPIP AAAA encountered a conflict due to OOOO (PID:PPPP)
 
 MUPIP Error: MUPIP action AAAA encountered a conflict due to a concurrent operation OOOO run as process ID PPPP.
 
-Action: MUPIP operations REORG UPGRADE and ONLINE ROLLBACK cannot run concurrently due to conflicting database changes. REORG UPGRADE exits if an ONLINE ROLLBACK is in progress or if it detects that an ONLINE ROLLBACK has started. ONLINE ROLLBACK pauses while waiting for the REORG UPGRADE to exit. ONLINE ROLLBACK has priority over REORG UPGRADE.
+Action: MUPIP operations `REORG UPGRADE <../AdminOpsGuide/dbmgmt.html#upgrade>`_ and `ONLINE ROLLBACK <../AdminOpsGuide/ydbjournal.html#on-line>`_ cannot run concurrently due to conflicting database changes. REORG UPGRADE exits if an ROLLBACK ONLINE is in progress or if it detects that an ROLLBACK ONLINE has started. ONLINE ROLLBACK pauses while waiting for the REORG UPGRADE to exit. ONLINE ROLLBACK has priority over REORG UPGRADE.
 
 -------------
 REPL0BACKLOG

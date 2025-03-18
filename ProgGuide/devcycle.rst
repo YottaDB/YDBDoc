@@ -68,7 +68,7 @@ Each of these remaining steps can be performed either from the YottaDB prompt or
 | Compile Routine                                      | invoke yottadb routine.m                      | ZLINK "routine"                                   |
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
 | Execute Routine                                      | invoke yottadb -run routine                   | Do ^routine calls from other routines invoke      |
-|                                                      |                                               | auto-ZLINK                                        |
+|                                                      |                                               | :ref:`auto-zlink`                                 |
 |                                                      | calls from other routines invoke auto-ZLINK   |                                                   |
 +------------------------------------------------------+-----------------------------------------------+---------------------------------------------------+
 | Debug Routine                                        | edit file with UNIX editor; compile and       | utilize debug commands such as:                   |
@@ -549,7 +549,7 @@ Example:
    $ yottadb payroll.m
    $ yottadb taxes.m
 
-This uses the yottadb command to invoke the YottaDB compiler from the shell prompt, and creates .o versions of these files.
+This uses the ``yottadb`` command to invoke the YottaDB compiler from the shell prompt, and creates ``.o`` versions of these files.
 
 Use the yottadb command at the shell prompt to:
 
@@ -557,7 +557,7 @@ Use the yottadb command at the shell prompt to:
 * Optionally, get a formatted listing of the program.
 * Ensure that all object code is up to date before linking.
 
-The yottadb command invokes the compiler to translate an M source file into object code.
+The ``yottadb`` command invokes the compiler to translate an M source file into object code.
 
 The format for the yottadb command is:
 
@@ -565,7 +565,7 @@ The format for the yottadb command is:
 
    yottadb [-qualifier[...]] pathname
 
-* Source programs must have an extension of .m.
+* Source programs typically have an extension of ``.m``. YottaDB accepts other file extensions, as well as files without an extension, for explicit recompilation commands, but not for auto-ZLINK.
 * Each pathname identifies an M source program to compile. If you do not specify a .m file extension, the yottadb command assumes the .m file extension.
 * Qualifiers determine characteristics of the compiler output.
 * Qualifiers must appear after the command, but before the file name to be properly applied.
@@ -586,7 +586,7 @@ For example, yottadb \*.m compiles all files in the current default directory wi
 Qualifiers for the yottadb command
 ++++++++++++++++++++++++++++++++++++
 
-The yottadb command allows qualifiers that customize the type and form of the compiler output to meet specific programming needs. Yottadb command qualifiers may also appear as a modifier to the argument to the ZLINK and ZCOMPILE commands. The following section describes the yottadb command qualifiers. Make sure the arguments are specified ahead of file name and after the command itself.
+The yottadb command allows qualifiers that customize the type and form of the compiler output to meet specific programming needs. Yottadb command qualifiers may also appear as a modifier to the argument to the :ref:`zlink` and :ref:`zcompile-command` commands and the :ref:`zcompile-isv` intrinsic special variable. The following section describes the ``yottadb`` command qualifiers. Make sure the arguments are specified ahead of file name and after the command itself.
 
 ~~~~~~~~~~~~~~~
 -di[rect_mode]
@@ -596,7 +596,7 @@ Invokes a small YottaDB image that immediately initiates Direct Mode.
 
 -direct_mode does not invoke the M compiler.
 
-The -direct_mode qualifier is incompatible with a file specification and with all other qualifiers.
+The -direct_mode qualifier is incompatible with a file specification and with all other qualifiers. The rest of the shell command is available to the process in the :ref:`zcmdline-isv` intrinsic special variable.
 
 ~~~~~~~~~~~~~~~~~~~~
 -dy[namic_literals]
@@ -639,6 +639,8 @@ By default, the compiler operates in -ignore mode and produces an object module 
 
 This qualifier has no effect. It is accepted only for backwards compatibility.
 
+.. _nolist-filename:
+
 ~~~~~~~~~~~~~~~~~~~~~~~
 -[no]li[st][=filename]
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -650,6 +652,12 @@ When you do not specify a file name for the listing file, the compiler produces 
 The -space qualifier modifies the format and content of the listing file. The M compiler ignores this qualifier unless the command includes the -list qualifier.
 
 By default, the compiler operates -nolist and does not produce listings.
+
+~~~~~~~~~~~~~~~~~~~~~
+-machine
+~~~~~~~~~~~~~~~~~~~~~
+
+Instructs the compiler to include the generated assembly code for each line of source code in the source program listing. If the :ref:`-list <nolist-filename>` option is not explictly specified, ``-machine`` automatically turns it on.
 
 ~~~~~~~~~~~~~~~~~~~~~
 -noin[line_literals]

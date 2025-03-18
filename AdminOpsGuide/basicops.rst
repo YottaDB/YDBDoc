@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -329,7 +329,7 @@ All processes performing updates during an online BACKUP must use the same direc
 ++++++++++++++
 ydb_boolean
 ++++++++++++++
-**ydb_boolean (gtm_boolean)** specifies the initial setting that determines how YottaDB compiles Boolean expression evaluation (expressions evaluated as a logical TRUE or FALSE). If ydb_boolean is undefined or evaluates to an integer zero (0), YottaDB behaves as it would after a `VIEW "NOFULL_BOOLEAN" <../ProgrammersGuide/commands.html#no-full-bool-ean-warn>`_ and compiles such that it stops evaluating a Boolean expression as soon as it establishes a definitive result . Note that:
+**ydb_boolean (gtm_boolean)** specifies the initial setting that determines how YottaDB compiles Boolean expression evaluation (expressions evaluated as a logical TRUE or FALSE). If ydb_boolean is undefined or evaluates to an integer zero (0), YottaDB behaves as it would after a `VIEW "NOFULL_BOOLEAN" <../ProgrammersGuide/commands.html#no-full-bool-ean-warn>`_ and compiles such that it stops evaluating a Boolean expression as soon as it establishes a definitive result. Note that:
 
 *  :ref:`ydb-side-effects-env-var` has an analogous impact on function argument evaluation order and implies "FULL_BOOLEAN" compilation, so VIEW "NOFULL_BOOLEAN" produces an error when :ref:`ydb-side-effects-env-var` is on.
 

@@ -1,6 +1,6 @@
 .. ################################################################
 .. #                                                              #
-.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries. #
+.. # Copyright (c) 2021-2025 YottaDB LLC and/or its subsidiaries. #
 .. # All rights reserved.                                         #
 .. #                                                              #
 .. #     This source code contains the intellectual property      #
@@ -167,6 +167,8 @@ Specifies the name of the database file for the MUPIP INTEG operation. FILE requ
 * The FILE qualifier is incompatible with the REGION qualifier.
 
 * By default, INTEG operates on FILE.
+
+.. _mupip-integ-full:
 
 ^^^^^^
 -FULL
