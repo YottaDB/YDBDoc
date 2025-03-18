@@ -1644,7 +1644,6 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |                  |                  |                                                                                                                                                                     |
 |                  |                  | * Updating the database of another replication instance using an extended global reference will change the active journal pool to that instance and                 |
 |                  |                  |   $VIEW("JNLPOOL") with no second argument will return the replication file of that instance, while the active global directory will remain unchanged.              |
-|                  |                  |                                                                                                                                                                     |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "JNLTRANSACTION" | none             | Index showing how many ZTSTART transaction fences have been opened (and not closed).                                                                                |
 |                  |                  |                                                                                                                                                                     |

@@ -144,9 +144,11 @@ YottaDB r2.04 includes the following enhancements and fixes beyond YottaDB [r2.0
 | ([873](#x873))   | Languages | ZSHOW "V" able to display variables at a specific stack levels                                    |
 | ([1056](#x1056)) | Languages | Pre-allocation for call-out (IO, not just O) string parameters                                    |
 | ([1112](#x1112)) | Other     | No GTMSECSHRSRVF and CRITSEMFAIL errors from ydb_env_set in certain rare cases                    |
+| ([1128](#x1128)) | Languages | MUPIP STOP terminates DSE/LKE/MUPIP even if they hold a critical section when ydb_readline=1      |
+| ([1129](#x1129)) | Languages | UTF-8 mode $TRANSLATE() works correctly with long search string with multi-byte characters        |
 | ([1133](#x1133)) | Languages | `-machine` compilation option                                                                     |
+| ([1136](#x1136)) | Languages | WRITE /TLS sets $TEST even if no TIMEOUT was specified                                            |
 | ([1138](#x1138)) | Languages | $ZYCOMPILE() intrinsic function checks whether a string is a syntactically correct line of M code |
-|                  |           |                                                                                                   |
 
 <a name="gtmv71000"></a>
 ### GT.M V7.1-000
@@ -245,7 +247,13 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
 
   See [Using External Calls: Call-Outs](https://docs.yottadb.com/ProgrammersGuide/extrout.html#using-external-calls-call-outs) for more detail about how pre-allocated IO parameters are represented in C. [#1056](https://gitlab.com/YottaDB/DB/YDB/-/issues/1056)
 
+* <a name="x1128"></a>A [MUPIP STOP](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#stop) does not terminate DSE, LKE and MUPIP processes if they hold the critical section for a database file. Previously, if [$ydb_readline](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-readline) was `1` or an equivalent value, it would incorrectly terminate the process. Note that a sequence of three MUPIP STOP signals sent within one minute continue to terminate the process even if it holds a critical section. [#1128](https://gitlab.com/YottaDB/DB/YDB/-/issues/1128)
+
+* <a name="x1129"></a>[\$TRANSLATE()](https://docs.yottadb.com/ProgrammersGuide/functions.html#translate) works correctly in UTF-8 mode (i.e., [$ZCHSET](https://docs.yottadb.com/ProgrammersGuide/isv.html#zchset) is `"UTF-8"`) when the search string (second parameter) contains more than 256 characters and includes at least one non-ASCII character. Previously, effective YottaDB release r1.36, this would fail with a fatal [GTMASSERT2](https://docs.yottadb.com/MessageRecovery/errors.html#gtmassert2) error. [#1129](https://gitlab.com/YottaDB/DB/YDB/-/issues/1129)
+
 * <a name="x1133"></a>YottaDB compilation supports a `-machine` flag (see [Qualifiers for the yottadb command](https://docs.yottadb.com/ProgrammersGuide/devcycle.html#qualifiers-for-the-yottadb-command)) which produces a listing that shows the generated assembly code for each line of source code. Specifying `-machine` automatically turns on the [-list](https://docs.yottadb.com/ProgrammersGuide/devcycle.html#no-li-st-filename) option if the latter is not explicitly specified. [#1133](https://gitlab.com/YottaDB/DB/YDB/-/issues/1133)
+
+* <a name="x1136"></a>[WRITE /TLS](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#write-command) does not set [$TEST](https://docs.yottadb.com/ProgrammersGuide/isv.html#test) in case no timeout was specified. In YottaDB releases r1.30 to r2.02, $TEST was set even in this case whereas it should have been set only if a timeout was specified. [#1136](https://gitlab.com/YottaDB/DB/YDB/-/issues/1136)
 
 * <a name="x1138"></a>The function $ZYCOMPILE(str) verifies whether or not `str` is valid M code. An empty string is returned if `str` is syntactically valid M code; otherwise a string of the form `POS,YDB_ERROR,Error` is returned where
 
