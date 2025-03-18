@@ -389,11 +389,12 @@ Specifies the approximate number of records a block in the region must exceed be
 
    -PRO[BLKSPLIT]=integer
 
-In order to minimize restarts YottaDB can proactively split data blocks when updating an data block more than once within a TP transaction or mini-transaction owing to contention. Proactive block splits tend to make globals require more blocks and potentially deeper trees.
-
-* A value of one (1) indicates to always consider proactive splits, which might be useful for regions used to hold globals with a first subscript of, for example, $job.
-
-* The default value of five (5) indicates that YottaDB considers proactive block split only when the number of records in a block exceed 5.
+  * Proactive consideration occurs when a mini-transaction retries updating an data block more than once due to contention.
+  * YottaDB never performs proactive block splitting inside a TP transaction.
+  * Proactive block splits tend to make globals require more blocks and potentially deeper trees.
+  * A value of one (1) instructs YottaDB to always consider proactive splits, which might be useful for regions used to hold globals with a first subscript of, for example, `$JOB <../ProgrammersGuide/isv.html#job>`_.
+  * A value of five (5) indicates that YottaDB considers proactive block split only when the number of records in a block exceed 5.
+  * The default is zero (0). It means that YottaDB does not consider proactive block splitting by default.
 
 ^^^^^^^^^^^^
 -QDBRUNDOWN
@@ -516,6 +517,21 @@ Specifies whether YottaDB should permit statistics sharing for this region. This
 * At database creation, GDE controls this characteristic, which by default is specified as STATS (on). When on, this characteristic causes YottaDB to create a small MM database for the associated region to hold the shared statistics.
 * A process disables itself from maintaining the shared statistics when it fails to open a statsDB. It does not, however, disable subsequently starting processes from maintaining the shared statistics.
 
+^^^^^^^^^^^^^^^^^^^^^
+-STATSDB_ALLOCATION
+^^^^^^^^^^^^^^^^^^^^^
+
+Specifies the initial number of GDS blocks for the shadow stats regions when the database region is first created. This qualifier requires standalone access and a file or region name. The format of the STATSDB_ALLOCATION qualifier is:
+
+.. code-block:: none
+
+   -STATSD[B_ALLOCATION]=integer
+
+  * YottaDB  implicitly doubles this block count each time it needs to extend the associated statsdb.
+  * The minimum STATSDB_ALLOCATION is 128 blocks.
+  * The maximum STATSDB_ALLOCATION is 8,388,607 blocks.
+  * By default, GDE provides an initial STATSDB_ALLOCATION of 2050 blocks for use by MUPIP CREATE.
+
 ^^^^^^^^^^^^^^
 -STDNULLCOLL
 ^^^^^^^^^^^^^^
@@ -535,20 +551,6 @@ Specifies the decimal value, in buffers, for the threshold at which processes st
 .. code-block:: none
 
    -T[RIGGER_FLUSH]=integer
-
-^^^^^^^^^^
--VERSION
-^^^^^^^^^^
-
-Sets the block format version (Desired DB Format field in the file header) for all subsequent new blocks. The format of the VERSION qualifier is:
-
-.. code-block:: none
-
-   -V[ERSION]={version}
-
-* MUPIP UPGRADE and MUPIP REORG UPGRADE set the Desired DB Format field in the database file header to the latest version while MUPIP REORG DOWNGRADE sets it to the previous version.
-
-For more information on the upgrading or downgrading your database, refer to the release notes document of your current YottaDB version(s).
 
 ^^^^^^^^^^^
 -WAIT_DISK

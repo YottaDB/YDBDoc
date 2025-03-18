@@ -123,7 +123,8 @@ The following table summarizes the YottaDB language extensions that facilitate d
 +-------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 | ZWRite                        | Displays all or some local or global variables.                                                                            |
 +-------------------------------+----------------------------------------------------------------------------------------------------------------------------+
-| $ZCSTATUS                     | Holds the value of the status code for the last compile performed by a ZCOMPILE command.                                   |
+| $ZCSTATUS                     | Holds the value of the status code for the last compile performed by a :ref:`zcompile-command`, :ref:`zlink`,              |
+|                               | or :ref:`auto-zlink`.                                                                                                      |
 +-------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 | $ZEDit                        | Contains the status code for the last ZEDit.                                                                               |
 +-------------------------------+----------------------------------------------------------------------------------------------------------------------------+
@@ -170,7 +171,7 @@ The following table summarizes the YottaDB language extensions that facilitate e
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 | ZMessage                       | Signals the specified condition.                                                                                           |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------+
-| $ZCSTATUS                      | Holds the value of the status code for the last compile performed by a ZCOMPILE command.                                   |
+| $ZCSTATUS                      | Holds the value of the status code for the last compile performed by a ZCOMPILE, ZLINK, or auto-ZLINK.                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 | $ZEOF                          | Contains indication of whether the last READ reached end-of-file.                                                          |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------+
