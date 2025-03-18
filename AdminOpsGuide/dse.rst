@@ -62,7 +62,7 @@ This command displays the fileheader of the region that stands first in the list
 
 As previously mentioned, DSE provides control over most of the attributes of your database. With DSE, it is possible to examine them and, with a few exceptions, change them.
 
-All DSE commands are divided into two categories - Change commands and Inquiry commands. Change commands allow you to modify the attributes of your database, in most cases without any warning or error. As the low level tool of last resort, Change commands allow you to take certain actions that can cause extensive damage when undertaken without an extensive understanding of the underlying data structures on disk and in memory and with an imperfect understanding of the commands issued. Do not use Change commands unless you know exactly what you are doing and have taken steps to protect yourself against mistakes, both inadvertent and resulting from an incomplete understanding of the commands you issue. Change commands are not required for normal operation, and are usually only used under the direction of YottaDB support to recover from the unanticipated consequences of failures not adequately planned for (for example, you should configure YottaDB applications such that you never need a Change command to recover from a system crash).
+All DSE commands are divided into two categories - Change commands and Inquiry commands. Change commands allow you to modify the attributes of your database, in most cases without any warning or error. As the low level tool of last resort, Change commands allow you to take certain actions that can cause extensive damage when undertaken without an extensive understanding of the underlying data structures on disk and in memory and with an imperfect understanding of the commands issued. Do not use Change commands unless you know exactly what you are doing and have taken steps to protect yourself against mistakes, both inadvertent and resulting from an incomplete understanding of the commands you issue. Change commands are not required for normal operation, and are usually only used under the direction of YottaDB support to recover from the unanticipated consequences of failures not adequately planned for (we strongly recommend that you configure YottaDB applications such that you never need a Change command to recover from a system crash).
 
 Inquiry commands let you see the attributes of your database. You may frequently use the inquiry commands for collecting your database metrics and status reporting.
 
@@ -967,7 +967,7 @@ DSE releases -FREEZE when it EXITs. To hold the database(s), CHANGE -FILEHEADER 
 -FU[LLY_UPGRADED]=boolean
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Sets a flag that indicates whether or not the database was fully upgraded to the latest version. The value is either T[RUE] or F[ALSE].
+Sets a flag that indicates whether or not the database was fully upgraded from a prior database format to the current format. The value is either T[RUE] or F[ALSE].
 
 Use only with: -FILEHEADER
 

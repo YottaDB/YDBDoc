@@ -210,13 +210,15 @@ The region-name is case-insensitive.
 V6
 ~~~~~~
 
-Directs MUPIP to create an r1.x (GT.M V6.x) compatible database file. When the environment variable :ref:`ydb-db-create-ver` specifies the creation of r1.x compatible database files, this option can be negated (``nov6``) to create r2.x database files.
+Directs MUPIP to create an r1.x (GT.M V6.x) compatible database file. When the environment variable :ref:`ydb-db-create-ver` specifies the creation of r1.x compatible database files, this option can be negated (``-nov6``) to create r2.x format database files.
 
 The format of the V6 qualifier is:
 
 .. code-block:: none
 
    -[no]v6
+
+``-nov6`` creates r2.x format database files, overdiring the environment variable $ydb_db_create_ver.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP CREATE
@@ -230,39 +232,6 @@ Example:
 
 This command creates the database file specified by the Global Directory for region YDBOCTO.
 
-.. _mupip-downgrade:
-
-++++++++++
-DOWNGRADE
-++++++++++
-
-The MUPIP DOWNGRADE command changes the file header format to a previous version number. The format of the MUPIP DOWNGRADE command is:
-
-.. code-block:: none
-
-   D[OWNGRADE] -V[ERSION]={r1.10|r1.20} file-name
-
-.. note::
-   You must perform a database integrity check using the -noonline parameter prior to downgrading a database. The integrity check verifies and clears database header fields required for an orderly downgrade. If an integrity check is not possible due to time constraints, please rely on a rolling upgrade scheme using replication and/or take a backup prior to upgrading the database.
-
-~~~~~~~~~~~~~~~~~~~
--VERSION={version}
-~~~~~~~~~~~~~~~~~~~
-
-For more information on the downgrade criteria for your database, refer to the release notes document of your current YottaDB version.
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Examples for MUPIP DOWNGRADE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Example:
-
-.. code-block:: bash
-
-   $ mupip downgrade yottadb.dat
-
-This command changes the file-header of yottadb.dat to the format in the previous version.
-
 +++++++++++++++++++++
 DUMPFHEAD
 +++++++++++++++++++++
@@ -271,7 +240,7 @@ The MUPIP DUMPFHEAD command displays information about one or more database file
 
 .. code-block:: none
 
-   DU[MPFHEAD] {-F[ILE] file-name | -R[EGION]=region-list | -R[EGION] region-list}
+   DU[MPFHEAD] {-FI[LE] file-name | -R[EGION]=region-list | -R[EGION] region-list}
 
 
 ~~~~~~~~~~~~~~~~
@@ -1296,7 +1265,7 @@ If the optional parameter dir1 is not specified, MUPIP RCTLDUMP dumps informatio
 
 * The Rtnobj shared memory line : All the length fields are displayed in hexadecimal. shmlen is the length of the allocated shared memory segment in bytes. shmused is the length that is currently used. shmfree is the length available for use. objlen is the total length of all the objects currently loaded in this shared memory. As YottaDB allocates blocks of memory with sizes rounded-up to an integer power of two bytes, shmused is always greater than objlen; for example with an objlen of 0x1c0, the shmused is 0x200.
 
-* Lines of the form rec#... indicate the record number in the relinkctl file. Each relinkctl file can store a maximum of 1,000,000 records, i.e., the maximum number of routines in a directory with auto-relink enabled is one million. Each record stores a routine name (rtnname:), the current cycle for this object file record entry (cycle:) which gets bumped on every ZLINK or ZRUPDATE command, the hash of the object file last loaded for this routine name (objhash:), the number of different versions of object files loaded in the Rtnobj shared memory segments with this routine name (numvers:), the total byte-length of the one or more versions of object files currently loaded with this routine name (objlen:), the total length used up in shared memory for these object files where YottaDB allocates each object file a rounded-up perfect 2-power block of memory (shmlen:).
+* Lines of the form rec#... indicate the record number in the relinkctl file. Each relinkctl file can store a maximum of 1,000,000 records, i.e., the maximum number of routines in a directory with auto-relink enabled is one million. Each record stores a routine name (rtnname:), the current cycle for this object file record entry (cycle:) which gets bumped on every ZLINK or ZRUPDATE command, the hash of the object file last loaded for this routine name (objhash:), the number of different versions of object files loaded in the Rtnobj shared memory segments with this routine name (numvers:), the total byte-length of the one or more versions of object files currently loaded with this routine name (objlen:), the total length in shared memory for these object files where YottaDB allocates each object file a rounded-up perfect 2-power block of memory (shmlen:), the number of times a routine has been superseded/replaced (superseded:).
 
 Given a relinkctl file name, one can find the corresponding directory path using the Unix "strings" command on the Relinkctl file. For example, :code:`strings /tmp/ydb-relinkctl-f0938d18ab001a7ef09c2bfba946f002`, corresponding to the above MUPIP RCTLDUMP output example, would output :code:`/obj` the corresponding directory name.
 
@@ -1311,7 +1280,7 @@ Example:
    # of attached processes  : 2
    Relinkctl shared memory  : shmid: 11534344 shmlen: 0x57c6000
    Rtnobj shared memory # 1 : shmid: 11567113 shmlen: 0x100000 shmused: 0x200 shmfree: 0xffe00 objlen: 0x1c0
-   rec#1: rtnname: abcd cycle: 1 objhash: 0xedbfac8c7f7ca357 numvers: 1 objlen: 0x1c0 shmlen: 0x200
+   rec#1: rtnname: abcd cycle: 1 objhash: 0xedbfac8c7f7ca357 numvers: 1 objlen: 0x1c0 shmlen: 0x200 superseded: 1
 
 
 +++++
@@ -1328,9 +1297,9 @@ The format of the MUPIP REORG command is:
 
    REO[RG]
    [
-    -D[OWNGRADE]
     -ENCR[YPT]=key
     -E[XCLUDE]=global-name-list
+    -FILE=file-name
     -FI[LL_FACTOR]=integer
     -I[NDEX_FILL_FACTOR]=integer
     -NOCO[ALESCE]
@@ -1346,14 +1315,14 @@ The format of the MUPIP REORG command is:
 .. note::
    While REORG optimizes the GDS structure of database files, it does not handle native file system file fragmentation. In most cases, fragmentation at the native file system level is more likely than fragmentation at the GDS structure level. Therefore, YottaDB recommends users create files with appropriate allocations and extensions, on disks with large amounts of contiguous free space. Use native utilities and MUPIP utilities (depending on operational procedures) to eliminate file fragmentation when database files have been extended more than a dozen times.
 
-* As REORG is IO intensive, running a REORG concurrently with normal database access may impact the operation of normal processes. As the YottaDB database engine has a daemonless architecture, attempts to reduce the impact by reducing the priority of REORG can (perhaps counter-intuitively) exacerbate rather than alleviate the impact. To reduce the impact REORG has on other processes, use the ydb_poollimit environment variable to limit the number of global buffers used by the REORG.
+* As REORG is IO intensive, running a REORG concurrently with normal database access may impact the operation of normal processes. As the YottaDB database engine has a daemonless architecture, attempts to reduce the impact by reducing the priority of REORG can (perhaps counter-intuitively) exacerbate rather than alleviate the impact. To reduce the impact REORG has on other processes, use the `ydb_poollimit <basicops.html#ydb-poollimit>`_ environment variable to limit the number of global buffers used by the REORG.
 
-* MUPIP REORG does not change the logical contents of the database, and can run on either the originating instance or replicating instance of an LMS application. In such cases, resuming REORGs in process should be part of the batch restart. See the `"Database Replication" chapter <./dbrepl.html>`_ for more information about running REORG on a dual site application.
+* MUPIP REORG does not change the logical contents of the database, and can run on either the originating instance or replicating instance of an LMS application. In such cases, resuming REORGs in process should be part of the batch restart. See the `"Database Replication" chapter <dbrepl.html>`_ for more information about running REORG on a dual site application.
 
 * Use MUPIP STOP (or <Ctrl-C> for an interactive REORG) to terminate a REORG process. Unless terminated with a :code:`kill -9`, a REORG terminated by operator action or error is incomplete but does not adversely affect the database.
 
 .. note::
-   REORG focuses on optimum adjacency and a change to even a single block can cause it to perform a large number of updates with only marginal benefit. Therefore, YottaDB recommends not running successive REORGs close together in time, as much as can provide minimal benefit for a significant increase in database and journal activity. For the same reason, YottaDB recommends careful research and planning before using the RESUME qualifier or complex uses of EXCLUDE and SELECT.
+   REORG focuses on optimum adjacency and a change to even a single block can cause it to perform a large number of updates with only marginal benefit. Therefore, YottaDB recommends not running successive REORGs close together in time, as that will likely provide minimal benefit for a significant increase in database and journal activity. For the same reason, YottaDB recommends careful research and planning before using the RESUME qualifier or complex uses of EXCLUDE and SELECT.
 
 Assume two scenarios of putting values of ^x(1) to ^x(10000). In the first scenarios, fill values in a sequential manner. In the second scenario, enter values for odd subscripts and then enter values for the even subscripts.
 
@@ -1418,14 +1387,6 @@ Note that there are more and less dense index and data blocks used than in scena
 
 The optional qualifiers for MUPIP REORG are:
 
-.. _reorg-downgrade:
-
-~~~~~~~~~~~~
--DOWNGRADE
-~~~~~~~~~~~~
-
-MUPIP REORG DOWNGRADE is deprecated, and not supported as of r2.00.
-
 .. _mupip-reorg-encrypt:
 
 ~~~~~~~~~
@@ -1438,15 +1399,15 @@ Encrypts an unencrypted database or changes the encryption key of a database whi
 
    -ENCR[YPT]=<key>
 
-MUPIP provides <key> to the encryption plugin. The reference implementation of the plugin expects a key with the specified name in the encryption configuration file identified by $ydb_crypt_config. The configuration file must contain an entry in the database section for each database file mapping to a region specified in <region-list> that names the specified key as its key. The ENCRYPT flag is incompatible with all other command line flags of MUPIP REORG except REGION, and performs no operation other than changing the encryption key. If the specified key is already the encryption key of a database region, MUPIP REORG ENCRYPT moves on to the next region after displaying a message (on stderr, where MUPIP operations send their output).
+MUPIP provides <key> to the encryption plugin. The reference implementation of the plugin expects a key with the specified name in the encryption configuration file identified by `$ydb_crypt_config <basicops.html#ydb-crypt-config>`_. The configuration file must contain an entry in the database section for each database file mapping to a region specified in <region-list> that names the specified key as its key. The ENCRYPT flag is incompatible with all other command line flags of MUPIP REORG except REGION, and performs no operation other than changing the encryption key. If the specified key is already the encryption key of a database region, MUPIP REORG ENCRYPT moves on to the next region after displaying a message (on stderr, where MUPIP operations send their output).
 
-As MUPIP REORG ENCRYPT reads, re-encrypts, and writes every in-use block in each database file, its operations take a material amount of time on the databases of typical applications, and furthermore add an additional IO load to the system on which it runs. You can use the environment variable ydb_poollimit to ameliorate, but not eliminate the impact, at the cost of extending execution times. To minimize impact on production instances, YottaDB recommends running this operation on replicating secondary instances, rather than on originating primary instances.
+As MUPIP REORG ENCRYPT reads, re-encrypts, and writes every in-use block in each database file, its operations take a material amount of time on the databases of typical applications, and furthermore add an additional IO load to the system on which it runs. You can use the environment variable ydb_poollimit to ameliorate, but not eliminate, the impact, at the cost of extending execution times. To minimize impact on production instances, YottaDB recommends running this operation on replicating secondary instances, rather than on originating primary instances.
 
 ENCRYPT switches the journal file for each database region when it begins operating on it, and again when it completes, and also records messages in the syslog for both events.
 
 As is the case under normal operation when MUPIP REORG ENCRYPT is not active, journaled databases are protected against system crashes when MUPIP REORG ENCRYPT is in operation: MUPIP JOURNAL ROLLBACK/RECOVER recovers journaled database regions (databases that use NOBEFORE journaling continue to require RECOVER/ROLLBACK FORWARD).
 
-Because a database file utilizes two keys while MUPIP REORG ENCRYPT is underway, the database section of the configuration file provides for a single database file entry to specify multiple keys. For example, if the keys of database regions CUST and HIST, mapping to database files cust.dat and hist.dat in directory /var/myApp/prod, are to be changed from key1 to key2 using the command:
+Because a database file utilizes two keys while MUPIP REORG ENCRYPT is underway, the database section of the configuration file provides for a single database file entry to specify multiple keys. For example, if the keys of database regions CUST and HIST, mapping to database files ``cust.dat`` and ``hist.dat`` in directory ``/var/myApp/prod``, are to be changed from ``key1`` to ``key2`` using the command:
 
 .. code-block:: none
 
@@ -1458,20 +1419,19 @@ then the database section of the configuration file must at least have the follo
 
     database: {
         keys: ({
-                dat: "/var/myApp/cust.dat";
+            dat: "/var/myApp/cust.dat";
                 key: "key1";
-               },{
-                  dat: "/var/myApp/cust.dat";
-                  key: "key2";
-                 },{
-                    dat: "/var/myApp/hist.dat";
-                    key: "key1";
-                   },{
-                      dat: "/var/myApp/hist.dat";
-                      key: "key2";
-                     })
-              };
-
+        },{
+            dat: "/var/myApp/cust.dat";
+            key: "key2";
+        },{
+            dat: "/var/myApp/hist.dat";
+            key: "key1";
+        },{
+            dat: "/var/myApp/hist.dat";
+            key: "key2";
+        })
+   };
 
 In other words, each database file entry can have multiple keys, and a key can be associated with multiple database files. With a configuration file that has multiple keys associated with the same database file, MUPIP CREATE uses the last entry. Other database operations use whichever key associated with the database file has a hash matching one in the database file header, reporting an error if no key matches. To improve efficiency when opening databases, you can delete entries for keys that are no longer used from the configuration file.
 
@@ -1483,7 +1443,7 @@ MUPIP REORG ENCR[YPT] can encrypt an unencrypted database only if the following 
 
 has previously marked the database "encryptable".
 
-The command requires standalone access to the database.  It performs some basic encryption setup checks and requires the ydb_passwd environment variable to be defined and the GNUPGHOME environment variable to point to a valid directory in the environment. Just as encrypted databases use global buffers in pairs (for encrypted and unencrypted versions of blocks), a database marked as encryptable has global buffers allocated in pairs (i.e., the actual number of global buffers is twice the number reported by DSE DUMP FILEHEADER) and requires correspondingly larger shared memory segments. To revert unencrypted but encryptable databases back to the "unencryptable" state, use the command:
+The command requires standalone access to the database.  It performs some basic encryption setup checks and requires the `ydb_passwd <basicops.html#ydb-passwd>`_ environment variable to be defined and the GNUPGHOME environment variable to point to a valid directory in the environment. Just as encrypted databases use global buffers in pairs (for encrypted and unencrypted versions of blocks), a database marked as encryptable has global buffers allocated in pairs (i.e., the actual number of global buffers is twice the number reported by :ref:`DSE DUMP FILEHEADER <dse-dump-fileheader>`) and requires correspondingly larger shared memory segments. To revert unencrypted but encryptable databases back to the "unencryptable" state, use the command:
 
 .. code-block:: none
 
@@ -1699,6 +1659,16 @@ The optional percentage (0-99) provides a minimum amount for the reclamation; in
 .. note::
    TRUNCATE does not complete if there is a concurrent online BACKUP or use of the snapshot mechanism, for example by INTEG.
 
+   Because any competing updates may interfere with MUPIP's ability to free space, minimize or prevent competing updates.
+
+.. _mupip-reorg-upgrade:
+
+~~~~~~~~~~
+UPGRADE
+~~~~~~~~~~
+
+Upgrades blocks to current DB version format. A REORG with the UPGRADE option cannot run concurrently on a file or region with any other REORG on the same file or region, but can run concurrently with normal application code. Use REORG UPGRADE when it is a part of a release notes procedure to upgrade the DB version format of a database or when you encounter a database integrity error that requires running REORG UPGRADE.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP REORG
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1852,12 +1822,6 @@ Execute the following command when encryption completes.
    Database file /home/gtc_twinata/staff/nitin/tr11/yottadb.dat now has encryption marked complete
 
 Always keep the keys in a secured location. Always set gtmcrypt_config and ydb_passwd to access the encrypted database.
-
-~~~~~~~~~~
--UPGRADE
-~~~~~~~~~~
-
-MUPIP REORG UPGRADE is not supported in YottaDB r2.00. YottaDB intends to support it in a future release. See :ref:`mupip-upgrade`.
 
 +++++++++++++++++++
 USER_DEFINED_REORG
@@ -2078,7 +2042,7 @@ SET
 SIZE
 ++++++++++++
 
-Estimates and reports the size of global variables using a format that is similar to the one that appears at the end of the MUPIP INTEG FULL report. In comparison with MUPIP INTEG FAST FULL, MUPIP SIZE provides the option of choosing any one of the three estimation techniques to estimate the size of global variables in a database file. These techniques vary in measurement speed and estimate accuracy. The format of the MUPIP SIZE command is:
+Estimates and reports the size of global variables using a format that is similar to the one that appears at the end of the :ref:`MUPIP INTEG FULL <mupip-integ-full>` report. In comparison with MUPIP INTEG FAST FULL, MUPIP SIZE provides the option of choosing any one of the three estimation techniques to estimate the size of global variables in a database file. These techniques vary in measurement speed and estimate accuracy. The format of the MUPIP SIZE command is:
 
 .. code-block:: none
 
@@ -2096,18 +2060,24 @@ Specifies the estimation technique that MUPIP SIZE should use to estimate the si
 
    -h[euristic]={sc[an][,level=<lvl>] | a[rsample][,samples=<smpls>] | i[mpsample][,samples=<smpls>]}
 
-* smpls is the number of samples and must be greater than zero (0)
-* lvl is a positive or negative tree level designation and -(level of the root block) <= lvl <= (level of the root block)
+  * smpls is the number of samples and must be greater than zero (0)
+  * lvl is a positive or negative tree level designation and -(level of the root block) <= lvl <= (level of the root block)
 
 estimation-technique is one of the following:
 
-* scan,level=<lvl> : Traverses the global variable tree and counts the actual number of records and blocks at levels from the root down to the level specified by lvl (default is 0, the data blocks). If the given level is non-negative, it is the lowest block level of the global for which the count is requested. So, 0 means all blocks, 1 means all index blocks, 2 means all index blocks of level 2 and above, and so on. SCAN counts a negative level from the root of the global tree where -1 means children of the root. The technique reports the results for levels other than 0 and shows the adjacency for the next lower (one less) level.
+  * scan,level=<lvl>
 
-* arsample,samples=<smpls> : Uses acceptance/rejection sampling of random tree traversals to estimate the number of blocks at each level. It continues until the specified number of samples (default is 1,000) is accepted.
+    Traverses the global variable tree and counts the actual number of records and blocks at levels from the root down to the level specified by lvl; the number of records at a level is the same as the number of blocks at the next lower level. The default is 1, which gives the count of level 0 blocks, which are the blocks containing data rather than metadata. If the given level is non-negative, it is the lowest block level of the global for which the count is requested. So, 0 means all blocks, 1 means all index blocks, 2 means all index blocks of level 2 and above, and so on. SCAN counts a negative level from the root of the global tree where -1 means children of the root.
 
-* impsample,samples=<smpls> : Uses importance sampling of random tree traversals to weight each sample of the specified number of samples (default is 1,000) in order to estimate the size of the tree at each level.
+  * arsample,samples=<smpls>
 
-* If HEURISTIC is not specified, MUPIP SIZE uses the ARSAMPLE,SAMPLE=1000 estimation technique.
+    Uses acceptance/rejection sampling of random tree traversals to estimate the number of blocks at each level. It continues until the specified number of samples (default is 1,000) is accepted.
+
+  * impsample,samples=<smpls>
+
+    Uses importance sampling of random tree traversals to weight each sample of the specified number of samples (default is 1,000) in order to estimate the size of the tree at each level.
+
+   * If HEURISTIC is not specified, MUPIP SIZE uses the ARSAMPLE,SAMPLE=1000 estimation technique.
 
 The 2 sigma column for the two sampling techniques shows the dispersion of the samples (in blocks) and the probability (rounded to a whole percentage) that the actual value falls farther away from the reported value by more than two sigma. With the scan method the "sample" is "complete," so any inaccuracy comes from concurrent updates.
 
@@ -2136,13 +2106,10 @@ The format of the SELECT qualifier is:
 
 global-name-list can be:
 
-* A comma separated list of global variables.
-
-* A range of global variables denoted by start:end syntax. For example, :code:`-select="g1:g4"`.
-
-* A global variable with wildcards, for example, "g*" (the name must be escaped to avoid shell filename expansion)
-
-* "\*" to select all global variables.
+  * A comma separated list of global variables. For example, ``-select='^g1,^g4'`` would select only globals ``g1`` and ``g4``.
+  * A range of global variables denoted by start:end syntax. For example, :code:`-select="^g1:^g4"`.
+  * A global variable with wildcards, for example, ``-select="^g*"`` (the name must be escaped to avoid shell filename expansion) to select all global variables which begin with the letter ``g``.
+  * ``\*`` to select all global variables.
 
 .. _size-region:
 
@@ -2223,14 +2190,17 @@ The format of the STOP command is:
 
    MUPIP ST[OP] process-id
 
-* Use the shell command ps to display a list of active process names and process identifiers (PIDs).
-
-* To STOP a process belonging to its own account, a process requires no privileges. To STOP a process belonging to another account, MUPIP STOP must execute as root.
+  * Use the shell command ps to display a list of active process names and process identifiers (PIDs).
+  * To STOP a process belonging to its own account, a process requires no privileges. To STOP a process belonging to another account, MUPIP STOP must execute as root.
 
 * A process that receives a MUPIP STOP signal terminates with exit code 241.
 
 .. note::
-   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a :code:`kill -9` signal. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances. In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Use three MUPIP STOPs in a row only as a last resort, and when you do, perform a MUPIP INTEG at your earliest opportunity thereafter to check for database structural damage, and repair any damage following the procedures in `Chapter 11 (Maintaining Database Integrity) <./integrity.html>`_.You may never have to perform a MUPIP STOP if your application is designed in a way that it reduces or eliminates the probability of a process getting in the final try of a transaction. For more information, refer to the `Programmers Guide <../ProgrammersGuide/index.html>`_.
+   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row within one minute, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a :code:`kill -9` signal, except that the three MUPIP STOP signals might produce a core file. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances.
+
+   In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Three MUPIP STOP signals received by a process but over a period of more than one minute will cause the process to shut down safely.
+
+   Use three MUPIP STOPs within one minute only as a last resort, and when you do, perform a `MUPIP INTEG <#integ>`_ at your earliest opportunity thereafter to check for database structural damage, and repair any damage following the procedures in `Chapter 11 (Maintaining Database Integrity) <./integrity.html>`_.You may never have to perform a MUPIP STOP if your application is designed in a way that it reduces or eliminates the probability of a process getting in the final try of a transaction. For more information, refer to the `Programmers Guide <../ProgrammersGuide/index.html>`_.
 
 .. _mupip-trigger:
 
@@ -2540,7 +2510,32 @@ You have successfully changed the trigger name ValidateAccount to ValidateAcct.
 UPGRADE
 +++++++++
 
-MUPIP UPGRADE is not supported in YottaDB r2.00. YottaDB intends to support it in a future release.  YottaDB r2.00 is fully functional with r1.x database files. If an application needs the larger maximum database file size of r2.00, create a new database file with r2.00 and `MUPIP LOAD <#load>`_ to load an extract created by `MUPIP EXTRACT <#extract>`_. In a replicated environment, remember to set the Region Seqno of the new database file to that of the old one (see `DSE CHANGE FILEHEADER REG_SEQNO <./dse.html#reg-seqno-sequence-number>`_.
+Upgrades the fileheader of an r1.x (or GT.M V6.x) database file to a transitional r2.x format where the fileheader is upgraded, but the database blocks are not. This is the first stage in upgrading an r1.x database file to the r2.x format. This command must be run standalone and is relatively quick. The remainder of the upgrade is done by :ref:`MUPIP REORG UPGRADE <mupip-reorg-upgrade>` which can upgrade the remaining blocks upgrades concurrently with normal application operation.
+
+The format of the MUPIP UPGRADE command is:
+
+.. code-block:: bash
+
+   UP[GRADE] [-FILE file-name | [-REGION] region-list]
+
+  * Relocates blocks to make space for an expanded master bit map
+  * Removes global names without any data, so called "dead" globals
+  * Upgrades the database directory tree blocks to r2.x format
+  * Changes the starting VBN (virtual block number) to values greater than or equal to 8193
+  * Expands the existing master bit map
+  * Sets the database format to r2.x upon completion
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example for MUPIP UPGRADE
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example:
+
+.. code-block:: bash
+
+   $ mupip upgrade -file mumps.dat
+
+This example starts the first stage of the upgrade of mumps.dat to r2.x format.
 
 -----------------------------
 MUPIP Command Summary
@@ -2566,8 +2561,6 @@ MUPIP Command Summary
 |                                      |                                             | * VERBOSE                                                                                | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | CR[EATE]                             | \-                                          | * R[EGION]=region-name \| R[EGION] region-name                                           | N.A.              |
-+--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| DO[WNGRADE]                          | file-name                                   | * V[ERSION]={V4|V5}                                                                      | Y                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | DU[MPFHEAD]                          | file-name or region-list                    | * \-                                                                                     | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
@@ -2629,8 +2622,7 @@ MUPIP Command Summary
 |                                      |                                             | * S[TDIN]                                                                                | N                 |
 |                                      |                                             | * O[NERROR]                                                                              | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
-| REO[RG]                              | \-                                          | * D[OWNGRADE]                                                                            | N                 |
-|                                      |                                             | * ENCR[YPT]=key                                                                          | N                 |
+| REO[RG]                              | \-                                          | * ENCR[YPT]=key                                                                          | N                 |
 |                                      |                                             | * E[XCLUDE]=global-name-list                                                             | N                 |
 |                                      |                                             | * FI[LL_FACTOR]=integer                                                                  | N                 |
 |                                      |                                             | * I[NDEX_FILL_FACTOR]=integer                                                            | N                 |
@@ -2641,7 +2633,7 @@ MUPIP Command Summary
 |                                      |                                             | * R[ESUME]                                                                               | N                 |
 |                                      |                                             | * S[ELECT]=global-name-list                                                              | N                 |
 |                                      |                                             | * T[RUNCATE][=percentage]                                                                | N                 |
-|                                      |                                             | * UP[GRADE]                                                                              | N                 |
+|                                      |                                             | * UP[GRADE]                                                                              | Y                 |
 |                                      |                                             | * REG[ION] region-list                                                                   | N                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | REP[LICATE]                          | file-name                                   | * E[DITINSTANCE]                                                                         | N                 |
@@ -2689,7 +2681,6 @@ MUPIP Command Summary
 |                                      |                                             | * STAN[DALONENOT]                                                                        | Y                 |
 |                                      |                                             | * [NO]STD[NULLCOLL]                                                                      | Y                 |
 |                                      |                                             | * [NO]STAT[S]                                                                            | Y                 |
-|                                      |                                             | * V[ERSION]={V4|V6}                                                                      | N                 |
 |                                      |                                             | * W[AIT_DISK]=integer                                                                    | Y                 |
 +--------------------------------------+---------------------------------------------+------------------------------------------------------------------------------------------+-------------------+
 | SI[ZE]                               | global-name-list region-list                | * H[EURISTIC]=estimation_technique                                                       | N                 |
@@ -2883,9 +2874,6 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * UPDOK                                                              |
 |                                              |                                                                              | * UPDNOTOK                                                           |
 |                                              |                                                                              | * ZEROBACKLOG                                                        |
-+----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| VERSION={V4|V5}                              | :ref:`mupip-downgrade`                                                       | * file-name                                                          |
-|                                              | and :ref:`mupip-upgrade`                                                     |                                                                      |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
 
 .. raw:: html
