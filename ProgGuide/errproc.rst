@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -203,7 +203,7 @@ Summary of YottaDB Error-Handling Facilities
 +-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $QUIT                         | Indicates whether the current block of code was called as an extrinsic function or a subroutine.                                                                            |
 +-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| $ZCSTATUS                     | Holds the value of the status code for the last compilation performed by a ZCOMPILE command.                                                                                |
+| $ZCSTATUS                     | Holds the value of the status code for the last compilation performed by a :ref:`zcompile-command`, :ref:`zlink`, or :ref:`auto-zlink`.                                     |
 +-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZEDIT                        | Holds the value of the status code for the last edit session invoked by a ZEDIT command.                                                                                    |
 +-------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

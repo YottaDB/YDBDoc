@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -842,7 +842,8 @@ For more information on syntax and run-time errors during Direct Mode, see `Chap
 +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | :ref:`zwrite-command`     | Displays all or some local or global variables.                                                                             |
 +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| :ref:`zcstatus-isv`       | Contains the value of the status code for the last compile performed by a ZCOMPILE command.                                 |
+| :ref:`zcstatus-isv`       | Contains the value of the status code for the last compile performed by a :ref:`zcompile-command`, :ref:`zlink`, or         |
+|                           | :ref:`auto-zlink`                                                                                                           |
 +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | :ref:`zedit-command`      | Contains the status code for the last ZEDit.                                                                                |
 +---------------------------+-----------------------------------------------------------------------------------------------------------------------------+

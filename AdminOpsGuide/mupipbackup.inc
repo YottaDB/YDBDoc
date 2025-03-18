@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -209,6 +209,8 @@ The format of the NEWJNLFILES qualifier is:
 * NONEWJNLFILES causes journaling to continue with the current journal files. It does not accept any arguments.
 
 * The default is NEWJNLFILES=PREVLINK, with the current values of SYNC_IO for each region retained by the new journal files.
+
+,, _mupip-backup-online:
 
 ^^^^^^^^
 -Online

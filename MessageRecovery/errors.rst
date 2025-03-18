@@ -240,7 +240,7 @@ ARGTRUNC
 
 ARGTRUNC, UUUU argument number CCCC truncated. Keep the size of total command line within NNNN bytes
 
-DSE/LKE/MUPIP Warning: This warning appears when the YottaDB parser truncates an argument of a YottaDB Utility (DSE, LKE, or MUPIP) executable exceeding the allowed maximum of NNNN bytes. CCCC is the argument number with 1 being the first argument for the YottaDB Utility executable.
+DSE/LKE/MUPIP Warning: This warning appears when the YottaDB parser truncates an argument of a YottaDB Utility (`DSE <../AdminOpsGuide/dse.html>`_, `LKE <../AdminOpsGuide/mlocks.html>`_, or `MUPIP <https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html>`_) executable exceeding the allowed maximum of NNNN bytes. CCCC is the argument number with 1 being the first argument for the YottaDB Utility executable.
 
 Action: Reduce the size of the argument number CCCC.
 
@@ -856,6 +856,16 @@ Run Time Information: This indicates that YottaDB encountered a BREAK command wi
 Action: The ZSTEP command causes YottaDB to proceed to the beginning of the next line of M code that matches the characteristic specified by the ZSTEP argument. YottaDB compiles and executes all commands entered at the Direct Mode prompt as they are entered. To continue program execution, enter the ZCONTINUE command.
 
 ------------
+BSIZTOOLARGE
+------------
+
+BSIZTOOLARGE, bbbb Block larger than specified maximum size
+
+Run Time Information: `MUPIP INTEG <../AdminOpsGuide/dbmgmt.html#integ>`_ when passed one of IMAXBLOCKSIZE=n and/or DMAXBLOCKSIZE=m, reports that the size of block bbbb exceeds the specified size. The message indicates that a newly-imposed reserved bytes value has not propagated to blocks that have not since been affected by new updates, or that a fill_factor passed to `MUPIP REORG <../AdminOpsGuide/dbmgmt.html#reorg>`_ was imposed successfully on blocks that existed when the reorg took place but not on newly created blocks.
+
+Action: No action is necessary unless you intend to ensure that all blocks in the database meet a certain level of sparseness. If that is the case, run MUPIP REORG again with appropriate FILL_FACTOR or INDEX_FILL_FACTOR parameters.
+
+------------
 BTFAIL
 ------------
 
@@ -874,6 +884,16 @@ BUFFLUFAILED, Error flushing buffers from uuuu for database file dddd
 DSE/MUPIP Error: MUPIP or DSE (uuuu) could not flush the buffers for database file dddd completely. In the case of MUPIP, this typically means that some process is not releasing the critical section. In the case of DSE, this typically means there is some error in the global buffer cache which needs to be fixed.
 
 Action: In the case of MUPIP, wait approximately 20 seconds and retry. In the case of DSE, try DSE CACHE RECOVER to fix the cache. If the error persists, report it to the group responsible for database integrity at your operation as soon as possible.
+
+-----------------
+BUFFSIZETOOSMALL
+-----------------
+
+BUFFSIZETOOSMALL, TCP xxxx buffer size passed to yyyy smaller than minimum size of zzzz.
+
+MUPIP Warning: This indicates that the value specified in  {SEND|RECV}BUFFSIZE option to a `MUPIP REPLICATE <../AdminOpsGuide/dbrepl.html#>`_ SOURCE/RECEIVER START as the desired send or receive TCP buffer size was smaller than YottaDB's minimum value, and that the minimum value was used instead. Note that if the buffer is initially larger than this minimum, YottaDB will not attempt to reduce its size.
+
+Action: No action necessary. Consider passing NO{SEND|RECV}BUFFSIZE to leave management of the buffer size to YottaDB and the operating system.
 
 ---------------
 BUFOWNERSTUCK
@@ -4077,6 +4097,16 @@ Run Time Error: This indicates that the user is unable to access the event loggi
 Action: Review accompanying messages for additional information.
 
 ------------------
+EXCEEDRCTLRNDWN
+------------------
+
+EXCEEDRCTLRNDWN, Maximum relinkctl rundown retries limit of nnnn exceeded
+
+MUPIP Error: This indicates competing processes tried to rundown relinkctl more than nnnn times while another process was trying to connect to the relinkctl.
+
+Action: Consider a `MUPIP STOP <../AdminOpsGuide/dbmgmt.html#stop>`_ to one (or more) of the competing processes
+
+------------------
 EXCEEDSPREALLOC
 ------------------
 
@@ -4294,7 +4324,7 @@ FDSIZELMT
 
 FDSIZELMT, Too many nnnn descriptors needed by GT.CM server
 
-GT.CM Error: A large number (nnnn) of regions accessed on behalf of GT.CM clients forced the file descriptor numerical value to its FD_SETSIZE limit. Under Linux as of this writing, this limit is fixed to 1024.
+GT.CM Error: A large number (nnnn) of regions accessed on behalf of `GT.CM <../AdminOpsGuide/gtcm.html>`_ clients forced the file descriptor numerical value to its FD_SETSIZE limit. Under Linux as of this writing, this limit is fixed to 1024.
 
 Action: Review the application, the database layout and the number of concurrent clients and adjust conditions to reduce the number of concurrent database files managed by the GT.CM server.
 
@@ -5012,7 +5042,7 @@ GTMSECSHRDMNSTARTED
 
 GTMSECSHRDMNSTARTED, gtmsecshr daemon started for version vvvv from dddd using socket file ssss
 
-GTMSECSHR Information: This message indicates that GTMSECSHR daemon was started for the version vvvv from the installation directory dddd and is expecting to receive client messages in the socket file whose full path is indicated by ssss. This message is immediately followed by a GTMSECSHRTMPPATH message which records the value of the :code:`ydb_tmp` env var this daemon/server started with. In case a client later encounters a GTMSECSHRSRVF error, it would issue a GTMSECSHRTMPPATH message as well which records the value of the :code:`ydb_tmp` env var the client started with. Most often, the cause is a mismatch between the ydb_tmp env var values between the server and the client. The GTMSECSHRTMPPATH messages of the server and client would help in identifying such a mismatch.
+GTMSECSHR Information: This message indicates that GTMSECSHR daemon was started for the version vvvv from the installation directory dddd and is expecting to receive client messages in the socket file whose full path is indicated by ssss. This message is immediately followed by a :ref:`gtmsecshrtmppath` message which records the value of the `ydb_tmp <../AdminOpsGuide/basicops.html#ydb-tmp>`_ environment variable with which this daemon/server process started. In case a client process later encounters a :ref:`gtmsecshrsrvf` error, it would issue a GTMSECSHRTMPPATH message as well which records the value of the $ydb_tmp the client started with. Most often, the cause of the GTMSECSHRSRVF is a mismatch between the ydb_tmp env var values between the server and client processes. The GTMSECSHRTMPPATH messages of the server and client would help in identifying such a mismatch.
 
 Action: N/A
 
@@ -5196,6 +5226,8 @@ Run Time Error: This indicates that a YottaDB process or GTMSECSHR with PID yyyy
 
 Action: Refer to the associated message(s) for more information.
 
+.. _gtmsecshrsrvf:
+
 ------------------
 GTMSECSHRSRVF
 ------------------
@@ -5266,6 +5298,8 @@ GTMSECSHRTMOUT, gtmsecshr exiting due to idle timeout
 Run Time Information: This indicates that the GTMSECSHR had been idle long enough to time out and terminate.
 
 Action: No action is required, another GTMSECSHR is started when it is needed.
+
+.. _gtmsecshrtmppath:
 
 -----------------
 GTMSECSHRTMPPATH
@@ -10718,7 +10752,7 @@ ORLBKDBUPGRDREQ
 
 ORLBKDBUPGRDREQ, Region RRR (DDDD) is not fully upgraded. ONLINE ROLLBACK cannot continue
 
-MUPIP Error: Region RRR pointing to database file DDDD has the fully upgraded flag set to FALSE and the database format is not r2.x indicating that there are GT.M V4 blocks in the database. `MUPIP JOURNAL ROLLBACK ONLINE <../AdminOpsGuide/ydbjournal.html#on-line>`_ in YottaDB r2.* cannot process these database files.
+MUPIP Error: Region RRR pointing to database file DDDD has the fully upgraded flag set to FALSE and the database format is not r2.x indicating that there are GT.M V4 blocks in the database. `MUPIP JOURNAL ROLLBACK ONLINE <../AdminOpsGuide/ydbjournal.html#on-line>`_ in YottaDB r2.x cannot process these database files.
 
 Action: Because a MUPIP JOURNAL ROLLBACK ONLINE is not possible for this database, stop all access to the database files and perform a ROLLBACK with standalone access.
 
@@ -10781,6 +10815,16 @@ ORLBKRESTART, ONLINE ROLLBACK restarted on instance iiii corresponding to rrrr
 MUPIP Information: MUPIP ROLLBACK -ONLINE is restarting on the instance iiii with replication journal pool rrrr
 
 Action: None required for this informational message
+
+------------
+ORLBKROLLED
+------------
+
+ORLBKROLLED, ONLINE ROLLBACK took the database for instance iiii region rrrr corresponding to dddd to a prior state
+
+MUPIP Warning: This message is issued to the system log when a `MUPIP JOURNAL ROLLBACK ONLINE <../AdminOpsGuide/ydbjournal.html#on-line>`_ takes the database back to an earlier state. iiii indicates the instance ID and rrrr indicates the region for the database file ffff.
+
+Action: Check the content of any broken or lost transaction files - this warning indicates a wholesome change in the database state, but one that may be inconsistent from an application perspective.
 
 --------------------
 ORLBKSTART
@@ -11604,7 +11648,7 @@ REORGUPCNFLCT, MUPIP AAAA encountered a conflict due to OOOO (PID:PPPP)
 
 MUPIP Error: MUPIP action AAAA encountered a conflict due to a concurrent operation OOOO run as process ID PPPP.
 
-Action: MUPIP operations REORG UPGRADE and ONLINE ROLLBACK cannot run concurrently due to conflicting database changes. REORG UPGRADE exits if an ONLINE ROLLBACK is in progress or if it detects that an ONLINE ROLLBACK has started. ONLINE ROLLBACK pauses while waiting for the REORG UPGRADE to exit. ONLINE ROLLBACK has priority over REORG UPGRADE.
+Action: MUPIP operations `REORG UPGRADE <../AdminOpsGuide/dbmgmt.html#upgrade>`_ and `ONLINE ROLLBACK <../AdminOpsGuide/ydbjournal.html#on-line>`_ cannot run concurrently due to conflicting database changes. REORG UPGRADE exits if an ROLLBACK ONLINE is in progress or if it detects that an ROLLBACK ONLINE has started. ONLINE ROLLBACK pauses while waiting for the REORG UPGRADE to exit. ONLINE ROLLBACK has priority over REORG UPGRADE.
 
 -------------
 REPL0BACKLOG
