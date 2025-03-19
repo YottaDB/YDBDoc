@@ -1617,8 +1617,19 @@ Example:
 
 .. code-block:: bash
 
-   YDB>SET from="B",to="^A(15)",x=""
-   YDB>FOR SET x=$O(@from@(x)) Q:x="" S @to@(x)=@from@(x)
+    YDB>SET from="B",to="^A(15)",x=""
+    YDB>set B(1)=1 ; Set some values for '@from@(x)' to reference later
+    YDB>set B(2)=2
+    YDB>set B(3)=3
+    YDB>zwrite ^A ;  Show that '@to@(x)', i.e. `^A(15)`, is empty
+    %YDB-E-GVUNDEF, Global variable undefined: ^A
+
+    YDB>FOR  SET x=$O(@from@(x)) Q:x=""  S @to@(x)=@from@(x) ; Set `^A(15)(x)` to match each value of `B(x)`
+
+    YDB>zwrite ^A ; Show that `^A(15)` was successfully updated using name indirection
+    ^A(15,1)=1
+    ^A(15,2)=2
+    ^A(15,3)=3
 
 This example uses name indirection to copy the level contents of a local array to a part of a global array. The example assumes that all existing first level nodes of variable B have data.
 
