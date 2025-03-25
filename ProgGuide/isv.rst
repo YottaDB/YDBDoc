@@ -1008,7 +1008,7 @@ When the integer byte value specified in a SET $ZMALLOCLIM=intexpr or by the env
 $ZMAXTPTIME
 ------------------
 
-$ZMAXTPTI[ME] contains an integer value indicating the time duration YottaDB should wait for the completion of all activities fenced by the current transaction's outermost TSTART/TCOMMIT pair.
+$ZMAXTPTI[ME] contains an integer value indicating the time duration, in seconds, YottaDB should wait for the completion of all activities fenced by the current transaction's outermost TSTART/TCOMMIT pair.
 
 $ZMAXTPTIME can be SET but cannot be NEWed.
 
