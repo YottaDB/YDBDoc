@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -14525,9 +14525,13 @@ TRANS2BIG
 
 TRANS2BIG, Transaction exceeded available buffer space for region rrrr
 
-Run Time Error: This indicates that a transaction updated more blocks than the global buffer could hold (half-2) for a particular region rrrr or accessed more than the single transaction limit of 64K blocks.
+Run Time Error: There are three possible causes for a TRANS2BIG error, which can result from an application coding error or an application design error.
 
-Action: Look for missing TCOMMIT commands; modify the code to reduce the total content or change content of the transaction. If the transaction is as intended and the issue is the number of updates, increase the GLOBAL_BUFFERS for the region using MUPIP SET, or modify the Global Directory to redistribute the relevant globals to more regions. If this occurs on a replicating instance it may indicate either a difference in configuration between the originating and replicating instances, which probably should be addressed, or a transaction that was borderline on the originating instance, but failed on the replicating instance because of difference in the database layout. In the later case, consider examining the application code to see if it's possible to reduce the size of the transaction, or alternatively increase the global buffers on both the instances.
+#. If a single transaction reads more than 64Ki blocks in region rrrr, regardless of `access method <../AdminOpsGuide/gde.html#ac-cess-method-code>`_.
+#. If region rrrr is using the BG access method, and a single transaction updates more than two less than half the number of global buffers in the region (e.g., if region rrrr has 10,000 global buffers, and a transaction updates more than 4,998 buffers, i.e,. more than 10000/2-2 buffers).
+#. If a single transaction updates more than 32,766 blocks in region rrrr, regardless of the number of global buffers in the region, regardless of access method.
+
+Action: Look for excessively long transactions, e.g., resulting from missing `TCOMMIT <../ProgrammersGuide/commands.html#tcommit>`_ commands in M code, or a failure to return to `ydb_tp_s() <../MultiLangProgGuide/cprogram.html#ydb-tp-s-ydb-tp-st>`_ or equivalent in other languages; modify the code to reduce the total content or change content of the transaction. If the transaction is as intended and the issue is the number of updates, increase the GLOBAL_BUFFERS for the region using `MUPIP SET <../AdminOpsGuide/dbmgmt.html#global-buffers>`_, or modify the Global Directory to redistribute the relevant globals to more regions. If this occurs on a replicating instance it may indicate either a difference in configuration between the originating and replicating instances, which probably should be addressed, or a transaction that was borderline on the originating instance, but failed on the replicating instance because of difference in the database layout. In the later case, consider examining the application code to see if it is possible to reduce the size of the transaction, or alternatively increase the global buffers on both the instances.
 
 ----------------
 TRANSMINUS
