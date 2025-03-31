@@ -856,6 +856,16 @@ Run Time Information: This indicates that YottaDB encountered a BREAK command wi
 Action: The ZSTEP command causes YottaDB to proceed to the beginning of the next line of M code that matches the characteristic specified by the ZSTEP argument. YottaDB compiles and executes all commands entered at the Direct Mode prompt as they are entered. To continue program execution, enter the ZCONTINUE command.
 
 ------------
+BSIZTOOLARGE
+------------
+
+BSIZTOOLARGE, bbbb Block larger than specified maximum size
+
+Run Time Information: `MUPIP INTEG <../AdminOpsGuide/dbmgmt.html#integ>`_ when passed one of IMAXBLOCKSIZE=n and/or DMAXBLOCKSIZE=m, reports that the size of block bbbb exceeds the specified size. The message indicates that a newly-imposed reserved bytes value has not propagated to blocks that have not since been affected by new updates, or that a fill_factor passed to `MUPIP REORG <../AdminOpsGuide/dbmgmt.html#reorg>`_ was imposed successfully on blocks that existed when the reorg took place but not on newly created blocks.
+
+Action: No action is necessary unless you intend to ensure that all blocks in the database meet a certain level of sparseness. If that is the case, run MUPIP REORG again with appropriate FILL_FACTOR or INDEX_FILL_FACTOR parameters.
+
+------------
 BTFAIL
 ------------
 
@@ -864,6 +874,16 @@ BTFAIL, The database block table is corrupt; error type xxxx
 Run Time Error: This indicates that a database operation failed because the tables of recently used blocks are damaged. YottaDB uses the block tables to control and optimize database traffic.
 
 Action: Report this database cache error to the group responsible for database integrity at your operation.
+
+-----------------
+BUFFSIZETOOSMALL
+-----------------
+
+BUFFSIZETOOSMALL, TCP xxxx buffer size passed to yyyy smaller than minimum size of zzzz.
+
+MUPIP Warning: This indicates that the value specified in  {SEND|RECV}BUFFSIZE option to a `MUPIP REPLICATE <../AdminOpsGuide/dbrepl.html#>`_ SOURCE/RECEIVER START as the desired send or receive TCP buffer size was smaller than YottaDB's minimum value, and that the minimum value was used instead. Note that if the buffer is initially larger than this minimum, YottaDB will not attempt to reduce its size.
+
+Action: No action necessary. Consider passing NO{SEND|RECV}BUFFSIZE to leave management of the buffer size to YottaDB and the operating system.
 
 -------------
 BUFFLUFAILED
@@ -4075,6 +4095,16 @@ EVENTLOGERR, Error in event logging subsystem
 Run Time Error: This indicates that the user is unable to access the event logging shared library or an event logging routine within the shared library.
 
 Action: Review accompanying messages for additional information.
+
+------------------
+EXCEEDRCTLRNDWN
+------------------
+
+EXCEEDRCTLRNDWN, Maximum relinkctl rundown retries limit of nnnn exceeded
+
+MUPIP Error: This indicates competing processes tried to rundown relinkctl more than nnnn times while another process was trying to connect to the relinkctl.
+
+Action: Consider a `MUPIP STOP <../AdminOpsGuide/dbmgmt.html#stop>`_ to one (or more) of the competing processes
 
 ------------------
 EXCEEDSPREALLOC
@@ -10791,6 +10821,16 @@ ORLBKSTART, ONLINE ROLLBACK started on instance iiii corresponding to dddd
 MUPIP Information: Issued by MUPIP ROLLBACK -ONLINE when it starts work on database file dddd on instance iiii.
 
 Action: None required.
+
+------------
+ORLBKROLLED
+------------
+
+ORLBKROLLED, ONLINE ROLLBACK took the database for instance iiii region rrrr corresponding to dddd to a prior state
+
+MUPIP Warning: This message is issued to the system log when a `MUPIP JOURNAL ROLLBACK ONLINE <../AdminOpsGuide/ydbjournal.html#on-line>`_ takes the database back to an earlier state. iiii indicates the instance ID and rrrr indicates the region for the database file ffff.
+
+Action: Check the content of any broken or lost transaction files - this warning indicates a wholesome change in the database state, but one that may be inconsistent from an application perspective.
 
 -------------------
 ORLBKTERMNTD
