@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
  ###############################################################
  #                                                             #
  # Copyright (c) 2024-2025 YottaDB LLC and/or its subsidiaries.#
@@ -29,16 +29,34 @@ ci/error_sync.py "$ydb" "$@" || exit 1
 
 # Check if every message documented in errors.rst is also documented with one error number
 # (or more error numbers in rare cases) in errormsgref.rst
-grep -A 1 '^---' MessageRecovery/errors.rst | grep '^[A-Z]' | grep -vwE "ILLEGALUSE|INVALIDGBL" > /tmp/err_errors.out
-grep '^| [0-9]' MessageRecovery/errormsgref.rst | sed 's/^| [0-9][0-9]* | //;s/,.*//g;' | sort -u > /tmp/err_errormsgref.out
-if ! diff /tmp/err_errors.out /tmp/err_errormsgref.out > err_diff.out; then
-	echo "FATAL: some error message documented with error numbers/more error numbers in errormsgref.rst"
-	echo "Please check diff output below (YDB errors on < left, YDBDoc errors on > right):"
-	cat err_diff.out
-	exit 1
-else
-	rm err_diff.out
+err_file=/tmp/err_errors-$$.out
+errmsg_file=/tmp/err_errormsgref-$$.out
+grep -A 1 '^---' MessageRecovery/errors.rst | grep '^[A-Z]' | grep -vwE "ILLEGALUSE|INVALIDGBL" > $err_file
+grep '^| [0-9]' MessageRecovery/errormsgref.rst | sed 's/^| [0-9][0-9]* | //;s/,.*//g;' > $errmsg_file
+# It is ok and normal for errormsgref.rst to have duplicate errors, since the messages can be slightly different but have the same code.
+# But it is not ok for errors.rst to have duplicate errors. Hence only using `-u` for one of the sort calls.
+if ! diff -c1 $err_file <(sort $err_file) > sorted_diff.out; then
+		echo "FATAL: some errors in errors.rst were not documented in alphabetical order, or possibly duplicated"
+		echo "Please check diff output below"
+		cat sorted_diff.out
+		exit 1
 fi
+if ! diff -c1 $err_file <(uniq $errmsg_file) > err_diff.out; then
+	if diff $err_file <(sort -u $errmsg_file) > sorted_diff.out; then
+		echo "FATAL: some error codes in errormsgref.rst were not documented in alphabetical order"
+		echo "Please check diff output below"
+		cat err_diff.out
+		rm sorted_diff.out
+	else
+		# Here as a backup check, but this should have already been caught by the python script.
+		echo "FATAL: mismatch between YDB errors and errormsgref.rst"
+		echo "Please check diff output below (undocumented YDB errors on < left, documentation for errors that do not exist on > right):"
+		cat sorted_diff.out
+		rm err_diff.out
+	fi
+	exit 1
+fi
+rm err_diff.out
 
 # Check if Every message number recorded in errormsgref.rst is accurate
 # (i.e. is aligned with the number in the YDB/sr_port/ydb*errors.h files in the YDB project
