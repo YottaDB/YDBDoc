@@ -138,7 +138,8 @@ def parse_ydb_msg_file(filename):
     """
     with open(filename) as fd:
         for i, line in enumerate(fd):
-            if match := re.match(YDB_MSG, line):
+            match = re.match(YDB_MSG, line)
+            if match:
                 name, desc = match.groups()
                 yield name, (f"{filename}:{i+1}", desc)
 
@@ -287,8 +288,8 @@ def normalize_docs(err, docs):
             docs = replace_and_inspect(docs, docstr, replace_exception)
 
     def replace(match):
-        if exclude := DOC_NOT_A_PLACEHOLDER.get(err):
-            if match.group(0) == exclude:
+        exclude = DOC_NOT_A_PLACEHOLDER.get(err)
+        if exclude and match.group(0) == exclude:
                 return exclude
         existing_placeholders[match.start()] = match.group(0)
         return PLACEHOLDER
@@ -376,7 +377,8 @@ def maybe_bless(corrections, failures, rst, bless, corrector):
             if skip:
                 skip -= 1
                 continue
-            if fix := corrections.get(i):
+            fix = corrections.get(i)
+            if fix:
                 skip = MULTILINE_MATCHES.get(rst, {}).get(i)
                 print(corrector(line, fix), file=tmp)
             else:
