@@ -1631,8 +1631,7 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "JNLFILE"        | region           | Journal file name associated with the region.                                                                                                                       |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "JNLPOOL"        | none             | Returns the replication instance file name for the current Journal Pool and an empty string when there is no Journal Pool. Specifying a second expression for       |
-|                  |                  | $VIEW("JNLPOOL") provides a means of iterating through active Journal Pools.                                                                                        |
+| "JNLPOOL"        | none             | Returns the replication instance file name for the current Journal Pool and an empty string when there is no Journal Pool.                                          |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "JNLTRANSACTION" | none             | Index showing how many ZTSTART transaction fences have been opened (and not closed).                                                                                |
 |                  |                  |                                                                                                                                                                     |
