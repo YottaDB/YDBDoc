@@ -218,7 +218,7 @@ The format of the V6 qualifier is:
 
    -[no]v6
 
-``-nov6`` creates r2.x format database files, overdiring the environment variable $ydb_db_create_ver.
+``-nov6`` creates r2.x format database files, overriding the environment variable $ydb_db_create_ver.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP CREATE
@@ -1297,6 +1297,7 @@ The format of the MUPIP REORG command is:
 
    REO[RG]
    [
+    -DOWNGRADE
     -ENCR[YPT]=key
     -E[XCLUDE]=global-name-list
     -FILE=file-name
@@ -1386,6 +1387,14 @@ This command produces an output like the following:
 Note that there are more and less dense index and data blocks used than in scenario 1. MUPIP REORG addresses such issues and makes the database (depending on the FILL_FACTOR) more compact.
 
 The optional qualifiers for MUPIP REORG are:
+
+.. _reorg-downgrade:
+
+~~~~~~~~~~~~
+-DOWNGRADE
+~~~~~~~~~~~~
+
+MUPIP REORG DOWNGRADE is deprecated, and not supported as of r2.00.
 
 .. _mupip-reorg-encrypt:
 
@@ -2196,7 +2205,7 @@ The format of the STOP command is:
 * A process that receives a MUPIP STOP signal terminates with exit code 241.
 
 .. note::
-   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row within one minute, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a :code:`kill -9` signal, except that the three MUPIP STOP signals might produce a core file. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances.
+   On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row within one minute, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a :code:`kill -9` signal, except that the three MUPIP STOP signals might produce a core file. This can result in structural database damage, because exiting a YottaDB process without cleaning up, i.e., one that has open database files, can potentially leave those files in an indeterminate state.
 
    In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Three MUPIP STOP signals received by a process but over a period of more than one minute will cause the process to shut down safely.
 
@@ -2510,7 +2519,7 @@ You have successfully changed the trigger name ValidateAccount to ValidateAcct.
 UPGRADE
 +++++++++
 
-Upgrades the fileheader of an r1.x (or GT.M V6.x) database file to a transitional r2.x format where the fileheader is upgraded, but the database blocks are not. This is the first stage in upgrading an r1.x database file to the r2.x format. This command must be run standalone and is relatively quick. The remainder of the upgrade is done by :ref:`MUPIP REORG UPGRADE <mupip-reorg-upgrade>` which can upgrade the remaining blocks upgrades concurrently with normal application operation.
+Upgrades the fileheader of an r1.x (or GT.M V6.x) database file to a transitional r2.x format where the fileheader is upgraded, but the database blocks are not. This is the first stage in upgrading an r1.x database file to the r2.x format. This command must be run standalone and is relatively quick. The remainder of the upgrade is done by :ref:`MUPIP REORG UPGRADE <mupip-reorg-upgrade>` upgrades the remaining blocks concurrent with normal application operation.
 
 The format of the MUPIP UPGRADE command is:
 
