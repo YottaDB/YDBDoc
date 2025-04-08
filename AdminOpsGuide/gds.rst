@@ -76,7 +76,8 @@ The file header data elements are listed as follows in alphabetical order for ea
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Cache freeze id                    | The process identification number (PID) of a process which has suspended updates to the segment.                                                              |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Certified for Upgrade to           | This field is V6, V7m, or V7.                                                                                                                                 |
+| Certified for Upgrade to           | This field is V6, V7m, or V7. V6 is the YottaDB r1.x database format, and V7 is the YottaDB r2.x database format. V7m indicates a V6 database file            |
+|                                    | in an intermediate state: :ref:`mupip-upgrade` has been run, but :ref:`mupip-reorg-upgrade` has not yet been fully run.                                       |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Create in progress                 | Create in progress is TRUE only during the MUPIP CREATE operation. The normal value is FALSE.                                                                 |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+

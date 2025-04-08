@@ -210,7 +210,7 @@ The format of the NEWJNLFILES qualifier is:
 
 * The default is NEWJNLFILES=PREVLINK, with the current values of SYNC_IO for each region retained by the new journal files.
 
-,, _mupip-backup-online:
+.. _mupip-backup-online:
 
 ^^^^^^^^
 -Online

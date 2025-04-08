@@ -284,17 +284,15 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
   > [!note]
   > The GT.M enhancement allowed extensions other than `.m`. YottaDB further enhanced the compiler to allow filenames with no extension.
 
-* The following YottaDB release note is adapted from the GT.M release note. YottaDB does not inplement the EXTENDED_BOOLEAN setting of [$ydb_boolean](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-boolean) / \$gtm\_boolean, as we could not find any cases where EXTENDED\_BOOLEAN gave different results from FULL\_BOOLEAN.
-
-  * <a name="GTM-DE506257"></a>GT.M appropriately evaluates subscripts containing or depending on side effects in lock resource and global variable names. Previously, due to shifting of evaluations to avoid unnecessary global access while appropriately maintaining $REFERENCE, rare constructs with such subscripts could produce out-of-order side effects. [GTM-DE506257](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE506257)
-
 * <a name="GTM-DE507982"></a>YottaDB produces an appropriate result from an equality test between zero (0) and a multiplicand of zero value that is the result of multiplying a non-integer value with zero (0). Previously, this odd combination could inappropriately indicate inequality. [GTM-DE507982](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE507982)
 
 * <a name="GTM-DE508852"></a>YottaDB appropriately reports a [NUMOFLOW](https://docs.yottadb.com/MessageRecovery/errors.html#numoflow) error for literal values when those literals are operated on at compile-time and the run-time variable equivalent would trigger the same error. This affects the unaryoperators \', +, and -. The effect of these operators on variables is unchanged. Previously, these operators sometimes did not correctly report a NUMOFLOW when called for. In the case of the negation operator, this could lead to reporting an incorrect result. [GTM-DE508852](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE508852)
 
 * <a name="GTM-DE510902"></a>YottaDB prevents compile-time errors in operations on literals within an [XECUTE](https://docs.yottadb.com/ProgrammersGuide/commands.html#xecute) block from terminating the XECUTE without properly cleaning up the surrounding compilation environment. Previously, this could cause termination of compilation of the routine containing the XECUTE and failure to compile subsequent routines passed to the same YottaDB process [GTM-DE510902](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE510902)
 
-* <a name="GTM-DE511969"></a>The Direct Mode [RECALL](https://docs.yottadb.com/ProgrammersGuide/opdebug.html#command-recall) command functions as documented; starting in r2.02 it always gave an error. [GTM-DE511969](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE511969)
+* As the following defect in the GT.M code base was found and fixed by the YottaDB team when merging the V7.0-002 code base, the following was never an issue in YottaDB and appears here for completeness.
+
+  * <a name="GTM-DE511969"></a>The Direct Mode [RECALL](https://docs.yottadb.com/ProgrammersGuide/opdebug.html#command-recall) command functions as documented; starting in V7.0-002 it always gave an error. [GTM-DE511969](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE511969)
 
   > [!note]
   > For a more powerful direct mode, YottaDB recommends setting [$ydb_readline](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-readline) to use [GNU Readline](https://www.gnu.org/software/readline/).
@@ -332,7 +330,7 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
 
   The r1.x to r2.x database upgrade process is split into two phases intended to reduce the downtime necessary for a database upgrade. This process is considerably faster and consumes less disk space than a traditional extract, transfer and load cycle. Please refer to [Upgrading to YottaDB r2.04](releases#releases#upgrading-to-yottadb-r204) for more details. [GTM-F135427](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-F135427)
 
-* <a name="GTM-F225097"></a>[MUPIP REORG UPGRADE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#upgrade), which completes the second phase of an r1.x (V6) to r2.x (V7) database transition, can run concurrently with other processing excepting other MUPIP REORG UPGRADE processes. MUPIP REORG UPGRADE can work either by region or by file allowing administrator to run concurrent upgrade operations on different regions/files. MUPIP DOWNGRADE -VERSION=V63000A allows the current YottaDB to downgrade a V6 database to the pre-V63000A EOF block format. Previously the downgrade function reported an unsupported error for a V7 versions. [GTM-F225097](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-F225097)
+* <a name="GTM-F225097"></a>[MUPIP REORG UPGRADE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#upgrade), which completes the second phase of an r1.x (V6) to r2.x (V7) database transition, can run concurrently with other processing excepting other MUPIP REORG UPGRADE processes. MUPIP REORG UPGRADE can work either by region or by file allowing administrator to run concurrent upgrade operations on different regions/files. MUPIP DOWNGRADE -VERSION=V63000A allows the current YottaDB to downgrade a V6 database to the pre-V63000A EOF block format. Previously the downgrade function reported an unsupported error for V7 versions. [GTM-F225097](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-F225097)
 
 ### Other
 
@@ -410,7 +408,7 @@ Action: No action is required, unless there is a subsequent REQRUNDOWN or REQRLN
 
 MUPIP Error: MUPIP action AAAA encountered a conflict due to a concurrent operation OOOO run as process ID PPPP.
 
-Action: MUPIP operations [REORG UPGRADE ](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#upgrade) and [ONLINE ROLLBACK ](https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#on-line) cannot run concurrently due to conflicting database changes. REORG UPGRADE exits if an ROLLBACK ONLINE is in progress or if it detects that an ROLLBACK ONLINE has started. ONLINE ROLLBACK pauses while waiting for the REORG UPGRADE to exit. ONLINE ROLLBACK has priority over REORG UPGRADE.
+Action: MUPIP operations [REORG UPGRADE ](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#upgrade) and [ONLINE ROLLBACK ](https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#on-line) cannot run concurrently due to conflicting database changes. REORG UPGRADE exits if an ONLINE ROLLBACK is in progress or if it detects that an ONLINE ROLLBACK has started. ONLINE ROLLBACK pauses while waiting for the REORG UPGRADE to exit. ONLINE ROLLBACK has priority over REORG UPGRADE.
 
 ### Revised Messages
 

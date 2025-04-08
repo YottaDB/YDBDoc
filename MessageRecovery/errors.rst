@@ -861,7 +861,7 @@ BSIZTOOLARGE
 
 BSIZTOOLARGE, bbbb Block larger than specified maximum size
 
-Run Time Information: `MUPIP INTEG <../AdminOpsGuide/dbmgmt.html#integ>`_ when passed one of IMAXBLOCKSIZE=n and/or DMAXBLOCKSIZE=m, reports that the size of block bbbb exceeds the specified size. The message indicates that a newly-imposed reserved bytes value has not propagated to blocks that have not since been affected by new updates, or that a fill_factor passed to `MUPIP REORG <../AdminOpsGuide/dbmgmt.html#reorg>`_ was imposed successfully on blocks that existed when the reorg took place but not on newly created blocks.
+MUPIP Error: `MUPIP INTEG <../AdminOpsGuide/dbmgmt.html#integ>`_ when passed one of IMAXBLOCKSIZE=n and/or DMAXBLOCKSIZE=m, reports that the size of block bbbb exceeds the specified size. The message indicates that a newly-imposed reserved bytes value has not propagated to blocks that have not since been affected by new updates, or that a fill_factor passed to `MUPIP REORG <../AdminOpsGuide/dbmgmt.html#reorg>`_ was imposed successfully on blocks that existed when the reorg took place but not on newly created blocks.
 
 Action: No action is necessary unless you intend to ensure that all blocks in the database meet a certain level of sparseness. If that is the case, run MUPIP REORG again with appropriate FILL_FACTOR or INDEX_FILL_FACTOR parameters.
 
@@ -2418,7 +2418,7 @@ DBFLCORRP, xxxx Header indicates database file is corrupt
 
 Run Time/MUPIP Error: This indicates that a database operation tried to activate database file xxxx, which was previously marked as damaged.
 
-Action: If ROLLBACK (either -NOONLINE or -ONLINE) terminates abnormally (say because of a kill -9), it leaves the database in a potentially inconsistent state indicated by the FILE corrupt field in the database file header. When an ROLLBACK terminates leaving this field set, all other processes receive DBFLCORRP errors any time they attempt to interact with the database. The best way to clear DBFLCORRP is by running another ROLLBACK. MUPIP SET -FILE -PARTIAL_RECOV_BYPASS and DSE CHANGE -FILE -CORRUPT=FALSE -NOCRIT can also clear this condition, but these commands do not ensure that the database has a consistent state, so you should always run MUPIP INTEG after executing these commands.
+Action: If ROLLBACK (either -NOONLINE or -ONLINE) terminates abnormally (say because of a kill -9), it leaves the database in a potentially inconsistent state indicated by the FILE corrupt field in the database file header. When a ROLLBACK terminates leaving this field set, all other processes receive DBFLCORRP errors any time they attempt to interact with the database. The best way to clear DBFLCORRP is by running another ROLLBACK. MUPIP SET -FILE -PARTIAL_RECOV_BYPASS and DSE CHANGE -FILE -CORRUPT=FALSE -NOCRIT can also clear this condition, but these commands do not ensure that the database has a consistent state, so you should always run MUPIP INTEG after executing these commands.
 
 ------------------
 DBFREEZEOFF
@@ -11648,7 +11648,7 @@ REORGUPCNFLCT, MUPIP AAAA encountered a conflict due to OOOO (PID:PPPP)
 
 MUPIP Error: MUPIP action AAAA encountered a conflict due to a concurrent operation OOOO run as process ID PPPP.
 
-Action: MUPIP operations `REORG UPGRADE <../AdminOpsGuide/dbmgmt.html#upgrade>`_ and `ONLINE ROLLBACK <../AdminOpsGuide/ydbjournal.html#on-line>`_ cannot run concurrently due to conflicting database changes. REORG UPGRADE exits if an ROLLBACK ONLINE is in progress or if it detects that an ROLLBACK ONLINE has started. ONLINE ROLLBACK pauses while waiting for the REORG UPGRADE to exit. ONLINE ROLLBACK has priority over REORG UPGRADE.
+Action: MUPIP operations `REORG UPGRADE <../AdminOpsGuide/dbmgmt.html#upgrade>`_ and `ONLINE ROLLBACK <../AdminOpsGuide/ydbjournal.html#on-line>`_ cannot run concurrently due to conflicting database changes. REORG UPGRADE exits if a ROLLBACK ONLINE is in progress or if it detects that a ROLLBACK ONLINE has started. ONLINE ROLLBACK pauses while waiting for the REORG UPGRADE to exit. ONLINE ROLLBACK has priority over REORG UPGRADE.
 
 -------------
 REPL0BACKLOG
