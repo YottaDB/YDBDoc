@@ -2844,14 +2844,14 @@ To shutdown an originating instance:
 * Shut down all YottaDB and mupip processes that might be attached to the Journal Pool.
 * In case the originating instance is also a supplementary instance, shutdown the Receiver Server(s) (there might be more than one Receiver Server in future YottaDB versions).
 * Shut down all active and/or passive Source Servers.
-* Execute mupip rundown -region to ensure that the database, Journal Pool, and Receiver Pool shared memory is rundown properly.
+* Execute mupip rundown -region to ensure that the database, Journal Pool, and Receive pool shared memory is rundown properly.
 
 To shutdown a propagating instance:
 
 * Shut down all replicating instance servers (Receiver Server, Update Process and its Helper processes).
 * Shutdown the originating instance servers (all active and/or passive Source Servers).
 * On its replicating instances, ensure that there are no YottaDB or MUPIP processes attached to the Journal Pool as updates are disabled (they are enabled only on the originating instance).
-* Execute mupip rundown -region to ensure that the database, Journal Pool, and Receiver Pool shared memory is rundown properly.
+* Execute mupip rundown -region to ensure that the database, Journal Pool, and Receive pool shared memory is rundown properly.
 
 .. _create-new-repl-inst-file:
 
@@ -3741,7 +3741,7 @@ Journal Pool Setup Qualifiers
 
 On the Source Server, BUFFSIZE specifies the size of the Journal Pool. The server rounds the size up or down to align with other specified or implicit requirements. Any size less than 1 MiB is rounded up to 1 MiB. If BUFFSIZE is not specified, MUPIP defaults the Journal Pool size to 64 MiB. Remember that you cannot exceed the system-provided maximum shared memory. For systems with high update rates, specify a larger buffer size to avoid the overflows and file I/O that occur when the Source Server reads journal records from journal files. The maximum value is 68719476736 (64GiB). The first Source Server process started on an instance sets up the Journal Pool. MUPIP REPLICATE SOURCE ignores BUFFSIZE if the Journal Pool is already set up.
 
-On the Receiver Server, BUFFSIZE specifies the size of the Receiver Pool. For applications having periodic spikes in the replication volume, YottaDB recommends having a larger Receiver Pool. The Receiver Pool is a memory structure that temporarily holds updates coming from the Source Server. The Update Process transfers these updates to permanent storage so that they can become accessible by YottaDB processes. As long as the Update Process is alive and running, it is safe to assume that updates in the Receiver Pool will eventually get transferred to permanent storage even if a network failure happens between the Source and Receiver Servers. The Receiver Pool becomes full when the speed of applying updates by the Update Process is slower than the speed of receiving updates from the Source Server. When the Receiver Pool becomes full, the Receiver Server will not accept more updates from the Source Server which increases the backlog on the Source Server. Therefore, a larger size Receiver Pool delays this condition and helps cushion the impact of periodic spikes in replication volumes.
+On the Receiver Server, BUFFSIZE specifies the size of the Receive pool. For applications having periodic spikes in the replication volume, YottaDB recommends having a larger Receive pool. The Receive pool is a memory structure that temporarily holds updates coming from the Source Server. The Update Process transfers these updates to permanent storage so that they can become accessible by YottaDB processes. As long as the Update Process is alive and running, it is safe to assume that updates in the Receive pool will eventually get transferred to permanent storage even if a network failure happens between the Source and Receiver Servers. The Receive pool becomes full when the speed of applying updates by the Update Process is slower than the speed of receiving updates from the Source Server. When the Receive pool becomes full, the Receiver Server will not accept more updates from the Source Server which increases the backlog on the Source Server. Therefore, a larger size Receive pool delays this condition and helps cushion the impact of periodic spikes in replication volumes.
 
 .. note::
 
@@ -4318,7 +4318,7 @@ Reports four fields that help determine the backlog of updates on the Source Ser
 
 #. Last JNL_SEQNO acknowledged by the Receiver Server
 
-The backlog is the difference between the second and third fields. When backlog is 0 and the remaining three fields have the same value, it means that all Source Server updates have reached the Receiver Pool and there are no in-flight updates.
+The backlog is the difference between the second and third fields. When backlog is 0 and the remaining three fields have the same value, it means that all Source Server updates have reached the Receive pool and there are no in-flight updates.
 
 In the WAS_ON state, SHOWBACKLOG reports the backlog information even if the Source Server is shut down.
 
@@ -4452,7 +4452,7 @@ The square brackets [] denote an optional qualifier group. The optional and mand
 |                                                                   |                                                                                   |
 |                                                                   | `-stopsourcefilter <#stopsourcefilter>`_                                          |
 +-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
-| Receive Pool Setup Qualifiers                                     | `-buffsize=<Receiver Pool size in bytes> <#buffsize-journal-pool-size-in-bytes>`_ |
+| Receive Pool Setup Qualifiers                                     | `-buffsize=<Receive pool size in bytes> <#buffsize-journal-pool-size-in-bytes>`_  |
 +-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
 | :ref:`si-repl-qual`                                               | [-initialize]                                                                     |
 |                                                                   |                                                                                   |
