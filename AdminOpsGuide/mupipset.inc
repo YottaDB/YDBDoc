@@ -389,7 +389,7 @@ Specifies the approximate number of records a block in the region must exceed be
 
    -PRO[BLKSPLIT]=integer
 
-  * Proactive consideration occurs when a mini-transaction retries updating an data block more than once due to contention.
+  * Proactive consideration occurs when a mini-transaction retries updating a data block more than once due to contention.
   * YottaDB never performs proactive block splitting inside a TP transaction.
   * Proactive block splits tend to make globals require more blocks and potentially deeper trees.
   * A value of one (1) instructs YottaDB to always consider proactive splits, which might be useful for regions used to hold globals with a first subscript of, for example, `$JOB <../ProgrammersGuide/isv.html#job>`_.
