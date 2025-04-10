@@ -3968,6 +3968,37 @@ Example:
    YDB>
 
 -----------------
+$ZYCOmpile()
+-----------------
+
+Verifies whether or not a string is syntactically correct M code.
+
+.. code-block:: none
+
+   $ZYCOMPILE(string)
+
+The string argument is the string whose syntax is to be checked. If the string is syntactically correct M code, the function returns an empty string. If there is an error, the function returns a comma-separated string in the format POS, YDB_ERROR, Error:
+
+* POS - the position in the line where the parsing found an error and stopped. The first character position in the line is zero (0).
+* YDB_ERROR - a YottaDB standard error code mnemonic.
+* Error - text description of the error.
+
+While $ZYCOMPILE() is functionally similar to the utility function :ref:`zmvalid-util`, the former was intrinsically found to be thousands of times faster, and also does not generate any ``.m`` or ``.o`` files.
+ 
+++++++++++++++++++++++++
+Examples of $ZYCOMPILE()
+++++++++++++++++++++++++
+
+
+.. code-block:: none
+
+   YDB>set x="label(a,b) set y=$char(5)" write $zycompile(x) ; valid syntax returns an empty string
+
+   YDB>set x="label(a,b set y=$char(5)" write $zycompile(x)  ; string with error returns first error found
+   10,%YDB-E-COMMAORRPAREXP,Comma or right parenthesis expected but not found
+   YDB>
+
+-----------------
 $ZYHASH()
 -----------------
 
