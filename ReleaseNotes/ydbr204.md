@@ -139,11 +139,14 @@ If you wish to use a database file created or used by r2.04 on a prior release o
 
 YottaDB r2.04 includes the following enhancements and fixes beyond YottaDB [r2.02](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.02).
 
-| ID               | Category  | Summary                                                                        |
-|------------------|-----------|--------------------------------------------------------------------------------|
-| ([1056](#x1056)) | Languages | Pre-allocation for call-out (IO, not just O) string parameters                 |
-| ([1112](#x1112)) | Other     | No GTMSECSHRSRVF and CRITSEMFAIL errors from ydb_env_set in certain rare cases |
-|                  |           |                                                                                |
+| ID               | Category  | Summary                                                                                           |
+|------------------|-----------|---------------------------------------------------------------------------------------------------|
+| ([873](#x873))   | Languages | ZSHOW "V" able to display variables at a specific stack levels                                    |
+| ([1056](#x1056)) | Languages | Pre-allocation for call-out (IO, not just O) string parameters                                    |
+| ([1112](#x1112)) | Other     | No GTMSECSHRSRVF and CRITSEMFAIL errors from ydb_env_set in certain rare cases                    |
+| ([1133](#x1133)) | Languages | `-machine` compilation option                                                                     |
+| ([1138](#x1138)) | Languages | $ZYCOMPILE() intrinsic function checks whether a string is a syntactically correct line of M code |
+|                  |           |                                                                                                   |
 
 <a name="gtmv71000"></a>
 ### GT.M V7.1-000
@@ -174,6 +177,27 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 
 ### Languages
 
+* <a name="x873"></a>The [ZSHOW Information Code](https://docs.yottadb.com/ProgrammersGuide/commands.html#zshow-information-codes) "V" can take an optional additional \<intexp> parameter to specify the stack level (corresponding to [$STACK](https://docs.yottadb.com/ProgrammersGuide/isv.html#stack)) for which the command is to output local variables. A value of -1 is an alias for $STACK. A negative value for the parameter, or one greater than the current value of $STACK raises a [STACKRANGE](https://docs.yottadb.com/MessageRecovery/errors.html#stackrange) error.
+
+  ```
+  YDB>zshow "v"::2
+  a="The quick brown fox"
+  c="jumps over the lazy dog"
+
+  YDB>zshow "v"
+  a=1
+  b=2
+  c="jumps over the lazy dog"
+
+  YDB>set n=2  zshow "v":d:n  zwrite d
+  d("V",1)="a=""The quick brown fox"""
+  d("V",2)="c=""jumps over the lazy dog"""
+
+  YDB>
+  ```
+
+  If the information codes of a ZSHOW command with a stack specification do not include "V", the stack specification is silently ignored. Other ZSHOW information codes ignore the stack specification, e.g., ZSHOW "vs"::2 (assuming $STACK>2) displays the local variables for $STACK level 2, as well as the current M stack. [#873](https://gitlab.com/YottaDB/DB/YDB/-/issues/873)
+
 * <a name="x1056"></a>A pre-allocation size may be specified for input-output (IO) string parameters in the [external call-out table](https://docs.yottadb.com/ProgrammersGuide/extrout.html#using-external-calls-call-outs), e.g. `IO:ydb_buffer_t*[100]`. Pre-allocation for `ydb_char_t *`, `ydb_string_t *`, and `ydb_buffer_t *` types was previously available for output (O) parameters but with this enhancement may also be specified for input-output (IO) parameters. Previously, an external function could only populate IO parameter strings up to the size of the input string. With pre-allocation, a maximum size may optionally be specified in the external call table to allocate more return space than the input string size. Note that IO `ydb_char_t*` and `ydb_string_t*` parameters do not allow querying the pre-allocation size at runtime; For robust applications, we recommend using `ydb_buffer_t*` for external call-outs.
 
   - Pre-allocation for non-string parameters in the external call-out table produces a [ZCPREALLVALSTR](https://docs.yottadb.com/MessageRecovery/errors.html#zcpreallvalstr) error. Previously, specifying a pre-allocation size for non-string parameters was silently ignored by YDB. Note that specifying the allocated space for non-string parameters is meaningless, as sizes are determined by the platform.
@@ -184,7 +208,19 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-000](http://ti
 
   See [Using External Calls: Call-Outs](https://docs.yottadb.com/ProgrammersGuide/extrout.html#using-external-calls-call-outs) for more detail about how pre-allocated IO parameters are represented in C. [#1056](https://gitlab.com/YottaDB/DB/YDB/-/issues/1056)
 
-* <a name="GTM-DE340906"></a>YottaDB appropriately handles a command with multiple (more than 255) LOCKs with the same name. Previously, a YottaDB command that created more than 255 LOCKs with the same name caused a segmentation violation (SIG-11). [GTM-DE340906](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE340906)
+* <a name="x1133"></a>YottaDB compilation supports a `-machine` flag (see [Qualifiers for the yottadb command](https://docs.yottadb.com/ProgrammersGuide/devcycle.html#qualifiers-for-the-yottadb-command)) which produces a listing that shows the generated assembly code for each line of source code. Specifying `-machine` automatically turns on the [-list](https://docs.yottadb.com/ProgrammersGuide/devcycle.html#no-li-st-filename) option if the latter is not explicitly specified. [#1133](https://gitlab.com/YottaDB/DB/YDB/-/issues/1133)
+
+* <a name="x1138"></a>The function $ZYCOMPILE(str) verifies whether or not `str` is valid M code. An empty string is returned if `str` is syntactically valid M code; otherwise a string of the form `POS,YDB_ERROR,Error` is returned where
+
+  * POS - is the position in the line where parsing stopped
+  * YDB_ERROR - YottaDB Standard Error Code Mnemonic
+  * Error - Error description
+
+  See [Examples](https://gitlab.com/YottaDB/DB/YDB/-/merge_requests/1656#examples-of-zycompile) for example usages.
+
+  Note that the intrinsic function is very similar to the M Utility Function [$$^%ZMVALID()](https://docs.yottadb.com/ProgrammersGuide/utility.html#zmvalid) but the intrinsic function is a lot faster (in an experiment it was found to be 100,000 times faster) and does not create any `.m` and `.o` files. [#1138](https://gitlab.com/YottaDB/DB/YDB/-/issues/1138)
+
+* <a name="GTM-DE340906"></a>YottaDB appropriately handles a command with multiple (more than 255) [LOCKs](https://docs.yottadb.com/ProgrammersGuide/commands.html#lock) with the same name. Previously, a YottaDB command that created more than 255 LOCKs with the same name caused a segmentation violation (SIG-11). [GTM-DE340906](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE340906)
 
 * <a name="GTM-DE340950"></a>An attempt by a process to incrementally LOCK the same resource name more than 511 times produces a [LOCKINCR2HIGH](https://docs.yottadb.com/MessageRecovery/errors.html#lockincr2high) with accurate context. Previously LOCK processing did not appropriately detect the limit or supply correct context. [GTM-DE340950](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE340950)
 
