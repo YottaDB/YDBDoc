@@ -10,7 +10,6 @@
 #       the license, please stop and do not read further.       #
 #                                                               #
 #################################################################
-
 set -e
 
 # The master branch represents the latest *published* release of YDB.
@@ -37,6 +36,17 @@ if ! git merge-base --is-ancestor upstream/$YDBDOC_DEV_BRANCH HEAD; then
 		# If we reach here, it means HEAD is NOT based off the YDBDoc master branch either.
 		echo "ERROR: HEAD should be based off [$YDBDOC_DEV_BRANCH] or [master] branch."
 		echo "ERROR: This script will not work correctly until the situation is fixed."
+		master_commits="$(git log --oneline upstream/master...HEAD | wc -l)"
+		dev_commits="$(git log --oneline upstream/$YDBDOC_DEV_BRANCH...HEAD | wc -l)"
+		if [ "$master_commits" -le "$dev_commits" ]; then
+			merge_base=$(git merge-base upstream/master HEAD)
+			echo -n "NOTE: HEAD is based off an old version [$merge_base] of [master]. "
+			echo "Consider rebasing: 'git rebase upstream/master'"
+		else
+			merge_base=$(git merge-base upstream/$YDBDOC_DEV_BRANCH HEAD)
+			echo -n "NOTE: HEAD is based off an old version [$merge_base] of [$YDBDOC_DEV_BRANCH]. "
+			echo "Consider rebasing: 'git rebase upstream/$YDBDOC_DEV_BRANCH'"
+		fi
 		exit 1
 	fi >&2
 fi
