@@ -1632,7 +1632,19 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "JNLFILE"        | region           | Journal file name associated with the region.                                                                                                                       |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "JNLPOOL"        | none             | Returns the replication instance file name for the current Journal Pool and an empty string when there is no Journal Pool.                                          |
+| "JNLPOOL"        | replication      | Returns the replication instance file name for the current Journal Pool and an empty string when there is no Journal Pool. Specifying a second expression for       |
+|                  | instance file    | $VIEW("JNLPOOL") provides a means of iterating through active Journal Pools. If the second expression is an empty string, the function returns the replication      |
+|                  |                  | instance file name associated with the instance first attached by the process or, if the process has not previously engaged with any instance, the string "\*".     |
+|                  |                  | If the file name specified in the second expression does not match the replication instance file name for any of the active Journal Pools the function returns      |
+|                  |                  | the string "\*". Otherwise, the function returns the file name of the Journal Pool attached after the Journal Pool with the specified file name. Note:              |
+|                  |                  |                                                                                                                                                                     |
+|                  |                  | * The two argument form of $VIEW("JNLPOOL") does not change the current Replication Instance.                                                                       |
+|                  |                  |                                                                                                                                                                     |
+|                  |                  | * The current Journal Pool may not be associated with the last global accessed by an extended reference.                                                            |
+|                  |                  |                                                                                                                                                                     |
+|                  |                  | * Updating the database of another replication instance using an extended global reference will change the active journal pool to that instance and                 |
+|                  |                  |   $VIEW("JNLPOOL") with no second argument will return the replication file of that instance, while the active global directory will remain unchanged.              |
+|                  |                  |                                                                                                                                                                     |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "JNLTRANSACTION" | none             | Index showing how many ZTSTART transaction fences have been opened (and not closed).                                                                                |
 |                  |                  |                                                                                                                                                                     |
@@ -3984,7 +3996,7 @@ The string argument is the string whose syntax is to be checked. If the string i
 * Error - text description of the error.
 
 While $ZYCOMPILE() is functionally similar to the utility function :ref:`zmvalid-util`, the former was intrinsically found to be thousands of times faster, and also does not generate any ``.m`` or ``.o`` files.
- 
+
 ++++++++++++++++++++++++
 Examples of $ZYCOMPILE()
 ++++++++++++++++++++++++
