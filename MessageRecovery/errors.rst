@@ -875,16 +875,6 @@ Run Time Error: This indicates that a database operation failed because the tabl
 
 Action: Report this database cache error to the group responsible for database integrity at your operation.
 
------------------
-BUFFSIZETOOSMALL
------------------
-
-BUFFSIZETOOSMALL, TCP xxxx buffer size passed to yyyy smaller than minimum size of zzzz.
-
-MUPIP Warning: This indicates that the value specified in  {SEND|RECV}BUFFSIZE option to a `MUPIP REPLICATE <../AdminOpsGuide/dbrepl.html#>`_ SOURCE/RECEIVER START as the desired send or receive TCP buffer size was smaller than YottaDB's minimum value, and that the minimum value was used instead. Note that if the buffer is initially larger than this minimum, YottaDB will not attempt to reduce its size.
-
-Action: No action necessary. Consider passing NO{SEND|RECV}BUFFSIZE to leave management of the buffer size to YottaDB and the operating system.
-
 -------------
 BUFFLUFAILED
 -------------
@@ -894,6 +884,16 @@ BUFFLUFAILED, Error flushing buffers from uuuu for database file dddd
 DSE/MUPIP Error: MUPIP or DSE (uuuu) could not flush the buffers for database file dddd completely. In the case of MUPIP, this typically means that some process is not releasing the critical section. In the case of DSE, this typically means there is some error in the global buffer cache which needs to be fixed.
 
 Action: In the case of MUPIP, wait approximately 20 seconds and retry. In the case of DSE, try DSE CACHE RECOVER to fix the cache. If the error persists, report it to the group responsible for database integrity at your operation as soon as possible.
+
+-----------------
+BUFFSIZETOOSMALL
+-----------------
+
+BUFFSIZETOOSMALL, TCP xxxx buffer size passed to yyyy smaller than minimum size of zzzz.
+
+MUPIP Warning: This indicates that the value specified in  {SEND|RECV}BUFFSIZE option to a `MUPIP REPLICATE <../AdminOpsGuide/dbrepl.html#>`_ SOURCE/RECEIVER START as the desired send or receive TCP buffer size was smaller than YottaDB's minimum value, and that the minimum value was used instead. Note that if the buffer is initially larger than this minimum, YottaDB will not attempt to reduce its size.
+
+Action: No action necessary. Consider passing NO{SEND|RECV}BUFFSIZE to leave management of the buffer size to YottaDB and the operating system.
 
 ---------------
 BUFOWNERSTUCK
@@ -10125,7 +10125,7 @@ Action: The NOPRINCIO error message is FATAL which does not drive device or trap
 NORECVPOOL
 --------------------
 
-NORECVPOOL, No receiver pool info found in the replication instance of xxxx
+NORECVPOOL, No receive pool info found in the replication instance of xxxx
 
 Run Time/MUPIP Error: This indicates that YottaDB/MUPIP did not get replication information from the instance file specified. The replication instance file was not initialized because the receiver server did not start, or some other process reset the replication instance file.
 
@@ -10812,16 +10812,6 @@ MUPIP Information: MUPIP ROLLBACK -ONLINE is restarting on the instance iiii wit
 
 Action: None required for this informational message
 
---------------------
-ORLBKSTART
---------------------
-
-ORLBKSTART, ONLINE ROLLBACK started on instance iiii corresponding to dddd
-
-MUPIP Information: Issued by MUPIP ROLLBACK -ONLINE when it starts work on database file dddd on instance iiii.
-
-Action: None required.
-
 ------------
 ORLBKROLLED
 ------------
@@ -10831,6 +10821,16 @@ ORLBKROLLED, ONLINE ROLLBACK took the database for instance iiii region rrrr cor
 MUPIP Warning: This message is issued to the system log when a `MUPIP JOURNAL ROLLBACK ONLINE <../AdminOpsGuide/ydbjournal.html#on-line>`_ takes the database back to an earlier state. iiii indicates the instance ID and rrrr indicates the region for the database file ffff.
 
 Action: Check the content of any broken or lost transaction files - this warning indicates a wholesome change in the database state, but one that may be inconsistent from an application perspective.
+
+--------------------
+ORLBKSTART
+--------------------
+
+ORLBKSTART, ONLINE ROLLBACK started on instance iiii corresponding to dddd
+
+MUPIP Information: Issued by MUPIP ROLLBACK -ONLINE when it starts work on database file dddd on instance iiii.
+
+Action: None required.
 
 -------------------
 ORLBKTERMNTD
