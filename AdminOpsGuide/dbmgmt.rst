@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -940,7 +940,7 @@ This command unfreezes the DEFAULT region even if the freeze was set by a proces
 FTOK
 +++++++++
 
-Produces the "public" (system generated) IPC Keys (essentially hash values) of a given file-list or the journal/receiver pool in a table form.
+Produces the "public" (system generated) IPC Keys (essentially hash values) of a given file-list or the journal/receive pool in a table form.
 
 The format of the MUPIP FTOK command is:
 
