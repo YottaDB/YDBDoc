@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -50,7 +50,7 @@ Your monitoring should recognize important events in real time, and warning even
 Some message identifiers are described in the following table:
 
 +-----------------------------+------------------------------------------------------+--------------------------------------+---------------------------+
-| Component                   | Instance File or Replication Journal Pool            | Receiver Pool                        | Identifier                |
+| Component                   | Instance File or Replication Journal Pool            | Receive Pool                         | Identifier                |
 +=============================+======================================================+======================================+===========================+
 | Source Server               | Y                                                    | N/A                                  | SRCSRVR                   |
 |                             |                                                      |                                      |                           |

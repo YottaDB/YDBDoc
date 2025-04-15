@@ -2840,14 +2840,14 @@ To shutdown an originating instance:
 * Shut down all YottaDB and mupip processes that might be attached to the Journal Pool.
 * In case the originating instance is also a supplementary instance, shutdown the Receiver Server(s) (there might be more than one Receiver Server in future YottaDB versions).
 * Shut down all active and/or passive Source Servers.
-* Execute mupip rundown -region to ensure that the database, Journal Pool, and Receiver Pool shared memory is rundown properly.
+* Execute mupip rundown -region to ensure that the database, Journal Pool, and Receive Pool shared memory is rundown properly.
 
 To shutdown a propagating instance:
 
 * Shut down all replicating instance servers (Receiver Server, Update Process and its Helper processes).
 * Shutdown the originating instance servers (all active and/or passive Source Servers).
 * On its replicating instances, ensure that there are no YottaDB or MUPIP processes attached to the Journal Pool as updates are disabled (they are enabled only on the originating instance).
-* Execute mupip rundown -region to ensure that the database, Journal Pool, and Receiver Pool shared memory is rundown properly.
+* Execute mupip rundown -region to ensure that the database, Journal Pool, and Receive Pool shared memory is rundown properly.
 
 .. _create-new-repl-inst-file:
 
@@ -4308,7 +4308,7 @@ Reports four fields that help determine the backlog of updates on the Source Ser
 
 #. Last JNL_SEQNO acknowledged by the Receiver Server
 
-The backlog is the difference between the second and third fields. When backlog is 0 and the remaining three fields have the same value, it means that all Source Server updates have reached the Receiver Pool and there are no in-flight updates.
+The backlog is the difference between the second and third fields. When backlog is 0 and the remaining three fields have the same value, it means that all Source Server updates have reached the Receive Pool and there are no in-flight updates.
 
 In the WAS_ON state, SHOWBACKLOG reports the backlog information even if the Source Server is shut down.
 
@@ -4442,7 +4442,7 @@ The square brackets [] denote an optional qualifier group. The optional and mand
 |                                                                   |                                                                                   |
 |                                                                   | `-stopsourcefilter <#stopsourcefilter>`_                                          |
 +-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
-| Receive Pool Setup Qualifiers                                     | `-buffsize=<Receiver Pool size in bytes> <#buffsize-journal-pool-size-in-bytes>`_ |
+| Receive Pool Setup Qualifiers                                     | `-buffsize=<Receive Pool size in bytes> <#buffsize-journal-pool-size-in-bytes>`_  |
 +-------------------------------------------------------------------+-----------------------------------------------------------------------------------+
 | :ref:`si-repl-qual`                                               | [-initialize]                                                                     |
 |                                                                   |                                                                                   |

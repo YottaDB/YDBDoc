@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -59,7 +59,7 @@ YottaDB uses UNIX IPC resources as follows:
 
      fuser <db-filename> | awk -F: '{if(length($NF))exit(1)}' && $ydb_dist/mupip set -noread_only -file <db-filename>
 
-* An instance has one journal pool, and, if a replicating instance, one receiver pool. Note that you might run multiple instances on the same computer system.
+* An instance has one journal pool, and, if a replicating instance, one receive pool. Note that you might run multiple instances on the same computer system.
 
 * For simple YottaDB operation (that is, no multisite replication), there is no journal pool or receive pool.
 
@@ -174,10 +174,10 @@ In this case, America has one region and no receiver-pool so:
 
    1 region * 3 IPCs/region + 1 IPC/journal-pool = 4 IPCs
 
-Therefore, assuming that instance America has 1 region, the total IPC utilized by YottaDB is: 4 [1 * 3 + 1 +0]. Note that there is no receiver pool for instance America.
+Therefore, assuming that instance America has 1 region, the total IPC utilized by YottaDB is: 4 [1 * 3 + 1 +0]. Note that there is no receive pool for instance America.
 
 .. note::
-   For MUPIP RECOVER operations the total number of IPC resources are 3n (As there is no Journal Pool or Receiver Pool) where  n is the number of regions.
+   For MUPIP RECOVER operations the total number of IPC resources are 3n (As there is no Journal Pool or Receive Pool) where  n is the number of regions.
 
 Now connect to Server_B and give the following commands in the directory holding database files for Brazil:
 
