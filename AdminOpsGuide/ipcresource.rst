@@ -177,7 +177,7 @@ In this case, America has one region and no receiver-pool so:
 Therefore, assuming that instance America has 1 region, the total IPC utilized by YottaDB is: 4 [1 * 3 + 1 +0]. Note that there is no receive pool for instance America.
 
 .. note::
-   For MUPIP RECOVER operations the total number of IPC resources are 3n (As there is no Journal Pool or Receive Pool) where  n is the number of regions.
+   For MUPIP RECOVER operations the total number of IPC resources are 3n (as there is no Journal Pool or Receive Pool) where  n is the number of regions.
 
 Now connect to Server_B and give the following commands in the directory holding database files for Brazil:
 
