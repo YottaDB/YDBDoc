@@ -859,7 +859,7 @@ ydb_node_next_s() / ydb_node_next_st()
 
 Return values of :code:`ydb_node_next_s()` and :code:`ydb_node_next_st()` are:
 
-- :code:`YDB_OK` with the next node, if there is one, changing :code:`*ret_subs_used` and :code:`*ret_subsarray` parameters to those of the next node. If there is no next node (i.e., the input node is the last), :code:`*ret_subs_used` on output is :code:`YDB_NODE_END`.
+- :code:`YDB_OK` with the next node, if there is one, changing :code:`*ret_subs_used` and :code:`*ret_subsarray` parameters to those of the next node.
 - :code:`YDB_ERR_INSUFFSUBS` if :code:`*ret_subs_used` specifies insufficient parameters to return the subscript. In this case :code:`*ret_subs_used` reports the actual number of subscripts required.
 - :code:`YDB_ERR_INVSTRLEN` if one of the :code:`ydb_buffer_t` structures pointed to by :code:`*ret_subsarray` does not have enough space for the subscript. In this case, :code:`*ret_subs_used` is the index into the :code:`*ret_subsarray` array with the error, and the :code:`len_used` field of that structure specifies the size required.
 - :code:`YDB_ERR_NODEEND` to indicate that that there are no more nodes. In this case, :code:`*ret_subs_used` is unchanged.
