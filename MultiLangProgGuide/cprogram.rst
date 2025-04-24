@@ -1634,7 +1634,7 @@ M routines can be called from C with the following functions which are described
 * `ydb_cip_t() <../ProgrammersGuide/extrout.html#ydb-cip-t-intf>`_
 * `ydb_zstatus() <../ProgrammersGuide/extrout.html#ydb-zstatus>`_
 
-Historically, the predecessors of the functions to call M routines returned positive return codes. In order to maintain backward compatibility, values returned by the above are positive values, whereas YottaDB :ref:`err-ret-codes` are negative. For example, to return an invalid string length (:ref:`YDB-ERR-INVSTRLEN`), the :code:`ydb_ci*()` functions return :code:`-YDB_ERR_INVSTRLEN`, which is a positve value because :code:`YDB_ERR_STRLEN` is a negative value.
+Historically, the predecessors of the functions to call M routines returned positive return codes. In order to maintain backward compatibility, values returned by the above are positive values, whereas YottaDB :ref:`err-ret-codes` are negative. For example, to return an invalid string length (:ref:`YDB-ERR-INVSTRLEN`), the :code:`ydb_ci*()` functions return :code:`-YDB_ERR_INVSTRLEN`, which is a positive value because :code:`YDB_ERR_INVSTRLEN` is a negative value.
 
 Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ :code:`ydb_zstatus()` returns an :code:`int`.
 
