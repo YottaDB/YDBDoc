@@ -90,7 +90,7 @@ This section assumes that YottaDB has already been installed. One way to install
     * *Option 2*: From source:
 
         #. Enter code directory :code:`cd YDBPython/`
-        #. Run :code:`setup.py` to install:
+        #. Run :code:`python -m pip install .` to install:
 
             * *Option 1*: Install in :code:`venv`:
 
@@ -102,15 +102,15 @@ This section assumes that YottaDB has already been installed. One way to install
 
                 #. Create venv: :code:`python3 -m venv .venv`
                 #. Activate venv: :code:`source .venv/bin/activate`
-                #. Install into venv: :code:`python setup.py install`
+                #. Install into venv: :code:`python -m pip install .`
 
             * *Option 2*: Install to user:
 
-                * :code:`python3 setup.py install --user`
+                * :code:`python3 -m pip install --user`
 
             * *Option 3*: Install globally (not suggested):
 
-                * :code:`sudo -E python3 setup.py install`
+                * :code:`sudo -E python3 -m pip install`
 
 In the above instructions, note that :code:`python3` command is used when using a global Python 3 installation, i.e. one installed for the current system using e.g. `apt-get install`. The :code:`python` command is used when operating within an active virtual environment ("venv") as described above. The reason for the discrepancy is that many systems map the :code:`python` command to Python 2, and use :code:`python3` to call a Python 3 installation. Within a virtual environment, Python binary paths are remapped to allow the :code:`python` command to reference Python 3. The same principle applies to the :code:`pip` command, with :code:`pip3` referencing the Python 3 version of the :code:`pip` command. :code:`pip` references the Python 2 implementation unless called within a virtual environment, where :code:`pip` is an alias for :code:`pip3`.
 
