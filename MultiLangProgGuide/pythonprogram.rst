@@ -106,11 +106,11 @@ This section assumes that YottaDB has already been installed. One way to install
 
             * *Option 2*: Install to user:
 
-                * :code:`python3 -m pip install --user`
+                * :code:`python3 -m pip install --user .`
 
             * *Option 3*: Install globally (not suggested):
 
-                * :code:`sudo -E python3 -m pip install`
+                * :code:`sudo -E python3 -m pip install .`
 
 In the above instructions, note that :code:`python3` command is used when using a global Python 3 installation, i.e. one installed for the current system using e.g. `apt-get install`. The :code:`python` command is used when operating within an active virtual environment ("venv") as described above. The reason for the discrepancy is that many systems map the :code:`python` command to Python 2, and use :code:`python3` to call a Python 3 installation. Within a virtual environment, Python binary paths are remapped to allow the :code:`python` command to reference Python 3. The same principle applies to the :code:`pip` command, with :code:`pip3` referencing the Python 3 version of the :code:`pip` command. :code:`pip` references the Python 2 implementation unless called within a virtual environment, where :code:`pip` is an alias for :code:`pip3`.
 
