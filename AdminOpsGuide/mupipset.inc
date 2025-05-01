@@ -146,6 +146,18 @@ Specifies whether to use asynchronous I/O for an access method BG database, rath
 
 For more information on specifying ASYNCIO,refer to :ref:`segment-qualifiers`.
 
+^^^^^^^^^^^^^^^^^^^^^
+DATA_reserved_bytes
+^^^^^^^^^^^^^^^^^^^^^
+
+Specifies the size for YottaDB to reserve in data-level database blocks. DATA_RESERVED_BYTES can be used as a user-managed fill factor when it is appropriate to have a different level of sparseness for data and index blocks. The format of the DATA_RESERVED_BYTES qualifier is:
+
+.. code-block:: none
+
+   -DATA[_RESERVED_BYTES]=size
+
+The minimum DATA_RESERVED_BYTES is 0 bytes. The maximum DATA_RESERVED_BYTES = Block Size - Max Key Size - 40 (Block/Record header overheads). The default DATA_RESERVED_BYTES is 0 bytes.
+
 ^^^^^^^^^^^^
 -DEFER_TIME
 ^^^^^^^^^^^^
@@ -160,7 +172,7 @@ Specifies, in MM access mode, the multiplying factor applied to the flush time t
 -DEFER_ALLOCATE
 ^^^^^^^^^^^^^^^^
 
-With DEFER_ALLOCATE, YottaDB instructs the file system to create the database file as a sparse file. Before using DEFER_ALLOCATE, ensure that your underlying file system supports sparse files. By default UNIX file systems, and YottaDB, use sparse (or lazy) allocation, which defers actual allocation until blocks are first written. The format of the DEFER_ALLOCATE qualifier is:
+With DEFER_ALLOCATE, YottaDB instructs the file system to create the database file as a sparse file. Before using DEFER_ALLOCATE, ensure that your underlying file system supports sparse files. By default Linux file systems, and YottaDB, use sparse (or lazy) allocation, which defers actual allocation until blocks are first written. The format of the DEFER_ALLOCATE qualifier is:
 
 .. code-block:: none
 
@@ -252,7 +264,7 @@ In general, increasing the number of global buffers improves performance by smoo
 
 The minimum is 64 buffers and the maximum is 2,097,151 buffers. By default, MUPIP CREATE establishes GLOBAL_BUFFERS using information entered in the Global Directory.
 
-On many UNIX systems, default kernel parameters may be inadequate for YottaDB global buffers, and may need to be adjusted by a system administrator.
+On many Linux systems, default kernel parameters may be inadequate for YottaDB global buffers, and may need to be adjusted by a system administrator.
 
 ^^^^^^^^^^^^^^^^^
 -HARD_SPIN_COUNT
@@ -265,6 +277,18 @@ The mutex hard spin count specifies the number of attempts to grab the mutex loc
    -HARD_SPIN_COUNT=integer
 
 The default value is 128. Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless, you have data from testing and benchmarking that demonstrates a benefit from a change.
+
+^^^^^^^^^^^^^^^^^^^^^
+INDEX_reserved_bytes
+^^^^^^^^^^^^^^^^^^^^^
+
+Specifies the size for YottaDB to reserve in index-level database blocks. INDEX_RESERVED_BYTES can be used as a user-managed fill factor when it is appropriate to have a different level of sparseness for data and index blocks. The format of the INDEX_RESERVED_BYTES qualifier is:
+
+.. code-block:: none
+
+   INDEX[_RESERVED_BYTES]=size
+
+The minimum INDEX_RESERVED_BYTES is 0 bytes. The maximum INDEX_RESERVED_BYTES = Block Size - Max Key Size - 40 (Block/Record header overheads). The default INDEX_RESERVED_BYTES is 0 bytes.
 
 ^^^^^^^^^^^^^^^^^^^^^^
 -INST_FREEZE_ON_ERROR
@@ -428,7 +452,7 @@ For more information, refer to the :ref:`CORRUPT_FILE <dse-change-corrupt-file>`
 -READ_ONLY
 ^^^^^^^^^^^^
 
-Indicates whether YottaDB should treat an MM access method segment as read only for all users, including root. This designation augments UNIX authorizations and prevents any state updates that normally might require an operational action for a database with no current accessing (attached) processes. MUPIP emits an error on attempts to set READ_ONLY on databases with the BG access method, or to set the access method to BG on databases with READ_ONLY set. The YottaDB help databases have READ_ONLY set by default. The format of the READ_ONLY qualifier is:
+Indicates whether YottaDB should treat an MM access method segment as read only for all users, including root. This designation augments Linux authorizations and prevents any state updates that normally might require an operational action for a database with no current accessing (attached) processes. MUPIP emits an error on attempts to set READ_ONLY on databases with the BG access method, or to set the access method to BG on databases with READ_ONLY set. The YottaDB help databases have READ_ONLY set by default. The format of the READ_ONLY qualifier is:
 
 .. code-block:: none
 
@@ -459,16 +483,14 @@ Specifies the number of nanoseconds that a MUPIP REORG process operating between
 -RESERVED_BYTES
 ^^^^^^^^^^^^^^^^
 
-Specifies the size to be reserved in each database block. RESERVED_BYTES is generally used to reserve room for compatibility with other implementations of M or to observe communications protocol restrictions. The format of the RESERVED_BYTES qualifier is:
+Specifies the size to be reserved in each database block. RESERVED_BYTES is generally used as a user-managed fill factor. The format of the RESERVED_BYTES qualifier is:
 
 .. code-block:: none
 
    -RES[ERVED_BYTES]=size
 
 
-* RESERVED_BYTES may also be used as a user-managed fill factor.
-
-* The minimum RESERVED_BYTES is 0 bytes. The maximum RESERVED_BYTES is the block size minus the size of the block header which is 7 or 8 depending on your platform. Realistic determinations of this amount should leave room for at least one record of maximum size.
+* The minimum RESERVED_BYTES is 0 bytes. The maximum RESERVED_BYTES = Block Size - Max Key Size - 40 (Block/Record header overheads). The default RESERVED_BYTES is 0 bytes.
 
 ^^^^^^^^^^^^^^^^^^
 -SLEEP_SPIN_COUNT
@@ -498,7 +520,7 @@ Specifies the maximum number of nanoseconds for processes to sleep while waiting
 
 * hex_mask is a hexadecimal mask that controls the maximum time (in nanoseconds) the process sleeps on a sleep spin.
 
-* The default is zero (0) which causes the process to return control to the UNIX kernel to be rescheduled with no explicit delay. When the value is non-zero, the process waits for a random value between zero (0) and the maximum value permitted by the mask.
+* The default is zero (0) which causes the process to return control to the OS kernel to be rescheduled with no explicit delay. When the value is non-zero, the process waits for a random value between zero (0) and the maximum value permitted by the mask.
 
 * Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless you have data from testing and benchmarking that demonstrates a benefit from a change.
 
