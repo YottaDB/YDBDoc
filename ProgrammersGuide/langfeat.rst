@@ -123,7 +123,7 @@ M Collation Sequences
 
 M collates all canonic numeric subscripts ahead of all string subscripts, including strings such as those with leading zeros that represent non-canonic numbers. Numeric subscripts collate from negative to positive in value order. String subscripts collate in ASCII sequence. In addition, YottaDB allows the empty string subscript in most contexts (the null, or empty, string collates ahead of all canonic numeric subscripts).
 
-YottaDB allows definition of alternative collation sequences. For complete information on enabling this functionality, See `Chapter 12: “Internationalization” <./internatn.html>`_.
+YottaDB allows definition of alternative collation sequences. For complete information on enabling this functionality, See `Chapter 12: "Internationalization" <./internatn.html>`_.
 
 ++++++++++++++++++++++++++++++
 Null Subscripts and Collation
@@ -154,7 +154,7 @@ For any region for which the NULL SUBSCRIPTS field has the value EXISTING:
 
 The DSE FILEHEADER qualifier NULL_SUBSCRIPTS permits the new keywords for values in the NULL_SUBSCRIPTS field. Also, the DSE DUMP command displays the new keywords in the file header output.
 
-The `GDE REGION <../AdminOpsGuide/gde.html#region-qualifiers>`_ qualifier NULL_SUBSCRIPTS accepts the keywords ALWAYS, NEVER and EXISTING. The existing argument-less qualifiers NULL_SUBSCRIPTS (synonymous with NULL_SUBSCRIPTS=ALWAYS) and NONULL_SUBSCRIPTS (synonymous with -NULL_SUBSCRIPTS=NEVER) are deprecated but continue to be supported. Also, the GDE SHOW command displays the new keywords in the “Null Subs” column.
+The `GDE REGION <../AdminOpsGuide/gde.html#region-qualifiers>`_ qualifier NULL_SUBSCRIPTS accepts the keywords ALWAYS, NEVER and EXISTING. The existing argument-less qualifiers NULL_SUBSCRIPTS (synonymous with NULL_SUBSCRIPTS=ALWAYS) and NONULL_SUBSCRIPTS (synonymous with -NULL_SUBSCRIPTS=NEVER) are deprecated but continue to be supported. Also, the GDE SHOW command displays the new keywords in the "Null Subs" column.
 
 MUPIP CREATE creates database files with the new values for NULL_SUBSCRIPTS.
 
@@ -164,7 +164,7 @@ MUPIP CREATE creates database files with the new values for NULL_SUBSCRIPTS.
 Null Subscript Collation
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The default collation (“standard null collation”) of local and global variable subscripts is that the null subscript collates first, followed by numeric subscripts in numeric order, and finally string subscripts in lexical order. YottaDB also supports a historical collation of null subscripts, between numeric subscripts and string subscripts. For global variables, the collation method must be specified at the time of database creation.
+The default collation ("standard null collation") of local and global variable subscripts is that the null subscript collates first, followed by numeric subscripts in numeric order, and finally string subscripts in lexical order. YottaDB also supports a historical collation of null subscripts, between numeric subscripts and string subscripts. For global variables, the collation method must be specified at the time of database creation.
 
 A read-only boolean parameter STDNULLCOLL in the database fileheader specifies the type of null collation:
 
@@ -192,19 +192,19 @@ Also using set^%LCLCOL(,ncol), the null collation order can be changed while kee
 GDE sets Null Subscripts
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `GDE -REGION <../AdminOpsGuide/gde.html#region-qualifiers>`_ qualifier –[NO]NULL_SUBCRIPTS accepts new values with change, add and template commands, default is –NONULL_SUBSCRIPTS, e.g.:
+The `GDE -REGION <../AdminOpsGuide/gde.html#region-qualifiers>`_ qualifier -[NO]NULL_SUBCRIPTS accepts new values with change, add and template commands, default is -NONULL_SUBSCRIPTS, e.g.:
 
 .. code-block:: bash
 
-   GDE>add –region areg –dyn=aseg –null_subscripts=always
-   GDE>change –region areg –null_subscripts=true
-   GDE>change –region areg –null_subscripts=false
-   GDE>change –region areg –null_subscripts=never
-   GDE>change –region areg –null_subscripts=existing
-   GDE>template –region –null_subscripts=existing
-   GDE>template –region –nonull_subscripts
+   GDE>add -region areg -dyn=aseg -null_subscripts=always
+   GDE>change -region areg -null_subscripts=true
+   GDE>change -region areg -null_subscripts=false
+   GDE>change -region areg -null_subscripts=never
+   GDE>change -region areg -null_subscripts=existing
+   GDE>template -region -null_subscripts=existing
+   GDE>template -region -nonull_subscripts
 
-The other region qualifier is –[NO]STDNULLCOLL with add, change and template command, default is –NOSTDNULLCOLL.
+The other region qualifier is -[NO]STDNULLCOLL with add, change and template command, default is -NOSTDNULLCOLL.
 
 .. code-block:: bash
 
@@ -300,11 +300,11 @@ The `DSE CHANGE -fileheader -null_subscripts <../AdminOpsGuide/dse.html#change>`
 .. note::
    The null subscript collation order cannot be changed using DSE.
 
-dump –fileheader output reflects this for null_subscripts as well as null collation order.
+dump -fileheader output reflects this for null_subscripts as well as null collation order.
 
-For a region, “Standard Null Collation” in DSE dump output corresponds to the -stdnullcoll field in the .gld file. DSE displays TRUE for “Standard Null Collation” if the region has –STDNULLCOLL, otherwise it displays FALSE.
+For a region, "Standard Null Collation" in DSE dump output corresponds to the -stdnullcoll field in the .gld file. DSE displays TRUE for "Standard Null Collation" if the region has -STDNULLCOLL, otherwise it displays FALSE.
 
-From the example above, the output of dump –fileheader for TEAGLOBALS.dat will be as follows:
+From the example above, the output of dump -fileheader for TEAGLOBALS.dat will be as follows:
 
 .. code-block:: bash
 
@@ -455,7 +455,7 @@ With stdnullcoll, if $D(glvn(""))=1 (or 11), $Q(glvn("")) will return glvn(1) [a
    lcl(1,2,"abc",5)=7
    lcl("x")=1
 
-   YDB>SET y="x”
+   YDB>SET y="x"
 
    YDB>FOR SET y=$QUERY(@y) QUIT:y="" WRITE !,y,"=",@y
 
@@ -487,7 +487,7 @@ Local Variables
 
 A local variable in M refers to a variable used solely within the scope of a single process. Local variable names have no leading delimiter.
 
-M makes a local variable available and subject to modification by all routines executed within a process from the time that variable is first SET until it is KILLed, or until the process stops executing M. However, M "protects" a local variable after that variable appears as an argument to a NEW command, or after it appears as an element in a formallist used in parameter passing. When M protects a local variable, it saves a copy of the variable's value and makes that variable undefined. M restores the variable to its saved value during execution of the QUIT that terminates the process stack level associated with the "protecting" NEW or formallist. For more information on NEW and QUIT, see `Chapter 6: “Commands” <./commands.html>`_.
+M makes a local variable available and subject to modification by all routines executed within a process from the time that variable is first SET until it is KILLed, or until the process stops executing M. However, M "protects" a local variable after that variable appears as an argument to a NEW command, or after it appears as an element in a formallist used in parameter passing. When M protects a local variable, it saves a copy of the variable's value and makes that variable undefined. M restores the variable to its saved value during execution of the QUIT that terminates the process stack level associated with the "protecting" NEW or formallist. For more information on NEW and QUIT, see `Chapter 6: "Commands" <./commands.html>`_.
 
 M restricts the following uses of variables to local variables:
 
@@ -812,7 +812,7 @@ Example:
    day3 week2 b
    day4 week2 c.gld
 
-This example demonstrates the mechanism. A table is set up the first time for proper memory management, and for each reference, a table lookup is performed. Note that for the purpose of simplicity, no error checking is done, so table.dat is assumed to be in the correct format, and have exactly four entries. This routine should be built as a shared library, see `Chapter 11: “Integrating External Routines” <./extrout.html>`_ for information on building as a shared library. The function init_functable is necessary to set up the YottaDB memory management functions.
+This example demonstrates the mechanism. A table is set up the first time for proper memory management, and for each reference, a table lookup is performed. Note that for the purpose of simplicity, no error checking is done, so table.dat is assumed to be in the correct format, and have exactly four entries. This routine should be built as a shared library, see `Chapter 11: "Integrating External Routines" <./extrout.html>`_ for information on building as a shared library. The function init_functable is necessary to set up the YottaDB memory management functions.
 
 .. _opt-ydb-gbldir-xltn-fac:
 
@@ -1348,7 +1348,7 @@ The pattern codes are:
 | U        | upper-case alphabetic characters, ASCII 65-90                                  |
 +----------+--------------------------------------------------------------------------------+
 
-Pattern codes may be upper or lower case and may be replaced with a string literal. YottaDB allows the M pattern match definition of patcodes A, C, N, U, L, and P to be extended or changed, (A can only be modified implicitly by modifying L or U) and new patcodes added. For detailed information on enabling this functionality, see `Chapter 12: “Internationalization” <./internatn.html>`_.
+Pattern codes may be upper or lower case and may be replaced with a string literal. YottaDB allows the M pattern match definition of patcodes A, C, N, U, L, and P to be extended or changed, (A can only be modified implicitly by modifying L or U) and new patcodes added. For detailed information on enabling this functionality, see `Chapter 12: "Internationalization" <./internatn.html>`_.
 
 .. note::
    The YottaDB compiler accepts pattern codes other than those explicitly defined above. If, at run-time, the pattern codes come into use and no pattern definitions are available, YottaDB issues a run-time error (PATNOTFOUND). YottaDB does not currently implement a mechanism for Y and Z patterns and continues to treat those as compile-time syntax errors. YottaDB defers literal optimizations involving patterns within an XECUTE as well as evaluations that encounter issues with the pattern table.
@@ -1406,7 +1406,7 @@ Command postconditionals appear immediately following a command and apply to all
 
 **Argument Postconditionals**
 
-Commands that affect the flow of control may accept postconditionals on individual command arguments. Because multiple arguments act as multiple commands, this is a straight-forward application of the same principal as command postconditional. The only M standard commands that accept argument postconditionals are DO, GOTO, and XECUTE. The YottaDB command extensions that accept argument postconditionals are BREAK, ZGOTO, and ZSYSTEM.
+Commands that affect the flow of control may accept postconditionals on individual command arguments. Because multiple arguments act as multiple commands, this is a straight-forward application of the same principle as command postconditional. The only M standard commands that accept argument postconditionals are DO, GOTO, and XECUTE. The YottaDB command extensions that accept argument postconditionals are BREAK, ZGOTO, and ZSYSTEM.
 
 +++++++++++++++++
 Timeouts
@@ -1477,7 +1477,7 @@ By default, GDE creates global directories mapping "local" LOCKs to the region D
 Intrinsic Functions
 ----------------------------
 
-M Intrinsic Functions start with a single dollar sign ($) and have one or more arguments enclosed in parentheses () and separated by commas (,). These functions provide an expression result by performing actions that would be impossible or difficult to perform using M commands. It is now possible to invoke a C function in a package via the external call mechanism. For information on the functions, see `Chapter 7: “Functions” <./functions.html>`_.
+M Intrinsic Functions start with a single dollar sign ($) and have one or more arguments enclosed in parentheses () and separated by commas (,). These functions provide an expression result by performing actions that would be impossible or difficult to perform using M commands. It is now possible to invoke a C function in a package via the external call mechanism. For information on the functions, see `Chapter 7: "Functions" <./functions.html>`_.
 
 .. _lang-feat-intrinsic-special-variables:
 
@@ -1485,7 +1485,7 @@ M Intrinsic Functions start with a single dollar sign ($) and have one or more a
 Intrinsic Special Variables
 ----------------------------
 
-M Intrinsic Special Variables start with a single dollar sign ($). YottaDB provides such variables for program examination. In some cases, the Intrinsic Special Variables may be SET to modify the corresponding part of the environment. For information, see `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
+M Intrinsic Special Variables start with a single dollar sign ($). YottaDB provides such variables for program examination. In some cases, the Intrinsic Special Variables may be SET to modify the corresponding part of the environment. For information, see `Chapter 8: "Intrinsic Special Variables" <./isv.html>`_.
 
 -------------------------
 Routines
@@ -1505,7 +1505,7 @@ A line of M code consists of the following elements in the following order:
 
 * An optional label.
 * A line-start delimiter. The standard defines the line-start delimiter as a space (<SP>) character. In order to enhance routine readability, YottaDB extends M by accepting one or more tab (<HT>) characters as line-start delimiters.
-* Zero or more level indicators, which are periods (.). The level indicators show the level of nesting for argumentless DO commands: the more periods, the deeper the nesting. M ignores lines that contain level indicators unless they directly follow an argumentless DO command with a matching level of nesting. For more information on the DO command, see `Chapter 6: “Commands” <./commands.html>`_.
+* Zero or more level indicators, which are periods (.). The level indicators show the level of nesting for argumentless DO commands: the more periods, the deeper the nesting. M ignores lines that contain level indicators unless they directly follow an argumentless DO command with a matching level of nesting. For more information on the DO command, see `Chapter 6: "Commands" <./commands.html>`_.
 * Zero or more commands and their arguments. M accepts multiple commands on a line. The argument(s) of one command are separated from the next command by a command-start delimiter, consisting of one or more spaces (<SP>).
 * A terminating end-of-line, which is a line feed.
 
@@ -1899,10 +1899,10 @@ or as an expression element,
 
    $&[packagename.]name[^name][parameter-list]
 
-Where packagename, like the name elements is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation – a later section describes how to transform this into a more richly punctuated name should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the caret (^).
+Where packagename, like the name elements is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation - a later section describes how to transform this into a more richly punctuated name should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the caret (^).
 
 .. note::
-   For more information on external calls, see `Chapter 11: “Integrating External Routines” <./extrout.html>`_.
+   For more information on external calls, see `Chapter 11: "Integrating External Routines" <./extrout.html>`_.
 
 .. _extrinsic-functions:
 
@@ -1988,9 +1988,9 @@ In M, a transaction is a sequence of commands that begins with a TSTART command,
 
 A successful transaction ends with a COMMIT that is triggered by the TCOMMIT command at the end of the transaction. A COMMIT causes all the database updates performed within the transaction to become available to other processes.
 
-An unsuccessful transaction ends with a ROLLBACK. ROLLBACK is invoked explicitly by the TROLLBACK command, or implicitly at a process termination that occurs during a transaction in progress. An error within a transaction does not cause an implicit ROLLBACK. A ROLLBACK removes any database updates performed within the transaction before they are made available to other processes. ROLLBACK also releases all resources LOCKed since the start of the transaction, and makes the naked reference undefined.
+An unsuccessful transaction ends with a ROLLBACK. ROLLBACK is invoked explicitly by the TROLLBACK command, or implicitly at a process termination that occurs during a transaction in progress. An error within a transaction does not itself cause an implicit ROLLBACK. A ROLLBACK removes any database updates performed within the transaction before they are made available to other processes. ROLLBACK also releases all resources LOCKed since the start of the transaction, and makes the naked reference undefined. While it causes a significant process state change, unlike a RESTART, a TROLLBACK does not cause any transfer of control. Because of this, a useful technique is to set a flag in a local variable that is not a restart variable, issue a TRESTART and have a block conditioned on the flag variable which does a TROLLBACK.
 
-A RESTART is a transfer of control to the TSTART at the beginning of the transaction. RESTART implicitly includes a ROLLBACK and may optionally restore local variables to the values they had when the initial TSTART was originally executed. A RESTART always restores $TEST and the naked reference to the values they had when the initial TSTART was executed. RESTART does not manage device state information. A RESTART is invoked by the TRESTART command or by M if it is determined that the transaction is in conflict with other database updates. RESTART can only successfully occur if the initial TSTART includes an argument that enables RESTART.
+A RESTART is a transfer of control to the TSTART at the beginning of the transaction. RESTART implicitly includes a ROLLBACK and may optionally restore local variables to the values they had when the initial TSTART was originally executed. A RESTART always restores $TEST and the naked reference to the values they had when the initial TSTART was executed. RESTART does not manage device state information. A RESTART is invoked by the TRESTART command or by M if it is determined that the transaction is in conflict with other database updates. RESTART can only successfully occur if the initial TSTART enables RESTART, which YottaDB strongly recommends in order to deal with implicit RESTARTs.
 
 +++++++++++++++++++++++++++++++++++++
 Key Considerations - Writing TP Code
@@ -1998,7 +1998,7 @@ Key Considerations - Writing TP Code
 
 Some key considerations for writing application code between TSTART and TCOMMIT are as follows:
 
-* Do not use BREAK, CLOSE, JOB, OPEN, READ, USE, WRITE, LOCK, HANG, and ZSYSTEM as they violate the ACID principal of Isolation. Using these commands inside a transaction may lead to longer than usual response time, high CPU utilization, repeat execution due to transaction restart, and/or TPNOTACID messages in the operator log. If application logic requires their use, put them before TSTART or after TCOMMIT so that they do not interfere with the transaction processing mechanism.
+* Avoid BREAK, CLOSE, JOB, OPEN, READ, USE, WRITE, LOCK, HANG, ZSYSTEM, and external calls as they can violate the ACID principal of Isolation. Using these commands inside a transaction may lead to longer than usual response time, high CPU utilization, repeat execution due to transaction restart, and/or TPNOTACID messages in the operator log. If application logic requires their use, put them before TSTART or after TCOMMIT so that they do not interfere with the transaction processing mechanism. For example, placing a LOCK before TSTART and releasing it after TCOMMIT provides an additional application layer of serialization for the transaction code. If the use case requires one or more non-ACID operation within a transaction, condition them on 0=$TRESTART on every path through transaction logic so they only process once, and never while holding a database critical section. If the use case requires a one-to-one relationship between a non-ACID action and a transaction, use TROLLBACK, typically with TRESTART and/or error handling to align them, but be aware this risks a "live-lock" pathology where the action consumes a disproportionate amount of resources while attempting to complete over an extended period. Certain external calls, e.g., to compute mathematical results based on values read from a database, are a special case of code that will need to be part of transaction logic. In such cases, make the calls as efficient as possible, and eschew external interaction in them, especially with files and networks.
 
 * Keep your transaction code "pure" . By "pure" we mean that you restrict code to only perform database updates (SET, MERGE, and so on). The primary purpose of a YottaDB transaction is to perform database updates that commit in entirety or do not commit at all. Perform external interaction like invoking an external call before or after the transaction.
 
@@ -2010,9 +2010,9 @@ Some key considerations for writing application code between TSTART and TCOMMIT 
 
 * Remember that trigger code executes within an implicit transaction. So, trigger code is always subject to transaction considerations.
 
-Most transaction processing systems try to have transactions that meet the "ACID" test – Atomic, Consistent, Isolated, and Durable.
+Most transaction processing systems try to have transactions that meet the "ACID" test - Atomic, Consistent, Isolated, and Durable.
 
-To provide ACID transactions, YottaDB uses a technique called optimistic concurrency control. Each block has a transaction number that YottaDB sets to the current database transaction number when updating a block. Application logic, brackets transactions with TSTART and TCOMMIT commands. Once inside a transaction, a YottaDB process tracks each database block that it reads (any database block containing existing data that it intends to update has to be read first) and in process private memory keeps a list of updates that it intends to apply - application logic within the process views the database with the updates; application logic in other processes does not see states internal to the transaction. At TCOMMIT time, the process checks whether any blocks have changed since it read them, and if none have changed, it commits the transaction, making its changes visible to other processes Atomically with Isolation and Consistency (Durability comes from the journal records written at COMMIT time). Optimistic concurrency attempts to exploit the odds that two processes need access to the same resource at the same time. If the chances are small, it permits many processes to work concurrently, particularly in a system with multiple CPUs. If the chances are not small the penalty is repeated execution of the same transaction logic.
+To provide ACID transactions, YottaDB uses a technique called `optimistic concurrency control <https://www.eecs.harvard.edu/~htk/publication/1981-tods-kung-robinson.pdf>`_. Each block has a transaction number that YottaDB sets to the current database transaction number when updating a block. Application logic, brackets transactions with TSTART and TCOMMIT commands. Once inside a transaction, a YottaDB process tracks each database block that it reads (any database block containing existing data that it intends to update has to be read first) and in process private memory keeps a list of updates that it intends to apply - application logic within the process views the database with the updates; application logic in other processes does not see states internal to the transaction. At TCOMMIT time, the process checks whether any blocks have changed since it read them, and if none have changed, it commits the transaction, making its changes visible to other processes Atomically with Isolation and Consistency (Durability comes from the journal records written at COMMIT time). Optimistic concurrency attempts to exploit the odds that two processes need access to the same resource at the same time. If the chances are small, it permits many processes to work concurrently, particularly in a system with multiple CPUs. If the chances are not small the penalty is repeated execution of the same transaction logic.
 
 If one or more blocks have changed, the process reverts its state to the TSTART and re-executes the application code for the transaction. If it fails to commit the second time, it tries yet again. If it fails to commit on the third attempt, it locks other processes out of the database and executes the transaction as the sole process (that is, on the fourth attempt, it switches to a from an optimistic approach to a pessimistic one).
 
@@ -2064,7 +2064,7 @@ To achieve the best YottaDB performance, transactions should:
 
 * be as short as possible
 * consist, as much as possible, only of global updates
-* be SERIAL with no associated LOCKs
+* be SERIAL with no LOCK operations within the transaction, and, where required by the application, minimal surrounding LOCKs
 * have RESTART enabled with a minimum of local variables protected by a restart portion of the TSTART argument.
 * Large concurrent transactions using TCOMMIT may result in repeated and inefficient attempts by competing processes to capture needed scarce resources, resulting in poor performance.
 
@@ -2072,8 +2072,8 @@ Example:
 
 .. code-block:: none
 
-   TSTART ():SERIAL
-   SET (ACCT,^M(0))=^M(0)+1
+   TSTART ()
+   SET ACCT=$INCREMENT(^M(0))
    SET ^M(ACCT)=PREC,^PN(NAM)=ACCT
    TCOMMIT
 
@@ -2083,18 +2083,18 @@ Example:
 
 .. code-block:: none
 
-   TSTART ():SERIAL
-   IF $TRESTART>3 DO QUIT
-   .TROLLBACK
-   .WRITE !,"Too many RESTARTs"
-   .QUIT
-   SET (NEXT,^ID(0))=^ID(0)+1
+   set ^ID(0)=5,RECORD="abc",ZIP=19355
+   TSTART ()
+   IF $TRESTART>3 DO  QUIT
+   . TROLLBACK
+   . WRITE !,"Too many RESTARTs"
+   SET NEXT=$INCREMENT(^ID(0))
    SET ^ID(NEXT)=RECORD,^XID(ZIP,NEXT)=""
    TCOMMIT
 
-This transaction will automatically restart if it cannot serialize the SETs to the database, and will terminate with a TROLLBACK if more than 3 RESTARTs occur.
+This transaction will automatically restart if it cannot commit the SETs to the database, and will terminate with a TROLLBACK if more than 3 RESTARTs occur.
 
-YottaDB provides a way to monitor transaction restarts by reporting them to the operator logging facility. If the environment variable ydb_tprestart_log_delta is defined, YottaDB reports every Nth restart where N is the numeric evaluation of the value of ydb_tprestart_log_delta. If the environment variable ydb_tprestart_log_first is defined, the restart reporting begins after the number of restarts specified by the value of ydb_tprestart_log_first. For example, defining both the environment variable to the value 1, causes all TP restarts to be logged. When ydb_tprestart_log_delta is defined, leaving ydb_tprestart_log_first undefined is equivalent to giving it the value 1.
+YottaDB provides a way to monitor transaction restarts by reporting them to the operator logging facility. If the environment variable `ydb_tprestart_log_delta <../AdminOpsGuide/basicops.html#ydb-tprestart-log-delta>`_ is defined, YottaDB reports every Nth restart where N is the numeric evaluation of $ydb_tprestart_log_delta. If the environment variable `ydb_tprestart_log_first <../AdminOpsGuide/basicops.html#ydb-tprestart-log-first>`_ is defined, the restart reporting begins after the number of restarts specified by $ydb_tprestart_log_first. For example, defining both environment variables to the value 1, causes all TP restarts to be logged. When ydb_tprestart_log_delta is defined, leaving ydb_tprestart_log_first undefined is equivalent to giving it the value 1.
 
 Here is an example message:
 
@@ -2117,7 +2117,9 @@ Here is an example message:
 * local_tn - This is a never-decreasing counter (starting at 1 at process startup) incremented for every new TP transaction, TP restart, and TP rollback. Two TPRESTART messages by the same process should never have the same value of local_tn. The difference between the local_tn values of two messages from the same process indicates the number of TP transactions done by that process in the time interval between the two messages.
 
 .. note::
-   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `“Key Words in VIEW Command” <./commands.html#keywords-in-view-command>`_ and the `Environment Variables <../AdminOpsGuide/basicops.html#env-vars>`_ section of the Administration and Operations Guide.
+   * Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages.
+   * Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.
+   * For more information, refer to `"Key Words in VIEW Command" <./commands.html#keywords-in-view-command>`_ and the `Environment Variables <../AdminOpsGuide/basicops.html#env-vars>`_ section of the Administration and Operations Guide.
 
 
 ++++++++++++++++++++++

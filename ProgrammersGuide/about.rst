@@ -130,7 +130,7 @@ The compile-as-written feature allows compilation to continue and produces an ob
 
 The run-time system recognizes execution errors and reports them when they occur. It also reports errors flagged by the compiler when they occur in the execution path.
 
-For more information, see `Chapter 13: “Error Processing” <./errproc.html>`_.
+For more information, see `Chapter 13: "Error Processing" <./errproc.html>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Input-Output Processing
@@ -169,13 +169,13 @@ YottaDB offers capabilities that allow you to optimize your programming environm
 Access to non- M routines
 +++++++++++++++++++++++++++++++++
 
-YottaDB routines can call external (non-M) routines using the external call function. This permits access to functions implemented in other programming languages. For more information, see `Chapter 11: “Integrating External Routines” <./extrout.html>`_.
+YottaDB routines can call external (non-M) routines using the external call function. This permits access to functions implemented in other programming languages. For more information, see `Chapter 11: "Integrating External Routines" <./extrout.html>`_.
 
 ++++++++++++++++++++++++++++++++
 Internationalization
 ++++++++++++++++++++++++++++++++
 
-YottaDB allows the definition of alternative collation sequences and pattern matching codes for use with languages other than English. `Chapter 12: “Internationalization” <./internatn.html>`_ describes the details and requirements of this functionality.
+YottaDB allows the definition of alternative collation sequences and pattern matching codes for use with languages other than English. `Chapter 12: "Internationalization" <./internatn.html>`_ describes the details and requirements of this functionality.
 
 .. raw:: html
 

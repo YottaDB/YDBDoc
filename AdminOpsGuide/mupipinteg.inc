@@ -35,8 +35,10 @@ The format of the MUPIP INTEG command is:
     -BL[OCK]=hexa;block-number
     -BR[IEF]
     -DBG
+    -DMAX[BLOCKSIZE][=integer]
     -FA[ST]
     -FU[LL]
+    -IMAX[BLOCKSIZE][=integer]
     -[NO]K[EYRANGES]
     -[NO]MAP[=integer]
     -[NO]MAXK[EYSIZE][=integer]
@@ -65,9 +67,9 @@ YottaDB strongly recommends fixing the following errors as soon as they are disc
 
 * Blocks incorrectly marked free - these may cause accelerating damage when processes make updates to any part of the database region.
 
-* Integrity errors in an index block - these may cause accelerating damage when processes make updates to that area of the database region using the faulty index. For more information, refer to `Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_.
+* Integrity errors in an index block - these may cause accelerating damage when processes make updates to that area of the database region using the faulty index. For more information, refer to `Chapter 11: "Maintaining Database Integrity" <./integrity.html>`_.
 
-MUPIP INTEG FAST and the "regular" INTEG both report these errors (These qualifiers are described later in this section). Other database errors do not pose the threat of rapidly spreading problems in GDS files. After the YottaDB database repair, assess the type of damage, the risk of continued operations, and the disruption in normal operation caused by the time spent repairing the database. For information on analyzing and correcting database errors, refer to `Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_. Contact your YottaDB support channel for help assessing INTEG errors.
+MUPIP INTEG FAST and the "regular" INTEG both report these errors (These qualifiers are described later in this section). Other database errors do not pose the threat of rapidly spreading problems in GDS files. After the YottaDB database repair, assess the type of damage, the risk of continued operations, and the disruption in normal operation caused by the time spent repairing the database. For information on analyzing and correcting database errors, refer to `Chapter 11: "Maintaining Database Integrity" <./integrity.html>`_. Contact your YottaDB support channel for help assessing INTEG errors.
 
 ~~~~~~~~~~~~~~~~~
 INTEG Qualifiers
@@ -129,6 +131,18 @@ Displays a single summary report by database file of the total number of directo
 
 Produces verbose output to help with debugging. We recommend using :ref:`VERBOSE <integ-verbose>` instead.
 
+^^^^^^^^^^^^^^
+DMAXBLOCKSIZE
+^^^^^^^^^^^^^^
+
+Specifies the maximum actual size of a data-level block in the database; any data block which contains data in excess of this size causes INTEG to report the block number, its path, and an error. The format of the DMAXBLOCKSIZE qualifier is:
+
+.. code-block:: none
+
+   -DMAX[BLOCKSIZE]=integer
+
+.. _integ-fast:
+
 ^^^^^^
 -FAST
 ^^^^^^
@@ -186,6 +200,16 @@ Displays an expanded report for a MUPIP INTEG operation. With FULL specified, MU
 * By default, INTEG reports are BRIEF.
 
 * Use FULL to have INTEG report all global names in a region or list of regions.
+
+^^^^^^^^^^^^^^
+IMAXBLOCKSIZE
+^^^^^^^^^^^^^^
+
+Specifies the maximum actual size of an index-level block in the database; any index block which contains data in excess of this size causes integ to report the block number, its path, and an error. The format of the IMAXBLOCKSIZE qualifier is:
+
+.. code-block:: none
+
+   -IMAX[BLOCKSIZE]=integer
 
 ^^^^^^^^^^^
 -KEYRANGES
@@ -291,7 +315,7 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 * The region-list identifies the target of INTEG. region-list may specify more than one region of the current global directory in a list. Region names in the list are case-insensitive, separated by commas, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order. INTEG processes regions based on the order specified in the list after wild-card expansion.
 
-* INTEG REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`__.
+* INTEG REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: "Global Directory Editor" <./gde.html>`__.
 
 * Because a KILL may briefly defer marking the blocks it releases "free" in the bit maps, INTEG REGION may report spurious "block incorrectly marked busy" errors. These errors are benign. If these errors occur in conjunction with a "Kill in progress" error, resolve the errors after the "Kill in progress" error is no longer present.
 

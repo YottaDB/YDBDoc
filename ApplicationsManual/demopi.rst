@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2023-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2023-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -442,7 +442,7 @@ Next, create ``repl_status.sh``:
     echo "Receiver Server $ydb_repl_instname: "
     echo "-----------------------------------------------------------------"
     $ydb_dist/mupip replicate -receive -check
-    $ydb_dist/mupip replicate -rece –showbacklog
+    $ydb_dist/mupip replicate -rece -showbacklog
 
 .. note:: Due to how replication works in YottaDB, ``repl_setup.sh`` combines both the set-up of supplementary replication and the first start-up. This means that you DO NOT run ``start.sh`` the first time you start replication. It’s confusing, but please keep that in mind.
 
@@ -468,7 +468,7 @@ First, load the "Motion" table into Octo and test it:
             TVOC INTEGER
     ) GLOBAL "^motion" READONLY;
     END
-    octo –f motion.sql
+    octo -f motion.sql
     octo <<< 'select count(*) from motion'
 
 Then, configure remote access with Rocto:

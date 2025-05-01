@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -603,7 +603,7 @@ Example:
    . W !,"Successful Read in region: ",reg," of ",g
    S reg="" F  S reg=$O(reg(reg)) Q:reg=""  D
    W !,"Write to region: ",reg
-   S @(reg(reg)_"="_reg(reg)) W "–OK"
+   S @(reg(reg)_"="_reg(reg)) W "-OK"
    Q
    S reg=$V("GVFIRST"),com="dbcheck" o com:newv u com
    W "dse <<yz > dbcheck.lis",!
@@ -624,7 +624,7 @@ Example:
    . W !,"Successful Read in region: ",reg," of ",g
    S reg="" F  S reg=$O(reg(reg)) Q:reg=""  D
    . W !,"Write to region: ",reg
-   . S @(reg(reg)_"="_reg(reg)) W "–OK"
+   . S @(reg(reg)_"="_reg(reg)) W "-OK"
    Q
 
 This routine provides a generalized approach to automating some of the tasks described in this section. It contains argumentless DO commands primarily for typesetting reasons. The routine issues a report if any region is frozen, but does not report which regions are in that state. It may hang while reading or writing a database. However, unless the region(s) holding ^% and the next global after ^% has a problem, it displays the name of the region that it is about to try. If this routine runs to completion, the databases in the current Global Directory are completely accessible. The limitations of this routine can be overcome by writing custom shell scripts and/or M programs that include embedded information about one or more Global Directories.
@@ -818,7 +818,7 @@ Example:
    do EDITACCT
    lock ^ACCT(acct)
    if x=^ACCT(acct) set ^ACCT(acct)=y
-   else  write !,"Update conflict–Please Reenter"
+   else  write !,"Update conflict-Please Reenter"
    lock
    QUIT $TEST
 
@@ -874,6 +874,8 @@ MUPIP INTEG Error Messages
 +------------+--------------------+------------------------------------------------------------------------------------+-----------------------------------------+
 | Severity   | Mnemonic           | Error Message                                                                      | Section                                 |
 +============+====================+====================================================================================+=========================================+
+| b          | BSIZTOOLARGE       | ffff Block larger than specified maximum size.                                     | :ref:`o6-block-size-errors`             |
++------------+--------------------+------------------------------------------------------------------------------------+-----------------------------------------+
 | T          | BUFFLUFAILED       | Error flushing buffers from rrrr for database file ffff.                           | :ref:`i7-database-rundown-problem`      |
 +------------+--------------------+------------------------------------------------------------------------------------+-----------------------------------------+
 | B          | DBBADFREEBLKCTR    | Free blocks counter in file header: nnnn appears incorrect, should be mmmm.        | :ref:`i3-file-header-errors`            |
@@ -1542,6 +1544,14 @@ Load the salvaged global:
    When can their glory fade?  O the wild charge they made!  All the world wondered.
    Honour the charge they made!  Honour the Light Brigade, Noble six hundred!
 
+.. _o6-block-size-errors:
+
++++++++++++++++++++++
+O6-Block Size Errors
++++++++++++++++++++++
+
+If INTEG is passed one of -IMAXBLOCKSIZE=n and/or -DMAXBLOCKSIZE=m, it will check index and/or data blocks, respectively, to verify that the data they contain does not exceed the specified size. Errors of this kind do not themselves indicate any database damage, although they can indicate that a newly-imposed reserved bytes value has not propagated to blocks that have not since been affected by new updates, or that a fill_factor passed to `MUPIP REORG <mupip-reorg-cmd>` was imposed successfully on blocks that existed when the REORG took place but not on newly created blocks. Errors of this kind therefore do not call for any recovery efforts, but may indicate the need for an additional REORG if the intent is to ensure that all blocks in the database meet a certain level of sparseness.
+
 .. _p1-process-damage:
 
 +++++++++++++++++++++++++
@@ -1629,7 +1639,7 @@ Run-Time Error Messages Identifying Potential System Problems
 +--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
 | GDINVALID          | Unrecognized Global Directory format: fff                                 | :ref:`i5-more-database-access-problems`            |
 +--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
-| GTMCHECK           | Internal error–report to YottaDB                                          | :ref:`r6-gtmassert-and-gtmcheck-errors`            |
+| GTMCHECK           | Internal error-report to YottaDB                                          | :ref:`r6-gtmassert-and-gtmcheck-errors`            |
 +--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
 | GVDATAFAIL         | Global variable $DATA function failed. Failure code: cccc                 | :ref:`r2-structural-database-integrity-errors`     |
 +--------------------+---------------------------------------------------------------------------+----------------------------------------------------+

@@ -131,7 +131,7 @@ As YottaDB assigns no inherent meaning to the keys or values, its key value stru
 
 In the above, 17900802 represents August 2, 1790, and an application would determine from the number of keys whether a node represents the current population or historical census data.
 
-.. [#] Variety is one of the *three "V"s* of "big data" — Velocity,
+.. [#] Variety is one of the *three "V"s* of "big data" - Velocity,
        Volume, and Variety. YottaDB handles all three very well.
 
 In YottaDB, the first key is called a *variable*, and the remaining keys are called *subscripts* allowing for a representation both compact and familiar to a programmer, e.g., :code:`Capital("Belgium")="Brussels"`. The set of all nodes under a variable is called a *tree* (so in the example, there are two trees, one under :code:`Capital` and the other under :code:`Population`). The set of all nodes under a variable and a leading set of its subscripts is called a *subtree* (e.g., :code:`Population("USA")` is a subtree of the :code:`Population` tree). [#]_
@@ -330,10 +330,10 @@ $zyrelease
 
 :code:`$zyrelease` identifies the YottaDB release in use. It consists of four space separated pieces:
 
-#. Always “YottaDB”.
-#. The release number, which starts with “r” and is followed by two numbers separated by a period (“.”), e.g., “r1.30”. The first is a major release number and the second is a minor release number under the major release. Even minor release numbers indicate formally released software. Odd minor release numbers indicate software builds from “in flight” code under development, between releases.
-#. The operating system. e.g., “Linux”.
-#. The CPU architecture, e.g., “x86_64”.
+#. Always "YottaDB".
+#. The release number, which starts with "r" and is followed by two numbers separated by a period ("."), e.g., "r1.30". The first is a major release number and the second is a minor release number under the major release. Even minor release numbers indicate formally released software. Odd minor release numbers indicate software builds from "in flight" code under development, between releases.
+#. The operating system. e.g., "Linux".
+#. The CPU architecture, e.g., "x86_64".
 
 .. _txn-proc:
 
@@ -418,6 +418,6 @@ In general, we recommend using either transaction processing or locks, and not m
 Programming in M
 ================
 
-YottaDB includes a complete implementation of the `M <https://en.wikipedia.org/wiki/MUMPS>`_ programming language (also known as MUMPS - see `The Heritage and Legacy of M (MUMPS) – and the Future of YottaDB <https://yottadb.com/heritage-legacy-m-mumps-future-yottadb/>`_) that mostly conforms to `ISO/IEC 11756:1999 <http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=29268&ICS1=35&ICS2=60&ICS3=&scopelist>`_. The `YottaDB M Programmers Guide <../ProgrammersGuide/index.html>`_ documents programming YottaDB in M and is not duplicated here.
+YottaDB includes a complete implementation of the `M <https://en.wikipedia.org/wiki/MUMPS>`_ programming language (also known as MUMPS - see `The Heritage and Legacy of M (MUMPS) - and the Future of YottaDB <https://yottadb.com/heritage-legacy-m-mumps-future-yottadb/>`_) that mostly conforms to `ISO/IEC 11756:1999 <http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=29268&ICS1=35&ICS2=60&ICS3=&scopelist>`_. The `YottaDB M Programmers Guide <../ProgrammersGuide/index.html>`_ documents programming YottaDB in M and is not duplicated here.
 
 YottaDB supports calling between M and C application code, as documented in `Chapter 11 (Integrating External Routines) of the M Programmers Guide <../ProgrammersGuide/extrout.html>`_.

@@ -97,7 +97,7 @@ Return code to YottaDB from an application function that implements a transactio
 Error Return Codes
 ~~~~~~~~~~~~~~~~~~
 
-Symbolic constants for error codes returned by calls to YottaDB are prefixed with :code:`YDB_ERR_` and are all less than zero. The symbolic constants below are not a complete list of all error messages that YottaDB functions can return — error return codes can indicate system errors and database errors, not just application errors. A process that receives a negative return code, including one not listed here, can call :ref:`ydb-get-s-st-fn` to get the value of :ref:`zstatus-isv`.
+Symbolic constants for error codes returned by calls to YottaDB are prefixed with :code:`YDB_ERR_` and are all less than zero. The symbolic constants below are not a complete list of all error messages that YottaDB functions can return - error return codes can indicate system errors and database errors, not just application errors. A process that receives a negative return code, including one not listed here, can call :ref:`ydb-get-s-st-fn` to get the value of :ref:`zstatus-isv`.
 
 Error messages can be raised by the YottaDB runtime system or by the underlying operating system.
 
@@ -247,7 +247,7 @@ This return code from :ref:`ydb-tp-s-st-fn` indicates that the transaction took 
 YDB_ERR_UNIMPLOP
 ^^^^^^^^^^^^^^^^
 
-An operation that is not supported for an intrinsic special variable – of the :ref:`c-simple-api` functions only :ref:`ydb-get-s-st-fn` and :ref:`ydb-set-s-st-fn` are supported – was attempted on an intrinsic special variable.
+An operation that is not supported for an intrinsic special variable - of the :ref:`c-simple-api` functions only :ref:`ydb-get-s-st-fn` and :ref:`ydb-set-s-st-fn` are supported - was attempted on an intrinsic special variable.
 
 ^^^^^^^^^^^^^^^^^^^^
 YDB_ERR_VARNAME2LONG
@@ -361,7 +361,7 @@ As values of the :code:`deltype` parameter, these values indicate to :ref:`ydb-d
 YDB_NOTTP
 ~~~~~~~~~
 
-As a value of the :code:`tptoken` parameter of the :ref:`c-simple-api` multi-threaded functions – those ending in :code:`_st()`, indicates that the caller is not within a :ref:`transaction <txn-proc>`.
+As a value of the :code:`tptoken` parameter of the :ref:`c-simple-api` multi-threaded functions - those ending in :code:`_st()`, indicates that the caller is not within a :ref:`transaction <txn-proc>`.
 
 .. _c-data-struct:
 
@@ -375,8 +375,8 @@ ydb_buffer_t
 
 :code:`ydb_buffer_t` is a descriptor for a string [#]_ value, and consists of the following fields:
 
-- :code:`buf_addr` — pointer to an :code:`unsigned char`, the starting address of a string.
-- :code:`len_alloc` and :code:`len_used` — fields of type :code:`unsigned int` where:
+- :code:`buf_addr` - pointer to an :code:`unsigned char`, the starting address of a string.
+- :code:`len_alloc` and :code:`len_used` - fields of type :code:`unsigned int` where:
 
   - :code:`len_alloc` is the number of bytes allocated to store the string,
   - :code:`len_used` is the length in bytes of the currently stored string, and
@@ -392,8 +392,8 @@ ydb_string_t
 
 :code:`ydb_string_t` is a descriptor for a string provided for compatibility with existing code, and consists of the following fields:
 
-- :code:`address` — pointer to an :code:`unsigned char`, the starting address of a string.
-- :code:`length` — the length of the string starting at the :code:`address` field.
+- :code:`address` - pointer to an :code:`unsigned char`, the starting address of a string.
+- :code:`length` - the length of the string starting at the :code:`address` field.
 
 +++++++++++++
 ydb_tpfnptr_t
@@ -532,9 +532,9 @@ to point to an existing null-terminated C string, i.e.,
 
 YottaDB functions are divided into:
 
-- Simple API — a core set of functions that provides easy-to-use access to the major features of YottaDB.
-- Comprehensive API — a more elaborate set of functions for specialized or optimized access to additional functionality within :code:`libyottadb.so` that YottaDB itself uses. The Comprehensive API is a project for the future.
-- Utility Functions — Functions useful to a C application using YottaDB.
+- Simple API - a core set of functions that provides easy-to-use access to the major features of YottaDB.
+- Comprehensive API - a more elaborate set of functions for specialized or optimized access to additional functionality within :code:`libyottadb.so` that YottaDB itself uses. The Comprehensive API is a project for the future.
+- Utility Functions - Functions useful to a C application using YottaDB.
 
 .. _c-simple-api:
 
@@ -580,10 +580,10 @@ ydb_data_s() / ydb_data_st()
 
 In the location pointed to by :code:`ret_value`, :code:`ydb_data_s()` and :code:`ydb_data_st()` return the following information about the local or global variable node identified by :code:`*varname`, :code:`subs_used` and :code:`*subsarray`.
 
-- 0 — There is neither a value nor a subtree, i.e., it is undefined.
-- 1 — There is a value, but no subtree
-- 10 — There is no value, but there is a subtree.
-- 11 — There are both a value and a subtree.
+- 0 - There is neither a value nor a subtree, i.e., it is undefined.
+- 1 - There is a value, but no subtree
+- 10 - There is no value, but there is a subtree.
+- 11 - There are both a value and a subtree.
 
 It is an error to call :code:`ydb_data_s()` or :code:`ydb_data_st()` on an intrinsic special variable; doing so results in the :code:`YDB_ERR_UNIMPLOP` error. :code:`ydb_data_s() / ydb_data_st()` returns:
 
@@ -1053,9 +1053,9 @@ ydb_tp_s() / ydb_tp_st()
 
 As discussed under :ref:`txn-proc`, a function implementing transaction processing logic should use the intrinsic special variable :code:`$trestart` to manage any externally visible action (which YottaDB recommends against, but which may be unavoidable). The function referenced by :code:`tpfn` should return one of the following:
 
-- :code:`YDB_OK` — application logic indicates that the transaction can be committed (the YottaDB engine may still decide that a restart is required to ensure ACID transaction properties) as discussed under :ref:`txn-proc`.
-- :code:`YDB_TP_RESTART`  — application logic indicates that the transaction should restart.
-- :code:`YDB_TP_ROLLBACK` — application logic indicates that the transaction should not be committed.
+- :code:`YDB_OK` - application logic indicates that the transaction can be committed (the YottaDB engine may still decide that a restart is required to ensure ACID transaction properties) as discussed under :ref:`txn-proc`.
+- :code:`YDB_TP_RESTART`  - application logic indicates that the transaction should restart.
+- :code:`YDB_TP_ROLLBACK` - application logic indicates that the transaction should not be committed.
 - :code:`YDB_ERR_PARAMINVALID` when :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one variable name in :code:`varnames`.
 - An :ref:`error return code <err-ret-codes>` returned by a YottaDB function called by the function. This case is treated the same way as if `YDB_TP_ROLLBACK` was returned (i.e. the application indicates that this transaction should not be committed).
 
@@ -1331,7 +1331,7 @@ ydb_fork_n_core()
 
 A core is a snapshot of a process, to help debug application code, for example to troubleshoot an out-of-design condition. When a process executes :code:`ydb_fork_n_core()`, it forks. The child process sends itself a signal to generate a core and terminate. On termination of the child process, the parent process continues execution. Note that depending on the nature of the condition necessitating a core, an :code:`exit()` may well be the right action for the parent process. An :code:`exit()` call will drive YottaDB exit handlers to perform clean shutdown of databases and devices the process has open.
 
-The content, location, and naming of cores is managed by the operating system – see :code:`man 5 core` for details. We recommend that you set :code:`kernel.core_uses_pid` to 1 to make it easier to identify and track cores. As cores will likely contain protected confidential information, you *must* ensure appropriate configuration and management of cores.
+The content, location, and naming of cores is managed by the operating system - see :code:`man 5 core` for details. We recommend that you set :code:`kernel.core_uses_pid` to 1 to make it easier to identify and track cores. As cores will likely contain protected confidential information, you *must* ensure appropriate configuration and management of cores.
 
 In a multi-threaded environment, only the thread that executes :code:`ydb_fork_n_core()` or :code:`ydb_fork_n_core()` survives in the child and is dumped.
 

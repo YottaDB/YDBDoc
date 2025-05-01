@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -30,17 +30,17 @@ As C application code can call POSIX functions directly, the plugin has no value
 
 When installed in the :code:`$ydb_dist/plugin` directory, YDBPosix consists of the following files:
 
-- :code:`libydbposix.so` – a shared library with the C software shims
+- :code:`libydbposix.so` - a shared library with the C software shims
 
-- :code:`ydbposix.xc` – a call-out table to allow M code to call the functions in :code:`libydbposix.so`
+- :code:`ydbposix.xc` - a call-out table to allow M code to call the functions in :code:`libydbposix.so`
 
-- :code:`r/_ydbposix.m` – M source code for higher level :code:`^%ydbposix` entryrefs that M application code can call.
+- :code:`r/_ydbposix.m` - M source code for higher level :code:`^%ydbposix` entryrefs that M application code can call.
 
-- :code:`r/_ydbposixtest.m` – M source code for :code:`%ydbposixtest` routine to test plugin with :code:`yottadb -run %ydbposix`
+- :code:`r/_ydbposixtest.m` - M source code for :code:`%ydbposixtest` routine to test plugin with :code:`yottadb -run %ydbposix`
 
-- :code:`o/_ydbposix.so` – a shared library with M mode object code for :code:`^%ydbposix` & :code:`^%ydbposixtest` entryrefs
+- :code:`o/_ydbposix.so` - a shared library with M mode object code for :code:`^%ydbposix` & :code:`^%ydbposixtest` entryrefs
 
-- :code:`o/utf8/_ydbposix.so` – if YottaDB is installed with UTF-8 support, a shared library with UTF-8 mode object code
+- :code:`o/utf8/_ydbposix.so` - if YottaDB is installed with UTF-8 support, a shared library with UTF-8 mode object code
 
 - ``posix/libmath.ref`` - reference data for ``%ydbposixtest``
 
