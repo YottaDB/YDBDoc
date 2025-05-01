@@ -1776,7 +1776,7 @@ Specifies the number of mutex slots for a database file. YottaDB uses mutex slot
 -R[ESERVED_BYTES]=size
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Specifies the size to be reserved in each database block. RESERVED_BYTES is generally used to reserve room for compatibility with other implementations of M or to observe communications protocol restrictions. RESERVED_BYTES may also be used as a user-managed fill factor.
+Specifies the size to be reserved in each database block. RESERVED_BYTES is generally used to reserve room for compatibility with other implementations of M or to observe communications protocol restrictions. RESERVED_BYTES may also be used as a user-managed fill factor. RESERVED_BYTES controls both index and data reserved bytes.
 
 The minimum RESERVED_BYTES is 0 bytes. The maximum RESERVED_BYTES = Block Size - Key Size - 40 (Block/Record header overheads).
 
