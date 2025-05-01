@@ -2764,7 +2764,7 @@ Example:
 %FREECNT
 +++++++++++++++
 
-The %FREECNT utility displays the number of free blocks in the database files associated with the current global directory.
+The %FREECNT utility displays the number of free and total blocks in the database files associated with the current global directory.
 
 Example:
 
