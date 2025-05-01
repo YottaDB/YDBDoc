@@ -557,61 +557,67 @@ Example:
 .. code-block:: bash
 
    YDB>zshow "*"
+   %cli="lock +^x set str=""The quick brown fox jumps over the lazy dog"" break"
+   etrap="Write:(0=$STACK) ""Error occurred: "",$ZStatus,!"
+   str="The quick brown fox jumps over the lazy dog"
    $DEVICE=""
-   $ECODE=",M6,Z150373850,"
-   $ESTACK=2
-   $ETRAP=""
-   $HOROLOG="64813,21971"
-   $IO="/dev/pts/0"
-   $JOB=14550
-   $KEY=$C(13)
-   $PRINCIPAL="/dev/pts/0"
+   $ECODE=""
+   $ESTACK=1
+   $ETRAP="Write:(0=$STACK) ""Error occurred: "",$ZStatus,!"
+   $HOROLOG="67324,61685"
+   $IO="/dev/pts/1"
+   $JOB=229148
+   $KEY=""
+   $PRINCIPAL="/dev/pts/1"
    $QUIT=0
    $REFERENCE=""
-   $STACK=2
+   $STACK=1
    $STORAGE=2147483647
-   $SYSTEM="47,ydb_sysid"
-   $TEST=1
+   $SYSTEM="47,gtm_sysid"
+   $TEST=0
    $TLEVEL=0
    $TRESTART=0
    $X=0
-   $Y=26
+   $Y=25
    $ZA=0
-   $ZALLOCSTOR=680360
+   $ZALLOCSTOR=852256
    $ZAUDIT=0
-   $ZB=$C(13)
-   $ZCHSET="M"
+   $ZB=""
+   $ZCHSET="UTF-8"
    $ZCLOSE=0
    $ZCMDLINE=""
    $ZCOMPILE=""
-   $ZCSTATUS=0
+   $ZCSTATUS=1
    $ZDATEFORM=0
-   $ZDIRECTORY="/path/to/the/current/directory"
+   $ZDIRECTORY="/home/bhaskar/"
    $ZEDITOR=0
    $ZEOF=0
    $ZERROR="Unprocessed $ZERROR, see $ZSTATUS"
-   $ZGBLDIR="/path/to/the/global/directory"
-   $ZHOROLOG="64813,21971,720675,14400"
+   $ZGBLDIR="/tmp/test/r2.03_x86_64/g/yottadb.gld"
+   $ZHOROLOG="67324,61685,605661,14400"
+   $ZICUVER=76.1
    $ZININTERRUPT=0
    $ZINTERRUPT="IF $ZJOBEXAM()"
-   $ZIO="/dev/pts/0"
+   $ZIO="/dev/pts/1"
    $ZJOB=0
    $ZKEY=""
-   $ZLEVEL=3
+   $ZLEVEL=2
+   $ZMALLOCLIM=0
    $ZMAXTPTIME=0
+   $ZMLKHASH=689026651
    $ZMODE="INTERACTIVE"
    $ZONLNRLBK=0
    $ZPATNUMERIC="M"
-   $ZPIN="/dev/pts/0"
-   $ZPOSITION="name+5^dmex"
-   $ZPOUT="/dev/pts/0"
+   $ZPIN="/dev/pts/1"
+   $ZPOSITION="%XCMD+5^%XCMD"
+   $ZPOUT="/dev/pts/1"
    $ZPROMPT="YDB>"
    $ZQUIT=0
-   $ZREALSTOR=697936
-   $ZRELDATE="20180614 00:33"
-   $ZROUTINES=". /usr/local/lib/yottadb/r132 /usr/local/lib/yottadb/r132/plugin/o(/usr/local/lib/yottadb/r132/plugin/r)"
+   $ZREALSTOR=887120
+   $ZRELDATE="20250424 16:55 02e082f2dd2617427228a36721cf37121863768e"
+   $ZROUTINES="/tmp/test/r2.03_x86_64/o/utf8*(/tmp/test/r2.03_x86_64/r /tmp/test/r) /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_ydbaim.so /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_ydbgui.so /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_ydbmwebserver.so /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_ydbocto.so /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_ydbposix.so /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_ydbsyslog.so /extra/usr/local/lib/yottadb/r203/utf8/libyottadbutil.so"
    $ZSOURCE=""
-   $ZSTATUS="150373850,name+5^dmex,%YDB-E-UNDEF, Undefined local variable: bame"
+   $ZSTATUS=""
    $ZSTEP="B"
    $ZSTRPLLIM=0
    $ZSYSTEM=0
@@ -622,34 +628,39 @@ Example:
    $ZTLEVEL=0
    $ZTNAME=""
    $ZTOLDVAL=""
-   $ZTRAP="B"
+   $ZTRAP=""
    $ZTRIGGEROP=""
    $ZTSLATE=""
    $ZTUPDATE=""
    $ZTVALUE=""
    $ZTWORMHOLE=""
-   $ZUSEDSTOR=671689
-   $ZUT=1528970771720738
-   $ZVERSION="YottaDB r1.32 Linux x86_64"
+   $ZUSEDSTOR=852256
+   $ZUT=1745960885605998
+   $ZVERSION="GT.M V7.1-002 Linux x86_64"
    $ZYERROR=""
-   ln=8
-   name="John Doe"
-   /dev/pts/0 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=165 LENG=48
-   MLG:0,MLT:0
-   GLD:*,REG:*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:0
-   DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,
-   TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,
-   DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,
-   CAT:0,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0
-   name+5^dmex    ($ZTRAP)
-       (Direct mode)
-   beg+1^dmex:51a6a6c4739b004094c4545246ce4d68
-   +1^GTM$DMOD    (Direct mode)
+   $ZYINTRSIG=""
+   $ZYRELEASE="YottaDB r2.03 Linux x86_64"
+   $ZYSQLNULL=$ZYSQLNULL
+   /dev/pts/1 OPEN TERMINAL NOPAST NOESCA NOREADONLY TYPE WIDTH=132 LENG=36 TTSYNC NOHOSTSYNC
+   MLG:1,MLT:0
+   LOCK ^x LEVEL=1
+   GLD:*,REG:*,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:1,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:0,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0,STG:0,KTG:0,ZTG:0,DEXA:0,GLB:0,JNL:0,MLK:1,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0,WRL:0,PRG:0,WFL:0,WHE:0
+   GLD:/tmp/test/r2.03_x86_64/g/yottadb.gld,REG:DEFAULT,SET:0,KIL:0,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:1,LKF:0,CTN:0,DRD:0,DWT:0,NTW:0,NTR:0,NBW:0,NBR:0,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:0,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:0,WFR:0,BUS:0,BTS:0,STG:0,KTG:0,ZTG:0,DEXA:0,GLB:0,JNL:0,MLK:1,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0,WRL:0,PRG:0,WFL:0,WHE:0
+	   Indirection    (Direct mode)
+   %XCMD+5^%XCMD:3547d16cf16b747ce523b2cfcc6e9447
+
    YDB>
 
-This example uses the asterisk (*) argument to show all information that ZSHOW offers in this context. First are the Intrinsic Special Variables ($DEVICE-$ZYERROR, also available with ZSHOW "I"), then the local variables (bame, ln and name, also available with ZSHOW "V"), then the ZBREAK locations (name+3^dmex, also available with ZSHOW "B"), then the device information (also available with ZSHOW "D"), then the M stack (also available with ZSHOW "S"). ZSHOW "S" is the default for ZSHOW with no arguments.
+This example uses the asterisk (*) argument to show all information that ZSHOW offers in this context.
 
-Context information that does not exist in this example includes M LOCKs of this process (ZSHOW "L").
+* Local variables (`%cli`, `etrap` and `str`, also available with ZSHOW "V")
+* Intrinsic Special Variables ($DEVICE through $ZYSQLNULL, also available with ZSHOW "I")
+* Device information (also available with ZSHOW "D")
+* M Locks (also available with ZSHOW "L")
+* Database statistics for open database regions (also available with ZSHOW "G")
+* M stack (also available with ZSHOW "S"; the default for an argumentless ZSHOW)
+
+Context information that does not exist in this example is the break (available with ZSHOW "B").
 
 In addition to directing its output to the current device, ZSHOW can place its output in a local or global variable array. For more information, see the command description :ref:`zshow-command`.
 

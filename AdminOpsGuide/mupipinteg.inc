@@ -35,8 +35,10 @@ The format of the MUPIP INTEG command is:
     -BL[OCK]=hexa;block-number
     -BR[IEF]
     -DBG
+    -DMAX[BLOCKSIZE][=integer]
     -FA[ST]
     -FU[LL]
+    -IMAX[BLOCKSIZE][=integer]
     -[NO]K[EYRANGES]
     -[NO]MAP[=integer]
     -[NO]MAXK[EYSIZE][=integer]
@@ -129,6 +131,18 @@ Displays a single summary report by database file of the total number of directo
 
 Produces verbose output to help with debugging. We recommend using :ref:`VERBOSE <integ-verbose>` instead.
 
+^^^^^^^^^^^^^^
+DMAXBLOCKSIZE
+^^^^^^^^^^^^^^
+
+Specifies the maximum actual size of a data-level block in the database; any data block which contains data in excess of this size causes INTEG to report the block number, its path, and an error. The format of the DMAXBLOCKSIZE qualifier is:
+
+.. code-block:: none
+
+   -DMAX[BLOCKSIZE]=integer
+
+.. _integ-fast:
+
 ^^^^^^
 -FAST
 ^^^^^^
@@ -186,6 +200,16 @@ Displays an expanded report for a MUPIP INTEG operation. With FULL specified, MU
 * By default, INTEG reports are BRIEF.
 
 * Use FULL to have INTEG report all global names in a region or list of regions.
+
+^^^^^^^^^^^^^^
+IMAXBLOCKSIZE
+^^^^^^^^^^^^^^
+
+Specifies the maximum actual size of an index-level block in the database; any index block which contains data in excess of this size causes integ to report the block number, its path, and an error. The format of the IMAXBLOCKSIZE qualifier is:
+
+.. code-block:: none
+
+   -IMAX[BLOCKSIZE]=integer
 
 ^^^^^^^^^^^
 -KEYRANGES

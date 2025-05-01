@@ -667,6 +667,7 @@ or
    -BLO[CKS_FREE]=free-blocks
    -CU[RRENT_TN]=transaction-number
    -COM[MITWAIT_SPIN_COUNT]=boolean
+   -DATA[_RESERVED_BYTES]=reserved-bytes
    -DEC[LOCATION]=value
    -DEF[_COLLATION]=value
    -ENCRYPTION_HASH
@@ -675,7 +676,8 @@ or
    -FU[LLY_UPGRADED]=boolean
    -GV[STATSRESET]
    -HARD_SPIN_COUNT=Mutex-hard-spin-count
-   -[HEXLOCATION]=value
+   -HE[XLOCATION]=value
+   -INDEX[_RESERVED_BYTES]=reserved-bytes
    -INT[ERRUPTED_RECOV]=boolean
    -JNL_YIELD_LIMIT=journal-yeild-limit
    -KE[Y_MAX_SIZE]=key-max-size
@@ -857,7 +859,7 @@ Use only with: -FILEHEADER
 -B[YTESTREAM]=transaction_number
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Changes the transaction number in the file header of the last incremental backup to the value specified. Use this qualifier only in conjunction with the -FILEHEADER qualifier. For compatibility issues with prior versions, this can still be specified as -B_COMPREHENSIVE.
+Changes the transaction number in the file header of the last incremental backup to the value specified. Use this qualifier only in conjunction with the -FILEHEADER qualifier. For compatibility issues with prior versions, this can still be specified as -B_INCREMENTAL.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 -D[ATABASE]=transaction_number
@@ -912,6 +914,14 @@ Changes the hexadecimal current transaction number for the current region.
 
 Use only with: -FILEHEADER
 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-DATA[_RESERVED_BYTES]=data_reserved_bytes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sets data reserved bytes. YottaDB will not utilize whatever space is reserved in performing updates on data blocks in the database. The default value is zero.
+
+Use only with: -FILEHEADER
+
 ^^^^^^^^^^^^
 -DECLOCATION
 ^^^^^^^^^^^^
@@ -926,7 +936,7 @@ Use only with: -FILEHEADER
 
 Changes the hash of the password stored in the database file header if and when you change the hash library. For more information on key management and reference implementation, refer to `Chapter 12: "Database Encryption" <./encryption.html>`_.
 
-.. note::
+.. warning::
    An incorrect hash renders the database useless.
 
 Use only with: -FILEHEADER
@@ -984,6 +994,14 @@ Use only with: -FILEHEADER
 ^^^^^^^^^^^^
 
 Specifies a hexadecimal offset with the file header. If -VALUE is specified, YottaDB puts it at that location.
+
+Use only with: -FILEHEADER
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-INDEX[_RESERVED_BYTES]=index_reserved_bytes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sets index reserved bytes. YottaDB will not utilize whatever space is reserved in performing updates on index blocks in the database. The default value is zero.
 
 Use only with: -FILEHEADER
 
@@ -1606,34 +1624,34 @@ This command displays an output like the following:
 
 .. code-block:: bash
 
-   File            /tmp/test/r2.01_x86_64/g/yottadb.dat
+   File            /tmp/test/r2.03_x86_64/g/yottadb.dat
    Region          DEFAULT
-   Date/Time       27-MAR-2024 17:43:10 [$H = 66926,63790]
-     Access method                                  MM  Global Buffers                        1000
-     Reserved Bytes                                  0  Block size (in bytes)                 4096
-     Maximum record size                          4080  Starting VBN                          8193
-     Maximum key size                              255  Total blocks            0x0000000000001392
-     Null subscripts                             NEVER  Free blocks             0x0000000000001384
+   Date/Time       29-APR-2025 15:29:01 [$H = 67324,55741]
+     Access method                                  BG  Global Buffers                       10000
+							Block size (in bytes)                 4096
+     Maximum record size                       1048576  Starting VBN                          8193
+     Maximum key size                             1019  Total blocks            0x0000000000002724
+     Null subscripts                             NEVER  Free blocks             0x000000000000270A
      Standard Null Collation                      TRUE  Free space                      0x00000000
-     Last Record Backup             0x0000000000000001  Extension Count                      10000
-     Last Database Backup           0x0000000000000001  Number of local maps                    10
-     Last Bytestream Backup         0x0000000000000001  Lock space                      0x000000DC
+     Last Record Backup             0x0000000000000001  Extension Count                      20000
+     Last Database Backup           0x0000000000000001  Number of local maps                    20
+     Last Bytestream Backup         0x0000000000000010  Lock space                      0x000000DC
      In critical section                    0x00000000  Timers pending                           0
      Cache freeze id                        0x00000000  Flush timer                    00:00:01:00
-     Freeze match                           0x00000000  Flush trigger                          938
+     Freeze match                           0x00000000  Flush trigger                         9375
      Freeze online                               FALSE  Freeze online autorelease            FALSE
-     Current transaction            0x0000000000002AE3  No. of writes/flush                      7
+     Current transaction            0x0000000000002381  No. of writes/flush                      7
      Maximum TN                     0xFFFFFFF803FFFFFF  Certified for Upgrade to                V7
      Maximum TN Warn                0xFFFFFFD813FFFFFF  Desired DB Format                       V7
      Master Bitmap Size                           8176  Blocks to Upgrade       0x0000000000000000
      Create in progress                          FALSE  Modified cache blocks                    0
      Reference count                                 1  Wait Disk                                0
-     Journal State                       [inactive] ON  Journal Before imaging               FALSE
+     Journal State                       [inactive] ON  Journal Before imaging                TRUE
      Journal Allocation                           2048  Journal Extension                     2048
      Journal Buffer Size                          2312  Journal Alignsize                     4096
      Journal AutoSwitchLimit                   8386560  Journal Epoch Interval                 300
      Journal Yield Limit                             8  Journal Sync IO                      FALSE
-     Journal File: /tmp/test/r2.01_x86_64/g/yottadb.mjl
+     Journal File: /tmp/test/r2.03_x86_64/g/yottadb.mjl
      Mutex Hard Spin Count                         128  Mutex Sleep Spin Count                 128
      Mutex Queue Slots                            1024  KILLs in progress                        0
      Replication State                             OFF  Region Seqno            0x0000000000000001
@@ -1647,7 +1665,8 @@ This command displays an output like the following:
      LOCK shares DB critical section             FALSE  Read Only                              OFF
      Recover interrupted                         FALSE  Full Block Write                         0
      StatsDB Allocation                           2050
-     Max conc proc time                     1711463747  Max Concurrent processes                 1
+     Data Reserved Bytes                             0  Index Reserved Bytes                     0
+     Max conc proc time                     1745872764  Max Concurrent processes                 2
      Reorg Sleep Nanoseconds                         0
 
 Note that certain fileheader elements appear depending on the current state of database. For example, if Journaling is not enabled in the database, DSE does not display Journal data element fields.
@@ -2095,7 +2114,7 @@ This command flags block 20 as free. A sample DSE DUMP output block 0 is as foll
 
 .. code-block:: bash
 
-   Block 0  Size 90  Level -1  TN 10B76A V5   Master Status: Free Space
+   Block 0  Size 90  Level -1  TN 10B76A V7   Master Status: Free Space
                    Low order                         High order
    Block        0: |  XXXXXXXX  XXXXXXXX  XXXXXXXX  XXXXXXXX  |
    Block       20: |  :XXXXXXX  XXXXXXXX  XXXXXXXX  XXXXXXXX  |
@@ -2127,7 +2146,7 @@ This command marks block 20 as busy. A sample DSE DUMP output of block 0 is as f
 
 .. code-block:: bash
 
-   Block 0  Size 90  Level -1  TN 1 V5   Master Status: Free Space
+   Block 0  Size 90  Level -1  TN 1 V7   Master Status: Free Space
                    Low order                         High order
    Block        0: |  XXX.....  ........  ........  ........  |
    Block       20: |  X.......  ........  ........  ........  |
@@ -2829,7 +2848,7 @@ DSE Command Summary
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -CU[RRENT_TN]=transaction number             | Use only with -FILEHEADER                                                  |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -DATA[_RESERVED_BYTES]=data_reserved_bytes   | Use only with -FILEHEADER;decimal                                          |
+| \-                                       | -DATA[_RESERVED_BYTES]=data_reserved_bytes   | Use only with -FILEHEADER; decimal                                         |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | DECL[OCATION]=value                          | Use only with -FILEHEADER; decimal                                         |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
@@ -2849,7 +2868,7 @@ DSE Command Summary
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -HEXL[OCATION]=value                         | Use only with -FILEHEADER;hexa                                             |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -INDEX[_RESERVED_BYTES]=index_reserved_bytes | Use only with -FILEHEADER;decimal                                          |
+| \-                                       | -INDEX[_RESERVED_BYTES]=index_reserved_bytes | Use only with FILEHEADER; decimal                                          |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -INT[ERRUPTED_RECOV]=boolean                 | \-                                                                         |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
@@ -2972,8 +2991,8 @@ DSE Command Summary
 | :ref:`dse-open`                          | -F[ILE]=file                                 | \-                                                                         |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
 | :ref:`dse-overwrite`                     | -B[LOCK]=block_number                        | \-                                                                         |
-|                                          |                                              |                                                                            |
-|                                          | -D[ATA]=string                               |                                                                            |
++------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | -D[ATA]=string                               | \-                                                                         |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -O[FFSET]=offset                             | \-                                                                         |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
@@ -2984,14 +3003,14 @@ DSE Command Summary
 | \-                                       | -T[O]=block_number                           | \-                                                                         |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -I[NDEX]=block_number                        | \-                                                                         |
-|                                          |                                              |                                                                            |
-|                                          | -L[OST]=block_number                         |                                                                            |
-|                                          |                                              |                                                                            |
-|                                          | -[NOT]BUSY=busy/free                         |                                                                            |
-|                                          |                                              |                                                                            |
-|                                          | -S[TAR]=block_number                         |                                                                            |
-|                                          |                                              |                                                                            |
-|                                          | -L[OWER]=key                                 |                                                                            |
++------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | -L[OST]=block_number                         | \-                                                                         |
++------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | -[NOT]BUSY=busy/free                         | \-                                                                         |
++------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | -S[TAR]=block_number                         | \-                                                                         |
++------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | -L[OWER]=key                                 | \-                                                                         |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
 | \-                                       | -U[PPER]=key                                 | \-                                                                         |
 +------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
