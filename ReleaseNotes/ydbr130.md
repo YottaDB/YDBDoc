@@ -1,7 +1,7 @@
 <!---
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2020-2022 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2020-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -23,6 +23,7 @@
 | --------- | ---- | --------------------- |
 | 1.00      | August 14, 2020 | r1.30 Initial Release |
 | 1.01      | May 23, 2021 | Change supported Debian release from Buster to Bullseye |
+| 1.02      | May 8, 2025 | Change "smart" quotes to simple double quotes |
 
 ## Contact Information
 
@@ -304,7 +305,7 @@ YottaDB r1.30 incorporates enhancements and fixes from [GT.M V6.3-008](http://ti
 
   - Unsigned numbers in the range 0 through 0xFFFFFFFFFFFFFFFF can be converted. Decimal return values greater than 999999999999999999 (YottaDB's maximum numeric size) are returned as strings.
   - Hexadecimal numbers are always converted to positive decimal numbers.
-  - As conversion from hexadecimal numbers preceded by `"-"` to decimal is not considered meaningful, if the number to be converted is a “negative” hexadecimal number (e.g., `"-F"`), the result is 0.
+  - As conversion from hexadecimal numbers preceded by `"-"` to decimal is not considered meaningful, if the number to be converted is a "negative" hexadecimal number (e.g., `"-F"`), the result is 0.
   - Conversion from negative decimal numbers to hexadecimal returns the hexadecimal value of the 2's complement of the number, e.g., the value of `$ZCONVERT(-23,"DEC","HEX")` is `"E9"`.
 
   The ^%DH() and ^%HD() utility programs use fast $ZCONVERT() conversion when the values supplied are in the range that $ZCONVERT() supports; they otherwise revert to existing conversion logic.

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -854,7 +854,7 @@ This example invokes %HO as an extrinsic function with the FUNC label.
 The ^%JSWRITE utility routine converts a glvn structure or a series of SET @ arguments to a string of JSON objects. The format of the ^%JSWRITE utility is:
 
 .. code-block:: none
-		
+
    ^%JSWRITE(glvnode,[expr1,expr2])
 
 * glvnode specifies the string containing the subscripted/unsubscripted global or local variable name. When glvnode evaluates to an empty string ("") or there are no arguments, %JSWRITE considers all subscripted local variables in scope for conversion.
@@ -903,23 +903,23 @@ Examples:
    demodevtest("Developer3","Token4","testSetup","holt","t","SendReport",65401,32073)=1
    demodevtest("Developer3","Token4","testSetup","holt","t","tconv",65401,32025)=0
 
-   YDB>set glvn="demodevtest(""Developer2"")" 
+   YDB>set glvn="demodevtest(""Developer2"")"
 
-   YDB>do ^%JSWRITE(glvn,"*") ; JS Object Strings: All descendants of demodevtest("Developer2") 
+   YDB>do ^%JSWRITE(glvn,"*") ; JS Object Strings: All descendants of demodevtest("Developer2")
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"22073":1}}}}}}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"22025":0}}}}}}}}}
 
-   YDB>do ^%JSWRITE(glvn,"[*]") ; Array: All descendants of demodevtest("Developer2") 
+   YDB>do ^%JSWRITE(glvn,"[*]") ; Array: All descendants of demodevtest("Developer2")
    [{"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"22073":1}}}}}}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"22025":0}}}}}}}}}]
 
-   YDB> do ^%JSWRITE(glvn,"#") ; JS Object Strings: All descendants of demodevtest starting from demodevtest("Developer2") 
+   YDB> do ^%JSWRITE(glvn,"#") ; JS Object Strings: All descendants of demodevtest starting from demodevtest("Developer2")
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}}
@@ -931,7 +931,7 @@ Examples:
    {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"32073":1}}}}}}}}}
    {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"32025":0}}}}}}}}}
 
-   YDB>do ^%JSWRITE(glvn,"[#]") ; Array: All descendants of demodevtest starting from demodevtest("Developer2") 
+   YDB>do ^%JSWRITE(glvn,"[#]") ; Array: All descendants of demodevtest starting from demodevtest("Developer2")
    [{"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}},
@@ -1821,7 +1821,7 @@ The %GED utility enables you to edit the globals in a full-screen editor environ
 
 Edit^: Requests the name, in ZWRITE format, of a global to edit.
 
-Only one global can be edited at a time with %GED, see “Prompts” above for descriptions of valid input for subscripts.
+Only one global can be edited at a time with %GED, see "Prompts" above for descriptions of valid input for subscripts.
 
 **Examples of %GED**
 
@@ -2724,7 +2724,7 @@ The internationalization utilities are:
 
 %PATCODE: Loads pattern definition files for use within an active database.
 
-These utilities are an integral part of the YottaDB functionality that permits you to customize your applications for use with other languages. For a description of these utilities, refer to `Chapter 12: “Internationalization” <internatn.html>`_.
+These utilities are an integral part of the YottaDB functionality that permits you to customize your applications for use with other languages. For a description of these utilities, refer to `Chapter 12: "Internationalization" <internatn.html>`_.
 
 ----------------------------
 System Management Utilities
@@ -2764,7 +2764,7 @@ Example:
 %FREECNT
 +++++++++++++++
 
-The %FREECNT utility displays the number of free blocks in the database files associated with the current global directory.
+The %FREECNT utility displays the number of free and total blocks in the database files associated with the current global directory.
 
 Example:
 
@@ -3354,7 +3354,7 @@ YottaDB strongly recommends that except as documented here for sharing and gathe
 As they do for unshared statistics, shared statistics reflect all database actions for a TP transaction, including those during RESTARTs. Because the sharing of statistics is not a database operation that modifies the relative time stamps that YottaDB uses to maintain serialized operation preserving the Consistency and Isolation aspects of ACID operation, statistics generated by a sharing process inside a transaction (TSTART/TCOMMIT) do not cause transaction restarts as a consequence of updates to shared statistics by other processes.
 
 .. note::
-   See also: ydb_statsdir (which specifies the directory for database files into which processes that have opted-in to sharing global statistics place their statistics as binary data) and ydb_statshare (which specifies an initial value for the characteristic controlled by VIEW “[NO]STATSHARE” in application code) in the `Environment Variables <../AdminOpsGuide/basicops.html#env-vars>`_ section of the documentation. VIEW “[NO]STATSHARE”[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing, more information :ref:`here <keywords-view-command>`.
+   See also: ydb_statsdir (which specifies the directory for database files into which processes that have opted-in to sharing global statistics place their statistics as binary data) and ydb_statshare (which specifies an initial value for the characteristic controlled by VIEW "[NO]STATSHARE" in application code) in the `Environment Variables <../AdminOpsGuide/basicops.html#env-vars>`_ section of the documentation. VIEW "[NO]STATSHARE"[:<region-list>] enables or disables database statistics sharing for listed regions which permit such sharing, more information :ref:`here <keywords-view-command>`.
 
 ----------------------------
 UTF-8 Mode Utility Routines

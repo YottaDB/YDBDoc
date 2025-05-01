@@ -27,7 +27,7 @@ There are two wrappers for programming YottaDB in `Go <https://golang.org/>`_, `
 
 The documentation below is specific to the YottaDB Go wrapper. Please use the link to `mg_go <https://github.com/chrisemunt/mg_go>`_ to access its documentation.
 
-The YottaDB Go wrapper wraps the :ref:`c-simple-api` threaded functions and uses `cgo <https://golang.org/cmd/cgo/>`_ to provide a “yottadb” package for access from Go application code. The wrapper must be installed on a system after YottaDB is installed. There are two Go APIs:
+The YottaDB Go wrapper wraps the :ref:`c-simple-api` threaded functions and uses `cgo <https://golang.org/cmd/cgo/>`_ to provide a "yottadb" package for access from Go application code. The wrapper must be installed on a system after YottaDB is installed. There are two Go APIs:
 
 - :ref:`go-easy-api` aims to be a straightforward, easy-to-use API to access YottaDB without limiting the functionality of YottaDB. The :ref:`go-easy-api` consists of :ref:`go-easy-api-funcs` that use standard Go data types and structures.
 - :ref:`go-simple-api` aims to improve performance by reducing copying between Go and YottaDB heaps by defining structures :code:`BufferT`, :code:`BufferTArray`, and :code:`KeyT` which contain pointers to structures and data in the YottaDB heap. :ref:`go-simple-api` functionality is provided by Go methods where a method can meaningfully be associated with a structure, and by Go functions where there is no meaningful association with a structure.
@@ -36,7 +36,7 @@ As the Go language has important differences from C (for example, it has structu
 
 Go application code *must not* directly use the YottaDB C API structures and functions (those prefixed by :code:`C.` or described in the :ref:`C Simple API <c-simple-api>`) as such usage bypasses important controls, but should instead use the structures, methods and functions exposed by the YottaDB Go wrapper. :code:`C.` prefixed structures and functions are mentioned only for clarity in documentation and brevity of explanation. For example, :code:`C.ydb_buffer_t` is the C :code:`ydb_buffer_t` structure defined in  :ref:`c-data-struct`.
 
-All subsections of the :code:`Programming in Go` section are prefixed with “Go” to ensure unique names for hyperlinking.
+All subsections of the :code:`Programming in Go` section are prefixed with "Go" to ensure unique names for hyperlinking.
 
 As Go implementations are inherently multi-threaded, where the :ref:`C Simple API <c-simple-api>` provides separate functions for use in multi-threaded applications, e.g., :ref:`ydb-get-s-st-fn`, the Go wrapper wraps the function for use in multi-threaded applications. Also, to accommodate Go's multi-threading, calls include an :ref:`errstr <errstr>` parameter to get the correct :ref:`zstatus-isv` for each call.
 
@@ -85,7 +85,7 @@ The :ref:`go-quick-start` assumes that YottaDB has already been installed as des
         $ go run .
         $ go build && ./yottadb-example
 
-#. As a sample program, you can download the `wordfreq.go program <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/go/inref/wordfreq.go>`_,   with a `reference input file <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/simpleapi/outref/wordfreq_input.txt>`_ and `corresponding reference output file <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/simpleapi/outref/wordfreq_output.txt>`_. 
+#. As a sample program, you can download the `wordfreq.go program <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/go/inref/wordfreq.go>`_,   with a `reference input file <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/simpleapi/outref/wordfreq_input.txt>`_ and `corresponding reference output file <https://gitlab.com/YottaDB/DB/YDBTest/-/raw/master/simpleapi/outref/wordfreq_output.txt>`_.
 
 #. Run your program and verify that the output matches the reference output. For example:
 
@@ -212,7 +212,7 @@ A global or local variable node, or an intrinsic special variable, is specified 
 
 As the :ref:`go-easy-api` involves more copying of data between the Go and YottaDB runtime systems, it requires the CPU to perform a little more work than the :ref:`go-simple-api` does. Whether or not this has a measurable impact on performance depends on the application and workload.
 
-The length of strings (values and subscripts) in YottaDB is variable, as is the number of subscripts a local or global variable can have. The :ref:`go-simple-api` requires application code to allocate memory for buffers, raising errors when allocated memory (either size or number of buffers) is insufficient. Requiring application code using the :ref:`go-easy-api` to similarly allocate memory would be at odds with our goal of having it “just work”.  Although YottaDB provides functionality to *a priori* determine the length of a value in order to allocate required memory, doing this for every call would adversely affect performance. The :ref:`go-easy-api` therefore allocates buffers initially of a size and number we believe to be reasonable. Whenever a result exceeds its allocation and returns an error, YottaDB expands the allocation transparently to the caller, and repeats the operation, remembering the expanded size for future allocations in the process.
+The length of strings (values and subscripts) in YottaDB is variable, as is the number of subscripts a local or global variable can have. The :ref:`go-simple-api` requires application code to allocate memory for buffers, raising errors when allocated memory (either size or number of buffers) is insufficient. Requiring application code using the :ref:`go-easy-api` to similarly allocate memory would be at odds with our goal of having it "just work".  Although YottaDB provides functionality to *a priori* determine the length of a value in order to allocate required memory, doing this for every call would adversely affect performance. The :ref:`go-easy-api` therefore allocates buffers initially of a size and number we believe to be reasonable. Whenever a result exceeds its allocation and returns an error, YottaDB expands the allocation transparently to the caller, and repeats the operation, remembering the expanded size for future allocations in the process.
 
 .. _go-easy-api-funcs:
 
@@ -241,7 +241,7 @@ Go Easy API Functions
 Go Simple API
 ---------------
 
-The Go Simple API consists of :code:`Go Data Structures & Type Definitions`, :code:`Go Simple API BufferT Methods`, :code:`Go Simple API BufferTArray Methods` and :code:`Go Simple API KeyT Methods`. Each of them wraps a function in the :ref:`C Simple API <c-simple-api>` – refer to the descriptions of those functions for more detailed information. The majority of the functionality is in :code:`Go Simple API KeyT Methods`.
+The Go Simple API consists of :code:`Go Data Structures & Type Definitions`, :code:`Go Simple API BufferT Methods`, :code:`Go Simple API BufferTArray Methods` and :code:`Go Simple API KeyT Methods`. Each of them wraps a function in the :ref:`C Simple API <c-simple-api>` - refer to the descriptions of those functions for more detailed information. The majority of the functionality is in :code:`Go Simple API KeyT Methods`.
 
 -------------------------------------
 Go Data Structures & Type Definitions
@@ -532,8 +532,8 @@ Go ReleaseT()
 
 Returns a string consisting of six space separated pieces to provide version information for the Go wrapper and underlying YottaDB release:
 
-- The first piece is always “gowr” to identify the Go wrapper.
-- The Go wrapper release number, which starts with “v” and is followed by three numbers separated by a period (“.”), e.g., “v0.90.0” mimicking `Semantic Versioning <https://semver.org/>`_. The first is a major release number, the second is a minor release number under the major release and the third is a patch level. Even minor and patch release numbers indicate formally released software. Odd minor release numbers indicate software builds from “in flight” code under development, between releases. Note that although they follow the same format, Go wrapper release numbers are different from the release numbers of the underlying YottaDB release as reported by :ref:`zyrelease-isv`.
+- The first piece is always "gowr" to identify the Go wrapper.
+- The Go wrapper release number, which starts with "v" and is followed by three numbers separated by a period ("."), e.g., "v0.90.0" mimicking `Semantic Versioning <https://semver.org/>`_. The first is a major release number, the second is a minor release number under the major release and the third is a patch level. Even minor and patch release numbers indicate formally released software. Odd minor release numbers indicate software builds from "in flight" code under development, between releases. Note that although they follow the same format, Go wrapper release numbers are different from the release numbers of the underlying YottaDB release as reported by :ref:`zyrelease-isv`.
 - The third through sixth pieces are :ref:`zyrelease-isv` from the underlying YottaDB release.
 
 ++++++++++++++

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -38,18 +38,18 @@ Figure 1 shows a representative application software stack for YottaDB applicati
 .. figure:: ArchitectureBasic.svg
     :width: 75%
     :align: center
-    :alt: Figure 1 – Software Layers
+    :alt: Figure 1 - Software Layers
 
-    Figure 1 – Software Layers
+    Figure 1 - Software Layers
 
-On a system, there is typically one copy of each version of a system library or a release of YottaDB – although a release of YottaDB can be installed in multiple directories on a system, there is no benefit to doing so. That single installation of YottaDB installed in a directory can be used by any number of applications on the system. Sometimes, these are different applications; at other times, they may be multiple installations of the same application, corresponding to multiple development and testing needs, or different production environments.
+On a system, there is typically one copy of each version of a system library or a release of YottaDB - although a release of YottaDB can be installed in multiple directories on a system, there is no benefit to doing so. That single installation of YottaDB installed in a directory can be used by any number of applications on the system. Sometimes, these are different applications; at other times, they may be multiple installations of the same application, corresponding to multiple development and testing needs, or different production environments.
 
 Also as shown in Figure 1, applications can call packages and libraries other than YottaDB, and packages may have common code. In Figure 1, Applications 1 and 2 may both include code to serialize a YottaDB local or global variable structure into `JSON <https://json.org>`_ and back. Applications 1 and 3 may both store time-series data in YottaDB, and include an interface to an external `Discrete Fourier Transform <https://en.wikipedia.org/wiki/Discrete_Fourier_transform>`_ package or library.
 
 Although YottaDB itself is extended by YottaDB developers, additional functionality can be installed in :code:`$ydb_dist` so that applications using YottaDB can access the additional functionality as if that were part of YottaDB.  Installed in the YottaDB directory, :code:`$ydb_dist`, plugins increase the breadth of YottaDB's functionality. Potential benefits include:
 
-- Simpler application configuration – access to a plugin residing in :code:`$ydb_dist` can be accessible to applications as part of their configuration to access YottaDB.
-- Code sharing – common functionality can be reusably packaged, resulting in standardized code and in turn, less code to maintain.
+- Simpler application configuration - access to a plugin residing in :code:`$ydb_dist` can be accessible to applications as part of their configuration to access YottaDB.
+- Code sharing - common functionality can be reusably packaged, resulting in standardized code and in turn, less code to maintain.
 
 A plugin increases the breadth of YottaDB's functionality, and if a wrapper is appropriately extended, can make that additional functionality available through the wrapper. `Octo <https://gitlab.com/YottaDB/DBMS/YDBOcto>`_ and the `GDE GUI <https://gitlab.com/YottaDB/UI/YDBGDEGUI>`_ are examples of plugins developed by YottaDB. The `M web server <https://github.com/shabiel/M-Web-Server>`_ is an example of a plugin developed by the YottaDB community.
 
@@ -58,9 +58,9 @@ Figure 2 shows the same software with functionality moved to plugins. The common
 .. figure:: ArchitecturePlugin.svg
     :width: 75%
     :align: center
-    :alt: Figure 1 – Software Layers with Plugins
+    :alt: Figure 1 - Software Layers with Plugins
 
-    Figure 2 – Software Layers with Plugins
+    Figure 2 - Software Layers with Plugins
 
 As plugins are installed in the YottaDB directory (under :code:`$ydb_dist`), and need to be available to all wrappers and all applications, they need to conform to rules described here.
 
@@ -70,11 +70,11 @@ Plugins
 
 As both M and C have limitations in the information hiding they provide, plugins use namespacing to avoid colliding with applications and with one another. Some of the namespacing conventions are historical, as are the terms call-in (calling from C to M) and call-out (calling from M to C). Names of entities (variables, files, functions, etc.) in plugins are conceptually identified using a triple of (developer, plugin, entity).
 
-A developer name has a long form (e.g., “YottaDB”) and a short form (e.g., “YDB”). “YottaDB” and “YDB” are used in the examples below; substitute your developer names for your plugins.  While developer and plugin names are case-insensitive, file names and variable names may need to use specific cases, as described below.  As developer names must be unique, please email info@yottadb.com to reserve your short- and long-form names.
+A developer name has a long form (e.g., "YottaDB") and a short form (e.g., "YDB"). "YottaDB" and "YDB" are used in the examples below; substitute your developer names for your plugins.  While developer and plugin names are case-insensitive, file names and variable names may need to use specific cases, as described below.  As developer names must be unique, please email info@yottadb.com to reserve your short- and long-form names.
 
-Except for `executable names`_, plugin names and entity names are entirely up to you. The examples below use “Octo” and “GDEGUI” as examples of plugin names.
+Except for `executable names`_, plugin names and entity names are entirely up to you. The examples below use "Octo" and "GDEGUI" as examples of plugin names.
 
-The short form developer name concatenated with a plugin name is called a package name, e.g., “ydbocto” or “ydbgdegui”.
+The short form developer name concatenated with a plugin name is called a package name, e.g., "ydbocto" or "ydbgdegui".
 
 An installed plugin consists of:
 
@@ -132,7 +132,7 @@ M Routines
 
 As the M routine namespace within a process is flat, the M routines of a plugin must be named to minimize the probability of collision not just with one another but also with applications. By convention, M applications are written to avoid names starting with :code:`%Y` or :code:`%y`.
 
-- M routine names start with :code:`%Y` or :code:`%y`, followed by the package name followed by a specific routine name. The specific routine name is optional, if a package has only one routine.  If the package name starts with “Y”, there is no need to start with a double letter, e.g., :code:`%YDBPOSIX` in routine :code:`_YDBPOSIX.m`. M routine source files are in :code:`$ydb_dist/plugin/r`.
+- M routine names start with :code:`%Y` or :code:`%y`, followed by the package name followed by a specific routine name. The specific routine name is optional, if a package has only one routine.  If the package name starts with "Y", there is no need to start with a double letter, e.g., :code:`%YDBPOSIX` in routine :code:`_YDBPOSIX.m`. M routine source files are in :code:`$ydb_dist/plugin/r`.
 
 - The M mode object code for plugins is in :code:`$ydb_dist/plugin/o`. While each routine can be compiled into its own :code:`.o` file, we recommend that each plugin have all its object code placed in a shared library named :code:`<packagename>.so`, with no :code:`.o` files installed.
 
@@ -204,7 +204,7 @@ Local Variables
 
 M code in plugins must NEW local variables that are not needed beyond the QUIT from the entryref call.
 
-C code in plugins and M code that needs configuration or other state beyond the QUIT from an entryref call can use local variables prefixed with :code:`%y` followed by the package name. For package names starting with “Y”, there is no need to double that initial letter.
+C code in plugins and M code that needs configuration or other state beyond the QUIT from an entryref call can use local variables prefixed with :code:`%y` followed by the package name. For package names starting with "Y", there is no need to double that initial letter.
 
 .. _permanent global variable:
 
@@ -212,7 +212,7 @@ C code in plugins and M code that needs configuration or other state beyond the 
 Permanent Global Variables
 ++++++++++++++++++++++++++
 
-“Permanent” global variables are those which should persist beyond the lifetime of current processes, and which should be replicated, for example, global variables storing cross references to accelerate queries. Global variables used by plugins use :code:`^%y` followed by the package name. In this case, the “y” *must* be lower case. For package names starting with “Y”, there is no need to double that initial letter.
+"Permanent" global variables are those which should persist beyond the lifetime of current processes, and which should be replicated, for example, global variables storing cross references to accelerate queries. Global variables used by plugins use :code:`^%y` followed by the package name. In this case, the "y" *must* be lower case. For package names starting with "Y", there is no need to double that initial letter.
 
 ++++++++++++++++++
 Dynamic M Routines

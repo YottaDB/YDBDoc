@@ -48,7 +48,7 @@ or as an expression element,
 
    $&[packagename.]name[^name][parameter-list]
 
-Where packagename, like the name elements, is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation - a later section describes how to transform this into a more richly punctuated name, should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the up-arrow (^). For more information on M names, labelrefs and parameter-lists, refer to `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
+Where packagename, like the name elements, is a valid M name. Because of the parsing conventions of M, the identifier between the ampersand (&) and the optional parameter-list has precisely constrained punctuation - a later section describes how to transform this into a more richly punctuated name, should that be appropriate for the called function. While the intent of the syntax is to permit the name^name to match an M labelref, there is no semantic implication to any use of the up-arrow (^). For more information on M names, labelrefs and parameter-lists, refer to `Chapter 5: "General Language Features of M" <./langfeat.html>`_.
 
 Examples:
 

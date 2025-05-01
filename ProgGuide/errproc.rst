@@ -134,7 +134,7 @@ When an executing YottaDB image encounters an error:
 
 After the action, if any, invoked by $ETRAP, $ZTRAP or EXCEPTION:
 
-* if the process ends in Direct Mode – as a result either of performing a BREAK in the executed string or of starting in Direct Mode – YottaDB reports the error on the principal device.
+* if the process ends in Direct Mode - as a result either of performing a BREAK in the executed string or of starting in Direct Mode - YottaDB reports the error on the principal device.
 * otherwise, if the executed string contains an unstacked transfer of control, the only implicit behavior is that as long as $ECODE'="" and $ZTRAP'="" an attempt to QUIT from the level of the current error causes that error to be reissued at the new stack level.
 * otherwise, if $ETRAP'="" YottaDB performs a QUIT$QUIT "" QUIT and reissues the error at the new stack level.
 * otherwise, $ZTRAP must contain code and YottaDB retries the line of M on which the error occurred.
@@ -157,7 +157,7 @@ Example:
    %YDB-E-INVCMD, Invalid command keyword encountered
    YDB>
 
-In Direct Mode, YottaDB provides access to the RECALL command. RECALL allows you to retrieve a Direct Mode command line with a minimum of typing. The YottaDB line editor allows you to make quick changes or corrections to the command line. For more information on RECALL and the line editor, see `Chapter 4: “Operating and Debugging in Direct Mode” <./opdebug.html>`_.
+In Direct Mode, YottaDB provides access to the RECALL command. RECALL allows you to retrieve a Direct Mode command line with a minimum of typing. The YottaDB line editor allows you to make quick changes or corrections to the command line. For more information on RECALL and the line editor, see `Chapter 4: "Operating and Debugging in Direct Mode" <./opdebug.html>`_.
 
 +++++++++++++++++++++++++++++++++++++++++++++
 Run-Time Errors Outside of Direct Mode
@@ -168,7 +168,7 @@ If YottaDB encounters an error outside of code entered in Direct Mode, YottaDB e
 The $ETRAP and $ZTRAP special variables specify an action that YottaDB should perform when an error occurs during routine execution. $ETRAP and $ZTRAP can establish one or more error handling "actions".
 
 .. note::
-   The environment variable ydb_etrap specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydb_env_set script sets ydb_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs. For more information, refer to “Processing Errors from Direct Mode and Shell”.
+   The environment variable ydb_etrap specifies an initial value of $ETRAP to override the default value of "B" for $ZTRAP as the base level error handler. The ydb_env_set script sets ydb_etrap to "Write:(0=$STACK) ""Error occurred: "",$ZStatus,!" which you can customize to suit your needs. For more information, refer to "Processing Errors from Direct Mode and Shell".
 
 ------------------------------
 Program Handling of Errors
@@ -233,7 +233,7 @@ $ECODE contains a list of errors codes for "active" errors - the error condition
 The most recent error in $ECODE appears first, the oldest last. If the error is defined by the M standard, the code starts with an "M", YottaDB error codes including those provided by OS services start with "Z", and application defined codes must start with "U". Every code is separated by a comma (,) and there is always a comma at the beginning and at the end of a list. YottaDB provided codes are those reported in $ZSTATUS, interpreted by $ZMESSAGE() and recognized as arguments to ZMESSAGE command. When YottaDB supplies a standard error code in $ECODE, it also supplies a corresponding 'Z' code.
 
 .. note::
-   See “$ECode” for a detailed description of $ECODE.
+   See "$ECode" for a detailed description of $ECODE.
 
 Example (setting $ECODE):
 
@@ -260,7 +260,7 @@ SETting $ECODE to an invalid value is an error. SETting $ECODE to a valid error 
    SET $ECODE=",U13-User defined error trap,"
 
 .. note::
-   The value of $ECODE provides information about errors that have occurred since the last time it was reset to an empty string. In addition to the information in this variable, more detailed information can be obtained from the intrinsic function $STACK. For more information, see the section on “$STack()”.
+   The value of $ECODE provides information about errors that have occurred since the last time it was reset to an empty string. In addition to the information in this variable, more detailed information can be obtained from the intrinsic function $STACK. For more information, see the section on "$STack()".
 
 ++++++++++++++++++
 $ZSTATUS Content
@@ -314,7 +314,7 @@ It is often beneficial to NEW both $ETRAP and $ESTACK a the same time.
 $ZTRAP Behavior
 ++++++++++++++++++++++++++
 
-If, at the time of any error, the value of $ZTRAP is non-empty, YottaDB uses the $ZTRAP contents to direct execution of the next action. Refer to the $ZTRAP section in `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
+If, at the time of any error, the value of $ZTRAP is non-empty, YottaDB uses the $ZTRAP contents to direct execution of the next action. Refer to the $ZTRAP section in `Chapter 8: "Intrinsic Special Variables" <./isv.html>`_.
 
 By default, execution proceeds as if the next instruction to be executed were the first one on "the next line", and the code on that next line would be the same as the text in the value of $ZTRAP. Unless $ZTRAP or any code it invokes issues a GOTO or ZGOTO, after YottaDB has executed the code in $ZTRAP, YottaDB attempts to execute the line with the error again. When a value is assigned to $ZTRAP, the new value replaces the previous value. If the value of $ETRAP is a non-empty one, $ETRAP is implicitly NEWed, and the value of $ETRAP becomes equal to the empty string; this ensures that at most one of $ETRAP and $ZTRAP is not the empty string. If the environment variable ydb_ztrap_new evaluates to Boolean TRUE (case insensitive string "TRUE", or case insensitive string "YES", or a non-zero number), $ZTRAP is NEWed when $ZTRAP is SET; otherwise $ZTRAP is not stacked when it is SET.
 
@@ -519,13 +519,13 @@ $ZSTATUS allows the routine to find out which trap character YottaDB encountered
 Error Actions
 ---------------------------------
 
-In the following examples (and the previous one as well), $ETRAP and $ZTRAP in most cases have similar behavior. The most prominent difference is that, when $ETRAP is active, $ECODE determines whether or not a second error in an M stack level triggers an immediate implicit QUIT from that level. For additional information, see the sections on $ECODE and $ETRAP in `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_. Because of the effect of $ECODE on the processing flow when $ETRAP is active, there is a benefit to including appropriate $ECODE maintenance in $ZTRAP related code, so that things stay well behaved when the two mechanisms are intermixed. Other differences are discussed in some of the examples.
+In the following examples (and the previous one as well), $ETRAP and $ZTRAP in most cases have similar behavior. The most prominent difference is that, when $ETRAP is active, $ECODE determines whether or not a second error in an M stack level triggers an immediate implicit QUIT from that level. For additional information, see the sections on $ECODE and $ETRAP in `Chapter 8: "Intrinsic Special Variables" <./isv.html>`_. Because of the effect of $ECODE on the processing flow when $ETRAP is active, there is a benefit to including appropriate $ECODE maintenance in $ZTRAP related code, so that things stay well behaved when the two mechanisms are intermixed. Other differences are discussed in some of the examples.
 
 ++++++++++++++++++++
 Break on an Error
 ++++++++++++++++++++
 
-When $ZTRAP is set to a BREAK command and an error occurs, YottaDB puts the process into Direct Mode. The default for $ZTRAP is a BREAK command. When developing a program, $ZTRAP="BREAK" allows you to investigate the cause of the error from Direct Mode. For information on YottaDB debugging tools, see `Chapter 4: “Operating and Debugging in Direct Mode” <./opdebug.html>`_.
+When $ZTRAP is set to a BREAK command and an error occurs, YottaDB puts the process into Direct Mode. The default for $ZTRAP is a BREAK command. When developing a program, $ZTRAP="BREAK" allows you to investigate the cause of the error from Direct Mode. For information on YottaDB debugging tools, see `Chapter 4: "Operating and Debugging in Direct Mode" <./opdebug.html>`_.
 
 Example:
 
@@ -1258,13 +1258,10 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    ^ERR(13258,"64813,17382","$STACK",4)="SUB3+3^EP13|~|        DO BAD|~||~|"
    ^ERR(13258,"64813,17382","$STACK",5)="BAD+2^EP13|~|        WRITE 1/0|~|,M9,Z150373210,|~|"
    ^ERR(13258,"64813,17382","D",1)="/dev/pts/0 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=165 LENG=48 "
-   ^ERR(13258,"64813,17382","G",0)="GLD:*,REG:*,SET:77,KIL:3,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:3,DWT:0,NTW:77,NTR:5,NBW:85,NBR:170,NR0:0,NR1:0,NR2:0,N
-   R3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0"
-   ^ERR(13258,"64813,17382","G",0,1)=",JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:80,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:6"
-   ^ERR(13258,"64813,17382","G",1)="GLD:/home/gtc_twinata/staff/nitin/a.gld,REG:DEFAULT,SET:79,KIL:4,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:79,DRD:3,DWT:0,NTW:79
-   ,NTR:6,NBW:87,NBR:178,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,"
-   ^ERR(13258,"64813,17382","G",1,1)="TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:83,CFE:0,CFS:0,CFT:0,CQS
-   :0,CQT:0,CYS:0,CYT:0,BTD:6"
+   ^ERR(13258,"64813,17382","G",0)="GLD:*,REG:*,SET:77,KIL:3,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:0,DRD:3,DWT:0,NTW:77,NTR:5,NBW:85,NBR:170,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0"
+   ^ERR(13258,"64813,17382","G",0,1)=",JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:80,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:6,WFR:0,BUS:0,BTS:0,STG:0,KTG:0,ZTG:0,DEXA:0,GLB:0,JNL:0,MLK:0,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0,WRL:0,PRG:0,WFL:0,WHE:0"
+   ^ERR(13258,"64813,17382","G",1)="GLD:/home/gtc_twinata/staff/nitin/a.gld,REG:DEFAULT,SET:79,KIL:4,GET:0,DTA:0,ORD:0,ZPR:0,QRY:0,LKS:0,LKF:0,CTN:79,DRD:3,DWT:0,NTW:79,NTR:6,NBW:87,NBR:178,NR0:0,NR1:0,NR2:0,NR3:0,TTW:0,TTR:0,TRB:0,TBW:0,TBR:0,TR0:0,TR1:0,TR2:0,TR3:0,TR4:0,TC0:0,TC1:0,TC2:0,"
+   ^ERR(13258,"64813,17382","G",1,1)="TC3:0,TC4:0,ZTR:0,DFL:0,DFS:0,JFL:0,JFS:0,JBB:0,JFB:0,JFW:0,JRL:0,JRP:0,JRE:0,JRI:0,JRO:0,JEX:0,DEX:0,CAT:83,CFE:0,CFS:0,CFT:0,CQS:0,CQT:0,CYS:0,CYT:0,BTD:6,WFR:0,BUS:0,BTS:0,STG:0,KTG:0,ZTG:0,DEXA:0,GLB:0,JNL:0,MLK:0,PRC:0,TRX:0,ZAD:0,JOPA:0,AFRA:0,BREA:0,MLBA:0,TRGA:0,WRL:0,PRG:0,WFL:0,WHE:0"
    ^ERR(13258,"64813,17382","I",1)="$DEVICE="""""
    ^ERR(13258,"64813,17382","I",2)="$ECODE="",M9,Z150373210,"""
    ^ERR(13258,"64813,17382","I",3)="$ESTACK=5"
@@ -1300,46 +1297,48 @@ Example EP13 uses the error recording routine by setting $ZTRAP="GOTO ^ERR". Whe
    ^ERR(13258,"64813,17382","I",32)="$ZERROR=""Unprocessed $ZERROR, see $ZSTATUS"""
    ^ERR(13258,"64813,17382","I",33)="$ZGBLDIR=""/path/to/the/global/directory"""
    ^ERR(13258,"64813,17382","I",34)="$ZHOROLOG=""64813,17382,175283,14400"""
-   ^ERR(13258,"64813,17382","I",35)="$ZININTERRUPT=0"
-   ^ERR(13258,"64813,17382","I",36)="$ZINTERRUPT=""IF $ZJOBEXAM()"""
-   ^ERR(13258,"64813,17382","I",37)="$ZIO=""/dev/pts/0"""
-   ^ERR(13258,"64813,17382","I",38)="$ZJOB=0"
-   ^ERR(13258,"64813,17382","I",39)="$ZKEY="""""
-   ^ERR(13258,"64813,17382","I",40)="$ZLEVEL=6"
-   ^ERR(13258,"64813,17382","I",41)="$ZMAXTPTIME=0"
-   ^ERR(13258,"64813,17382","I",42)="$ZMODE=""INTERACTIVE"""
-   ^ERR(13258,"64813,17382","I",43)="$ZONLNRLBK=0"
-   ^ERR(13258,"64813,17382","I",44)="$ZPATNUMERIC=""M"""
-   ^ERR(13258,"64813,17382","I",45)="$ZPIN=""/dev/pts/0"""
-   ^ERR(13258,"64813,17382","I",46)="$ZPOSITION=""RECORD+1^ERR"""
-   ^ERR(13258,"64813,17382","I",47)="$ZPOUT=""/dev/pts/0"""
-   ^ERR(13258,"64813,17382","I",48)="$ZPROMPT=""GTM>"""
-   ^ERR(13258,"64813,17382","I",49)="$ZQUIT=0"
-   ^ERR(13258,"64813,17382","I",50)="$ZREALSTOR=802648"
-   ^ERR(13258,"64813,17382","I",51)="$ZRELDATE=""20180614 00:33"""
-   ^ERR(13258,"64813,17382","I",52)="$ZROUTINES="". /usr/lib/fis-gtm/V6.3-007_x86_64 /usr/lib/fis-gtm/V6.3-007_x86_64/plugin/o(/usr/lib/fis-gtm/V6.3-007_x86_64/plugin/r)"""
-   ^ERR(13258,"64813,17382","I",53)="$ZSOURCE="""""
-   ^ERR(13258,"64813,17382","I",54)="$ZSTATUS=""150373210,BAD+2^EP13,%GTM-E-DIVZERO, Attempt to divide by zero"""
-   ^ERR(13258,"64813,17382","I",55)="$ZSTEP=""B"""
-   ^ERR(13258,"64813,17382","I",56)="$ZSTRPLLIM=0"
-   ^ERR(13258,"64813,17382","I",57)="$ZSYSTEM=0"
-   ^ERR(13258,"64813,17382","I",58)="$ZTIMEOUT=-1"
-   ^ERR(13258,"64813,17382","I",59)="$ZTDATA=0"
-   ^ERR(13258,"64813,17382","I",60)="$ZTDELIM="""""
-   ^ERR(13258,"64813,17382","I",61)="$ZTEXIT="""""
-   ^ERR(13258,"64813,17382","I",62)="$ZTLEVEL=0"
-   ^ERR(13258,"64813,17382","I",63)="$ZTNAME="""""
-   ^ERR(13258,"64813,17382","I",64)="$ZTOLDVAL="""""
-   ^ERR(13258,"64813,17382","I",65)="$ZTRAP=""GOTO OPEN"""
-   ^ERR(13258,"64813,17382","I",66)="$ZTRIGGEROP="""""
-   ^ERR(13258,"64813,17382","I",67)="$ZTSLATE="""""
-   ^ERR(13258,"64813,17382","I",68)="$ZTUPDATE="""""
-   ^ERR(13258,"64813,17382","I",69)="$ZTVALUE="""""
-   ^ERR(13258,"64813,17382","I",70)="$ZTWORMHOLE="""""
-   ^ERR(13258,"64813,17382","I",71)="$ZUSEDSTOR=759855"
-   ^ERR(13258,"64813,17382","I",72)="$ZUT=1528966182176530"
-   ^ERR(13258,"64813,17382","I",73)="$ZVERSION=""GT.M V6.3-007 Linux x86_64"""
-   ^ERR(13258,"64813,17382","I",74)="$ZYERROR="""""
+   ^ERR(13258,"64813,17382","I",35)="$ZICUVER="""
+   ^ERR(13258,"64813,17382","I",36)="$ZININTERRUPT=0"
+   ^ERR(13258,"64813,17382","I",37)="$ZINTERRUPT=""IF $ZJOBEXAM()"""
+   ^ERR(13258,"64813,17382","I",38)="$ZIO=""/dev/pts/0"""
+   ^ERR(13258,"64813,17382","I",39)="$ZJOB=0"
+   ^ERR(13258,"64813,17382","I",40)="$ZKEY="""""
+   ^ERR(13258,"64813,17382","I",41)="$ZLEVEL=6"
+   ^ERR(13258,"64813,17382","I",42)="$ZMAXTPTIME=0"
+   ^ERR(13258,"64813,17382","I",43)="$ZMLKHASH=0"
+   ^ERR(13258,"64813,17382","I",44)="$ZMODE=""INTERACTIVE"""
+   ^ERR(13258,"64813,17382","I",45)="$ZONLNRLBK=0"
+   ^ERR(13258,"64813,17382","I",46)="$ZPATNUMERIC=""M"""
+   ^ERR(13258,"64813,17382","I",47)="$ZPIN=""/dev/pts/0"""
+   ^ERR(13258,"64813,17382","I",48)="$ZPOSITION=""RECORD+1^ERR"""
+   ^ERR(13258,"64813,17382","I",49)="$ZPOUT=""/dev/pts/0"""
+   ^ERR(13258,"64813,17382","I",50)="$ZPROMPT=""GTM>"""
+   ^ERR(13258,"64813,17382","I",51)="$ZQUIT=0"
+   ^ERR(13258,"64813,17382","I",52)="$ZREALSTOR=802648"
+   ^ERR(13258,"64813,17382","I",52)="$ZRELDATE=""20180614 00:33"""
+   ^ERR(13258,"64813,17382","I",54)="$ZROUTINES="". /usr/lib/fis-gtm/V6.3-007_x86_64 /usr/lib/fis-gtm/V6.3-007_x86_64/plugin/o(/usr/lib/fis-gtm/V6.3-007_x86_64/plugin/r)"""
+   ^ERR(13258,"64813,17382","I",55)="$ZSOURCE="""""
+   ^ERR(13258,"64813,17382","I",56)="$ZSTATUS=""150373210,BAD+2^EP13,%GTM-E-DIVZERO, Attempt to divide by zero"""
+   ^ERR(13258,"64813,17382","I",57)="$ZSTEP=""B"""
+   ^ERR(13258,"64813,17382","I",58)="$ZSTRPLLIM=0"
+   ^ERR(13258,"64813,17382","I",59)="$ZSYSTEM=0"
+   ^ERR(13258,"64813,17382","I",60)="$ZTIMEOUT=-1"
+   ^ERR(13258,"64813,17382","I",61)="$ZTDATA=0"
+   ^ERR(13258,"64813,17382","I",62)="$ZTDELIM="""""
+   ^ERR(13258,"64813,17382","I",63)="$ZTEXIT="""""
+   ^ERR(13258,"64813,17382","I",64)="$ZTLEVEL=0"
+   ^ERR(13258,"64813,17382","I",65)="$ZTNAME="""""
+   ^ERR(13258,"64813,17382","I",66)="$ZTOLDVAL="""""
+   ^ERR(13258,"64813,17382","I",67)="$ZTRAP=""GOTO OPEN"""
+   ^ERR(13258,"64813,17382","I",68)="$ZTRIGGEROP="""""
+   ^ERR(13258,"64813,17382","I",69)="$ZTSLATE="""""
+   ^ERR(13258,"64813,17382","I",70)="$ZTUPDATE="""""
+   ^ERR(13258,"64813,17382","I",71)="$ZTVALUE="""""
+   ^ERR(13258,"64813,17382","I",72)="$ZTWORMHOLE="""""
+   ^ERR(13258,"64813,17382","I",73)="$ZUSEDSTOR=759855"
+   ^ERR(13258,"64813,17382","I",74)="$ZUT=1528966182176530"
+   ^ERR(13258,"64813,17382","I",75)="$ZVERSION=""GT.M V6.3-007 Linux x86_64"""
+   ^ERR(13258,"64813,17382","I",76)="$ZYERROR="""""
    ^ERR(13258,"64813,17382","L",0)="MLG:0,MLT:0"
    ^ERR(13258,"64813,17382","R",1)="RECORD+1^ERR:e99b16e4f7e1112d058dc22cb53491fd"
    ^ERR(13258,"64813,17382","R",2)="SUB3+3^EP13:d9e026c6d14e42567d3e64eecd049726"

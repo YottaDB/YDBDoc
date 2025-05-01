@@ -66,11 +66,11 @@ The file header data elements are listed as follows in alphabetical order for ea
 | Access method                      | The buffering strategy of the database. Access Method can have 2 values - BG or MM. The default value is BG.                                                  |
 |                                    | Buffered Global (BG) manages the buffers (the OS/file system may also buffer "in series"); MM - the OS/file system manages all the buffering.                 |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Async IO                           | Whether the database file uses Asynchronous or Synchronous I/O. For additional information, see Chapter 4: Global Directory Editor (GDE).                     |
+| Async IO                           | Whether the database file uses Asynchronous or Synchronous I/O. For additional information, see `Global Directory Editor (GDE) <gde.html>`_.                  |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Block size (in bytes)              | The size (in bytes) of a GDS block. Block size can have values that are multiples of 512. The default value is 4096.                                          |
 |                                    | Block size should be a multiple of the native block size for the OS file system chosen to accommodate all but outlying large records.                         |
-|                                    | For additional information, see Ch 4: Global Directory Editor (GDE).                                                                                          |
+|                                    | For additional information, see `Global Directory Editor (GDE) <gde.html>`_.                                                                                  |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Blocks to Upgrade                  | This field should be ignored in r2.00.                                                                                                                        |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -88,6 +88,8 @@ The file header data elements are listed as follows in alphabetical order for ea
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Current transaction                | The 64-bit hexadecimal number of the most recent database transaction.                                                                                        |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Data Reserved Bytes                | Number of bytes reserved (not used by YottaDB) in data-level database blocks.                                                                                 |
++------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | DB is auto-created                 | Indicates whether the database file is automatically created.                                                                                                 |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | DB shares gvstats                  | Indicates whether the database supports sharing of statistics.                                                                                                |
@@ -98,29 +100,30 @@ The file header data elements are listed as follows in alphabetical order for ea
 |                                    | the major version for the current running YottaDB distribution or the last prior major version. Newly created databases and converted databases have the      |
 |                                    | current major version.                                                                                                                                        |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Endian Format                      | The Endian byte ordering of the platform.                                                                                                                     |
+| Endian Format                      | The Endian byte ordering of the platform. This is always LITTLE for YottaDB.                                                                                  |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Extension Count                    | The number of GDS blocks by which the database file extends when it becomes full. The default value is 100 and the maximum is 65535.                          |
 |                                    | In production, typically this value should reflect the amount of new space needed in a relatively long period (say a week or a month).                        |
-|                                    | UNIX file systems use lazy allocations so this value controls the frequency at which YottaDB checks the actual available space for database expansion in      |
+|                                    | Linux file systems use lazy allocations so this value controls the frequency at which YottaDB checks the actual available space for database expansion in     |
 |                                    | order to warn when space is low.                                                                                                                              |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Flush timer                        | Indicates the time between completion of a database update and initiation of a timed flush of modified buffers.                                               |
 |                                    | The default value is 1 second and the maximum value is 1 hour.                                                                                                |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Flush trigger                      | The total number of modified buffers that trigger an updating process to initiate a flush.                                                                    |
-|                                    | The maximum and default value is 93.75% of the global buffers; the minimum is 25% of the global buffers. For large numbers of global buffers, consider setting|
-|                                    | the value towards or at the minimum.                                                                                                                          |
+|                                    | The maximum and default value is 93.75% of the global buffers; the minimum is 25% of the global buffers.                                                      |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Free blocks                        | The number of GDS blocks in the data portion of the file that are not currently part of the indexed database (that is, not in use).                           |
-|                                    | MUPIP INTEG -NOONLINE (including -FAST) can rectify this value if it is incorrect.                                                                            |
+|                                    | MUPIP INTEG NOONLINE (including -FAST) can rectify this value if it is incorrect.                                                                             |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Free space                         | The number of currently unused blocks in the fileheader (for use by enhancements).                                                                            |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Global Buffers                     | The number of BG buffers for the region. It can have values that are multiples of 512 (in bytes). The minimum value is 64 and the maximum is 2147483647.      |
-|                                    | (may vary depending on your platform). The default value is 1024. In a production system, this value should typically be higher.                              |
+| Global Buffers                     | The number of BG buffers for the region. The minimum value is 64 and the maximum is 2147483647.                                                               |
+|                                    | The default value is 1024. In a production system, this value should typically be higher.                                                                     |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | In critical section                | The process identification number (PID) of the process in the write-critical section, or zero if no process holds the critical section.                       |
++------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Index Reserved Bytes               | Number of bytes reserved (not used by YottaDB) in index-level database blocks.                                                                                |
 +------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Journal Alignsize                  | Specifies the number of 512-byte-blocks in the alignsize of the journal file. DSE only reports this field if journaling is ENABLED (or ON).                   |
 |                                    | If the ALIGNSIZE is not a perfect power of 2, YottaDB rounds it up to the nearest power of 2.                                                                 |
@@ -292,7 +295,7 @@ The interpreted form of the local bitmap is like the following:
 
 .. code-block:: none
 
-   Block 0  Size 90  Level -1  TN 1 V5   Master Status: Free Space
+   Block 0  Size 90  Level -1  TN 1 V7   Master Status: Free Space
                   Low order                         High order
    Block        0: |  XXXXX...  ........  ........  ........  |
    Block       20: |  ........  ........  ........  ........  |
@@ -485,11 +488,11 @@ To distinguish strings from numerics while preserving collation sequence, YottaD
 
 .. code-block:: none
 
-   Block 3   Size 24   Level 0   TN 1 V5
+   Block 3   Size 24   Level 0   TN 1 V7
 
    Rec:1  Blk 3  Off 10  Size 14  Cmpc 0  Key ^A("Name",1)
-       10 : | 14  0  0 61 41  0 FF 4E 61 6D 65  0 BF 11  0  0 42 72 61 64|
-            |  .  .  .  a  A  .  .  N  a  m  e  .  .  .  .  .  B  r  a  d|
+       10 : | 14  0  0  0 41  0 FF 4E 61 6D 65  0 BF 11  0  0 42 72 61 64|
+            |  .  .  .  .  A  .  .  N  a  m  e  .  .  .  .  .  B  r  a  d|
 
 Note that hexadecimal FF is in front of the subscript "Name". YottaDB permits the use of the full range of legal characters in keys. Therefore, a null (ASCII 0) is an acceptable character in a string. YottaDB handles strings with embedded nulls by mapping 0x00 to 0x0101 and 0x01 to 0x0102. YottaDB treats 0x01 as an escape code. This resolves confusion when null is used in a key, and at the same time, maintains proper collating sequence. The following rules apply to character representation:
 
