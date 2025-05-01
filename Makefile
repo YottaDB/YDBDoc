@@ -14,7 +14,7 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    = -W -q
+SPHINXOPTS    = -W --keep-going -q
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = GTMAdminOps
 SOURCEDIRS    = AcculturationGuide AdminOpsGuide ApplicationsManual MessageRecovery MultiLangProgGuide ProgGuide StyleGuide Plugins
