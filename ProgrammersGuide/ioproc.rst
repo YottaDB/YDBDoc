@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -625,7 +625,7 @@ User Interface
 +----------------------------------------------------------+-------------------------------------------------------+---------------------------------------------------------------+
 | Editing Function                                         | Key / Character                                       | Direct Mode Difference                                        |
 +==========================================================+=======================================================+===============================================================+
-| Delete character to left of cursor                       | Delete character [a]_ [b]_ (ASCII 127)                | Backspace character (ASCII 8) is also recognized.             |
+| Delete character to left of cursor                       | Delete character [#a]_ [#b]_ (ASCII 127)                | Backspace character (ASCII 8) is also recognized.           |
 +----------------------------------------------------------+-------------------------------------------------------+---------------------------------------------------------------+
 | Move left one character                                  | Left arrow key or <ctrl> B character                  | \-                                                            |
 +----------------------------------------------------------+-------------------------------------------------------+---------------------------------------------------------------+
@@ -649,9 +649,9 @@ User Interface
 | Delete character at the cursor position                  | <ctrl>-D character                                    | \-                                                            |
 +----------------------------------------------------------+-------------------------------------------------------+---------------------------------------------------------------+
 
-.. [a] The terminal or terminal emulator may remap the backspace key to send the delete character.
+.. [#a] The terminal or terminal emulator may remap the backspace key to send the delete character.
 
-.. [b] The actual character recognized for this function depends on the setting of the erase character as shown by "stty -a" which is usually the delete character.
+.. [#b] The actual character recognized for this function depends on the setting of the erase character as shown by "stty -a" which is usually the delete character.
 
 ~~~~~~~~~~~~~~~~~~~~~~
 USE Device Parameters

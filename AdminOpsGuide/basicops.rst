@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -1359,6 +1359,8 @@ The commands, Intrinsic Special Variables, and functions whose behavior changes 
 * $ECODE/$STACK() initialized to the empty string at level one (1) in GTM$CI frame.
 
 After the filter completes, YottaDB restores the above to their values at the invocation of the filter.
+
+.. _audit-logging-facility:
 
 ++++++++++++++++++++++++++++++++++++++++++++
 Audit Logging Facility

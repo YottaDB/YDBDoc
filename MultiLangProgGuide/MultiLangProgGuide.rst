@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -308,7 +308,7 @@ $zmaxtptime
 
 :code:`$zmaxtptime` provides a limit in seconds for the time that a transaction can be open (see :ref:`txn-proc`). :code:`$zmaxtptime` is initialized at process startup from the environment variable :code:`ydb_maxtptime`, with values greater than 60 seconds truncated to 60 seconds. In the unlikely event that an application legitimately needs a timeout greater than 60 seconds, use :ref:`ydb-set-s-st-fn` to set it.
 
-.. _zstatus-isv:
+.. _multilang-zstatus-isv:
 
 ~~~~~~~~~
 $zstatus
@@ -322,7 +322,7 @@ $zstatus
 
 Note that a race condition exists for a multi-threaded application: after a call that returns an error, it is possible for another call from a different thread to perturb the value of :code:`$zstatus`. Use the :ref:`errstr <errstr>` parameter discussed in :ref:`threads` to get the correct :code:`$zstatus` in a multi-threaded application.
 
-.. _zyrelease-isv:
+.. _multilang-zyrelease-isv:
 
 ~~~~~~~~~~~
 $zyrelease
@@ -421,4 +421,3 @@ Programming in M
 YottaDB includes a complete implementation of the `M <https://en.wikipedia.org/wiki/MUMPS>`_ programming language (also known as MUMPS - see `The Heritage and Legacy of M (MUMPS) – and the Future of YottaDB <https://yottadb.com/heritage-legacy-m-mumps-future-yottadb/>`_) that mostly conforms to `ISO/IEC 11756:1999 <http://www.iso.ch/iso/en/CatalogueDetailPage.CatalogueDetail?CSNUMBER=29268&ICS1=35&ICS2=60&ICS3=&scopelist>`_. The `YottaDB M Programmers Guide <../ProgrammersGuide/index.html>`_ documents programming YottaDB in M and is not duplicated here.
 
 YottaDB supports calling between M and C application code, as documented in `Chapter 11 (Integrating External Routines) of the M Programmers Guide <../ProgrammersGuide/extrout.html>`_.
-

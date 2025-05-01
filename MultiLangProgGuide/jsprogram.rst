@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2022-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2022-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -1750,13 +1750,13 @@ Nodem also supports setting the Call-In path directly in the :code:`open()` call
 
    > ydb.open({callinTable: process.env.HOME + '/nodem/resources/nodem.ci'});
 
-.. _gt-cm-client:
+.. _js-gt-cm-client:
 
 ++++++++++++++
 GT.CM Client
 ++++++++++++++
 
-Nodem can be configured to function as a `GT.CM client <../AdminOpsGuide/gtcm.html#gt-cm-client>`_, allowing it to connect with a remote database. The :code:`ipAddress` and/or :code:`tcpPort` property can be set in the :code:`open()` method, allowing Nodem to set up the environment to connect with a YottaDB database on a remote server that already has a GT.CM server listening at that address and port.
+Nodem can be configured to function as a :ref:`gt-cm-client`, allowing it to connect with a remote database. The :code:`ipAddress` and/or :code:`tcpPort` property can be set in the :code:`open()` method, allowing Nodem to set up the environment to connect with a YottaDB database on a remote server that already has a GT.CM server listening at that address and port.
 If only :code:`ipAddress` or :code:`tcpPort` is defined, the other one will be set with a default value; 127.0.0.1 for :code:`ipAddress`, or 6789 for :code:`tcpPort`. Nodem will then set the :code:`$ydb_cm_NODEM` environment variable for that Nodem process only, with the address and port in the :code:`open()` call, e.g.,
 
 .. code-block:: javascript

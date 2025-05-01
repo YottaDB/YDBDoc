@@ -10,16 +10,6 @@
 #
 #################################################################
 
-favicon.png
-logo.png
-LICENSE.rst
-_build
-_static
-_templates
-
-# Above is too aggressive and incorrectly includes shared/* files, so fix that problem:
-!shared/*
-
 MultiLangProgGuide/YDBLua-ydbdocs.rst
 /commit_verify.sh
 /deadlinks

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -15,6 +15,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+Acculturation Guide
+###################
+
 Welcome to the Acculturation Guide!
 =========================================
 
@@ -23,7 +26,7 @@ Welcome to the Acculturation Guide!
 
    Main YottaDB Documentation Page <https://yottadb.com/resources/documentation>
    acculturation
-   LICENSE
+   ../shared/LICENSE
 
 
 Indices and tables

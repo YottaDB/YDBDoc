@@ -496,7 +496,7 @@ $ZALLOCSTOR contains the number of bytes that are (sub) allocated (including ove
 $ZAUDIT
 ---------
 
-$ZAUDIT contains a boolean value that indicates whether Audit Principal Device in the `Audit Logging Facility <../AdminOpsGuide/basicops.html#audit-logging-facility>`_ is enabled. YottaDB does not permit $ZAUDIT to be SET or NEWed.
+$ZAUDIT contains a boolean value that indicates whether Audit Principal Device in the :ref:`audit-logging-facility` is enabled. YottaDB does not permit $ZAUDIT to be SET or NEWed.
 
 ----------
 $ZB

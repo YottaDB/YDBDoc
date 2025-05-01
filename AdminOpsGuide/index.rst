@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -14,6 +14,9 @@
    sphinx-quickstart on Mon Nov 27 09:22:04 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
+
+Administration and Operations Guide
+###################################
 
 Welcome to the Administration and Operations Guide!
 ====================================================
@@ -44,7 +47,7 @@ Welcome to the Administration and Operations Guide!
    tls
    glossary
    extending
-   LICENSE
+   ../shared/LICENSE
 
 Indices and tables
 ==================

@@ -16,11 +16,9 @@
 # You can set these variables from the command line.
 SPHINXOPTS    = -W --keep-going -q
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = GTMAdminOps
 SOURCEDIRS    = AcculturationGuide AdminOpsGuide ApplicationsManual MessageRecovery MultiLangProgGuide ProgGuide StyleGuide Plugins
 SOURCEDIR     = .
-BUILDDIR      = _build
-LINKCHECKDIR  = _build/linkcheck
+BUILDDIR      = public
 # newline used in the foreach statements to make "make" stop at an erroring step.
 define newline
 
@@ -37,11 +35,10 @@ help:
 .PHONY: help Makefile
 
 # Clean target: remove all files under _build directory, as well as duplicated files.
-# The Sphinx command below functions the same way as that for the Catch-all target.
-# Remove tarball diretory "public"
+# We don't use per-dir build directories anymore, but keep this around for a while so it removes cached artifacts.
+# https://www.extrema.is/blog/2021/12/17/makefile-foreach-commands talks about why we use $(newline): to stop make at a specific step if it fails.
 clean:
 	@$(foreach dir, $(SOURCEDIRS), rm -rf "$(dir)/favicon.png" "$(dir)/_static" "$(dir)/_templates" "$(dir)/LICENSE.rst" "$(dir)/logo.png" $(newline))
-	@$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O) $(newline))
 	@rm -f MultiLangProgGuide/YDBLua-ydbdocs.rst YDBLua-ydbdocs.rst
 	@rm -rf ./public/
 	@rm -f err_*.out
@@ -50,7 +47,6 @@ clean:
 # Relies on html, which gets passed to the % target below
 test: html
 	ci/error-check.sh
-	@+./buildall.sh
 	@if [ ! -f ./deadlinks ]; then \
 		echo "Downloading deadlinks..."; \
 		DEADLINKS_VERSION=$$(wget -q -O - https://api.github.com/repos/deadlinks/cargo-deadlinks/releases/latest | jq --raw-output .tag_name); \
@@ -68,14 +64,19 @@ man: SPHINXOPTS=-q
 MultiLangProgGuide/YDBLua-ydbdocs.rst:
 	wget --no-verbose https://yottadb.gitlab.io/lang/ydblua/YDBLua-ydbdocs.rst --directory-prefix=MultiLangProgGuide/
 
+
+html: MultiLangProgGuide/YDBLua-ydbdocs.rst
+	+./buildall.sh
+
+.PHONY: checklinks
+checklinks: linkcheck
+	# noop
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 # All of the $(SOURCEDIRS) are built at once.
-# https://www.extrema.is/blog/2021/12/17/makefile-foreach-commands talks about why we use $(newline): to stop make at a specific step if it fails.
 %: Makefile MultiLangProgGuide/YDBLua-ydbdocs.rst
-	@$(foreach dir, $(SOURCEDIRS), ln -sf ../shared/LICENSE.rst ../shared/_static  ../shared/_templates  ../shared/favicon.png ../shared/logo.png "$(dir)" $(newline))
-	$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -M $@ "$(dir)" "$(dir)/$(BUILDDIR)" $(SPHINXOPTS) $(O) $(newline))
+	$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-.PHONY: checklinks
-checklinks: html
-	$(foreach dir, $(SOURCEDIRS), $(SPHINXBUILD) -b linkcheck "$(dir)" "$(dir)/$(BUILDDIR)";)
+# uses catch-all
+linkcheck: html

@@ -18,53 +18,52 @@ set -euo pipefail
 # for rsync; this expands *.c to nothing if there are no matches, rather than '*.c'
 shopt -s nullglob
 
+if [ $# -gt 1 ]; then
+	echo "usage: $0 [build-dir]"
+	exit 1
+fi
+
+rsync() {
+        command rsync --delete -lrtu --exclude=\*.zip --exclude=.buildinfo --exclude=.nojekyll "$@"
+}
+
 target="$(realpath "${1:-public}")"
 mkdir -p "$target"
 
-usage() {
-	echo "usage: $0 [build-dir]"
-	exit 1
-}
-
-octo=$(ci/needs-clone.sh https://gitlab.com/YottaDB/DBMS/YDBOcto.git/)
-
 DIRECTORIES=(
-	AcculturationGuide/
-	AdminOpsGuide/
-	ApplicationsManual/
-	MessageRecovery/
-	MultiLangProgGuide/
-	ProgGuide/
-	StyleGuide/
-	Plugins/
+        AcculturationGuide/
+        AdminOpsGuide/
+        ApplicationsManual/
+        MessageRecovery/
+        MultiLangProgGuide/
+        ProgrammersGuide/
+        StyleGuide/
+        Plugins/
 )
 
-rsync() {
-	command rsync --delete -lrtu --exclude=\*.zip --exclude=.buildinfo --exclude=.nojekyll "$@"
-}
-
+# sphinx has completely broken caching.
+# In particular, updating the title of `ProgrammersGuide/index.rst` will not update any other subproject files, even though it's linked in e.g. `StyleGuide/index.html`.
+# Overrule sphinx and force it to rebuild the headers.
+rm -f public/*/index.html
+sphinx-build . public
 # Copy the HTML files
 for directory in "${DIRECTORIES[@]}"; do
 	pushd $directory >/dev/null
-	output="$target/${directory%?}"
-	rsync _build/html/ "$output/"
-	# Update the following line as additional languages are supported
-	rsync --exclude=conf.py *.c *.m *.go *.pl *.py *.rs *.js *.lua "$output/"
+	rsync --exclude=conf.py *.c *.m *.go *.pl *.py *.rs *.js *.lua "$target/${directory%?}"
 	popd >/dev/null
 done
-cp index.html "$target"
 
-# Build the documentation from other repositories
-pushd "$octo"/doc >/dev/null
+# Sphinx does not allow us to modify the generated directory structure,
+# and additionally embeds that structure into the header of every sub-project.
+# Trick it by:
+# 1. Building Octo independently of the other subprojects
+# 2. Using rsync to copy it over.
+# 3. Using a small shim in YDBDoc/Octo/index.rst to force sphinx generate a link to it.
+# This has the downside that Octo will not backlink to the main documentation; but that seems better than breaking URLs.
+octo=$(ci/needs-clone.sh https://gitlab.com/YottaDB/DBMS/YDBOcto.git/)
 echo "Building Octo HTML docs..."
-make html >/dev/null
-rsync _build/html/ "$target/Octo"
-popd >/dev/null
-
-# Remove unused fonts
-echo "Removing unused fonts..."
-find $target -iname 'lato*' -delete
-find $target -iname 'roboto*' -delete
+make -C "$octo"/doc html >/dev/null
+rsync "$octo"/doc/_build/html/ "$target/Octo"
 
 # Verify that there are no duplicate references. Every duplicate reference will be automatically named as a numbered link
 # containing for example "#id1", "#id2" etc. by Sphinx so we look for that below. And expect NO such lines in "index.html".

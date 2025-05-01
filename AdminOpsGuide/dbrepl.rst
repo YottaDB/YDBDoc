@@ -261,11 +261,11 @@ In the last example, Malvern was not ahead when starting SI replication from Bry
 | \-                                    | O: ... A95, A96, A97, B61, B62          | S: ... M34, A95, M35, M36, A96, A97, M37,| For Malvern to accept replication from BrynMawr, it must roll off transactions generated |
 |                                       |                                         | M38, B61                                 | by Ardmore, (in this case A98) that BrynMawr does not have in its database, as well as   |
 |                                       |                                         |                                          | any additional transactions generated and applied locally since transaction number A98   |
-|                                       |                                         |                                          | from Ardmore. [a]_ This rollback is accomplished with a MUPIP JOURNAL -ROLLBACK          |
-|                                       |                                         |                                          | -FETCHRESYNC operation on Malvern. [b]_ These rolled off transactions (A98, M39, M40) go |
+|                                       |                                         |                                          | from Ardmore. [#a]_ This rollback is accomplished with a MUPIP JOURNAL -ROLLBACK         |
+|                                       |                                         |                                          | -FETCHRESYNC operation on Malvern. [#b]_ These rolled off transactions (A98, M39, M40) go|
 |                                       |                                         |                                          | into the Unreplicated Transaction Log and can be subsequently reprocessed by application |
-|                                       |                                         |                                          | code. [c]_ Once the rollback is completed, Malvern can start accepting replication from  |
-|                                       |                                         |                                          | BrynMawr. [d]_ BrynMawr in its Originating Primary role processes transactions and       |
+|                                       |                                         |                                          | code. [#c]_ Once the rollback is completed, Malvern can start accepting replication from |
+|                                       |                                         |                                          | BrynMawr. [#d]_ BrynMawr in its Originating Primary role processes transactions and      |
 |                                       |                                         |                                          | provides business continuity, resulting in transactions B61 and B62.                     |
 +---------------------------------------+-----------------------------------------+------------------------------------------+------------------------------------------------------------------------------------------+
 | \-                                    | O: ... A95, A96, A97, B61, B62, B63, B64| S: ... M34, A95, M35, M36, A96, A97, M37,| Malvern operating as a supplementary instance to BrynMawr replicates transactions        |
@@ -276,13 +276,13 @@ In the last example, Malvern was not ahead when starting SI replication from Bry
 
 
 
-.. [a] As this rollback is more complex, may involve more data than the regular LMS rollback, and may involve reading journal records sequentially - it may take longer.
+.. [#a] As this rollback is more complex, may involve more data than the regular LMS rollback, and may involve reading journal records sequentially - it may take longer.
 
-.. [b] In scripting for automating operations, there is no need to explicitly test whether BrynMawr is behind Malvern - if it is behind, the Source Server will fail to connect and report an error, which automated shell scripting can detect and effect a rollback on Malvern followed by a reconnection attempt by BrynMawr. On the other hand, there is no harm in Malvern routinely performing a rollback before having BrynMawr connect - if it is not ahead, the rollback will be a no-op.
+.. [#b] In scripting for automating operations, there is no need to explicitly test whether BrynMawr is behind Malvern - if it is behind, the Source Server will fail to connect and report an error, which automated shell scripting can detect and effect a rollback on Malvern followed by a reconnection attempt by BrynMawr. On the other hand, there is no harm in Malvern routinely performing a rollback before having BrynMawr connect - if it is not ahead, the rollback will be a no-op.
 
-.. [c] YottaDB's responsibility for them ends once it places them in the Unreplicated Transaction Log.
+.. [#c] YottaDB's responsibility for them ends once it places them in the Unreplicated Transaction Log.
 
-.. [d] Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
+.. [#d] Ultimately, business logic must determine whether the rolled off transactions can simply be reapplied or whether other reprocessing is required. YottaDB's $ZQGBLMOD() function can assist application code in determining whether conflicting updates may have occurred.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Rollback not Desired or Required by Application Design

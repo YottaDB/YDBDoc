@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2023-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2023-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -14,6 +14,9 @@
    sphinx-quickstart on Fri Nov 17 11:33:19 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
+
+Applications Manual
+###################
 
 Index
 ========
@@ -30,7 +33,7 @@ Index
    ydbpython
    ydbapron
    demopi
-   LICENSE
+   ../shared/LICENSE
 
 Indices and tables
 ==================

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -15,6 +15,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+Plugins
+#######
+
 Welcome to Plugins documentation!
 ===================================
 
@@ -28,7 +31,7 @@ Welcome to Plugins documentation!
    ydbsyslog
    ydbwebserver
    ydbzlib
-   LICENSE
+   ../shared/LICENSE
 
 
 
