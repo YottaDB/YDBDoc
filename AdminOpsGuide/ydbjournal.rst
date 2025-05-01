@@ -975,7 +975,7 @@ Also ensure that you adhere to the following rules:
 
 For example, :code:`mupip journal -extract=ydb.mjl -forward -detail` is a valid command which performs forward processing to extract detailed journal records to ydb.mjf. However, :code:`mupip journal -extract -redirect=ydb.dat=test/ydb.dat -forward` is an invalid command because REDIRECT is not compatible with EXTRACT.
 
-MUPIP JOURNAL manipulates an inactive journal file that is available for exclusive (standalone) use. You can transcribe Journal files to tape. However, you must always restore them to disk for processing by MUPIP JOURNAL.
+MUPIP JOURNAL manipulates an inactive journal file that is available for exclusive (standalone) use.
 
 Press CTRL+C to stop JOURNAL processing. A JOURNAL command that terminates abnormally by operator action or error produces an incomplete result. In this case, the resulting database may be corrupt. If you stop a JOURNAL operation by mistake, reissue the command to produce the proper result for RECOVER (or ROLLBACK) BACKWARD. For RECOVER FORWARD, restore the database from backup and reissue the command.
 

@@ -1558,7 +1558,7 @@ Load the salvaged global:
 O6 - Block Size Errors
 ++++++++++++++++++++++
 
-If INTEG is passed one of -IMAXBLOCKSIZE=n and/or -DMAXBLOCKSIZE=m, it will check index and/or data blocks, respectively, to verify that the data they contain does not exceed the specified size. Errors of this kind do not themselves indicate any database damage, although they can indicate that a newly-imposed reserved bytes value has not propagated to blocks that have not since been affected by new updates, or that a fill_factor passed to reorg was imposed successfully on blocks that existed when the reorg took place but not on newly created blocks. Errors of this kind therefore do not call for any recovery efforts, but may indicate the need for an additional reorg if the intent is to ensure that all blocks in the database meet a certain level of sparseness.
+If INTEG is passed one of -IMAXBLOCKSIZE=n and/or -DMAXBLOCKSIZE=m, it will check index and/or data blocks, respectively, to verify that the data they contain does not exceed the specified size. Errors of this kind do not themselves indicate any database damage, although they can indicate that a newly-imposed reserved bytes value has not propagated to blocks that have not since been affected by new updates, or that a fill_factor passed to `MUPIP REORG <mupip-reorg-cmd>` was imposed successfully on blocks that existed when the REORG took place but not on newly created blocks. Errors of this kind therefore do not call for any recovery efforts, but may indicate the need for an additional REORG if the intent is to ensure that all blocks in the database meet a certain level of sparseness.
 
 .. _p1-process-damage:
 

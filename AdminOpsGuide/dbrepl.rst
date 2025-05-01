@@ -3636,6 +3636,7 @@ The square brackets [] denote an optional qualifier group. The optional and mand
 +=================================+====================================================================================================================================+
 | :ref:`connection-qs`            | * [-cmplvl=n]                                                                                                                      |
 |                                 | * [-connectparams=<hard_tries>, <hard_tries_period>, <soft_tries_period>, <alert_time>, <heartbeat_period>, <max_heartbeat_wait>]  |
+|                                 | * [-[no]{send|recv}buffsize[=<buffer_size>]]                                                                                       |
 +---------------------------------+------------------------------------------------------------------------------------------------------------------------------------+
 | :ref:`jnlpool-setup-qs`         | * [-buffsize=<Journal Pool size in bytes>]                                                                                         |
 |                                 | * [-[no]jnlfileonly]                                                                                                               |
@@ -3728,6 +3729,15 @@ The only difference between hard and soft connection attempts is their interval 
 The presence of the REPLALERT message in the Source Server log file can be used with a monitoring tool to alert the operator about an unaccessible Receiver Server.
 
 Specifying 0 for <alert time> disables the REPLALERT messages. By default, REPLAERT messages are disabled. Specifying 0 for <hard tries> disables making hard connection attempts which is useful in a situation where the early of logging of the REPLALERT messages is relevant.
+
+*****************************
+-[no]{send|recv}buffsize[=n]
+*****************************
+
+Specifies the desired minimum TCP send and/or receive buffer sizes. This affects the `SO_SNDBUF <https://www.man7.org/linux/man-pages/man7/socket.7.html>`_ and `SO_RCVBUF <https://www.man7.org/linux/man-pages/man7/socket.7.html>`_ socket options of the socket YottaDB uses for replication, not the journalpool or any other application-level buffer. n is a positive integer value indicating the desired minimum buffer size. If YottaDB finds that the specified buffer already has a sufficient size when it is created, YottaDB will avoid setting the buffer explicitly. The NO{SEND|RECV}BUFFSIZE version of this qualifier instructs YottaDB to avoid setting the buffer sizes under any circumstance. In some environments, when the size of these buffers are dynamically adjusted except in cases where an application sets their size explicitly, NO{SEND|RECV}BUFFSIZE can lead to good performance in a wide variety of network conditions. By default and without passing this qualifier, YottaDB enforces a minimum size of approximately 1MiB for each buffer. This qualifier may only be passed to a START command.
+
+.. note::
+   The actual size of a TCP buffer depends on a variety of environmental conditions, including system configuration, operating system, and available memory. Users of YottaDB may observe that YottaDB reports in the source and/or receiver logs buffers that are approximately twice what is requested, if the request has been honored by the OS. This is due to a quirk in the way that the Linux kernel reports TCP buffer sizes: the user-available size is approximately equal to what is requested, and the additional space is used internally by the kernel.
 
 .. _jnlpool-setup-qs:
 

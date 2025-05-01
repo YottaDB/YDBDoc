@@ -1406,7 +1406,7 @@ Command postconditionals appear immediately following a command and apply to all
 
 **Argument Postconditionals**
 
-Commands that affect the flow of control may accept postconditionals on individual command arguments. Because multiple arguments act as multiple commands, this is a straight-forward application of the same principal as command postconditional. The only M standard commands that accept argument postconditionals are DO, GOTO, and XECUTE. The YottaDB command extensions that accept argument postconditionals are BREAK, ZGOTO, and ZSYSTEM.
+Commands that affect the flow of control may accept postconditionals on individual command arguments. Because multiple arguments act as multiple commands, this is a straight-forward application of the same principle as command postconditional. The only M standard commands that accept argument postconditionals are DO, GOTO, and XECUTE. The YottaDB command extensions that accept argument postconditionals are BREAK, ZGOTO, and ZSYSTEM.
 
 +++++++++++++++++
 Timeouts
@@ -1988,9 +1988,9 @@ In M, a transaction is a sequence of commands that begins with a TSTART command,
 
 A successful transaction ends with a COMMIT that is triggered by the TCOMMIT command at the end of the transaction. A COMMIT causes all the database updates performed within the transaction to become available to other processes.
 
-An unsuccessful transaction ends with a ROLLBACK. ROLLBACK is invoked explicitly by the TROLLBACK command, or implicitly at a process termination that occurs during a transaction in progress. An error within a transaction does not cause an implicit ROLLBACK. A ROLLBACK removes any database updates performed within the transaction before they are made available to other processes. ROLLBACK also releases all resources LOCKed since the start of the transaction, and makes the naked reference undefined.
+An unsuccessful transaction ends with a ROLLBACK. ROLLBACK is invoked explicitly by the TROLLBACK command, or implicitly at a process termination that occurs during a transaction in progress. An error within a transaction does not itself cause an implicit ROLLBACK. A ROLLBACK removes any database updates performed within the transaction before they are made available to other processes. ROLLBACK also releases all resources LOCKed since the start of the transaction, and makes the naked reference undefined. While it causes a significant process state change, unlike a RESTART, a TROLLBACK does not cause any transfer of control. Because of this, a useful technique is to set a flag in a local variable that is not a restart variable, issue a TRESTART and have a block conditioned on the flag variable which does a TROLLBACK.
 
-A RESTART is a transfer of control to the TSTART at the beginning of the transaction. RESTART implicitly includes a ROLLBACK and may optionally restore local variables to the values they had when the initial TSTART was originally executed. A RESTART always restores $TEST and the naked reference to the values they had when the initial TSTART was executed. RESTART does not manage device state information. A RESTART is invoked by the TRESTART command or by M if it is determined that the transaction is in conflict with other database updates. RESTART can only successfully occur if the initial TSTART includes an argument that enables RESTART.
+A RESTART is a transfer of control to the TSTART at the beginning of the transaction. RESTART implicitly includes a ROLLBACK and may optionally restore local variables to the values they had when the initial TSTART was originally executed. A RESTART always restores $TEST and the naked reference to the values they had when the initial TSTART was executed. RESTART does not manage device state information. A RESTART is invoked by the TRESTART command or by M if it is determined that the transaction is in conflict with other database updates. RESTART can only successfully occur if the initial TSTART enables RESTART, which YottaDB strongly recommends in order to deal with implicit RESTARTs.
 
 +++++++++++++++++++++++++++++++++++++
 Key Considerations - Writing TP Code
@@ -1998,7 +1998,7 @@ Key Considerations - Writing TP Code
 
 Some key considerations for writing application code between TSTART and TCOMMIT are as follows:
 
-* Do not use BREAK, CLOSE, JOB, OPEN, READ, USE, WRITE, LOCK, HANG, and ZSYSTEM as they violate the ACID principal of Isolation. Using these commands inside a transaction may lead to longer than usual response time, high CPU utilization, repeat execution due to transaction restart, and/or TPNOTACID messages in the operator log. If application logic requires their use, put them before TSTART or after TCOMMIT so that they do not interfere with the transaction processing mechanism.
+* Avoid BREAK, CLOSE, JOB, OPEN, READ, USE, WRITE, LOCK, HANG, ZSYSTEM, and external calls as they can violate the ACID principal of Isolation. Using these commands inside a transaction may lead to longer than usual response time, high CPU utilization, repeat execution due to transaction restart, and/or TPNOTACID messages in the operator log. If application logic requires their use, put them before TSTART or after TCOMMIT so that they do not interfere with the transaction processing mechanism. For example, placing a LOCK before TSTART and releasing it after TCOMMIT provides an additional application layer of serialization for the transaction code. If the use case requires one or more non-ACID operation within a transaction, condition them on 0=$TRESTART on every path through transaction logic so they only process once, and never while holding a database critical section. If the use case requires a one-to-one relationship between a non-ACID action and a transaction, use TROLLBACK, typically with TRESTART and/or error handling to align them, but be aware this risks a "live-lock" pathology where the action consumes a disproportionate amount of resources while attempting to complete over an extended period. Certain external calls, e.g., to compute mathematical results based on values read from a database, are a special case of code that will need to be part of transaction logic. In such cases, make the calls as efficient as possible, and eschew external interaction in them, especially with files and networks.
 
 * Keep your transaction code "pure" . By "pure" we mean that you restrict code to only perform database updates (SET, MERGE, and so on). The primary purpose of a YottaDB transaction is to perform database updates that commit in entirety or do not commit at all. Perform external interaction like invoking an external call before or after the transaction.
 
@@ -2012,7 +2012,7 @@ Some key considerations for writing application code between TSTART and TCOMMIT 
 
 Most transaction processing systems try to have transactions that meet the "ACID" test - Atomic, Consistent, Isolated, and Durable.
 
-To provide ACID transactions, YottaDB uses a technique called optimistic concurrency control. Each block has a transaction number that YottaDB sets to the current database transaction number when updating a block. Application logic, brackets transactions with TSTART and TCOMMIT commands. Once inside a transaction, a YottaDB process tracks each database block that it reads (any database block containing existing data that it intends to update has to be read first) and in process private memory keeps a list of updates that it intends to apply - application logic within the process views the database with the updates; application logic in other processes does not see states internal to the transaction. At TCOMMIT time, the process checks whether any blocks have changed since it read them, and if none have changed, it commits the transaction, making its changes visible to other processes Atomically with Isolation and Consistency (Durability comes from the journal records written at COMMIT time). Optimistic concurrency attempts to exploit the odds that two processes need access to the same resource at the same time. If the chances are small, it permits many processes to work concurrently, particularly in a system with multiple CPUs. If the chances are not small the penalty is repeated execution of the same transaction logic.
+To provide ACID transactions, YottaDB uses a technique called `optimistic concurrency control <https://www.eecs.harvard.edu/~htk/publication/1981-tods-kung-robinson.pdf>`_. Each block has a transaction number that YottaDB sets to the current database transaction number when updating a block. Application logic, brackets transactions with TSTART and TCOMMIT commands. Once inside a transaction, a YottaDB process tracks each database block that it reads (any database block containing existing data that it intends to update has to be read first) and in process private memory keeps a list of updates that it intends to apply - application logic within the process views the database with the updates; application logic in other processes does not see states internal to the transaction. At TCOMMIT time, the process checks whether any blocks have changed since it read them, and if none have changed, it commits the transaction, making its changes visible to other processes Atomically with Isolation and Consistency (Durability comes from the journal records written at COMMIT time). Optimistic concurrency attempts to exploit the odds that two processes need access to the same resource at the same time. If the chances are small, it permits many processes to work concurrently, particularly in a system with multiple CPUs. If the chances are not small the penalty is repeated execution of the same transaction logic.
 
 If one or more blocks have changed, the process reverts its state to the TSTART and re-executes the application code for the transaction. If it fails to commit the second time, it tries yet again. If it fails to commit on the third attempt, it locks other processes out of the database and executes the transaction as the sole process (that is, on the fourth attempt, it switches to a from an optimistic approach to a pessimistic one).
 
@@ -2064,7 +2064,7 @@ To achieve the best YottaDB performance, transactions should:
 
 * be as short as possible
 * consist, as much as possible, only of global updates
-* be SERIAL with no associated LOCKs
+* be SERIAL with no LOCK operations within the transaction, and, where required by the application, minimal surrounding LOCKs
 * have RESTART enabled with a minimum of local variables protected by a restart portion of the TSTART argument.
 * Large concurrent transactions using TCOMMIT may result in repeated and inefficient attempts by competing processes to capture needed scarce resources, resulting in poor performance.
 
@@ -2072,8 +2072,8 @@ Example:
 
 .. code-block:: none
 
-   TSTART ():SERIAL
-   SET (ACCT,^M(0))=^M(0)+1
+   TSTART ()
+   SET ACCT=$INCREMENT(^M(0))
    SET ^M(ACCT)=PREC,^PN(NAM)=ACCT
    TCOMMIT
 
@@ -2083,18 +2083,18 @@ Example:
 
 .. code-block:: none
 
-   TSTART ():SERIAL
-   IF $TRESTART>3 DO QUIT
-   .TROLLBACK
-   .WRITE !,"Too many RESTARTs"
-   .QUIT
-   SET (NEXT,^ID(0))=^ID(0)+1
+   set ^ID(0)=5,RECORD="abc",ZIP=19355
+   TSTART ()
+   IF $TRESTART>3 DO  QUIT
+   . TROLLBACK
+   . WRITE !,"Too many RESTARTs"
+   SET NEXT=$INCREMENT(^ID(0))
    SET ^ID(NEXT)=RECORD,^XID(ZIP,NEXT)=""
    TCOMMIT
 
-This transaction will automatically restart if it cannot serialize the SETs to the database, and will terminate with a TROLLBACK if more than 3 RESTARTs occur.
+This transaction will automatically restart if it cannot commit the SETs to the database, and will terminate with a TROLLBACK if more than 3 RESTARTs occur.
 
-YottaDB provides a way to monitor transaction restarts by reporting them to the operator logging facility. If the environment variable ydb_tprestart_log_delta is defined, YottaDB reports every Nth restart where N is the numeric evaluation of the value of ydb_tprestart_log_delta. If the environment variable ydb_tprestart_log_first is defined, the restart reporting begins after the number of restarts specified by the value of ydb_tprestart_log_first. For example, defining both the environment variable to the value 1, causes all TP restarts to be logged. When ydb_tprestart_log_delta is defined, leaving ydb_tprestart_log_first undefined is equivalent to giving it the value 1.
+YottaDB provides a way to monitor transaction restarts by reporting them to the operator logging facility. If the environment variable `ydb_tprestart_log_delta <../AdminOpsGuide/basicops.html#ydb-tprestart-log-delta>`_ is defined, YottaDB reports every Nth restart where N is the numeric evaluation of $ydb_tprestart_log_delta. If the environment variable `ydb_tprestart_log_first <../AdminOpsGuide/basicops.html#ydb-tprestart-log-first>`_ is defined, the restart reporting begins after the number of restarts specified by $ydb_tprestart_log_first. For example, defining both environment variables to the value 1, causes all TP restarts to be logged. When ydb_tprestart_log_delta is defined, leaving ydb_tprestart_log_first undefined is equivalent to giving it the value 1.
 
 Here is an example message:
 
@@ -2117,7 +2117,9 @@ Here is an example message:
 * local_tn - This is a never-decreasing counter (starting at 1 at process startup) incremented for every new TP transaction, TP restart, and TP rollback. Two TPRESTART messages by the same process should never have the same value of local_tn. The difference between the local_tn values of two messages from the same process indicates the number of TP transactions done by that process in the time interval between the two messages.
 
 .. note::
-   Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages. Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.For more information, refer to `"Key Words in VIEW Command" <./commands.html#keywords-in-view-command>`_ and the `Environment Variables <../AdminOpsGuide/basicops.html#env-vars>`_ section of the Administration and Operations Guide.
+   * Use VIEW [NO]LOGT[PRESTART][=intexpr] to enable or disable the logging of TPRESTART messages. Note that you can use the ydb_tprestart_log_delta and ydb_tprestart_log_first environment variables to set the frequency of TPRESTART messages.
+   * Use VIEW [NO]LOGN[ONTP][=intexpr] to enable or disable the logging of NONTPRESTART messages. This facility is the analog of TPRESTART tracking, but for non-TP mini-transacstions. Note that you can use the ydb_nontprestart_log_delta and ydb_nontprestart_log_first environment variables to set the frequency of the NONTPRESTART messages.
+   * For more information, refer to `"Key Words in VIEW Command" <./commands.html#keywords-in-view-command>`_ and the `Environment Variables <../AdminOpsGuide/basicops.html#env-vars>`_ section of the Administration and Operations Guide.
 
 
 ++++++++++++++++++++++

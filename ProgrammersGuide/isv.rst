@@ -824,6 +824,16 @@ Example:
 .. note::
    The offset from UTC may be counterintuitive. For example Phoenix is seven hours behind UTC, but $ZHOROLOG shows its offset as 25200, whereas Bangkok is seven hours ahead of UTC, but $ZHOROLOG shows its offset as -25200.
 
+=======
+--------------------
+$ZICUVER
+--------------------
+
+$ZICUVER provides the current International Character Utilities (ICU) version or an empty string if ICU is not available.
+
+.. note::
+   The version is blank/empty if $ZCHSET is "M".
+
 --------------------
 $ZININTERRUPT
 --------------------
@@ -1074,6 +1084,12 @@ Results:
    In $ETRAP handler. Error was:
     150377322,longtran+6^tptime,%YDB-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
    Done TP Timeout test.
+
+----------
+$ZMLKHASH
+----------
+
+$ZMLKHASH is a hash of the last subscript of the last M lock acquired by a process. It is intended as an aid to YottaDB developers, and not an API that applications should rely on.
 
 --------------
 $ZMODE
@@ -1833,7 +1849,7 @@ For :ref:`set-command` of $ZTIMEOUT:
 
 * If the optional timeout is specified:
 
-  * A positive value specifies a time in seconds, with millisecond resolution, how long from the current time, the timer interrupts the process. When the timer interrupts the process, it :ref:`XECUTEs <xecute-command>` the vector.
+  * A positive value specifies a time in seconds, with microsecond resolution, how long from the current time, the timer interrupts the process. When the timer interrupts the process, it :ref:`XECUTEs <xecute-command>` the vector.
   * A negative value cancels the timer.
   * A zero value, or a string value, causes the vector to be XECUTEd immediately.
 
@@ -2071,7 +2087,7 @@ YottaDB provides nine ISVs (Intrinsic Special Variables) to facilitate trigger o
 $ZTDATA
 +++++++++++
 
-Within trigger context, $ZTDATA returns $DATA(@$REFERENCE)#2 for a SET or $DATA(@$REFERENCE) for a KILL, ZKILL or ZWITHDRAW prior to the explicit update. This provides a fast path alternative, avoiding the need for indirection in trigger code, to help trigger code determine the characteristics of the triggering node prior to the triggering update. For a SET, it shows whether the node did or did not hold data - whether a SET is modifying the contents of an existing node or creating data at a new node. For a KILL it shows whether the node had descendants and whether it had data.
+Within trigger context, $ZTDATA returns $DATA(@$REFERENCE)#2 for a SET, or $DATA(@$REFERENCE) for a KILL, ZKILL or ZWITHDRAW, at the time of trigger invocation, prior to the explicit update. This provides a fast path alternative, avoiding the need for indirection in trigger code, to help trigger code determine the characteristics of the triggering node prior to the triggering update. For a SET, it shows whether the node did or did not hold data - whether a SET is modifying the contents of an existing node or creating data at a new node. For a KILL it shows whether the node had descendants and whether it had data.
 
 .. _ztdelim-isv:
 

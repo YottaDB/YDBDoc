@@ -4137,16 +4137,16 @@ Example:
 
 .. code-block:: bash
 
-   YDB>ZSHOW "I"
+   YDB>zshow "i"
    $DEVICE=""
    $ECODE=""
    $ESTACK=0
    $ETRAP="Write:(0=$STACK) ""Error occurred: "",$ZStatus,!"
-   $HOROLOG="67205,50567"
-   $IO="/dev/pts/4"
-   $JOB=666530
+   $HOROLOG="67326,42751"
+   $IO="/dev/pts/1"
+   $JOB=359786
    $KEY=""
-   $PRINCIPAL="/dev/pts/4"
+   $PRINCIPAL="/dev/pts/1"
    $QUIT=0
    $REFERENCE=""
    $STACK=0
@@ -4156,12 +4156,12 @@ Example:
    $TLEVEL=0
    $TRESTART=0
    $X=0
-   $Y=22
+   $Y=20
    $ZA=0
-   $ZALLOCSTOR=827499
+   $ZALLOCSTOR=684296
    $ZAUDIT=0
    $ZB=""
-   $ZCHSET="M"
+   $ZCHSET="UTF-8"
    $ZCLOSE=0
    $ZCMDLINE=""
    $ZCOMPILE=""
@@ -4171,28 +4171,32 @@ Example:
    $ZEDITOR=0
    $ZEOF=0
    $ZERROR="Unprocessed $ZERROR, see $ZSTATUS"
-   $ZGBLDIR="/tmp/test/r2.02_x86_64/g/yottadb.gld"
-   $ZHOROLOG="67205,50567,322036,18000"
+   $ZGBLDIR="/tmp/test/r2.03_x86_64/g/yottadb.gld"
+   $ZHOROLOG="67326,42751,851245,14400"
+   $ZICUVER=76.1
    $ZININTERRUPT=0
    $ZINTERRUPT="IF $ZJOBEXAM()"
-   $ZIO="/dev/pts/4"
+   $ZIO="/dev/pts/1"
    $ZJOB=0
    $ZKEY=""
    $ZLEVEL=1
    $ZMALLOCLIM=0
    $ZMAXTPTIME=0
-   $ZMLKHASH=2333956397
+   $ZMLKHASH=0
    $ZMODE="INTERACTIVE"
    $ZONLNRLBK=0
    $ZPATNUMERIC="M"
-   $ZPIN="/dev/pts/4"
+   $ZPIN="/dev/pts/1"
    $ZPOSITION="+1^GTM$DMOD"
-   $ZPOUT="/dev/pts/4"
+   $ZPOUT="/dev/pts/1"
    $ZPROMPT="YDB>"
    $ZQUIT=0
-   $ZREALSTOR=837971
-   $ZRELDATE="20241230 15:59 6b6853170ca3b3bf71176d2802573d4410d83dad"
-   $ZROUTINES="/tmp/test/r2.02_x86_64/o*(/tmp/test/r2.02_x86_64/r /tmp/test/r) /opt/yottadb/r2.02/libyottadbutil.so"
+   $ZREALSTOR=710224
+   $ZRELDATE="20250424 16:55 02e082f2dd2617427228a36721cf37121863768e"
+   $ZROUTINES="/tmp/test/r2.03_x86_64/o/utf8*(/tmp/test/r2.03_x86_64/r /tmp/test/r) /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_yd
+   baim.so /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_ydbgui.so /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_ydbmwebserver.so
+    /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_ydbocto.so /extra/usr/local/lib/yottadb/r203/plugin/o/utf8/_ydbposix.so /extra/usr
+   /local/lib/yottadb/r203/plugin/o/utf8/_ydbsyslog.so /extra/usr/local/lib/yottadb/r203/utf8/libyottadbutil.so"
    $ZSOURCE=""
    $ZSTATUS=""
    $ZSTEP="B"
@@ -4211,12 +4215,12 @@ Example:
    $ZTUPDATE=""
    $ZTVALUE=""
    $ZTWORMHOLE=""
-   $ZUSEDSTOR=829899
-   $ZUT=1735671767325502
-   $ZVERSION="GT.M V7.0-005 Linux x86_64"
+   $ZUSEDSTOR=691496
+   $ZUT=1746114751865885
+   $ZVERSION="GT.M V7.1-002 Linux x86_64"
    $ZYERROR=""
    $ZYINTRSIG=""
-   $ZYRELEASE="YottaDB r2.02 Linux x86_64"
+   $ZYRELEASE="YottaDB r2.03 Linux x86_64"
    $ZYSQLNULL=$ZYSQLNULL
 
 This example displays the current value of all intrinsic special variables.

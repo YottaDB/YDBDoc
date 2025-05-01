@@ -378,6 +378,8 @@ The format of the MUPIP EXTEND command is:
 
 * EXTEND uses the Global Directory to map the region to the dynamic segment and the segment to the file.
 
+* An r1.x database file can have a maximum of 992Mi blocks and an r2.x database file can have a maximum of 16Gi blocks. A request to EXTEND blocks beyond this limit produces an error. In such a case, performing a region split, REORG to reclaim free blocks, etc. may be some of the available options. YottaDB recommends operating procedures to proactively monitor DB growth to ensure that corrective actions are performed before reaching these limits.
+
 ~~~~~~~~
 -Blocks
 ~~~~~~~~
@@ -928,63 +930,66 @@ where file-list is a space delimited list of files, such as that provided by the
 
 Specifies that the file-name is a database file. By default, MUPIP FTOK uses DB.
 
+
+~~~~~~~~~~~
+[NO]HEADER
+~~~~~~~~~~~
+
+Displays or omits the header line of the tablular output. The output of the ONLY option has no header, but by default other forms include a header that NOHEADER suppresses.
+
+HEADER qualifier was added to YottaDB effective release r1.36.
+
+.. _ftok-id:
+
+~~~
+ID
+~~~
+
+Specifies the ``prod_id`` value to use (see `man ftok <https://www.man7.org/linux/man-pages/man3/ftok.3.html>`_) when reporting the FTOK key. Specifying an id using the syntax ``-id=num`` where ``num`` is a decimal number 0 through 255 reports that value in the high byte of the FTOK key field reported by MUPIP FTOK. If unspecified, YottaDB uses 43, which shows up as hexadecimal ``2b`` and 44 (``2c``) for the Journal and Receive Pools (see examples below).
+
+ID qualifier was added to YottaDB effective release r1.36.
+
 ~~~~~~~~~
 -JNLPOOL
 ~~~~~~~~~
 
-Specifies that the reported key is for the Journal Pool of the instance created by the current Global Directory.
-
-~~~~~~~~~
--RECVPOOL
-~~~~~~~~~
-
-Specifies that the reported key is for the Receive Pool of the instance created by the current Global Directory.
-
-.. _ftok-id:
-
-~~~~~
--ID
-~~~~~
-
-Specified the signature use for the FTOK; if unspecified, it defaults to the signature for a YottaDB database file.
-
-ID qualifier was added to YottaDB effective release r1.36.
+Specifies that the reported key is for the Journal Pool of the instance corresponding to the current Global Directory.
 
 ~~~~~~~
 -ONLY
 ~~~~~~~
 
-Restricts the output to only the FTOK key; if a file is not valid and accessible, FTOK reports -1 values. ONLY does not report the table header even when HEADER is specified. If the database file is unavailable, the utility defaults to the ONLY behavior.
+Restricts the output to only the FTOK key; if a file is not valid and accessible, FTOK reports -1. ONLY does not report the table header even when HEADER is specified. If the database file is unavailable, the utility defaults to the ONLY behavior.
 
 ONLY qualifier was added to YottaDB effective release r1.36.
 
 ~~~~~~~~~
--HEADER
+-RECVPOOL
 ~~~~~~~~~
 
-Displays or omits the header of the table. By default, MUPIP FTOK displays the header.
+Specifies that the reported key is for the Receive Pool of the instance corresponding to the current Global Directory.
 
 Example:
 
 .. code-block:: none
 
-   $ mupip ftok -id mumps.dat
-		  File ::            Semaphore Id ::        Shared Memory Id ::                FTOK Key ::                             FileId
+   $ mupip ftok /tmp/test/r2.03_x86_64/g/yottadb.dat
+                File ::            Semaphore Id ::        Shared Memory Id ::                FTOK Key ::                             FileId
    -------------------------------------------------------------------------------------------------------------------------------------------
-              mumps.dat :: 1044382209 [0x3e400201] ::  613417274 [0x2490013a] ::  725039842 [0x2b373ae2] :: 0x00000000000e09818000002900000001
-
-   $ mupip ftok -id -only mumps.dat
-	      mumps.dat  ::   725039842  [ 0x2b373ae2 ]
-   $ mupip ftok -id -noheader mumps.dat
-              mumps.dat :: 1044382209 [0x3e400201] ::  613417274 [0x2490013a] ::  725039842 [0x2b373ae2] :: 0x00000000000e09818000002900000001
-
+   /tmp/test/r2.03_x86_64/g/yottadb.dat ::         -1 [0xffffffff] ::         -1 [0xffffffff] ::  733762153 [0x2bbc5269] :: 0xbe420000000000002800000000000000
+   $ mupip ftok -id=14 /tmp/test/r2.03_x86_64/g/yottadb.dat
+                File ::            Semaphore Id ::        Shared Memory Id ::                FTOK Key ::                             FileId
+   -------------------------------------------------------------------------------------------------------------------------------------------
+   /tmp/test/r2.03_x86_64/g/yottadb.dat ::         -1 [0xffffffff] ::         -1 [0xffffffff] ::  247222889 [0x0ebc5269] :: 0xbe420000000000002800000000000000
+   $ mupip ftok -only /tmp/test/r2.03_x86_64/g/yottadb.dat
+   /tmp/test/r2.03_x86_64/g/yottadb.dat  ::   733762153  [ 0x2bbc5269 ]
+   $ mupip ftok -id=255 -noheader /tmp/test/r2.03_x86_64/g/yottadb.dat
+   /tmp/test/r2.03_x86_64/g/yottadb.dat ::         -1 [0xffffffff] ::         -1 [0xffffffff] ::   -4435351 [0xffbc5269] :: 0xbe420000000000002800000000000000
    $ mupip ftok -jnlpool
                    File ::            Semaphore Id ::        Shared Memory Id ::                FTOK Key ::                             FileId
    -------------------------------------------------------------------------------------------------------------------------------------------
              multi.repl ::         -1 [0xffffffff] ::         -1 [0xffffffff] ::  743218009 [0x2c4c9b59] :: 0x00000000000e09838000002900000001
                 jnlpool ::  636486196 [0x25f00234] ::  578814256 [0x22800130]
-
-HEADER qualifier was added to YottaDB effective release r1.36.
 
 +++++++++++++++
 HASH
@@ -1282,6 +1287,7 @@ Example:
    Rtnobj shared memory # 1 : shmid: 11567113 shmlen: 0x100000 shmused: 0x200 shmfree: 0xffe00 objlen: 0x1c0
    rec#1: rtnname: abcd cycle: 1 objhash: 0xedbfac8c7f7ca357 numvers: 1 objlen: 0x1c0 shmlen: 0x200 superseded: 1
 
+.. _mupip-reorg-cmd:
 
 +++++
 REORG
@@ -1303,6 +1309,8 @@ The format of the MUPIP REORG command is:
     -FILE=file-name
     -FI[LL_FACTOR]=integer
     -I[NDEX_FILL_FACTOR]=integer
+    -K[EEP]={blocks|percent%}
+    -MIN[_LEVEL]=integer
     -NOCO[ALESCE]
     -NOSP[LIT]
     -NOSW[AP]
@@ -1553,6 +1561,18 @@ For a :ref:`MUPIP REORG TRUNCATE <reorg-truncate>`, KEEP allows the specificatio
 .. code-block:: none
 
    [-keep=blocks|percent%]
+
+~~~~~~~~~~
+MIN_LEVEL
+~~~~~~~~~~
+
+Directs REORG to only process blocks with a level greater than or equal to what is specified. ``-min_level=1``, for example, instructs REORG to only process index blocks. The format of the MIN_LEVEL qualifier is:
+
+.. code-block:: none
+
+   M[IN_LEVEL]=integer
+
+When the user intends to target only a subset of the blocks in a database for splitting, coalescing, and swapping, this setting can significantly reduce the overhead of doing so. ``-min_level=1`` is conceptually the MUPIP REORG equivalent of an :ref:`MUPIP INTEG FAST <integ-fast>`.
 
 ~~~~~~~~~~~~~
 -NOCOALESCE
@@ -2603,9 +2623,11 @@ MUPIP Command Summary
 |                                      |                                             | * BL[OCK]=hexa;block-number                                                              | N                 |
 |                                      |                                             | * BR[IEF]                                                                                | N                 |
 |                                      |                                             | * DBG                                                                                    | N                 |
+|                                      |                                             | * DMAXBLOCKSIZE=integer                                                                  | N                 |
 |                                      |                                             | * FA[ST]                                                                                 | N                 |
 |                                      |                                             | * FI[LE]                                                                                 | Y                 |
 |                                      |                                             | * FU[LL]                                                                                 | N                 |
+|                                      |                                             | * IMAXBLOCKSIZE=integer                                                                  | N                 |
 |                                      |                                             | * [NO]K[EYRANGES]                                                                        | N                 |
 |                                      |                                             | * [NO][MAP]=integer                                                                      | N                 |
 |                                      |                                             | * [NO]MAXK[EYSIZE]=integer                                                               | N                 |
@@ -2634,7 +2656,10 @@ MUPIP Command Summary
 | REO[RG]                              | \-                                          | * ENCR[YPT]=key                                                                          | N                 |
 |                                      |                                             | * E[XCLUDE]=global-name-list                                                             | N                 |
 |                                      |                                             | * FI[LL_FACTOR]=integer                                                                  | N                 |
+|                                      |                                             | * FILE=file-name                                                                         | N                 |
 |                                      |                                             | * I[NDEX_FILL_FACTOR]=integer                                                            | N                 |
+|                                      |                                             | * KEEP={blocks|percent%}                                                                 | N                 |
+|                                      |                                             | * MIN[_LEVEL]=integer                                                                    | N                 |
 |                                      |                                             | * NOCO[ALESCE]                                                                           | N                 |
 |                                      |                                             | * NOSP[LIT]                                                                              | N                 |
 |                                      |                                             | * NOSW[AP]                                                                               | N                 |
@@ -2662,6 +2687,7 @@ MUPIP Command Summary
 |                                      |                                             |   \REP[LICATION]={ON|OFF}}                                                               | N                 |
 |                                      |                                             | * AC[CESS_METHOD]={BG|MM}                                                                | Y                 |
 |                                      |                                             | * [NO]AS[YNCIO]                                                                          | Y                 |
+|                                      |                                             | * DATA[_RESERVED_BYTES]=integer                                                          | N                 |
 |                                      |                                             | * [NO]DE[FER_TIME][=seconds]                                                             | Y                 |
 |                                      |                                             | * [NO]DEFER_ALLOCATE                                                                     | N                 |
 |                                      |                                             | * [NO]EP[OCHTAPER]                                                                       | N                 |
@@ -2671,6 +2697,7 @@ MUPIP Command Summary
 |                                      |                                             | * F[ULLBLKWRT]={0|1|2}                                                                   | Y                 |
 |                                      |                                             | * G[LOBAL_BUFFERS]=integer                                                               | Y                 |
 |                                      |                                             | * H[ARD_SPIN_COUNT]=integer                                                              | N                 |
+|                                      |                                             | * INDEX[_RESERVED_BYTES]=integer                                                         | N                 |
 |                                      |                                             | * [NO]INST[_FREEZE_ON_ERROR]                                                             | N                 |
 |                                      |                                             | * JN[LFILE] journal-file-name                                                            | Y                 |
 |                                      |                                             | * K[EY_SIZE]=bytes                                                                       | Y                 |
@@ -2754,28 +2781,34 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              |                                                                      |
 |                                              | -ROLLBACK                                                                    | * OPERATIONS=integer                                                 |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
-| RECEIVER                                     | :ref:`mupip-replicate`                                                       | * BUFFSIZE=integer                                                   |
+| RECEIVER                                     | :ref:`mupip-replicate`                                                       | * AUTOROLLBACK[=VERBOSE]                                             |
+|                                              |                                                                              | * BUFFSIZE=integer                                                   |
 |                                              |                                                                              | * CHANGELOG                                                          |
 |                                              |                                                                              | * CHECKHEALTH                                                        |
 |                                              |                                                                              | * CMPLVL=integer                                                     |
 |                                              |                                                                              | * FILTER=filter_name                                                 |
-|                                              |                                                                              | * he[lpers]=[m[,n]]                                                  |
+|                                              |                                                                              | * HE[LPERS]=[m[,n]]                                                  |
 |                                              |                                                                              | * INITIALIZE                                                         |
-|                                              |                                                                              | * CMPLVL=n                                                           |
 |                                              |                                                                              | * LISTENPORT=integer                                                 |
 |                                              |                                                                              | * LOG=logfile                                                        |
 |                                              |                                                                              | * LOG_INTERVAL=integer                                               |
 |                                              |                                                                              | * NORESYNC                                                           |
+|                                              |                                                                              | * [NO]RECVBUFFSIZE[=integer]                                         |
 |                                              |                                                                              | * RESUME=strm_num                                                    |
 |                                              |                                                                              | * REUSE=instname                                                     |
+|                                              |                                                                              | * RSYNC_STRM=strm_num                                                |
+|                                              |                                                                              | * [NO]SENDBUFFSIZE[=integer]                                         |
 |                                              |                                                                              | * SHOWBACKLOG                                                        |
 |                                              |                                                                              | * SHUTDOWN                                                           |
 |                                              |                                                                              | * START                                                              |
 |                                              |                                                                              | * STATSLOG=[ON|OFF]                                                  |
+|                                              |                                                                              | * STOPRECEIVERFILTER                                                 |
 |                                              |                                                                              | * STOPSOURCEFILTER                                                   |
 |                                              |                                                                              | * TIMEOUT=seconds                                                    |
 |                                              |                                                                              | * TLSID=label                                                        |
 |                                              |                                                                              | * UPDATEONLY                                                         |
+|                                              |                                                                              | * UPDNOTOK                                                           |
+|                                              |                                                                              | * UPDOK                                                              |
 |                                              |                                                                              | * UPDATERESYNC=/path/to/bkup-orig-inst                               |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
 | RECOVER                                      | :ref:`mupip-journal`                                                         | * AFTER=time                                                         |
@@ -2855,12 +2888,12 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * CHANGELOG                                                          |
 |                                              |                                                                              | * CHECKHEALTH                                                        |
 |                                              |                                                                              | * CMPLVL=integer                                                     |
+|                                              |                                                                              | * [NO]COMMENT=string                                                 |
 |                                              |                                                                              | * CONNECTPARAMS=connection_options                                   |
 |                                              |                                                                              | * DEACTIVATE                                                         |
 |                                              |                                                                              | * DETAIL                                                             |
 |                                              |                                                                              | * FILTER=filter_name                                                 |
 |                                              |                                                                              | * FREEZE=on/off                                                      |
-|                                              |                                                                              | * [NO]COMMENT=string                                                 |
 |                                              |                                                                              | * INSTSECONDARY=secondary_instance name                              |
 |                                              |                                                                              | * NOJNLFILEONLY                                                      |
 |                                              |                                                                              | * JNLPOOL-LOG=log_file                                               |
@@ -2870,9 +2903,11 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * PASSIVE                                                            |
 |                                              |                                                                              | * [NO]PLAINTEXTFALLBACK                                              |
 |                                              |                                                                              | * PROPAGATEPRIMARY                                                   |
+|                                              |                                                                              | * [NO]RECVBUFFSIZE[=integer]                                         |
 |                                              |                                                                              | * RENEGOTIATE_INTERVAL=minutes                                       |
 |                                              |                                                                              | * ROOTPRIMARY                                                        |
 |                                              |                                                                              | * SECONDARY=secondary_instance_name                                  |
+|                                              |                                                                              | * [NO]SENDBUFFSIZE[=integer]                                         |
 |                                              |                                                                              | * SHOWBACKLOG                                                        |
 |                                              |                                                                              | * SHUTDOWN                                                           |
 |                                              |                                                                              | * START                                                              |
@@ -2880,8 +2915,8 @@ The following table summarizes the qualifiers.
 |                                              |                                                                              | * STOPSOURCEFILTER                                                   |
 |                                              |                                                                              | * TIMEOUT=seconds                                                    |
 |                                              |                                                                              | * TLSID=label                                                        |
-|                                              |                                                                              | * UPDOK                                                              |
 |                                              |                                                                              | * UPDNOTOK                                                           |
+|                                              |                                                                              | * UPDOK                                                              |
 |                                              |                                                                              | * ZEROBACKLOG                                                        |
 +----------------------------------------------+------------------------------------------------------------------------------+----------------------------------------------------------------------+
 
