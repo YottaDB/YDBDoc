@@ -351,7 +351,7 @@ Since the script is an M routine, it must follow the normal syntax of M code, e.
 .. code-block:: none
 
    $ env | grep -Ei ^\(\(ydb\)\|\(gtm\)\) # No YottaDB environment variables
-   $ cat /tmp/ydbsh.m 
+   $ cat /tmp/ydbsh.m
    #!/usr/local/bin/ydbsh
 	   write $zroutines,!,$zcmdline,!
 	   for  read "Enter text: ",line,! quit:'$zlength(line)  do
@@ -361,7 +361,7 @@ Since the script is an M routine, it must follow the normal syntax of M code, e.
    /tmp/ydbsh.m ABC DEF
    Enter text: The quick brown fox jumps over the lazy dog
    god yzal eht revo spmuj xof nworb kciuq ehT
-   Enter text: 
+   Enter text:
    $
 
 .. raw:: html

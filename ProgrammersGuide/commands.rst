@@ -2504,7 +2504,7 @@ Enables or disables handling of undefined variables as errors. With UNDEF, Yotta
 The environment variable $ydb_noundef specifies the initial value of [NO]UNDEF at process startup. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string.
 
 .. note::
-   NOUNDEF applies even in the case of an undefined FOR control variable, such as when a KILL or NEW command is used on the control variable, which may cause an unintended indefinite loop. For example, FOR A=1:1:10 KILL A results in an indefinite loop with VIEW "NOUNDEF". 
+   NOUNDEF applies even in the case of an undefined FOR control variable, such as when a KILL or NEW command is used on the control variable, which may cause an unintended indefinite loop. For example, FOR A=1:1:10 KILL A results in an indefinite loop with VIEW "NOUNDEF".
 
 ~~~~~~~~~~~~~~~~~~~~~
 ZDATE_FORM:value

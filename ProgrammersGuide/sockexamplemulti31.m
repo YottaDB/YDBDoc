@@ -220,7 +220,7 @@ ioerr(code,port,opt)
 	use $principal ; since process will terminate, no need to save & restore $io
  	zshow "s":stack
 	do log("At "_stack("S",2)_" "_$piece(msg,";",2)_" port "_$get(port)_$select($data(opt)#10:$piece(msg,";",3)_opt,1:""))
-	use 0 zwrite ioerrio,ioerrdev,ioerrkey,ioerrzeof zshow "D"	
+	use 0 zwrite ioerrio,ioerrdev,ioerrkey,ioerrzeof zshow "D"
 	zwrite:$data(connectionsock) connectionsock
 	zwrite:$data(connections) connections
 	zwrite:$data(connectionsd) connectionsd
@@ -312,7 +312,7 @@ server(portno,msg,listenqueue,timeout)
 	. zwrite zkey,zkey2
 	. use previo
 	set totalpartialread=$length(x1,"READ")-1
-	for i=1:1:totalpartialread do  
+	for i=1:1:totalpartialread do
 	. set sockhandlepar=$piece($piece(zkey,";",i),"|",2)
 	. set listensock(sockhandlepar,"read")="Partial"
 	. use sockdev:(detach=sockhandlepar) ; detach the socket with partially read data

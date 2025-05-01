@@ -854,7 +854,7 @@ This example invokes %HO as an extrinsic function with the FUNC label.
 The ^%JSWRITE utility routine converts a glvn structure or a series of SET @ arguments to a string of JSON objects. The format of the ^%JSWRITE utility is:
 
 .. code-block:: none
-		
+
    ^%JSWRITE(glvnode,[expr1,expr2])
 
 * glvnode specifies the string containing the subscripted/unsubscripted global or local variable name. When glvnode evaluates to an empty string ("") or there are no arguments, %JSWRITE considers all subscripted local variables in scope for conversion.
@@ -903,23 +903,23 @@ Examples:
    demodevtest("Developer3","Token4","testSetup","holt","t","SendReport",65401,32073)=1
    demodevtest("Developer3","Token4","testSetup","holt","t","tconv",65401,32025)=0
 
-   YDB>set glvn="demodevtest(""Developer2"")" 
+   YDB>set glvn="demodevtest(""Developer2"")"
 
-   YDB>do ^%JSWRITE(glvn,"*") ; JS Object Strings: All descendants of demodevtest("Developer2") 
+   YDB>do ^%JSWRITE(glvn,"*") ; JS Object Strings: All descendants of demodevtest("Developer2")
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"22073":1}}}}}}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"22025":0}}}}}}}}}
 
-   YDB>do ^%JSWRITE(glvn,"[*]") ; Array: All descendants of demodevtest("Developer2") 
+   YDB>do ^%JSWRITE(glvn,"[*]") ; Array: All descendants of demodevtest("Developer2")
    [{"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"22073":1}}}}}}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"22025":0}}}}}}}}}]
 
-   YDB> do ^%JSWRITE(glvn,"#") ; JS Object Strings: All descendants of demodevtest starting from demodevtest("Developer2") 
+   YDB> do ^%JSWRITE(glvn,"#") ; JS Object Strings: All descendants of demodevtest starting from demodevtest("Developer2")
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}}
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}}
@@ -931,7 +931,7 @@ Examples:
    {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":{"SendReport":{"65401":{"32073":1}}}}}}}}}
    {"demodevtest":{"Developer3":{"Token4":{"testSetup":{"holt":{"t":{"tconv":{"65401":{"32025":0}}}}}}}}}
 
-   YDB>do ^%JSWRITE(glvn,"[#]") ; Array: All descendants of demodevtest starting from demodevtest("Developer2") 
+   YDB>do ^%JSWRITE(glvn,"[#]") ; Array: All descendants of demodevtest starting from demodevtest("Developer2")
    [{"demodevtest":{"Developer2":{"Token3":{"testSetup":"runtest holt maintest tconv"}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"65401,21987":1}}}}}},
    {"demodevtest":{"Developer2":{"Token3":{"testSetup":{"holt":{"t":"mtest"}}}}}},

@@ -61,13 +61,6 @@ make html >/dev/null
 rsync _build/html/ "$target/Octo"
 popd >/dev/null
 
-# The source directory for the programmer's guide does not have the same name
-# as the page the index links to
-if [ -d "$target/ProgrammersGuide" ]; then
-	rm -r "$target/ProgrammersGuide"
-fi
-mv "$target"/ProgGuide/ "$target"/ProgrammersGuide/
-
 # Remove unused fonts
 echo "Removing unused fonts..."
 find $target -iname 'lato*' -delete
