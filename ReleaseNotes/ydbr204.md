@@ -45,7 +45,7 @@ Contact YottaDB or your YottaDB support channel for support with assured service
 
 For free (to you) support from members of communities who run widely available applications on YottaDB, please use an application-specific list where appropriate.
 
- - Join the discussion a the [YottaDB Discord channel](https://discord.gg/bFHmDdzcqY).
+ - Join the discussion on the [YottaDB Discord channel](https://discord.gg/bFHmDdzcqY).
  - For issues specific to the use of YottaDB from node.js via [Nodem](https://github.com/dlwicksell/nodem), [post an Issue on the Nodem project](https://github.com/dlwicksell/nodem/issues/new/).
  - For issues specific to the use of YottaDB from [QewdJS](http://qewdjs.com/), or [EWD.js](https://github.com/robtweed/ewd.js), or from node.js via [mg-dbx](https://github.com/chrisemunt/mg-dbx) or [mg-dbx-napi](https://github.com/chrisemunt/mg-dbx-napi) post to the [Enterprise Web Developer community](https://groups.google.com/forum/#!forum/enterprise-web-developer-community).
  - For issues specific to the use of YottaDB with [VistA](https://en.wikipedia.org/wiki/VistA) flavors, post to the [Hardhats](https://groups.google.com/forum/#!forum/hardhats) list.
@@ -56,7 +56,7 @@ For free (to you) support from members of communities who run widely available a
 
 ### Overview
 
-Effective r2.04, the 32-bit ARM platform is Supportable, and no longer Supported. If this is a problem for you, please [contact us](mailto:info@yottadb.com).
+Effective r2.04, the 32-bit ARM platform is no longer Supported. If this is a problem for you, please [contact us](mailto:info@yottadb.com).
 
 ### Platforms
 
@@ -66,16 +66,17 @@ A platform is a combination of a CPU architecture and an operating system. A pla
 * Supportable means that although we may not have such a platform in our environment, we have no reason to believe that the software will not run on it.
 * All others are Unsupported.
 
-| CPU Architecture                    | Supported OS Version(s)                                                              | Notes                                                                                                                         |
-| ----------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| 64-bit x86                          | Ubuntu 22.04 LTS & 24.04 LTS; Red Hat Enterprise Linux 8.x & 9.x; SUSE Linux Enterprise 15.x; Debian GNU/Linux 12 (Bookworm) | Except for Ubuntu 22.04 LTS and 24.04 LTS, which share a binary distribution, there are separate binary distributions for each OS version, owing to differences in library versions of those distributions. |
-| 64-bit ARM (Raspberry Pi 3 Model B) | Debian GNU/Linux 12 (Bookworm)                                                       | See below.                                                                                                                    |
-Recent releases of major 64-bit GNU/Linux distributions with contemporary kernels, glibc and ncurses are Supportable; however you may have to build YottaDB from source. Specific notes:
+| CPU Architecture      | Supported OS Version(s)              | Notes                                        |
+|-----------------------|--------------------------------------|----------------------------------------------|
+| 64-bit x86            | * Ubuntu 22.04 LTS & 24.04 LTS<br> * Red Hat Enterprise Linux 8.x & 9.x<br> * SUSE Linux Enterprise 15.x<br> * Debian GNU/Linux 12 (Bookworm) | There are separate binary distributions for each OS version, owing to differences in the library versions of the distributions. |
+| 64-bit ARM (RaspberryPi 3 Model B) | * Debian GNU Linux 12 (Bookworm) | See below. |
+
+ Recent releases of major 64-bit GNU/Linux distributions with contemporary kernels, glibc and ncurses are Supportable; however you may have to build YottaDB from source. Specific notes:
 
 - Supported filesystems are ext4 and xfs. f2fs is Supportable. btrfs, zfs, and NFS are Unsupported, and known to have issues.
-- [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) recognizes [Rocky Linux](https://rockylinux.org/) as equivalent to RHEL, and [OpenSUSE Leap](https://www.opensuse.org/#Leap) as equivalent to SUSE Linux Enterprise, installing the releases for the corresponding distributions. Note that Rocky Linux and OpenSUSE Leap are Supportable, not Supported.
+- [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) recognizes [Rocky Linux](https://rockylinux.org/) as equivalent to RHEL, and [OpenSUSE Leap](https://www.opensuse.org/#Leap) as equivalent to SUSE Linux Enterprise, installing the releases for the corresponding Supported distributions. Note that Rocky Linux and OpenSUSE Leap are Supportable, not Supported.
 - On [Arch Linux](https://www.archlinux.org/) and other leading edge distributions such as [OpenSUSE Tumbleweed](https://www.opensuse.org/#Tumbleweed), as well as new versions of Linux distributions, YottaDB will need to be recompiled from source code owing to library and tool chain versions newer than those used in building Supported distributions. The `--from-source` option of [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) simplifies the process.
-- While YottaDB is Supportable on other ARMv6, [ARMv7-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv7-A_cores), and [ARMv8-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv8-A_cores) CPUs, owing to variations in the implementations of ARM microarchitectures, we recommend that you ensure the software runs correctly before committing to any specific hardware other than those listed above. Please [contact us](mailto:info@yottadb.com) if you want a specific combination of OS and CPU microarchitecture to be Supported.
+- While YottaDB is Supportable on other [ARMv7-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv7-A_cores), and [ARMv8-A](https://en.wikipedia.org/wiki/Comparison_of_ARMv8-A_cores) CPUs, owing to variations in the implementations of ARM microarchitectures, we recommend that you ensure the software runs correctly before committing to any specific hardware other than those listed above. Please [contact us](mailto:info@yottadb.com) if you want a specific combination of OS and CPU microarchitecture to be Supported.
 
 ### Installation
 See our [Get Started page](https://yottadb.com/product/get-started) to use YottaDB.
@@ -89,12 +90,12 @@ Assuming `$ydb_dist` points to the directory where YottaDB is installed:
  - Execute `mupip rundown && mupip rundown -relinkctl` and review the output to ensure successful completion.
  - Ensure that there are no `gtcm*` or `gtmsecshr` processes active.
  - Use `sudo lsof | grep $ydb_dist` to ensure there are no open files.
-   - If there are links to files in `$ydb_dist`, e.g., from `/usr/local/bin/` or `/usr/local/etc/`, remove the links.
+ - If there are links to files in `$ydb_dist`, e.g., from `/usr/local/bin/` or `/usr/local/etc/`, remove the links.
  - Delete the directory with `sudo rm -rf $ydb_dist`
 
 ## Upgrading to YottaDB r2.04
 
-YottaDB r2.04 is upward compatible from YottaDB [r2.02](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.02), GT.M [V7.1-000](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html), GT.M [V7.1-001](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html), and (fill in additional GT.M versions here). The minimal upgrade steps are:
+YottaDB r2.04 is upward compatible from YottaDB [r2.02](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.02), GT.M [V7.1-000](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html), GT.M [V7.1-001](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html), and GT.M [V7.1-002](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html). The minimal upgrade steps are:
 
 * Install YottaDB r2.04 using the [ydbinstall.sh](https://download.yottadb.com/ydbinstall.sh) script; or download the YottaDB distribution for your platform, and use the included `ydbinstall` script to install YottaDB. The scripts can install the YottaDB plugins that you use along with installing YottaDB, or you can install or upgrade them later. The `--help` option of the scripts lists their capabilities.
 * Install plugins you need in addition to those installed in the previous step, e.g., non-YottaDB plugins or customized plugins.
@@ -129,7 +130,7 @@ In the event you need database files that need the 16Gi block limit or the 11 tr
 
 * After a [MUPIP FREEZE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip-freeze) of the database, use [MUPIP EXTRACT](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#extract) to extract the database nodes, and [MUPIP LOAD](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#load) to load them into a new database file created by [MUPIP CREATE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#create). A binary format will give you the fastest extract and load times. Note that you should use a MUPIP FREEZE across all regions of a database to ensure consistency of the database. The MUPIP EXTRACT and MUPIP LOAD processes can run concurrently for the regions.
 
-* After a [MUPIP INTEG](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#integ) to verify the structural integrity of database files, use [MUPIP UPGRADE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip-upgrade) to upgrade the database file header to the 2.x format, followed by a [MUPIP REORG UPGRADE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#upgrade) to upgrade the individual blocks.
+* After a [MUPIP INTEG](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#integ) to verify the structural integrity of database files, use [MUPIP UPGRADE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip-upgrade) to upgrade the database file header to the 2.x format, followed by a [MUPIP REORG UPGRADE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#upgrade) to upgrade the individual blocks. MUPIP REORG UPGRADE can run concurrently with normal database usage.
 
 If you wish to use a database file created or used by r2.04 on a prior release of YottaDB or a GT.M version, contact your YottaDB support channel.
 
@@ -143,11 +144,11 @@ YottaDB r2.04 includes the following enhancements and fixes beyond YottaDB [r2.0
 |------------------|-----------|---------------------------------------------------------------------------------------------------|
 | ([873](#x873))   | Languages | ZSHOW "V" able to display variables at a specific stack levels                                    |
 | ([1056](#x1056)) | Languages | Pre-allocation for call-out (IO, not just O) string parameters                                    |
-| ([1112](#x1112)) | Other     | No GTMSECSHRSRVF and CRITSEMFAIL errors from ydb_env_set in certain rare cases                    |
+| ([1112](#x1112)) | Other     | No GTMSECSHRSRVF and CRITSEMFAIL errors from ydb\_env\_set in certain rare cases                  |
 | ([1128](#x1128)) | Languages | MUPIP STOP terminates DSE/LKE/MUPIP even if they hold a critical section when ydb_readline=1      |
 | ([1129](#x1129)) | Languages | UTF-8 mode $TRANSLATE() works correctly with long search string with multi-byte characters        |
 | ([1133](#x1133)) | Languages | `-machine` compilation option                                                                     |
-| ([1136](#x1136)) | Languages | WRITE /TLS sets $TEST even if no TIMEOUT was specified                                            |
+| ([1136](#x1136)) | Languages | WRITE /TLS does not set $TEST if no TIMEOUT was specified                                         |
 | ([1138](#x1138)) | Languages | $ZYCOMPILE() intrinsic function checks whether a string is a syntactically correct line of M code |
 
 <a name="gtmv71000"></a>
@@ -155,23 +156,23 @@ YottaDB r2.04 includes the following enhancements and fixes beyond YottaDB [r2.0
 
 YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-000](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-000_Release_Notes.html).
 
-| ID                              | Category              | Summary                                                                                                                          |
-|---------------------------------|-----------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| ([GTM-DE325871](#GTM-DE325871)) | Other                 | Remove limit affecting sockets and improve error message where it still exists for GT.CM                                         |
-| ([GTM-DE340906](#GTM-DE340906)) | Languages             | Attempting a LOCK with more identical arguments than YottaDB supports for the command generates an error                            |
-| ([GTM-DE340950](#GTM-DE340950)) | Languages             | Exceeding the LOCK level limit for the same resource name generates a LOCKINCR2HIGH error                                        |
-| ([GTM-DE376223](#GTM-DE376223)) | Languages             | $FNUMBER() handles fill requests up to close to the maximum string length                                                        |
-| ([GTM-DE376224](#GTM-DE376224)) | Languages             | Modulo of non-canonical number by a divisor greater than 999,999 returns a canonical result                                      |
-| ([GTM-DE376239](#GTM-DE376239)) | Languages             | When YottaDB inserts an implicit QUIT to prevent a possible error, it generates a FALLINTOFLST WARNING message                   |
-| ([GTM-DE388565](#GTM-DE388565)) | Languages             | Avoid inappropriate NUMFLOW from a literal Boolean argument with exponential (E) form                                            |
-| ([GTM-DE402020](#GTM-DE402020)) | Database              | Prevent Block SIG-11 splits under rare concurrency conditions involving empty string values                                      |
-| ([GTM-DE408789](#GTM-DE408789)) | System Administration | MUPIP BACKUP DATABASE uses faster copy mechanism when available                                                                  |
-| ([GTM-DE421008](#GTM-DE421008)) | System Administration | Triple MUPIP STOP within a minute similar to, but slightly better than kill -9                                                   |
-| ([GTM-DE422089](#GTM-DE422089)) | Other                 | Improved detection and reporting of issues with utility command length and parsing                                               |
-| ([GTM-DE493831](#GTM-DE493831)) | Languages             | Prevent rare deadlock while using JOB command                                                                                    |
-| ([GTM-F135385](#GTM-F135385))   | System Administration | MUPIP RCTLDUMP reports the number of times a routine has been replaced (rtnsupersede) in the autorelink cache                    |
-| ([GTM-F135427](#GTM-F135427))   | System Administration | Support in-place conversion from V6 to V7 database formats                                                                       |
-| ([GTM-F221672](#GTM-F221672))   | Other                 | Additional context in SHMHUGETLB syslog message                                                                                  |
+| ID                              | Category              | Summary                                                                                                        |
+|---------------------------------|-----------------------|----------------------------------------------------------------------------------------------------------------|
+| ([GTM-DE325871](#GTM-DE325871)) | Other                 | Remove limit affecting sockets and improve error message where it still exists for GT.CM                       |
+| ([GTM-DE340906](#GTM-DE340906)) | Languages             | Attempting a LOCK with more identical arguments than YottaDB supports for the command generates an error       |
+| ([GTM-DE340950](#GTM-DE340950)) | Languages             | Exceeding the LOCK level limit for the same resource name generates a LOCKINCR2HIGH error                      |
+| ([GTM-DE376223](#GTM-DE376223)) | Languages             | $FNUMBER() handles fill requests up to close to the maximum string length                                      |
+| ([GTM-DE376224](#GTM-DE376224)) | Languages             | Modulo of non-canonical number by a divisor greater than 999,999 returns a canonical result                    |
+| ([GTM-DE376239](#GTM-DE376239)) | Languages             | When YottaDB inserts an implicit QUIT to prevent a possible error, it generates a FALLINTOFLST WARNING message |
+| ([GTM-DE388565](#GTM-DE388565)) | Languages             | Avoid inappropriate NUMFLOW from a literal Boolean argument with exponential (E) form                          |
+| ([GTM-DE402020](#GTM-DE402020)) | Database              | Prevent Block SIG-11 splits under rare concurrency conditions involving empty string values                    |
+| ([GTM-DE408789](#GTM-DE408789)) | System Administration | MUPIP BACKUP DATABASE uses faster copy mechanism when available                                                |
+| ([GTM-DE421008](#GTM-DE421008)) | System Administration | Triple MUPIP STOP within a minute similar to, but slightly better than kill -9                                 |
+| ([GTM-DE422089](#GTM-DE422089)) | Other                 | Improved detection and reporting of issues with utility command length and parsing                             |
+| ([GTM-DE493831](#GTM-DE493831)) | Languages             | Prevent rare deadlock while using JOB command                                                                  |
+| ([GTM-F135385](#GTM-F135385))   | System Administration | MUPIP RCTLDUMP reports the number of times a routine has been replaced (rtnsupersede) in the autorelink cache  |
+| ([GTM-F135427](#GTM-F135427))   | System Administration | Support in-place conversion from V6 to V7 database formats                                                     |
+| ([GTM-F221672](#GTM-F221672))   | Other                 | Additional context in SHMHUGETLB syslog message                                                                |
 
 <a name="gtmv71001"></a>
 ### GT.M V7.1-001
@@ -202,6 +203,30 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
 | ([GTM-F135040](#GTM-F135040))   | Languages             | $VIEW("JNLPOOL") with multiple instances                                                                                         |
 | ([GTM-F225097](#GTM-F225097))   | System Administration | Second phase of in-place conversion from V6 to V7 database formats supports operation with concurrent activity                   |
 
+<a name="gtmv71001"></a>
+### GT.M V7.1-002
+
+YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-002](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-002_Release_Notes.html).
+
+| ID                              | Category  | Summary                                                                                                                                   |
+|---------------------------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| ([GTM-DE324947](#GTM-DE324947)) | Languages | Correct error message when ydbtls_passwd_TLSID is not set                                                                                 |
+| ([GTM-DE533918](#GTM-DE533918)) | Languages | Error on READ or WRITE to a SOCKET device with no active sockets                                                                          |
+| ([GTM-DE534846](#GTM-DE534846)) | Languages | $ZTIMEOUT presents the time remaining value to microsecond precision                                                                      |
+| ([GTM-DE538928](#GTM-DE538928)) | Admin     | Update Process properly closes prior generation journal files                                                                             |
+| ([GTM-DE549071](#GTM-DE549071)) | Admin     | REORG traverses the database correctly and accepts restrictions on which levels it processes                                              |
+| ([GTM-DE549072](#GTM-DE549072)) | Admin     | REORG succeeds in splitting any blocks that require a split                                                                               |
+| ([GTM-DE549073](#GTM-DE549073)) | Admin     | REORG no longer accepts a combination of reserved bytes and fill factor which together target an impossible block size                    |
+| ([GTM-DE556365](#GTM-DE556365)) | Admin     | Receiver Server continues to accept connections after a TLSCONVSOCK error                                                                 |
+| ([GTM-DE556760](#GTM-DE556760)) | Admin     | MUPIP UPGRADE appropriately processes r1.x database files that exceed the maximum tree depth (7 levels) associated with pre-r2.x versions |
+| ([GTM-F135405](#GTM-F135405))   | Admin     | Syslog message on Replication state when Journaling turns off                                                                             |
+| ([GTM-F167609](#GTM-F167609))   | Other     | SOCKET Devices support TLSv1.3 Post Handshake Authentication                                                                              |
+| ([GTM-F167995](#GTM-F167995))   | Languages | The YottaDB TLS plugin library exposes an external call interface providing cipher suite and version information                          |
+| ([GTM-F197635](#GTM-F197635))   | Admin     | YottaDB supports independent index and data reserved bytes values                                                                         |
+| ([GTM-F217678](#GTM-F217678))   | DB        | Online Rollback syslogs change to database logical state                                                                                  |
+| ([GTM-F229760](#GTM-F229760))   | Languages | $ZICUVER provide the ICU version if available                                                                                             |
+| ([GTM-F235980](#GTM-F235980))   | Admin     | YottaDB supports increased user control of TCP buffer sizing in replication                                                               |
+
 ### Database
 
 * <a name="xGTM-DE402020"></a>YottaDB deals appropriately with a concurrency issue encountered when splitting a block, the record triggering the split has a zero-length value, concurrent changes make the previous record appear identical to the one triggering the split, and YottaDB attempts to calculate a parent key to demarcate the split. This apparently longstanding issue was detected by a customer using a stress test with the default proactive block split setting. While more likely with proactive block splits, the issue is difficult to reproduce without using carefully constructed update patterns. We have no indication that it has ever been previously reported by a customer or detected in our testing. Previously, the condition caused a process to fail with a segmentation violation (SIG-11) but did not result in any database damage. [GTM-DE402020](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE402020)
@@ -213,6 +238,8 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
 * <a name="GTM-DE531078"></a>YottaDB processes working on the second phase of a [KILL](https://docs.yottadb.com/ProgrammersGuide/commands.html#kill) operation (KILL-In-Progress), issue a [DBROLLEDBACK](https://docs.yottadb.com/MessageRecovery/errors.html#dbrolledback) error in the event a [MUPIP JOURNAL ROLLBACK ONLINE](https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#on-line) changes the state of the database. Previously, YottaDB processes would restart until the fourth retry acquiring the critical section on all participating regions before issuing such an error. This error was only seen in development and not reported by a user. [GTM-DE531078](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE531078)
 
 * <a name="GTM-DE532295"></a>YottaDB disables proactive block splitting by default as well as within a TP transaction. YottaDB made this change after observing that, under certain conditions, the setting could incur spurious restarts and split blocks which were not subject to contention. To enable the feature outside of transaction processing, use a [MUPIP SET -PROBLKSPLIT=n](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#problksplit), where n is the number of nodes at which YottaDB considers based on the number of restarts whether to split a block in advance of its becoming full. Previously, starting in r2.00, the default threshold for a proactive block split was 5 nodes and the feature applied to TP as well as non-TP. The performance issue was only ever observed in testing and not reported by a user; it was not associated with any correctness or integrity concerns. [GTM-DE532295](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE532295)
+
+* <a name="GTM-F217678"></a>When [MUPIP JOURNAL ROLLBACK ONLINE](https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#rollback-on-line-noo-nline) changes the logical state of a database it issues an [ORLBKROLLED](https://docs.yottadb.com/MessageRecovery/errors.html#orlbkrolled) message to the system log. Previously, MUPIP did not announce this state change in the system log. [GTM-F217678](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-F217678)
 
 ### Languages
 
@@ -265,6 +292,8 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
 
   Note that the intrinsic function is very similar to the M Utility Function [$$^%ZMVALID()](https://docs.yottadb.com/ProgrammersGuide/utility.html#zmvalid) but the intrinsic function is a lot faster (in an experiment it was found to be 100,000 times faster) and does not create any `.m` and `.o` files. [#1138](https://gitlab.com/YottaDB/DB/YDB/-/issues/1138)
 
+* <a name="GTM-DE324947"></a>In the event of failure to acquire the TLS password, the YottaDB encryption plugin issues an appropriate error message. Previously, in some cases, failure to acquire the TLS password resulted in a garbled error message. [GTM-DE324947](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-DE324947)
+
 * <a name="GTM-DE340906"></a>YottaDB appropriately handles a command with multiple (more than 255) [LOCKs](https://docs.yottadb.com/ProgrammersGuide/commands.html#lock) with the same name. Previously, a YottaDB command that created more than 255 LOCKs with the same name caused a segmentation violation (SIG-11). [GTM-DE340906](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE340906)
 
 * <a name="GTM-DE340950"></a>An attempt by a process to incrementally [LOCK](https://docs.yottadb.com/ProgrammersGuide/commands.html#lock) the same resource name more than 511 times produces a [LOCKINCR2HIGH](https://docs.yottadb.com/MessageRecovery/errors.html#lockincr2high) with accurate context. Previously LOCK processing did not appropriately detect the limit or supply correct context. [GTM-DE340950](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE340950)
@@ -292,7 +321,9 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
   > [!note]
   > The GT.M enhancement allowed extensions other than `.m`. YottaDB further enhanced the compiler to allow filenames with no extension.
 
-* <a name="GTM-DE507982"></a>YottaDB produces an appropriate result from an equality test between zero (0) and a multiplicand of zero value that is the result of multiplying a non-integer value with zero (0). Previously, this odd combination could inappropriately indicate inequality. [GTM-DE507982](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE507982)
+* The following was fixed in r2.02, and the below release note appears here for completeness.
+
+  * <a name="GTM-DE507982"></a>YottaDB produces an appropriate result from an equality test between zero (0) and a multiplicand of zero value that is the result of multiplying a non-integer value with zero (0). Previously, this odd combination could inappropriately indicate inequality. [GTM-DE507982](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE507982)
 
 * <a name="GTM-DE508852"></a>YottaDB appropriately reports a [NUMOFLOW](https://docs.yottadb.com/MessageRecovery/errors.html#numoflow) error for literal values when those literals are operated on at compile-time and the run-time variable equivalent would trigger the same error. This affects the unaryoperators \', +, and -. The effect of these operators on variables is unchanged. Previously, these operators sometimes did not correctly report a NUMOFLOW when called for. In the case of the negation operator, this could lead to reporting an incorrect result. [GTM-DE508852](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE508852)
 
@@ -315,7 +346,57 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
 
 * <a name="GTM-DE525624"></a>Because it is a byte-oriented function, [$ZTRANSLATE()](https://docs.yottadb.com/ProgrammersGuide/functions.html#ztranslate) does not issue a [BADCHAR](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#intrpt) error when operating on UTF-8 strings. Due to a regression in r1.36, this function previously incorrectly issued a BADCHAR error when the input string contained non-UTF-8 characters. There were two possible workarounds for this issue: 1) A targeted approach requiring code changes to enclose each use of $ZTRANSLATE() with [VIEW "NOBADCHAR"](https://docs.yottadb.com/ProgrammersGuide/commands.html#no-badchar) and VIEW "BADCHAR", which ensures all UTF-8 data is handled appropriately. 2) A broad approach of defining [$ydb_badchar](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-badchar) as zero or FALSE to disable BADCHAR checking through-out the application which disables detection of any improperly formatted UTF-8 strings. [GTM-DE525624](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE525624)
 
+* <a name="GTM-DE533918"></a>YottaDB issues a [NOSOCKETINDEV](https://docs.yottadb.com/MessageRecovery/errors.html#nosocketindev) error the first time a process in direct mode attempts to read from or write to a socket principal device with no socket descriptors, and issues a fatal [NOPRINCIO](https://docs.yottadb.com/MessageRecovery/errors.html#noprincio) error upon a subsequent attempt. Previously a process that entered direct mode with an empty socket principal device would loop indefinitely and consume CPU resources. [GTM-DE533918](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-DE533918)
+
+* <a name="GTM-DE534846"></a>$ZTIMEOUT presents the time remaining value to microsecond precision; previously it only showed time with precision in milliseconds or less. [GTM-DE534846](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-DE534846)
+
 * <a name="GTM-F135040"></a>Specifying a second expression for [$VIEW("JNLPOOL")](https://docs.yottadb.com/ProgrammersGuide/functions.html#argument-keywords-of-view) provides a means of iterating through active Journal Pools. If the second expression is an empty string, the function returns the replication instance file name associated with the instance first attached by the process or the string "\*" if the process has not previously engaged with any instance. If the file name specified in the second expression does not match the replication instance file name for any of the active Journal Pools the string "\*" is returned. Otherwise the file name of the Journal Pool attached after the Journal Pool with the file name given in the second expression is returned. Note the two argument form of $VIEW("JNLPOOL") does not change the current Replication Instance. [GTM-F135040](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-F135040)
+
+* <a name="GTM-F167995"></a>The [encryption plugin](https://docs.yottadb.com/AdminOpsGuide/encryption.html) exposes an external call interface providing ciphersuite and version information. The four new functions are:
+
+  ```
+  getversion:                     xc_long_t gtm_tls_get_version(O:xc_char_t*[2048])
+  gettlslibsslversion:            xc_long_t gtm_tls_get_TLS_version(O:xc_char_t*[2048],I:xc_char_t*,O:xc_char_t*[2048])
+  getdefaultciphers:              xc_long_t gtm_tls_get_defaultciphers(O:xc_char_t*[4096],I:xc_char_t*,O:xc_char_t*[2048])
+  getciphers:                     xc_long_t gtm_tls_get_ciphers(O:xc_char_t*[4096],I:xc_char_t*,I:xc_char_t*,I:xc_char_t*,I:xc_char_t*,O:xc_char_t*[2048])
+  ```
+
+  The following entry points provide the supported cipher suite information. Except where noted, the [$ydb_crypt_conf](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-crypt-config) configuration file and [$ydb_tls_passwd_<TLS_ID>](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-tls-passwd-label) are not required.
+
+  * getdefaultciphers
+
+	* 1st parameter contains the default list of ciphers based on the 2nd parameter
+	* 2nd parameter directs the interface to report the OpenSSL default cipher suite for TLSv1.2 ("tls1_2") or TLSv1.3 ("tls1_3")
+	* 3rd parameter is an error string (allocated by the external call interface).
+    * The function returns negative as failure and positive for the number of colon delimited pieces in the return string.
+
+  * getciphers
+
+	* 1st parameter contains the list of available ciphers based on the 2nd parameter
+	* 2nd parameter directs the interface to report the OpenSSL default cipher suite for TLSv1.2 ("tls1_2") or TLSv1.3 ("tls1_3")
+	* 3rd parameter directs the interface to report the cipher suite using the cipher suite defaults for "SOCKET" Device or "REPLICATION" server
+	* (optional) 4th parameter directs the interface to use the name TLS ID from the $gtmcrypt_conf configuration file. Using the null string makes $gtmcrypt_config optional. Using a TLS ID with certificates requires $ydb_tls_passwd_<TLS ID>
+	* (optional) 5th parameter directs the interface to use the supplied cipher suite string when determining supported ciphers
+	* 6th parameter is an error string (allocated by the external call interface)
+	* The function returns negative as failure and positive for the number of colon delimited pieces in the return string
+
+  The following entry points provide version information.
+
+  * getversion
+
+	* 1st parameter contains the GT.M TLS plugin version as a string.
+	* The function returns the GT.M TLS plugin version as a number.
+
+  * gettlslibversion
+
+	* 1st parameter contains the OpenSSL string
+	* 2nd parameter directs the function to report the "run-time" or "compile-time" OpenSSL version
+	* 3rd parameter is an error string (allocated by the external call interface)
+	* The function returns the OpenSSL version number or negative on failure
+
+  [GTM-F167995](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-F167995)
+
+* <a name="GTM-F229760"></a>The [$ZICUVER](https://docs.yottadb.com/ProgrammersGuide/isv.html#zicuver) Intrinsic Special Variable provides the current [International Components for Unicode (ICU)](https://icu.unicode.org/) version or an empty string if ICU is not available. YottaDB requires ICU to support UTF-8 operation. Previously, YottaDB did not make this information available to the application code. [GTM-F229760](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-F229760)
 
 ### System Administration
 
@@ -323,9 +404,23 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
 
   [MUPIP BACKUP ONLINE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip-backup-online) does not retry backup when it detects a concurrent rollback or on certain errors during the copy phase of BACKUP. Previously, MUPIP BACKUP ONLINE incorrectly retried backup when it encountered a concurrent rollback or an error in the first backup attempt; the workaround was to specify RETRY=0. [GTM-DE408789](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE408789)
 
-* <a name="xGTM-DE421008"></a>[MUPIP STOP](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#stop) three times within a minute acts like a kill -9 by stopping a process even if it might not be safe to do so, except that it may produce a core file. Three MUPIP STOPs issued over a period of more than one minute terminate the process when it is safe to do so. Previously any three MUPIP STOPs over the life of a process acted like a kill -9, whether or not the three MUPIP STOPs were sent within 1 minute, and whether or not the process was at a safe point to be terminated. [GTM-DE421008](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE421008)
+* <a name="GTM-DE421008"></a>[MUPIP STOP](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#stop) three times within a minute acts like a kill -9 by stopping a process even if it might not be safe to do so, except that it may produce a core file. Three MUPIP STOPs issued over a period of more than one minute terminate the process when it is safe to do so. Previously any three MUPIP STOPs over the life of a process acted like a kill -9, whether or not the three MUPIP STOPs were sent within 1 minute, and whether or not the process was at a safe point to be terminated. [GTM-DE421008](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE421008)
 
-* <a name="xGTM-F135385"></a>[MUPIP RCTLDUMP](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#rctldump) reports the number of times a routine has been superseded (rtnsupersede) in the autorelink cache. Previously, MUPIP RTCLDUMP did not record this value, and only recorded the number of times a routine has been referenced. [GTM-F135385](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE411385)
+* <a name="GTM-DE538928"></a>The Update Process properly closes prior generation journal files. Previously, due to a regression in r1.24, it was possible for the Update Process to miss closing a prior journal file when a [MUPIP SET](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#set) switched a journal file and the Update Process was waiting to receive updates from the Receiver Server. The workaround was to avoid explicitly switching journal files on the replicating instances. [GTM-DE538928](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-DE538928)
+
+* <a name="GTM-DE549071"></a>[MUPIP REORG](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#reorg) traverses all index blocks and achieves a compact and optimally-structured database with a single pass. Previously, MUPIP REORG failed to visit certain categories of blocks, including the root block and blocks it newly created or modified, and it required an indefinite number of passes to achieve optimal block structure. As a workaround for previous releases, users may consider repeating REORG operations until the command reports few blocks coalesced and split. In addition, REORG now recognizes a new qualifier, `-min_level=n`, which specifies the minimum level of block it may process. The default is `-min_level=0`. `-min_level=1` instructs reorg only to process index blocks and can be understood as the REORG equivalent of a [MUPIP INTEG FAST](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#fast). [GTM-DE549071](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-DE549071)
+
+* <a name="GTM-DE549072"></a>[MUPIP REORG](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#reorg) correctly handles block splits at the index level which are caused by a reorg-related block split at a lower-level index or data block. Previously, YottaDB would sometimes fail to split these blocks, which prevented the original lower data-level or index-level split from taking place. Together, these could prevent REORG from enforcing the provided fill factor and/or reserved bytes setting; a failure which persisted on all subsequent attempts, or until the database structure changed as a result of new updates. As a workaround, users of previous releases can address a subset of the failures-to-split by passing a slightly different fill factor, provided that reserved bytes are disabled. [GTM-DE549072](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-DE549072)
+
+* <a name="GTM-DE549073"></a>[MUPIP REORG](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#reorg) enforces a minimum target block size of the database block size minus the maximum reserved bytes. Previously, YottaDB failed to reject a combination of reserved bytes and [FILL FACTOR](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#fill-factor) which effectively reserved a space larger than the database block size and caused database damage. Users of previous releases should use either reserved bytes or fill factor, but not both, as a means of achieving REORG sparseness. [GTM-DE549073](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-DE549073)
+
+* <a name="GTM-DE556365"></a>"The Receiver Server, configured to use TLS, continues waiting for new connections when a Source Server fails to establish a TLS session (e.g. misconfiguration). Previously, a Receiver Server configured for TLS but without [PLAINTEXTFALLBACK](https://docs.yottadb.com/AdminOpsGuide/dbrepl.html#no-plaintextfallback) would exit with a [TLSCONVSOCK](https://docs.yottadb.com/MessageRecovery/errors.html#tlsconvsock) error message when it failed to establish a TLS session. [GTM-DE556365](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-DE556365)
+
+* <a name="GTM-DE556760"></a>[MUPIP UPGRADE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip-upgrade) correctly handles global variable trees with depths greater than supported by r1.x releases, but possible when running an r2.x release on a 1.x database. Previously, attempts to upgrade r1.x databases containing these tall global variable trees would result in a segmentation violation and the process would terminate early without upgrading the database. [GTM-DE556760](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-DE556760)
+
+* <a name="GTM-F135405"></a>YottaDB issues [JNLCLOSED](https://docs.yottadb.com/MessageRecovery/errors.html#jnlclosed) and [REPLSTATE](https://docs.yottadb.com/MessageRecovery/errors.html#replstate) syslog messages for a database file when journaling is closed and the replication status changes from ON to WAS_ON. In the WAS_ON state, replication continues until and unless replication requires records that are no longer available from the replication Journal Pool, as it can no longer use the journal files to find those records. While in this WAS_ON state if you can resume journaling, you may be able to avoid having to refresh the associated Secondary Instances. The need to use journal files in replication is a function of the size of the replication Journal Pool, the rate of updates and operator actions that impact replication. Previously, YottaDB issued a [REPLJNLCLOSED](https://docs.yottadb.com/MessageRecovery/errors.html#repljnlclosed) message when journaling was disabled for a database file, but did not indicate that the replication status changed to WAS_ON. [GTM-F135405](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-F135405)
+
+* <a name="GTM-F135385"></a>[MUPIP RCTLDUMP](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#rctldump) reports the number of times a routine has been superseded (rtnsupersede) in the autorelink cache. Previously, MUPIP RTCLDUMP did not record this value, and only recorded the number of times a routine has been referenced. [GTM-F135385](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-F135385)
 
 * <a name="xGTM-F135427"></a>YottaDB r2.04 provides the capability to upgrade a r1.x database to r2.x in-place. There is no ability to downgrade a r2.x database to r1.x in place. You can use [MUPIP EXTRACT](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#extract) on r2.x and [MUPIP LOAD](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#load) on r1.x as long as the data does not cause the r1.x database file to exceed the r1.x maximum limits, or revert to a prior version using a suitable combination of replicating instances. YottaDB r2.04 blocks all access to a r1.x database marked as not fully upgraded from the V4 format.
 
@@ -338,7 +433,18 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
 
   The r1.x to r2.x database upgrade process is split into two phases intended to reduce the downtime necessary for a database upgrade. This process is considerably faster and consumes less disk space than a traditional extract, transfer and load cycle. Please refer to [Upgrading to YottaDB r2.04](releases#releases#upgrading-to-yottadb-r204) for more details. [GTM-F135427](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-F135427)
 
+* <a name="GTM-F197635"></a>The INDEX_RESERVED_BYTES and DATA_RESERVED_BYTES qualifiers for [MUPIP SET](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#set) (and [DSE CHANGE FILEHEADER](https://docs.yottadb.com/AdminOpsGuide/dse.html#change-fileheader-qualifiers)) allow independent adjustment of reserved bytes for each block type. Previously YottaDB did not provide the flexibility to set these values independently. The RESERVED_BYTES qualifier continues to adjust both types of block to the same value. When the command specifies RESERVED_BYTES along with one of the more specific qualifiers, MUPIP applies the more general RESERVED_BYTES value to the block type unspecified by the other qualifier. [MUPIP DUMPFHEAD](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#dumpfhead) reports the number of bytes reserved for each type of block (as does [DSE DUMP FILEHEADER](https://docs.yottadb.com/AdminOpsGuide/dse.html#f-ileheader)). Reserving additional bytes in index blocks can reduce the number of records in any given index block and may reduce invalidation and search restarts in some workloads. [GTM-F197635](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-F197635)
+
 * <a name="GTM-F225097"></a>[MUPIP REORG UPGRADE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#upgrade), which completes the second phase of an r1.x (V6) to r2.x (V7) database transition, can run concurrently with other processing excepting other MUPIP REORG UPGRADE processes. MUPIP REORG UPGRADE can work either by region or by file allowing administrator to run concurrent upgrade operations on different regions/files. MUPIP DOWNGRADE -VERSION=V63000A allows the current YottaDB to downgrade a V6 database to the pre-V63000A EOF block format. Previously the downgrade function reported an unsupported error for V7 versions. [GTM-F225097](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-F225097)
+
+* <a name="GTM-F235980"></a>YottaDB recognizes the -[NO]{SEND|RECV}BUFFSIZE=n qualifiers for use with MUPIP REPLICATE -{SOURCE|RECEIVER} -START invocations. These qualifiers affect the TCP send and receive buffers associated with the socket YottaDB uses for replication, rather than the Receive/Journal Pools. When invoked with -{SEND|RECV}BUFFSIZE=n, where n is a positive decimal or hexadecimal (0x) integer, YottaDB attempts to increase the specified socket buffer size to match the provided value. If the specified buffer is already larger than the provided value, YottaDB does not attempt to reduce its size. By default, YottaDB attempts to increase the size of the send buffer (SO_SNDBUF) or receive buffer (SO_RCVBUF) if either is smaller than the internal target value specified below.
+
+  |          | `SO_SNDBUF` | `SO_RCVBUF` |
+  |----------|-------------|-------------|
+  | Source   | 1MiB        | 1KiB        |
+  | Receiver | 1KiB        | 1MiB        |
+
+  If a user requests a size for either buffer smaller than necessary to support YottaDB replication, YottaDB will print a BUFFSIZETOOSMALL warning, act as if the minimum size had been specified instead, and continue. Due to a quirk in how the Linux kernel reports socket buffer sizes, users of YottaDB can expect YottaDB to report a final size approximately twice what is requested; the additional space is used internally by the kernel. When invoked with -NO{SEND|RECV}BUFFSIZE, YottaDB leaves the management of the initial size of the specified buffer to the execution environment, including the system defaults, local configuration settings, and operating system. In some cases, such as when the operating system dynamically manages the size of the relevant buffers, this can may lead to better performance in conditions which call for larger sizes than the YottaDB default. Previously YottaDB enforced a fixed minimum size for each buffer and did not permit the explicit request of receive and send buffer sizes. In addition, YottaDB now correctly sets the buffer sizes, when warranted, before establishing a connection. Previously, YottaDB waited until after the source and receiver had established a connection to perform any modification of the buffer sizes, which prevented the TCP connection from taking full advantage of any increase in size. [GTM-F236066](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-F236066) [GTM-F235980](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-F235980)
 
 ### Other
 
@@ -354,7 +460,9 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
 
 * <a name="GTM-DE506361"></a>[GTMSECSHR](https://docs.yottadb.com/AdminOpsGuide/ipcresource.html#gtmsecshr) appropriately handles a rare condition when two processes attempt to start a GTMSECSHR process at a coincident time. Previously, this could start more than one GTMSECSHR process, and, although a single GTMSECSHR process handled all the requests, their shutting down produced syslog error messages. [GTM-DE506361](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-001_Release_Notes.html#GTM-DE506361)
 
-* <a name="GTM-F221672"></a>The [SHMHUGETLB]((https://docs.yottadb.com/MessageRecovery/errors.html#shmhugetlb) syslog warning message provides information about the operation of the calling process. Previously, SHMHUGETLB failure messages did not include operational information necessary to understand the reasons for such failures. [GTM-F221672](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-F221672)
+* <a name="GTM-F167609"></a>When using TLS configuration verify-mode option SSL_VERIFY_PEER, YottaDB enables TLSv1.3 Post Handshake Authentication (PHA) for client connections. When using TLS configuration verify-mode options SSL_VERIFY_PEER and SSL_VERIFY_POST_HANDSHAKE, YottaDB enables TLSv1.3 PHA for server connections. By itself, SSL_VERIFY_POST_HANDSHAKE does not enable PHA. Previously, YottaDB did not support TLSv1.3's PHA capability. This could cause problems when connecting to some TLSv1.3 servers that require PHA. [GTM-F167609](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-002_Release_Notes.html#GTM-F167609)
+
+* <a name="GTM-F221672"></a>The [SHMHUGETLB](https://docs.yottadb.com/MessageRecovery/errors.html#shmhugetlb) syslog warning message provides information about the operation of the calling process. Previously, SHMHUGETLB failure messages did not include operational information necessary to understand the reasons for such failures. [GTM-F221672](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-F221672)
 
 ## Additional Information
 
@@ -364,91 +472,30 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-001](http://ti
 
 ### New Messages
 
-**ARGTRUNC**, UUUU argument number CCCC truncated. Keep the size of total command line within NNNN bytes
-
-DSE/LKE/MUPIP Warning: This warning appears when the YottaDB parser truncates an argument of a YottaDB Utility ([DSE](/AdminOpsGuide/dse.html), [LKE](https://docs.yottadb.com/AdminOpsGuide/mlocks.html), or [MUPIP](https://docs/yottadb.com/AdminOpsGuide/dbmgmt.html)) executable exceeding the allowed maximum of NNNN bytes. CCCC is the argument number with 1 being the first argument for the YottaDB Utility executable.
-
-Action: Reduce the size of the argument number CCCC.
-
-**DBFILERDONLY**, The database file ffff was opened as read-only (perms pppp)
-
-All YottaDB Components Error: Database file ffff was opened read-only with permissions pppp, but the read-only status is inconsistent with application expectations.
-
-Action: Use the error and any follow-on messages to assess whether or not the read-only status is correct or the rejection is appropriate.
-
-**DBUPGRDREQ**, Database file DDDD is not fully upgraded (format FFFF) and cannot be used by this version of YottaDB. Please upgrade the database.
-
-MUPIP Error: The database file DDDD with block format FFFF has the fully upgraded flag set to FALSE indicating that it holds a mix of block versions.
-
-Action: While YottaDB r1.x can use database files with formats as old as GT.M V4.x, YottaDB starting with r2.x does not handle the V4 block format. Use YottaDB r1.x to fully upgrade the database file before using it.
-
-**FDSIZELMT**, Too many nnnn descriptors needed by GT.CM server
-
-GT.CM Error: A large number (nnnn) of regions accessed on behalf of [GT.CM ](https://docs.yottadb.com/AdminOpsGuide/gtcm.html) clients forced the file descriptor numerical value to its FD_SETSIZE limit. Under Linux as of this writing, this limit is fixed to 1024.
-
-Action: Review the application, the database layout and the number of concurrent clients and adjust conditions to reduce the number of concurrent database files managed by the GT.CM server.
-
-**FORCEDHALT2**, Receipt of 3 MUPIP STOP signals within xxxx seconds, process: yyyy shutting down with no exit handling like a kill -9
-
-Run Time Fatal: This indicates that a YottaDB process recognized the receipt of three [MUPIP STOP ](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#stop) commands within approximately 60 seconds and is shutting down without normal clean up - very similar to a kill -9 signal. This event doesn't stop YottaDB processes in an orderly fashion, and might cause database damage if the target process is concurrently actively updating. Therefore use it only on processes that are deadlocked or otherwise stuck, say due to some type of FREEZE.
-
-Action: Determine who initiated the MUPIP STOP and why they did so. Run [MUPIP INTEG ](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#integ) as appropriate.
-
-**LINETOOLONG**, UUUU prompt input exceeds NNNN bytes
-
-DSE/LKE/MUPIP Error: This error appears when the YottaDB parser detects the input to a YottaDB Utility ([DSE](/AdminOpsGuide/dse.html), [LKE](https://docs.yottadb.com/AdminOpsGuide/mlocks.html), or [MUPIP](https://docs/yottadb.com/AdminOpsGuide/dbmgmt.html)) prompt exceeds the allowed maximum of NNNN bytes.
-
-Action: Reduce the size of input to the utility prompt. If input to the UUUU prompt is from a [PIPE device ](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#using-pipe-devices), set the [RECORDSIZE deviceparameter ](https://docs.yottadb.com/ProgrammersGuide/ioproc.html#pipe-deviceparameter-summary) to a value less than NNNN bytes.
-
-**ORLBKDBUPGRDREQ**, Region RRR (DDDD) is not fully upgraded. ONLINE ROLLBACK cannot continue
-
-MUPIP Error: Region RRR pointing to database file DDDD has the fully upgraded flag set to FALSE and the database format is not r2.x indicating that there are GT.M V4 blocks in the database. [MUPIP JOURNAL ROLLBACK ONLINE ](https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#on-line) in YottaDB r2.x cannot process these database files.
-
-Action: Because a MUPIP JOURNAL ROLLBACK ONLINE is not possible for this database, stop all access to the database files and perform a ROLLBACK with standalone access.
-
-**PIDMISMATCH**, PID=qqqq has a mismatched internal process id value of pppp
-
-Run Time Warning: pppp is the process_id shown by the internal state, qqqq is the operating system pid reported by [getpid()](https://www.man7.org/linux/man-pages/man2/getpid.2.html). If a child process forked off by a [JOB ](https://docs.yottadb.com/ProgrammersGuide/commands.html#job) command terminates abnormally and prematurely (i.e., before the jobbed off process setup is complete), this message indicates that it skipped exit handing in order to avoid potential damage to the parent processes' statsdb or routine shared memory.
-
-Action: No action is required, unless there is a subsequent REQRUNDOWN or REQRLNKCTLRNDWN shortly afterwards.
-
-**REORGUPCNFLCT**, MUPIP AAAA encountered a conflict due to OOOO (PID:PPPP)
-
-MUPIP Error: MUPIP action AAAA encountered a conflict due to a concurrent operation OOOO run as process ID PPPP.
-
-Action: MUPIP operations [REORG UPGRADE ](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#upgrade) and [ONLINE ROLLBACK ](https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#on-line) cannot run concurrently due to conflicting database changes. REORG UPGRADE exits if an ONLINE ROLLBACK is in progress or if it detects that an ONLINE ROLLBACK has started. ONLINE ROLLBACK pauses while waiting for the REORG UPGRADE to exit. ONLINE ROLLBACK has priority over REORG UPGRADE.
+* [ARGTRUNC](https://docs.yottadb.com/MessageRecovery/errors.html#argtrunc)
+* [BSIZTOOLARGE](https://docs.yottadb.com/MessageRecovery/errors.html#bsiztoolarge)
+* [BUFFSIZETOOSMALL](https://docs.yottadb.com/MessageRecovery/errors.html#buffsizetoosmall)
+* [DBFILERDONLY](https://docs.yottadb.com/MessageRecovery/errors.html#dbfilerdonly)
+* [DBUPGRDREQ](https://docs.yottadb.com/MessageRecovery/errors.html#dbupgrdreq)
+* [EXCEEDRCTLRNDWN](https://docs.yottadb.com/MessageRecovery/errors.html#exceedrctlrndwn)
+* [FDSIZELMT](https://docs.yottadb.com/MessageRecovery/errors.html#fdsizelmt)
+* [FORCEDHALT2](https://docs.yottadb.com/MessageRecovery/errors.html#forcedhalt2)
+* [LINETOOLONG](https://docs.yottadb.com/MessageRecovery/errors.html#linetoolong)
+* [ORLBKDBUPGRDREQ](https://docs.yottadb.com/MessageRecovery/errors.html#orlbkdbupgrdreq)
+* [ORLBKROLLED](https://docs.yottadb.com/MessageRecovery/errors.html#orlbkrolled)
+* [PIDMISMATCH](https://docs.yottadb.com/MessageRecovery/errors.html#pidmismatch)
+* [REORGUPCNFLCT](https://docs.yottadb.com/MessageRecovery/errors.html#reorgupcnflct)
+* [RSVDBYTE2HIGH](https://docs.yottadb.com/MessageRecovery/errors.html#rsvdbyte2high)
 
 ### Revised Messages
 
 The following are updated messages:
 
-**GTMSECSHRDMNSTARTED**, gtmsecshr daemon started for version vvvv from dddd using socket file ssss
-
-GTMSECSHR Information: This message indicates that GTMSECSHR daemon was started for the version vvvv from the installation directory dddd and is expecting to receive client messages in the socket file whose full path is indicated by ssss. This message is immediately followed by a [GTMSECSHRTMPPATH](https://docs.yottadb.com/MessageRecovery/errors.html#gtmsecshrtmppath) message which records the value of the [ydb_tmp ](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-tmp) environment variable with which this daemon/server process started. In case a client process later encounters a [GTMSECSHRSRVF](https://docs.yottadb.com/MessageRecovery/errors.html#gtmsecshrsrvf) error, it would issue a GTMSECSHRTMPPATH message as well which records the value of the $ydb_tmp the client started with. Most often, the cause of the GTMSECSHRSRVF is a mismatch between the ydb_tmp env var values between the server and client processes. The GTMSECSHRTMPPATH messages of the server and client would help in identifying such a mismatch.
-
-Action: N/A
-
-**MUUPGRDNRDY**, Database xxxx has not been completely upgraded to yyyy format - still bbbb database blocks to upgrade
-
-MUPIP Error: The named database file is in an older format than is in use by this YottaDB version and has not been certified as ready for use by this YottaDB version. There are still bbbb blocks in the older format that need to be upgraded.
-
-Action: Run [MUPIP UPGRADE ](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip-upgrade)  to complete the upgrade.
-
-**SHMHUGETLB**, Could not back shared memory with huge pages, using base pages instead ffff
-
-Run Time Warning: When the [ydb_hugetlb_shm ](https://docs.yottadb.com/AdminOpsGuide/basicops.html#ydb-hugetlb-shm) environment variable is defined and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES" in a process creating shared memory, YottaDB attempts to back shared memory segments with hugepages, using the default hugepages size. If huge pages cannot be used, YottaDB outputs the SHMHUGETLB warning and tries to back the shared memory with base pages instead. The warning message specifies the operation of the caller along with the resource ffff for the process requesting shared memory. The warning message also includes either an ENOMEM or an EPERM error, depending on why the request for hugepages failed.
-
-**ZCPREALLVALSTR**, Pre-allocation allowed only for output or input/output variables of type ydb_buffer_t*, ydb_string_t*, or ydb_char_t*
-
-Compile Time Error: This indicates that the program specified a pre-allocation for non-string-type variable. In particular, pre-allocation is not allowed for :code:`ydb_char_t**`, which always has a fixed size.
-
-Action: Remove the pre-allocation.
-
-**ZSHOWSTACKRANGE**, Invalid stack level value nnnn for ZSHOW "V"
-
-Run Time Error: This indicates that a ZSHOW argument specified an invalid stack level. The valid range is :code:`[0, $STACK]`, inclusive.
-
-Action: Modify the argument to use a valid value.
+* [GTMSECSHRDMNSTARTED](https://docs.yottadb.com/MessageRecovery/errors.html#gtmsecshrdmnstarted)
+* [MUUPGRDNRDY](https://docs.yottadb.com/MessageRecovery/errors.html#muupgrdnrdy)
+* [SHMHUGETLB](https://docs.yottadb.com/MessageRecovery/errors.html#shmhugetlb)
+* [ZCPREALLVALSTR](https://docs.yottadb.com/MessageRecovery/errors.html#zcpreallvalstr)
+* [ZSHOWSTACKRANGE](https://docs.yottadb.com/MessageRecovery/errors.html#zshowstackrange)
 
 ### Obsolete messages
 

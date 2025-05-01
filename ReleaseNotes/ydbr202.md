@@ -35,6 +35,7 @@
 |----------|-------------------|--------------------------------------------------------------|
 | 1.0      | December 17, 2024 | Initial Release Note                                         |
 | 1.1      | January 7, 2025   | Document Supported, Supportable, and Unsupported filesystems |
+| 1.2      | May 8, 2025 | Change "smart" quotes to simple double quotes |
 
 ## Contact Information
 ### YottaDB LLC
