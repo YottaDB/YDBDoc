@@ -1753,20 +1753,48 @@ Key.save_json()
 
     def save_json(self, json: object, key: Key = None)
 
-``Key.save_json()`` saves JSON data stored in a Python object under the YottaDB node represented by the calling ``Key`` object. For example:
+``Key.save_json()`` saves JSON data stored in a Python object under the YottaDB node represented by the calling ``Key`` object. This saved JSON data can subsequently be loaded with `Key.load_json()`_.
+
+Data is stored in the following format:
+
+* Each key in a JSON object becomes a string subscript.
+* Each index in a JSON array becomes an integer subscript.
+* Each value in a JSON object or array becomes a variable.
+* String values are indicated with a "\s" subscript.
+* Empty lists are indicated with a "\l" subscript.
+* Empty objects are indicated with a "\d" subscript.
+* All other types are indicated by context.
+
+A simple example that saves a json payload:
 
 .. code-block:: python
 
     import yottadb
-    import requests
-    import json
 
-    response = requests.get("https://rxnav.nlm.nih.gov/REST/relatedndc.json?relation=product&ndc=0069-3060")
-    json_data = json.loads(response.content)
-    key = yottadb.Key("^rxnav")
-    key.save_json(json_data)
+    key = yottadb.Key("^pythontest2")
+    key.save_json({
+        "empty_dict": {},
+        "empty_list": [],
+        "list": [1, 2, 3],
+        "bool": True,
+        "null": None,
+        "string": "xyz",
+    })
 
-This saved JSON data can subsequently be loaded with `Key.load_json()`_.
+That data will be stored in the database as follows:
+
+.. code-block::
+
+    ^pythontest2("bool")="True"
+    ^pythontest2("empty_dict","\d")=""
+    ^pythontest2("empty_list","\l")=""
+    ^pythontest2("list",1)=1
+    ^pythontest2("list",2)=2
+    ^pythontest2("list",3)=3
+    ^pythontest2("null")="None"
+    ^pythontest2("string")="xyz"
+    ^pythontest2("string","\s")=""
+
 
 ++++++++++++++++
 Key.save_tree()
