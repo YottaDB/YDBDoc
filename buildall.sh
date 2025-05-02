@@ -27,8 +27,9 @@ rsync() {
         command rsync --delete -lrtu --exclude=\*.zip --exclude=.buildinfo --exclude=.nojekyll "$@"
 }
 
-target="$(realpath "${1:-public}")"
+target="${1:-public}"
 mkdir -p "$target"
+target=$(realpath "$target")
 
 DIRECTORIES=(
         AcculturationGuide/
