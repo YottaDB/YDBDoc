@@ -35,21 +35,21 @@ YottaDB Documentation
 Releases
 ========
 
-* `Latest <https://gitlab.com/YottaDB/DB/YDB/tags/r2.02>`_
-* `r2.02 <https://gitlab.com/YottaDB/DB/YDB/tags/r2.02>`_
-* `r2.00 <https://gitlab.com/YottaDB/DB/YDB/tags/r2.00>`_
-* `r1.38 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.38>`_
-* `r1.36 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.36>`_
-* `r1.34 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.34>`_
-* `r1.32 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.32>`_
-* `r1.3 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.30>`_
-* `r1.28 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.28>`_
-* `r1.26 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.26>`_
-* `r1.24 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.24>`_
-* `r1.22 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.22>`_
-* `r1.20 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.20>`_
-* `r1.10 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.10>`_
-* `r1.00 <https://gitlab.com/YottaDB/DB/YDB/tags/r1.00>`_
+* `Latest <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.02>`_
+* `r2.02 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.02>`_
+* `r2.00 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.00>`_
+* `r1.38 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.38>`_
+* `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.36>`_
+* `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.34>`_
+* `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.32>`_
+* `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.30>`_
+* `r1.28 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.28>`_
+* `r1.26 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.26>`_
+* `r1.24 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.24>`_
+* `r1.22 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.22>`_
+* `r1.20 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.20>`_
+* `r1.10 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.10>`_
+* `r1.00 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.00>`_
 
 Guides
 ======
