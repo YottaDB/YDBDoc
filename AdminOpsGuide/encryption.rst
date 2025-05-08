@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -35,7 +35,7 @@ YottaDB can encrypt data in database and journal files on selected platforms. En
 
 A plug-in architecture allows you to use your choice of encryption package. The characteristics of encryption are entirely determined by the package you choose - for example, YottaDB implements no "back doors" or "key recovery", and if you want such functionality, you need to choose or construct an encryption package that provides the features you want.
 
-YottaDB distributes only the source code for the reference implementation of a plug-in that uses popular, widely available, encryption libraries. If the reference implementation plug-in meets your needs, you are welcome to compile and use it as distributed, but please read and understand the “Disclaimer” section below. You can also use it as a base to implement your own plug-in.
+YottaDB distributes only the source code for the reference implementation of a plug-in that uses popular, widely available, encryption libraries. If the reference implementation plug-in meets your needs, you are welcome to compile and use it as distributed, but please read and understand the "Disclaimer" section below. You can also use it as a base to implement your own plug-in.
 
 In the reference implementation, YottaDB uses a symmetric cipher to encrypt data. The reference implementation encrypts the key for the symmetric cipher with an asymmetric cipher using public and private keys. The private keys are stored in a key ring on disk locked with a password (or passphrase - the terms are used interchangeably).
 
@@ -137,7 +137,7 @@ For example, if you have a YottaDB based application server process that is star
 MM Databases
 ~~~~~~~~~~~~
 
-YottaDB database encryption is only supported for the Buffered Global (BG) access method. It is not supported for the Mapped Memory (MM) access method. See “Alternatives to Database Encryption ” below, for other options.
+YottaDB database encryption is only supported for the Buffered Global (BG) access method. It is not supported for the Mapped Memory (MM) access method. See "Alternatives to Database Encryption " below, for other options.
 
 ++++++++++++++++++++++++++++++++++++
 Alternatives to Database Encryption
@@ -544,7 +544,7 @@ Once the environment variables are set, Phil creates a global directory, where h
 .. code-block:: bash
 
    phil$ export ydb_gbldir=/home/phil/cust.gld
-   phil$ export ydb_passwd=””
+   phil$ export ydb_passwd=""
    phil$ $ydb_dist/mumps -dir
    Enter Passphrase:
    YDB>zsystem "$ydb_dist/mumps -run GDE"
@@ -756,7 +756,7 @@ On all platforms on which YottaDB supports encryption, compiling the source refe
    Encrypted database files are compatible between different endian platforms as long as they use the same key and the same cipher. The sample shell scripts in the reference implementation use the standard shell (/bin/sh).
 
 .. note::
-   YottaDB dropped support for the Blowfish encryption plugin. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: “Database Replication” <./dbrepl.html>`_ for more complete documentation.
+   YottaDB dropped support for the Blowfish encryption plugin. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: "Database Replication" <./dbrepl.html>`_ for more complete documentation.
 
 --------------------------------------------
 Special Note - GNU Privacy Guard and Agents
@@ -1010,7 +1010,7 @@ As there is no way to change the hash in a journal file header, make sure that y
 Changing Encryption Keys
 +++++++++++++++++++++++++
 
-YottaDB recommends rotating (changing) the encryption key of the database for better security. The frequency of encryption key rotation depends on your security requirements and policies. MUPIP REORG -ENCRYPT provides the option to encrypt a database or rotate the keys of an already encrypted database. If you are using replication, you can encrypt the replicating secondary instance first to prevent your originating primary instance from any additional IO load that MUPIP REORG -ENCRYPT may add. YottaDB suggests using different encryption keys for different instances, so that if the keys for one instance are compromised, the application can be kept available from another instance whose keys are not compromised, while changing the encryption keys on the instance with compromised keys. For more information, refer to “-Encrypt”.
+YottaDB recommends rotating (changing) the encryption key of the database for better security. The frequency of encryption key rotation depends on your security requirements and policies. MUPIP REORG -ENCRYPT provides the option to encrypt a database or rotate the keys of an already encrypted database. If you are using replication, you can encrypt the replicating secondary instance first to prevent your originating primary instance from any additional IO load that MUPIP REORG -ENCRYPT may add. YottaDB suggests using different encryption keys for different instances, so that if the keys for one instance are compromised, the application can be kept available from another instance whose keys are not compromised, while changing the encryption keys on the instance with compromised keys. For more information, refer to "-Encrypt".
 
 ++++++++++++++++++
 Database Creation

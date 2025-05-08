@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -29,8 +29,8 @@ Since YottaDB is designed to integrate with the underlying OS, you should consid
 
 This appendix has two examples that illustrate techniques for packaging YottaDB applications, neither of which excludes the other.
 
-1. “Setting up a Captive User Application with YottaDB”, such that when captive users login, they are immediately taken to the application, have no access to the shell or programmer prompt, and when they exit, are logged off the system.
-2. “Invoking YottaDB through a C main() program”: in addition to providing another technique for creating captive applications, invoking through a C main() is the only way that application code has access to the original argc and argv of a shell command used to start the application (the $ZCMDLINE ISV provides an edited version of the command line).
+1. "Setting up a Captive User Application with YottaDB", such that when captive users login, they are immediately taken to the application, have no access to the shell or programmer prompt, and when they exit, are logged off the system.
+2. "Invoking YottaDB through a C main() program": in addition to providing another technique for creating captive applications, invoking through a C main() is the only way that application code has access to the original argc and argv of a shell command used to start the application (the $ZCMDLINE ISV provides an edited version of the command line).
 
 --------------------------------------------------------
 Setting Up a Captive User Application with YottaDB
@@ -38,7 +38,7 @@ Setting Up a Captive User Application with YottaDB
 
 This section discusses wholesome practices in setting up a YottaDB based application on UNIX/Linux such that, when "captive" users log in to the system, they are taken directly into the application, and when they exit the application, they are logged off the system. Unless part of the application design, a captive user should not get to a shell or YottaDB prompt.
 
-The example in “Sample .profile” is for /bin/sh on GNU/Linux, and may need to be adapted for use with other shells on other platforms.
+The example in "Sample .profile" is for /bin/sh on GNU/Linux, and may need to be adapted for use with other shells on other platforms.
 
 At a high level, preventing a captive user from getting to a shell or YottaDB prompt involves:
 
@@ -184,7 +184,7 @@ Prior to calling the YottaDB entryref, the C program also needs to set environme
             ydb_exit(); /* Discard status from ydb_exit and return status from function call */
 
 
-Note that on 32-bit platforms, the last element of ydb_routines is $ydb_dist, whereas on 64-bit platforms, it is $ydb_dist/libgtmutil.so. If you are creating a wrapper to ensure that environment variables are set correctly because their values cannot be trusted, you should also review and set the environment variables discussed in “Setting up a Captive User Application with YottaDB” above.
+Note that on 32-bit platforms, the last element of ydb_routines is $ydb_dist, whereas on 64-bit platforms, it is $ydb_dist/libgtmutil.so. If you are creating a wrapper to ensure that environment variables are set correctly because their values cannot be trusted, you should also review and set the environment variables discussed in "Setting up a Captive User Application with YottaDB" above.
 
 All the C program needs to do is to set environment variables and call a YottaDB entryref. A call-in table is a text file that maps C names and parameters to M names and parameters. In this case, the call-in table is just a single line to map the C function calcprint() to the YottaDB entryref calcprint^monthstarting():
 
@@ -196,7 +196,7 @@ All the C program needs to do is to set environment variables and call a YottaDB
 Defensive Practices
 --------------------------------
 
-The following practices, some of which are illustrated in “Sample .profile”, help provide layered defenses:
+The following practices, some of which are illustrated in "Sample .profile", help provide layered defenses:
 
 1. Setting the ydb_nocenable environment variable to a value to specify that <CTRL-C> should be ignored by the application, at least until it sets up a <CTRL-C> handler. As part of its startup, the application process might execute:
 
@@ -208,9 +208,9 @@ to set up a handler such as:
 
 DONE: QUIT ; or HALT or ZHALT, as appropriate
 
-2. Providing a value to the ydb_etrap environment variable, as illustrated “Sample .profile”. This overrides YottaDB's default value of "B" for $ZTRAP, which puts the application into direct mode. Of course, in a development environment, going to direct mode may be the correct behavior, in which case there is no need to set ydb_etrap.
+2. Providing a value to the ydb_etrap environment variable, as illustrated "Sample .profile". This overrides YottaDB's default value of "B" for $ZTRAP, which puts the application into direct mode. Of course, in a development environment, going to direct mode may be the correct behavior, in which case there is no need to set ydb_etrap.
 
-3. Providing a value to the ydb_zinterrupt environment to override the default of "IF $ZJOBEXAM()" which causes the process to create a text file of its state in response to a MUPIP INTRPT (or SIGUSR1 signal). Such a text file may contain confidential information that the process is actively computing. Note that a user can only send INTRPT signals as permitted by the configuration of system security for the user. If your application uses INTRPT signals, review the code they invoke carefully to ensure processes respond appropriately to the signal. If any response produces an output file, be sure they have write access to the destination; restrict read access to such files appropriately. The “Sample .profile” example does not illustrate an alternative value for ydb_interrupt.
+3. Providing a value to the ydb_zinterrupt environment to override the default of "IF $ZJOBEXAM()" which causes the process to create a text file of its state in response to a MUPIP INTRPT (or SIGUSR1 signal). Such a text file may contain confidential information that the process is actively computing. Note that a user can only send INTRPT signals as permitted by the configuration of system security for the user. If your application uses INTRPT signals, review the code they invoke carefully to ensure processes respond appropriately to the signal. If any response produces an output file, be sure they have write access to the destination; restrict read access to such files appropriately. The "Sample .profile" example does not illustrate an alternative value for ydb_interrupt.
 
 4. Setting the SHELL environment variable to /bin/false disables the ZSYSTEM command, which if executed without an argument takes the user to a shell prompt. While a correctly coded application might not have a ZSYSTEM without an argument, setting SHELL to a value such as /bin/false, as illustrated above, adds a layer of defense against a possible application bug. Of course, if an application uses the ZSYSTEM command, then an executable SHELL is required. If your application uses ZSYSTEM to run a command, consider whether a PIPE device might provide a better alternative.
 

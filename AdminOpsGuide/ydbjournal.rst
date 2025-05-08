@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -86,7 +86,7 @@ or
 
 Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use. See :ref:`set-action-qualifiers` for more information about options and settings.
 
-Note: Whenever YottaDB implicitly turns off journaling due to run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file (and so on) , it produces an error with accompanying messages to alert operation staff. YottaDB on selected platforms can encrypt data in database and journal files. Encryption protects against unauthorized access to data by an unauthorized process which is able to access disk files, that is, encryption protects data at rest (DAR). Rather than build encryption into YottaDB, a plug-in architecture facilitates use of your preferred encryption software. For more information, refer to `Chapter 12: “Database Encryption” <./encryption.html>`_.
+Note: Whenever YottaDB implicitly turns off journaling due to run-time conditions such as no available disk space or no authorization for a process attempting to auto-switch a journal file (and so on) , it produces an error with accompanying messages to alert operation staff. YottaDB on selected platforms can encrypt data in database and journal files. Encryption protects against unauthorized access to data by an unauthorized process which is able to access disk files, that is, encryption protects data at rest (DAR). Rather than build encryption into YottaDB, a plug-in architecture facilitates use of your preferred encryption software. For more information, refer to `Chapter 12: "Database Encryption" <./encryption.html>`_.
 
 ++++++++++++++++++++++++++++++++++
 Recovery from a Journal File
@@ -198,7 +198,7 @@ Because tbck is less than tfwd, tsys+tbck is less than tsys+tfwd. In very round 
 
 1. When A is the sole production instance of an application, halving or quartering the recovery time of the instance is significant, because when the instance is down, the enterprise is not in business. The difference between a ten minute recovery time and a thirty minute recovery time is important. Thus, when running a sole production instance or a sole production instance backed up by an underpowered or not easily accessed "disaster recovery site", before image journaling with backward recovery is the preferred configuration that better suits the production deployment. Furthermore, in this situation, there is pressure to bring A back up soon, because the enterprise is not in business - pressure that increases the probability of human error.
 
-2. Consider two equally functional and accessible instances, A and B, deployed in an LMS configuration at a point in time. When A, running as the originating instance replicating to B, crashes, B can be switched from a replicating instance to an originating instance within seconds. An appropriately configured network can change the routing of incoming accesses from one instance to the other in seconds to tens of seconds. The enterprise is down only for the time required to ascertain that A is in fact down, and to make the decision to switch to B — perhaps a minute or two. Furthermore, B is in a "known good" state, therefore, a strategy of "if in doubt, switchover" is entirely appropriate. This time, tswch is independent of whether A and B are running -BEFORE_IMAGE journaling or -NOBEFORE_IMAGE journaling. The difference between -BEFORE_IMAGE journaling and -NOBEFORE_IMAGE journaling is the difference in time taken to subsequently recover A, so that it can be brought up as a replicating instance to B. If -NOBEFORE_IMAGE journaling is used and the last backup is online, there is no need to first perform a forward recovery on A using its journal files. Once A has rebooted:
+2. Consider two equally functional and accessible instances, A and B, deployed in an LMS configuration at a point in time. When A, running as the originating instance replicating to B, crashes, B can be switched from a replicating instance to an originating instance within seconds. An appropriately configured network can change the routing of incoming accesses from one instance to the other in seconds to tens of seconds. The enterprise is down only for the time required to ascertain that A is in fact down, and to make the decision to switch to B - perhaps a minute or two. Furthermore, B is in a "known good" state, therefore, a strategy of "if in doubt, switchover" is entirely appropriate. This time, tswch is independent of whether A and B are running -BEFORE_IMAGE journaling or -NOBEFORE_IMAGE journaling. The difference between -BEFORE_IMAGE journaling and -NOBEFORE_IMAGE journaling is the difference in time taken to subsequently recover A, so that it can be brought up as a replicating instance to B. If -NOBEFORE_IMAGE journaling is used and the last backup is online, there is no need to first perform a forward recovery on A using its journal files. Once A has rebooted:
 
    * Extract the unreplicated transactions from the crashed environment
 
@@ -457,7 +457,7 @@ MUPIP CREATE copies existing journaling information from the Global Directory to
 
 :ref:`DSE DUMP FILEHEADER <dse-dump-fileheader>` displays the current values for all established journaling characteristics.
 
-This section provides a description of the MUPIP SET command with specific reference to the journaling related qualifiers. For information on the other MUPIP SET qualifiers, refer to `Chapter 5: “Database Management Tool” <dbmgmt.html>`_.
+This section provides a description of the MUPIP SET command with specific reference to the journaling related qualifiers. For information on the other MUPIP SET qualifiers, refer to `Chapter 5: "Database Management Tool" <dbmgmt.html>`_.
 
 MUPIP SET JOURNAL can change some database characteristics when journaling is active for a specific file or region(s). The first run of MUPIP SET JOURNAL on an older database automatically changes the maximum/minimum journal settings to match those required by the current YottaDB version. MUPIP SET operates on database files, journal files, regions or replication state.
 
@@ -570,7 +570,7 @@ Change the replication state of a journal file; this command is intended for use
 SET Action Qualifiers
 ++++++++++++++++++++++
 
-The JOURNAL and REPLICATION qualifiers are the only SET qualifiers relevant for journaling. For information on the other MUPIP SET qualifiers, refer to `Chapter 5: “Database Management Tool” <dbmgmt.html>`_.
+The JOURNAL and REPLICATION qualifiers are the only SET qualifiers relevant for journaling. For information on the other MUPIP SET qualifiers, refer to `Chapter 5: "Database Management Tool" <dbmgmt.html>`_.
 
 .. _set-action-journal:
 
@@ -807,7 +807,7 @@ The default for SET JOURNAL is ON.
 ON
 ^^
 
-Records subsequent database updates in that journal file. MUPIP SET JOURNAL=ON must include either BEFORE_IMAGES or NOBEFORE_IMAGES in the accompanying journal-option-list. By default YottaDB sets journal operation to BEFORE_IMAGE if this command changes the database replication state (refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_ for more information) from OFF to ON and JOURNAL=NOBEFORE_IMAGE is not specified.
+Records subsequent database updates in that journal file. MUPIP SET JOURNAL=ON must include either BEFORE_IMAGES or NOBEFORE_IMAGES in the accompanying journal-option-list. By default YottaDB sets journal operation to BEFORE_IMAGE if this command changes the database replication state (refer to `Chapter 7: "Database Replication" <./dbrepl.html>`_ for more information) from OFF to ON and JOURNAL=NOBEFORE_IMAGE is not specified.
 
 .. note::
    The ON keyword works only on previously ENABLEd regions. YottaDB ignores ON if Journaling is DISABLEd. In other words, an ENable / DISable is like the power switch on the back of many television sets and ON/OFF is like the ON/OFF on the remote control. The ON/OFF on the remote control works only when the power switch on the back of the television set is enabled.
@@ -1762,7 +1762,7 @@ After this label, the journal record extracts follow. These journal record extra
 
 The first piece of an EXTRACT output record contains a two-digit decimal transaction record type (for example, 01 for a process initialization record). The second piece contains the full date and time of the operation, represented in the $HOROLOG format. The third piece contains a YottaDB assigned number (database transaction number) which uniquely identifies the transaction within the time covered by the journal file. The fourth piece contains the process ID (PID) of the process that performed the operation, represented as a decimal number. The remainder of the record depends on the record type.
 
-Records of type SET, KILL, ZKILL, TSTART, and TCOMMIT include the token_seq as part of the output. It is the sixth field in the output of the journal record extract. When replication is in use, token_seq is a journal sequence number (jsnum) that uniquely identifies each transaction (for more information on journal sequence number refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_). When replication is not in use and the transaction is a TP transaction, token_seq is an 8-byte token that uniquely identifies the entire TP transaction. For non-replicated, non-TP journal records, token_seq has a zero (0) value.
+Records of type SET, KILL, ZKILL, TSTART, and TCOMMIT include the token_seq as part of the output. It is the sixth field in the output of the journal record extract. When replication is in use, token_seq is a journal sequence number (jsnum) that uniquely identifies each transaction (for more information on journal sequence number refer to `Chapter 7: "Database Replication" <./dbrepl.html>`_). When replication is not in use and the transaction is a TP transaction, token_seq is an 8-byte token that uniquely identifies the entire TP transaction. For non-replicated, non-TP journal records, token_seq has a zero (0) value.
 
 The format of the plain journal extract is as follows:
 

@@ -23,7 +23,7 @@
 .. contents::
    :depth: 2
 
-In addition to providing all of the ANSI standard M features, YottaDB offers a number of language extensions. In this chapter, the language extensions are grouped by intended function to demonstrate their relationships to each other and to the programming process. A summary table is provided in each section. For a full description of a particular extension, refer to its complete entry in the `“Commands” <commands.html>`_, `“Functions” <functions.html>`_, or `“Intrinsic Special Variables” <isv.html>`_ chapters.
+In addition to providing all of the ANSI standard M features, YottaDB offers a number of language extensions. In this chapter, the language extensions are grouped by intended function to demonstrate their relationships to each other and to the programming process. A summary table is provided in each section. For a full description of a particular extension, refer to its complete entry in the `"Commands" <commands.html>`_, `"Functions" <functions.html>`_, or `"Intrinsic Special Variables" <isv.html>`_ chapters.
 
 The following sections describe the YottaDB language extensions listed below:
 
@@ -232,7 +232,7 @@ Extensions for Additional Capability
 
 For ways to adjust some process operating characteristics, see the command description :ref:`view-command`. For ways to get information about certain process operating characteristics, see the function description :ref:`view-function`.
 
-In YottaDB, support of environment specification for global names and resource names is possible. It is possible to excercise user code to customize interpretation of the environment specification. See `Chapter 5: “General Language Features of M” <./langfeat.html>`_ for details.
+In YottaDB, support of environment specification for global names and resource names is possible. It is possible to excercise user code to customize interpretation of the environment specification. See `Chapter 5: "General Language Features of M" <./langfeat.html>`_ for details.
 
 The following table summarizes YottaDB extensions that increase general capability.
 
@@ -296,7 +296,7 @@ Device Handling Extensions
 
 In the earlier versions of the M standard, device behavior was defined as a framework, with the details left to the implementations. YottaDB supports Terminals, Sequential Disks, FIFOs, PIPEs and a Null device under this model. Subsequently device mnemonicspaces were added to the standard and some of them defined. YottaDB supports the SOCKET device under this model with some extensions identified with controlmnemonics starting with the letter "Z."
 
-For details of YottaDB device handling see `Chapter 9: “Input/Output Processing” <./ioproc.html>`_.
+For details of YottaDB device handling see `Chapter 9: "Input/Output Processing" <./ioproc.html>`_.
 
 .. _alias-var-ext:
 
@@ -868,7 +868,7 @@ The following table summarizes YottaDB Unicode support.
 |                             | :ref:`zascii-function`.                                                                                                                                                                    |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZCHset                     | The read-only intrinsic special variable $ZCHSET takes its value from the environment variable ydb_chset. An application can obtain the character set used by a YottaDB process by the     |
-|                             | value of $ZCHSET. $ZCHSET can have only two values –"M", or "UTF-8" and it cannot appear on the left of an equal sign in the SET command. For more information and usage examples, refer to|
+|                             | value of $ZCHSET. $ZCHSET can have only two values -"M", or "UTF-8" and it cannot appear on the left of an equal sign in the SET command. For more information and usage examples, refer to|
 |                             | :ref:`zchset-isv`.                                                                                                                                                                         |
 +-----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | $ZCHar()                    | The $ZCHAR() function returns a byte sequence of one or more bytes corresponding to numeric byte value (0 through 255) specified in its argument(s). For more information and usage        |

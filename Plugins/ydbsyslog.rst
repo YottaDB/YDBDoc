@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #								 #
-.. # Copyright (c) 2023-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2023-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.					 #
 .. #								 #
 .. #	 This document contains the intellectual property	 #
@@ -89,7 +89,7 @@ Where :code:`op` and :code:`[options]` are:
 
   * :code:`--moreopt` indicates that the rest of the command line should be passed verbatim to the :code:`journalctl` command as additional options. See the Linux command :code:`man journalctl` for details. YDBSyslog does no error checking of these additional options.
 
-* :code:`ingestjnlctlfile` – read :code:`journalctl --output=export` formatted data from stdin.
+* :code:`ingestjnlctlfile` - read :code:`journalctl --output=export` formatted data from stdin.
 
 * :code:`octoddl` - output an Octo DDL to allow analysis of syslog data using SQL. If the database combines syslog data from multiple systems, Octo SQL queries can span systems.
 
@@ -114,11 +114,11 @@ The following M entryrefs can called directly from programs.
 
 Data are stored in nodes of :code:`^%ydbSYSLOG` with the following subscripts, which are reverse engineered from the :code:`__CURSOR` field of the :code:`journalctl` export format. While :code:`__CURSOR` is documented as opaque, reverse engineering provides a more compact database and faster access:
 
-* :code:`Cs` – a UUID for a large number of syslog records.
-* :code:`Cb` – evidently a boot UUID.
+* :code:`Cs` - a UUID for a large number of syslog records.
+* :code:`Cb` - evidently a boot UUID.
 * :code:`Ci` - evidently the record number in a syslog.
 * :code:`Ct` - evidently the number of microseconds since the UNIX epoch.
-* :code:`Cm` – evidently a monolithic timestamp since boot.
+* :code:`Cm` - evidently a monolithic timestamp since boot.
 * :code:`Cx` - a UUID that is unique to each syslog entry.
 
 Fields that :code:`journalctl` has been found to flag as binary, e.g., :code:`"MESSAGE"` and :code:`"SYSLOG_RAW"` have an additional, seventh, subscript, the tag for the field.

@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -243,7 +243,7 @@ MUPIP INTEG Error Messages
 | DBLRCINVSZ        | Last record of block has      |  I                          |    `K5 <../AdminOpsGuide/integrity.html#k5-star-key-problems>`_                      |
 |                   | invalid size                  |                             |                                                                                      |
 +-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
-| DBLTSIBL          | Key less than sibling’s index |  I                          |    `K2 <../AdminOpsGuide/integrity.html#k2-keys-misplaced>`_                         |
+| DBLTSIBL          | Key less than sibling's index |  I                          |    `K2 <../AdminOpsGuide/integrity.html#k2-keys-misplaced>`_                         |
 |                   | key                           |                             |                                                                                      |
 +-------------------+-------------------------------+-----------------------------+--------------------------------------------------------------------------------------+
 | DBLVLINC          | Local map block level         |  B                          |    `M2 <../AdminOpsGuide/integrity.html#m2-bitmap-header-problems>`_                 |

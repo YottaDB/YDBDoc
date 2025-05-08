@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -362,7 +362,7 @@ Compatible with: -A[LL]
 Freezes or prevents updates on all regions of the current global directory.
 
 * The FREEZE qualifier freezes all GDS regions except those previously frozen by another process. Regions frozen by a particular process are associated with that process.
-* A frozen region may be unfrozen for updates in one of two ways: The process which froze the region may unfreeze it with the -NOFREEZE qualifier; or another process may override the freeze in conjunction with the -OVERRIDE qualifier. For more information on a preferred method of manipulating FREEZE, refer to “FREEZE ”.
+* A frozen region may be unfrozen for updates in one of two ways: The process which froze the region may unfreeze it with the -NOFREEZE qualifier; or another process may override the freeze in conjunction with the -OVERRIDE qualifier. For more information on a preferred method of manipulating FREEZE, refer to "FREEZE ".
 * By default, the -NOFREEZE qualifier unfreezes only those GDS regions that were previously frozen by a process. Once a region is unfrozen, it may be updated by any process. To unfreeze all GDS regions of the Global Directory, use the -OVERRIDE qualifier.
 * DSE releases any FREEZE it holds when it exits, therefore, use the same DSE invocation or SPAWN to perform operations after executing the ALL -FREEZE command.
 
@@ -924,7 +924,7 @@ Use only with: -FILEHEADER
 -E[NCRYPTION_HASH]
 ^^^^^^^^^^^^^^^^^^
 
-Changes the hash of the password stored in the database file header if and when you change the hash library. For more information on key management and reference implementation, refer to `Chapter 12: “Database Encryption” <./encryption.html>`_.
+Changes the hash of the password stored in the database file header if and when you change the hash library. For more information on key management and reference implementation, refer to `Chapter 12: "Database Encryption" <./encryption.html>`_.
 
 .. note::
    An incorrect hash renders the database useless.
@@ -937,7 +937,7 @@ Use only with: -FILEHEADER
 
 Sets a flag that indicates whether or not epoch tapering should be done. The default value is -EPOCHTAPER.
 
-For more information, refer to “Region Qualifiers”.
+For more information, refer to "Region Qualifiers".
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 -FL[USH_TIME][=delta_time]
@@ -1001,7 +1001,7 @@ Use only with: -FILEHEADER
 
 Changes the decimal value for the maximum allowable key size. Reducing KEY_MAX_SIZE can restrict access to existing data and cause YottaDB to report errors. Do not create incompatible key and record sizes.
 
-Before permanently changing the key size using DSE, use GDE to check that the appropriate Global Directory contains the same key size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor (GDE)” <gde.html>`__.
+Before permanently changing the key size using DSE, use GDE to check that the appropriate Global Directory contains the same key size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: "Global Directory Editor (GDE)" <gde.html>`__.
 
 Use only with: -FILEHEADER
 
@@ -1048,7 +1048,7 @@ For more information, refer to :ref:`region-qualifiers`.
 
 Changes the decimal value for the maximum allowable record size. Use the -RECORD_MAX_SIZE qualifier only in conjunction with the -FILEHEADER qualifier. Reducing RECORD_MAX_SIZE can restrict access to existing data and cause YottaDB to report errors. Do not create incompatible key and record sizes.
 
-Before making a permanent change to the records size using DSE, use GDE to check that the appropriate Global Directory contains the same record size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: “Global Directory Editor (GDE)” <gde.html>`__.
+Before making a permanent change to the records size using DSE, use GDE to check that the appropriate Global Directory contains the same record size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: "Global Directory Editor (GDE)" <gde.html>`__.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 -REF[ERENCE_COUNT]=reference_count
@@ -1060,7 +1060,7 @@ Sets a field that tracks how many processes are accessing the database with read
 -REG[_SEQNO]=sequence-number
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In an LMS environment, this sets the "Region Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_.
+In an LMS environment, this sets the "Region Seqno" field. For more information, refer to `Chapter 7: "Database Replication" <./dbrepl.html>`_.
 
 ^^^^^^^^^^^^^^^^^^^^
 -RESET_MAX_PROCS
@@ -1072,13 +1072,13 @@ Sets the maximum number of concurrent processes to zero, and the time to the tim
 -RESYNC_S[EQNO]=sequence-number
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In an LMS environment, this sets the hexadecimal value of the "Resync Seqno" field. For more information, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_.
+In an LMS environment, this sets the hexadecimal value of the "Resync Seqno" field. For more information, refer to `Chapter 7: "Database Replication" <./dbrepl.html>`_.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 -RESYNC_T[N]=sequence-number
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In an LMS environment, this sets the hexadecimal value ofthe "Resync transaction" field. For more information, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_.
+In an LMS environment, this sets the hexadecimal value ofthe "Resync transaction" field. For more information, refer to `Chapter 7: "Database Replication" <./dbrepl.html>`_.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 -S[PIN_SLEEP_MASK]=hexadecimal-mask
@@ -1662,10 +1662,10 @@ This command displays the fileheader elements along with the following helper pr
 
 .. code-block:: bash
 
-   Upd reserved area [% global buffers]   50  Avg blks read per 100 records                200
-   Pre read trigger factor [% upd rsrvd]    50  Upd writer trigger [%flshTrgr]                 33
+     Upd reserved area [% global buffers]           50  Avg blks read per 100 records          200
+     Pre read trigger factor [% upd rsrvd]          50  Upd writer trigger [%flshTrgr]          33
 
-For more information, refer to the :ref:`file-header-data-elements` in “Database Structure (GDS file)”.
+For more information, refer to the :ref:`file-header-data-elements` in "Database Structure (GDS file)".
 
 .. _dse-evaluate:
 

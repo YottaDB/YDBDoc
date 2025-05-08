@@ -642,7 +642,7 @@ ydb_log
 +++++++++++++++++
 ydb_lvnullsubs
 +++++++++++++++++
-**ydb_lvnullsubs (gtm_lvnullsubs)** specifies the initialization of `VIEW [NEVER][NO]LVNULLSUBS <../ProgrammersGuide/commands.html#lvnullsubs-nolvnullsubs-neverlvnullsubs>`_ at process startup. The value of the environment variable can be 0 which is equivalent to VIEW “NOLVNULLSUBS”, 1 (the default) which is equivalent to VIEW “LVNULLSUBS” or 2, which is equivalent to VIEW “NEVERLVNULLSUBS”.
+**ydb_lvnullsubs (gtm_lvnullsubs)** specifies the initialization of `VIEW [NEVER][NO]LVNULLSUBS <../ProgrammersGuide/commands.html#lvnullsubs-nolvnullsubs-neverlvnullsubs>`_ at process startup. The value of the environment variable can be 0 which is equivalent to VIEW "NOLVNULLSUBS", 1 (the default) which is equivalent to VIEW "LVNULLSUBS" or 2, which is equivalent to VIEW "NEVERLVNULLSUBS".
 
 ++++++++++++++++
 ydb_malloc_limit

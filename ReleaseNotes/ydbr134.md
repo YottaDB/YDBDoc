@@ -1,7 +1,7 @@
 <!---
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2022 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2022-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -22,6 +22,7 @@
 | Revision  | Date              | Summary               |
 | --------- | ----------------- | --------------------- |
 | 1.00      | February 25, 2022 | r1.34 Initial Release |
+| 1.01      | May 8, 2025 | Change "smart" quotes to simple double quotes |
 
 ### Contact Information
 #### YottaDB LLC
@@ -44,7 +45,7 @@ For free (to you) support from members of communities who run widely available a
 
 #### Overview
 
-While YottaDB r1.34 is an otherwise modest successor to [r1.32](https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.32), internal changes allow the popular programming language [Python](https://www.python.org/) to be fully Supported. We are excited about making YottaDB available to the large Python user community. Here is a “Hello, World” Python program that updates the database and illustrates YottaDB's Unicode support:
+While YottaDB r1.34 is an otherwise modest successor to [r1.32](https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.32), internal changes allow the popular programming language [Python](https://www.python.org/) to be fully Supported. We are excited about making YottaDB available to the large Python user community. Here is a "Hello, World" Python program that updates the database and illustrates YottaDB's Unicode support:
 
 ```
 	import yottadb

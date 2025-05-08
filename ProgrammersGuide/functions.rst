@@ -1497,7 +1497,7 @@ The format for the $TRANSLATE function is:
 * The optional second expression specifies the characters for $TRANSLATE() to replace. If a character occurs more than once in the second expression, the first occurrence controls the translation, and $TRANSLATE() ignores subsequent occurrences. If this argument is omitted, $TRANSLATE() returns the first expression without modification.
 * The optional third expression specifies the replacement characters for positionally corresponding characters in the second expression. If this argument is omitted or shorter than the second expression, $TRANSLATE() drops all occurrences of characters in the second expression that have no replacement in the corresponding position of the third expression.
 * For a process started in UTF-8 mode, the algorithm of $TRANSLATE() treats the string arguments as UTF-8 encoded. With VIEW "BADCHAR" enabled, $TRANSLATE() produces a run-time error when it encounters a malformed character.
-* Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZTRANSLATE() interprets argument as a sequence of bytes (rather than a sequence of characters) and performs all byte-oriented $TRANSLATE() operations. For more information, refer to “$ZTRanslate()”.
+* Irrespective of the settings of VIEW "BADCHAR" and $ZCHSET, $ZTRANSLATE() interprets argument as a sequence of bytes (rather than a sequence of characters) and performs all byte-oriented $TRANSLATE() operations. For more information, refer to "$ZTRanslate()".
 * $TRANSLATE() provides a tool for tasks such as changing case and doing encryption. For examples of case translation, refer to the ^%LCASE and ^%UCASE utility routines.
 
 The $TRANSLATE() algorithm can be understood as follows:
@@ -1726,7 +1726,7 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 |                  |                  | :ref:`colln-seq-defn`  for more details on specifying alternative collation.                                                                                        |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "ZDATE_FORM"     | none             | Integer value showing whether four digit year code is active for $ZDATE(); YottaDB defaults to 0 (for "YY" format). Use the environment variable ydb_zdate_form     |
-|                  |                  | to set the initial value of this factor. For usage examples, refer to “$ZDate()”.                                                                                   |
+|                  |                  | to set the initial value of this factor. For usage examples, refer to "$ZDate()".                                                                                   |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. note::
@@ -2038,7 +2038,7 @@ $ZBIT Functions
 
 A series of functions beginning with $ZBIT lets you manipulate a bit stream. Internally, YottaDB stores a bit stream in the form of a bit string. A bit string embeds a bit stream in such a way that the first byte specifies the number of trailing bits in the last byte that are not part of the bit-stream. In this way, YottaDB is able to store bit-streams of lengths other than multiples of 8 bits in byte format. So for example, a first byte of value of zero (0) indicates that all of the bits in the last byte belong to the bit-stream, while a one (1) indicates the last bit is excluded and a seven (7) indicates that only the first bit in the last byte belongs to the bit-stream.
 
-If you have to convert a character string into a bit string then add a leading byte to that character string so that all $ZBIT functions can recognize it. The most common and straightforward way of doing this is to concatenate a $CHAR(n) on the front of the character string, where the value of n is zero through seven (0-7) – most commonly zero (0). If you pass a bit string as an argument to a routine that is expecting a character string, then that caller routine must strip off the first (and possibly the last) byte so that it can recognize the character string.
+If you have to convert a character string into a bit string then add a leading byte to that character string so that all $ZBIT functions can recognize it. The most common and straightforward way of doing this is to concatenate a $CHAR(n) on the front of the character string, where the value of n is zero through seven (0-7) - most commonly zero (0). If you pass a bit string as an argument to a routine that is expecting a character string, then that caller routine must strip off the first (and possibly the last) byte so that it can recognize the character string.
 
 This section contains the description of all $ZBIT function and an example of using $ZBIT functions to turn a character into a bit stream and return a coded value. However, the most appropriate use of these functions may include the formation of checksums, handling of bit-data (say pixels from a scan), or interfacing with a routine that requires bit-oriented arguments.
 
@@ -2493,7 +2493,7 @@ For numeric conversion:
 
 * Unsigned numbers in the range 0 through 0xFFFFFFFFFFFFFFFF (64-bit unsigned integers) can be converted. Decimal return values greater than 999999999999999999 (18 decimal digits, YottaDB's maximum numeric size) are returned as strings.
 * Hexadecimal numbers are always converted to positive decimal numbers.
-* As conversion from hexadecimal numbers preceded by "-" to decimal is not considered meaningful, if the number to be converted is a “negative” hexadecimal number (e.g., "-F"), the result is 0.
+* As conversion from hexadecimal numbers preceded by "-" to decimal is not considered meaningful, if the number to be converted is a "negative" hexadecimal number (e.g., "-F"), the result is 0.
 * Conversion from negative decimal numbers to hexadecimal returns the hexadecimal value of the 2's complement of the number, e.g., the value of $ZCONVERT(-23,"DEC","HEX") is "E9"
 
 ++++++++++++++++++++++++
@@ -2590,7 +2590,7 @@ Example:
 $ZDATE()
 -----------------
 
-Returns a date and/or time formatted as text based on an argument formatted in the manner of $HOROLOG. For information on the format of $HOROLOG, refer to `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
+Returns a date and/or time formatted as text based on an argument formatted in the manner of $HOROLOG. For information on the format of $HOROLOG, refer to `Chapter 8: "Intrinsic Special Variables" <./isv.html>`_.
 
 The format for the $ZDATE function is:
 
@@ -2980,7 +2980,7 @@ The format for the $ZJUSTIFY function is:
 * The expression specifies the sequence of octets formatted by $ZJUSTIFY().
 * The first integer expression (second argument) specifies the minimum size of the resulting byte sequence.
 * If the first integer expression is larger than the length of the expression, $ZJUSTIFY() right-justifies the expression to a byte sequence of the specified length by adding leading spaces. Otherwise, $ZJUSTIFY() returns the expression unmodified unless specified by the second integer argument.
-* The behavior of the optional second expression (third argument) for $ZJUSTIFY() is the same at $JUSTIFY(). For more information, refer to “$Justify()”.
+* The behavior of the optional second expression (third argument) for $ZJUSTIFY() is the same at $JUSTIFY(). For more information, refer to "$Justify()".
 * When the second argument is specified and the first argument evaluates to a fraction between -1 and 1, $ZJUSTIFY() returns a number with a leading zero (0) before the decimal point (.).
 * $ZJUSTIFY() fills a sequence of octets to create a fixed length byte sequence. However, if the length of the specified expression exceeds the specified byte size, $ZJUSTIFY() does not truncate the result (although it may still round based on the third argument). When required, $ZEXTRACT() performs truncation.
 
@@ -3604,7 +3604,7 @@ The second expression specifies a keyword identifying the type of information re
 
 .. note::
 
-   The keywords KEEPALIVE, KEEPCNT, KEEPIDLE, KEEPINTVL, SNDBUF, and ZIBFSIZE return two values if the value previously specified in an OPEN/USE command with the “OPTIONS” or "ZIBFSIZE" device parameter doesn't match the system's current value.  The two values are separated by a semicolon (";"):"uservalue;systemvalue".
+   The keywords KEEPALIVE, KEEPCNT, KEEPIDLE, KEEPINTVL, SNDBUF, and ZIBFSIZE return two values if the value previously specified in an OPEN/USE command with the "OPTIONS" or "ZIBFSIZE" device parameter doesn't match the system's current value.  The two values are separated by a semicolon (";"):"uservalue;systemvalue".
 
 The following table describes the values for the fourth expression for the TLS keyword.
 

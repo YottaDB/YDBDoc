@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2023-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2023-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -22,7 +22,7 @@ YottaDB and a tale of two Pis
 
     The full demopi2 breadboard.
 
-This tutorial describes a YottaDB installation on two Raspberri Pis. The first Pi has Temperature, Motion, CO2, sensors with an LCD display to immediately display the data. This Pi stores the data in YottaDB, then streams it over to the second Pi using YottaDB’s replication. This data is then exposed via SQL and graphed in Excel.
+This tutorial describes a YottaDB installation on two Raspberri Pis. The first Pi has Temperature, Motion, CO2, sensors with an LCD display to immediately display the data. This Pi stores the data in YottaDB, then streams it over to the second Pi using YottaDB's replication. This data is then exposed via SQL and graphed in Excel.
 
 The full code is available in `demopi.py <demopi.py>`_.
 
@@ -40,7 +40,7 @@ Components
 Software Installation
 +++++++++++++++++++++
 
-Both Pi’s have straight Debian 11 (bullseye) installed and YottaDB per the instructions on how to `Get Started <https://yottadb.com/product/get-started/>`_:
+Both Pi's have straight Debian 11 (bullseye) installed and YottaDB per the instructions on how to `Get Started <https://yottadb.com/product/get-started/>`_:
 
 .. code-block:: bash
 
@@ -442,9 +442,9 @@ Next, create ``repl_status.sh``:
     echo "Receiver Server $ydb_repl_instname: "
     echo "-----------------------------------------------------------------"
     $ydb_dist/mupip replicate -receive -check
-    $ydb_dist/mupip replicate -rece –showbacklog
+    $ydb_dist/mupip replicate -rece -showbacklog
 
-.. note:: Due to how replication works in YottaDB, ``repl_setup.sh`` combines both the set-up of supplementary replication and the first start-up. This means that you DO NOT run ``start.sh`` the first time you start replication. It’s confusing, but please keep that in mind.
+.. note:: Due to how replication works in YottaDB, ``repl_setup.sh`` combines both the set-up of supplementary replication and the first start-up. This means that you DO NOT run ``start.sh`` the first time you start replication. It's confusing, but please keep that in mind.
 
 The next time you start replication, do not use ``repl_setup.sh`` but use ``start.sh``.
 
@@ -468,7 +468,7 @@ First, load the "Motion" table into Octo and test it:
             TVOC INTEGER
     ) GLOBAL "^motion" READONLY;
     END
-    octo –f motion.sql
+    octo -f motion.sql
     octo <<< 'select count(*) from motion'
 
 Then, configure remote access with Rocto:

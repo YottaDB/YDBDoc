@@ -448,7 +448,7 @@ Where:
 * An element of the expression contains an environment variable evaluating to a directory specification.
 * If $ZROUTINES contains an environment variable that evaluates to a list, YottaDB uses the first name in that list.
 
-For more information on $ZROUTINES, see `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
+For more information on $ZROUTINES, see `Chapter 8: "Intrinsic Special Variables" <./isv.html>`_.
 
 .. _edit-from-shell:
 
@@ -507,7 +507,7 @@ When a command refers to an M routine that is not part of the current image, Yot
 
 By using the DO command, you implicitly instruct YottaDB to compile, link, and execute the program. With this method, you can test your routine interactively.
 
-For complete descriptions of ZLINK and auto-ZLINK, see `Chapter 6: “Commands” <./commands.html>`_ .
+For complete descriptions of ZLINK and auto-ZLINK, see `Chapter 6: "Commands" <./commands.html>`_ .
 
 Example:
 
@@ -532,7 +532,7 @@ Example:
 
 The first ZLINK compiles payroll.m if it cannot locate payroll, or if it finds that payroll.m has a more recent date/time stamp than payroll.o. The second ZLINK always compiles taxes.m producing a new taxes.o.
 
-For more information on debugging in Direct Mode, see `Chapter 4: “Operating and Debugging in Direct Mode” <./opdebug.html>`_.
+For more information on debugging in Direct Mode, see `Chapter 4: "Operating and Debugging in Direct Mode" <./opdebug.html>`_.
 
 .. _compile-from-shell:
 
@@ -730,29 +730,29 @@ Yottadb Command Qualifiers Summary
 +----------------------------------------------+--------------------------------------------+
 | Qualifier                                    | Default                                    |
 +==============================================+============================================+
-| “-di[rect_mode]”                             | N/A                                        |
+| "-di[rect_mode]"                             | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| “-dy[namic_literals]”                        | N/A                                        |
+| "-dy[namic_literals]"                        | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| “-[no]embed_source”                          | -noembedsource                             |
+| "-[no]embed_source"                          | -noembedsource                             |
 +----------------------------------------------+--------------------------------------------+
-| “-[no]i[gnore]”                              | -ignore                                    |
+| "-[no]i[gnore]"                              | -ignore                                    |
 +----------------------------------------------+--------------------------------------------+
-| “-le[ngth]=lines”                            | -length=66                                 |
+| "-le[ngth]=lines"                            | -length=66                                 |
 +----------------------------------------------+--------------------------------------------+
-| “-[no]li[st][=filename]”                     | -nolist                                    |
+| "-[no]li[st][=filename]"                     | -nolist                                    |
 +----------------------------------------------+--------------------------------------------+
-| “-noin[line_literals]”                       | N/A                                        |
+| "-noin[line_literals]"                       | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
 | "-nolineentry"                               | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| “-[n]ameofrtn=filename”                      | N/A                                        |
+| "-[n]ameofrtn=filename"                      | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| “-[no]o[bject][=filename]”                   | -object                                    |
+| "-[no]o[bject][=filename]"                   | -object                                    |
 +----------------------------------------------+--------------------------------------------+
-| “-r[un]”                                     | N/A                                        |
+| "-r[un]"                                     | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| “-s[pace]=lines”                             | -space=1                                   |
+| "-s[pace]=lines"                             | -space=1                                   |
 +----------------------------------------------+--------------------------------------------+
 
 .. _execute-src-prog:
@@ -791,7 +791,7 @@ When the argument to a ZLINK command includes a pathname, $ZSOURCE maintains tha
 
 Once you use the ZEDIT or ZLINK commands, $ZSOURCE can contain a partial file specification. The partial file specification can be a directory path (full or relative), a file name, and a file extension. You can set $ZSOURCE with an M SET command. A ZLINK without an argument is equivalent to ZLINK $ZSOURCE.
 
-For additional information on $ZSOURCE and $ZROUTINES, refer to `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
+For additional information on $ZSOURCE and $ZROUTINES, refer to `Chapter 8: "Intrinsic Special Variables" <./isv.html>`_.
 
 Example:
 
@@ -811,7 +811,7 @@ When the file being linked includes an explicit directory, ZLINK and auto-ZLINK 
 
 A subsequent ZLINK searching for this object file will never find the object file in the specified directory unless the directory is added to the search path in $ZROUTINES, or the object file is moved to another directory already in the search path.
 
-ZLINK cannot change a currently active routine, (e.g., a routine displayed in a ZSHOW "S" of the stack). ZLINK a currently active routine by first removing it from the M stack, using ZGOTO, or one or more QUITs. For additional information on the functionality of ZGOTO and ZSHOW, see their entries in `Chapter 6: “Commands” <./commands.html>`_.
+ZLINK cannot change a currently active routine, (e.g., a routine displayed in a ZSHOW "S" of the stack). ZLINK a currently active routine by first removing it from the M stack, using ZGOTO, or one or more QUITs. For additional information on the functionality of ZGOTO and ZSHOW, see their entries in `Chapter 6: "Commands" <./commands.html>`_.
 
 To maintain compatibility with other editions of YottaDB that do not permit the percent sign (%) in a file name, YottaDB uses an underscore (_) in place of the percent in the file name.
 
@@ -868,7 +868,7 @@ Processing Errors from Direct Mode and Shell
 |                            | * The erroneous code was entered at the direct mode prompt                                                                                          |
 +----------------------------+---------------------------------------------------------------------------+-------------------------------------------------------------------------+
 
-For more information, see `Chapter 13: “Error Processing” <./errproc.html>`_.
+For more information, see `Chapter 13: "Error Processing" <./errproc.html>`_.
 
 .. raw:: html
 

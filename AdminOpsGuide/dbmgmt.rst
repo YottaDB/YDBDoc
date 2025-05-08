@@ -32,9 +32,9 @@ This chapter describes common database management operations such as creating da
 
 YottaDB uses M Peripheral Interchange Program (MUPIP) for database management, database journaling, and logical multisite replication (LMS). This chapter summarizes the MUPIP commands pertaining to YottaDB database management and serves as a foundation for more advanced YottaDB functionality described for Journaling and LMS.
 
-For MUPIP commands pertaining to database journaling, refer to `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`__.
+For MUPIP commands pertaining to database journaling, refer to `Chapter 6: "YottaDB Journaling" <./ydbjournal.html>`__.
 
-For MUPIP commands pertaining to multisite database replication, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`__.
+For MUPIP commands pertaining to multisite database replication, refer to `Chapter 7: "Database Replication" <./dbrepl.html>`__.
 
 .. note::
    Two MUPIP operations - INTRPT and STOP - perform process management functions. All other MUPIP operations relate to the operation of the database.
@@ -62,7 +62,7 @@ Some MUPIP commands require information contained in the global directory. There
 
 The environment variable ydb_gbldir specifies the active global directory.
 
-To access database files, MUPIP requires a global directory file, pointed to by the environment variable `ydb_gblir <basicops.html#ydb-gbldir>`_. For more information on the global directory, refer to `“Global Directory Editor (GDE)” <gde.html>`_.
+To access database files, MUPIP requires a global directory file, pointed to by the environment variable `ydb_gblir <basicops.html#ydb-gbldir>`_. For more information on the global directory, refer to `"Global Directory Editor (GDE)" <gde.html>`_.
 
 .. note::
    YottaDB recommends against running YottaDB components as root. When run as root, YottaDB components use the owner and group of the database file as the owner and group of newly created journal files, backup files, snapshot files, shared memory, and semaphores. In addition, they set the permissions on the resulting files, shared memory, and semaphores, as if running as the owner of the database file and as a member of the database file group.
@@ -413,7 +413,7 @@ The format of the MUPIP EXTEND command is:
 -Blocks
 ~~~~~~~~
 
-Specifies the number of GDS database blocks by which MUPIP should extend the file. GDS files use additional blocks for bitmaps. MUPIP EXTEND adds the specified number of blocks plus the bitmap blocks required as overhead. For more information about bitmaps, refer to `Chapter 9: “Database Structure (GDS file)” <gds.html>`_.
+Specifies the number of GDS database blocks by which MUPIP should extend the file. GDS files use additional blocks for bitmaps. MUPIP EXTEND adds the specified number of blocks plus the bitmap blocks required as overhead. For more information about bitmaps, refer to `Chapter 9: "Database Structure (GDS file)" <gds.html>`_.
 
 The format of the BLOCK qualifier is:
 
@@ -1060,7 +1060,7 @@ Sends an interrupt signal [POSIX] SIGUSR1 to the specified process, whose signal
 JOURNAL
 ++++++++++
 
-Analyzes, extracts, reports, and recovers data using journal files. For a description of the JOURNAL command, refer to `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`__.
+Analyzes, extracts, reports, and recovers data using journal files. For a description of the JOURNAL command, refer to `Chapter 6: "YottaDB Journaling" <./ydbjournal.html>`__.
 
 +++++++
 LOAD
@@ -1511,13 +1511,13 @@ Blocking subsequent MUPIP REORG ENCRYPT operations after one completes, provides
    YottaDB recommends rotating (changing) the encryption key of the database for better security. The frequency of encryption key rotation depends on your security requirements and policies.
 
 .. note::
-   MUPIP REORG ENCRYPT does not enable switching between encryption algorithms. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: “Database Replication” <./dbrepl.html>`_ for more complete documentation.
+   MUPIP REORG ENCRYPT does not enable switching between encryption algorithms. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: "Database Replication" <./dbrepl.html>`_ for more complete documentation.
 
 ~~~~~~~~~
 -EXCLUDE
 ~~~~~~~~~
 
-Specifies that REORG not handle blocks that contain information about the globals in the associated list–this means they are neither reorganized nor swapped in the course of reorganizing other globals; EXCLUDE can reduce the efficiency of REORG because it complicates and interferes with the block swapping actions that try to improve adjacency.
+Specifies that REORG not handle blocks that contain information about the globals in the associated list-this means they are neither reorganized nor swapped in the course of reorganizing other globals; EXCLUDE can reduce the efficiency of REORG because it complicates and interferes with the block swapping actions that try to improve adjacency.
 
 The format of the EXCLUDE qualifier is:
 
@@ -1913,7 +1913,7 @@ This example combines two specifications, and carries out the REORG without swap
 REPLICATE
 ++++++++++++
 
-Control the logical multi-site operation of YottaDB. For more information on the qualifiers of the MUPIP REPLICATE command, refer to `Chapter 7: “Database Replication” <./dbrepl.html>`_ .
+Control the logical multi-site operation of YottaDB. For more information on the qualifiers of the MUPIP REPLICATE command, refer to `Chapter 7: "Database Replication" <./dbrepl.html>`_ .
 
 +++++++++
 RESTORE

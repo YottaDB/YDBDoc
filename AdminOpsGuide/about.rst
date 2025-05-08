@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -40,7 +40,7 @@ System requirements vary widely depending on application needs, and should be em
 Installation
 ------------
 
-YottaDB installation is semi-automatic, using the ydbinstall script provided with the product. The installation procedure is described in `Chapter 2: “Installing YottaDB” <./installydb.html>`_.
+YottaDB installation is semi-automatic, using the ydbinstall script provided with the product. The installation procedure is described in `Chapter 2: "Installing YottaDB" <./installydb.html>`_.
 
 --------
 Security
@@ -71,7 +71,7 @@ Database Subsystem
 
 The YottaDB database subsystem consists of a run-time library and a set of utilities which operate on one or more user-specified Global Directories (GD) and database files. YottaDB stores M global variables in database files, which are ordinary UNIX files. Internally, the UNIX files are organized as balanced trees (B-trees) in YottaDB Data Structures (GDS). See the `"Database Structure (GDS file)" chapter <gds.html>`_ for more information on B-trees and the GDS file structure.
 
-A directory maps global names to a database file. YottaDB processes use this mapping when storing and retrieving globals from the database. Multiple global directories can reference a single database file, and a database file can be referenced in multiple global directories, with some exceptions, as discussed in `Chapter 4: “Global Directory Editor” <./gde.html>`__. Use the Global Directory Editor (GDE) to create and maintain global directories.
+A directory maps global names to a database file. YottaDB processes use this mapping when storing and retrieving globals from the database. Multiple global directories can reference a single database file, and a database file can be referenced in multiple global directories, with some exceptions, as discussed in `Chapter 4: "Global Directory Editor" <./gde.html>`__. Use the Global Directory Editor (GDE) to create and maintain global directories.
 
 In addition to mapping global variables to database files, global directories also store initial parameters used by the MUPIP CREATE command when creating new database files. YottaDB uses environment variables to locate the global directory or, optionally database files.
 
@@ -85,7 +85,7 @@ YottaDB provides utility programs to administer the system. Each utility is summ
 1. GDE
 ++++++
 
-The Global Directory Editor (GDE) is a YottaDB utility program that creates and maintains global directories. GDE provides commands for operating on the global directory. See `Chapter 4: “Global Directory Editor” <gde.html>`_ for more information.
+The Global Directory Editor (GDE) is a YottaDB utility program that creates and maintains global directories. GDE provides commands for operating on the global directory. See `Chapter 4: "Global Directory Editor" <gde.html>`_ for more information.
 
 ++++++++
 2. MUPIP
@@ -97,13 +97,13 @@ MUPIP (M Peripheral Interchange Program) is the primary YottaDB tool for managin
 3. LKE
 ++++++
 
-The M Lock Editor (LKE) is the YottaDB utility program that examines and modifies the lock space where YottaDB maintains the current M LOCK state. LKE can monitor the locking mechanism and remove locks. See `Chapter 8: “M Lock Editor (LKE)” <mlocks.html>`_ for more information.
+The M Lock Editor (LKE) is the YottaDB utility program that examines and modifies the lock space where YottaDB maintains the current M LOCK state. LKE can monitor the locking mechanism and remove locks. See `Chapter 8: "M Lock Editor (LKE)" <mlocks.html>`_ for more information.
 
 ++++++
 4. DSE
 ++++++
 
-The Database Structure Editor (DSE) is the YottaDB utility for experts to examine and manipulate the internal structure of YottaDB database (Global Database Structure – GDS) files. It provides an extensive database "patch" facility (including block integrity checks), searches for block numbers and nodes, and provides symbolic examination and manipulation facilities. See `Chapter 10: “Database Structure Editor (DSE)” <dse.html>`_ for more information.
+The Database Structure Editor (DSE) is the YottaDB utility for experts to examine and manipulate the internal structure of YottaDB database (Global Database Structure - GDS) files. It provides an extensive database "patch" facility (including block integrity checks), searches for block numbers and nodes, and provides symbolic examination and manipulation facilities. See `Chapter 10: "Database Structure Editor (DSE)" <dse.html>`_ for more information.
 
 +++++++++++++++++++++
 5. Command Qualifiers
@@ -115,13 +115,13 @@ Each utility program has its own set of commands. Qualifiers are used as argumen
 Database Integrity
 ------------------
 
-YottaDB tools verify and maintain database integrity. As described in `Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_, database integrity refers to a state of logical and physical consistency in the database when all of the globals and pointers are correct, thereby making all data accessible. Chapter 11 describes how to use the MUPIP INTEG command and the DSE utility to detect and repair integrity problems, and supplies procedures for avoiding such problems.
+YottaDB tools verify and maintain database integrity. As described in `Chapter 11: "Maintaining Database Integrity" <./integrity.html>`_, database integrity refers to a state of logical and physical consistency in the database when all of the globals and pointers are correct, thereby making all data accessible. Chapter 11 describes how to use the MUPIP INTEG command and the DSE utility to detect and repair integrity problems, and supplies procedures for avoiding such problems.
 
 --------------------------
 Interprocess Communication
 --------------------------
 
-YottaDB uses UNIX Interprocess Communication (IPC) resources to coordinate access to the database. Additionally, YottaDB includes a daemon process gtmsecshr that implements process wake-up for M locks and clean-up of IPC resources after certain types of abnormal process termination. See `Appendix A: “YottaDB's IPC Resource Usage” <./ipcresource.html>`_ for more information.
+YottaDB uses UNIX Interprocess Communication (IPC) resources to coordinate access to the database. Additionally, YottaDB includes a daemon process gtmsecshr that implements process wake-up for M locks and clean-up of IPC resources after certain types of abnormal process termination. See `Appendix A: "YottaDB's IPC Resource Usage" <./ipcresource.html>`_ for more information.
 
 .. raw:: html
 

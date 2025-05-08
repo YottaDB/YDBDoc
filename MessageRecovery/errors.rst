@@ -6084,7 +6084,7 @@ INVSEQNOQUAL, Invalid SEQNO qualifier value xxxx
 
 MUPIP Error: This error indicates that MUPIP JOURNAL -EXTRACT -SEQNO command could not extract a journal file because an invalid SEQNO format was specified.
 
-Action: Enter a comma-separated list of valid sequence numbers (‘0’ or positive integers) as values for the SEQNO qualifier. The format of the SEQNO qualifier is -SEQNO=seqno1[,seqno2,seqno3…..] where seqno is the region sequence number in decimal format.
+Action: Enter a comma-separated list of valid sequence numbers ('0' or positive integers) as values for the SEQNO qualifier. The format of the SEQNO qualifier is -SEQNO=seqno1[,seqno2,seqno3…..] where seqno is the region sequence number in decimal format.
 
 ---------------
 INVSHUTDOWN
@@ -14023,7 +14023,7 @@ SYSUTILCONF, Error determining the path for system utility. tttt
 
 Run Time Error: tttt represents text describing details of an issue finding a POSIX function that it needed.
 
-Action: Check for aliases or environment variables related to paths that might be interfering with YottaDB’s ability to invoke functions.
+Action: Check for aliases or environment variables related to paths that might be interfering with YottaDB's ability to invoke functions.
 
 --------------
 TCGETATTR
@@ -15852,7 +15852,7 @@ ZCWRONGDESC, A string longer than 65535 is passed via 32-bit descriptor
 
 Run Time Error: A string size greater than 65,535 byte was passed while the input mechanism is descriptor.
 
-Action: Modify the external call table’s input mechanism to be descriptor64 instead of descriptor and modify the called routine to handle the new descriptor type.
+Action: Modify the external call table's input mechanism to be descriptor64 instead of descriptor and modify the called routine to handle the new descriptor type.
 
 ------------------
 ZDATEBADDATE

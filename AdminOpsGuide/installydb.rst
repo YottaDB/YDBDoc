@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -82,7 +82,7 @@ Installing YottaDB
 
 * Make it executable: chmod +x ydbinstall.sh
 
-* Run it with your choice of directory where you want it installed (omit the –verbose option for less output):
+* Run it with your choice of directory where you want it installed (omit the -verbose option for less output):
 
   .. code-block:: bash
 
@@ -257,7 +257,7 @@ ydbinstall Script
 
 :code:`ydbinstall` / :code:`ydbinstall.sh` creates :code:`usr/share/pkgconfig` (the directory where :code:`pkg-config` by default tracks packages) if it does not exist. Note that this was added effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
 
-When the script installs a plugin, it records a 1-line summary of the last commit for that plugin, including the hash and a summary of the commit in the :code:`$ydb_dist/plugin/version` directory. Since plugins are `continuously released <https://yottadb.com/yottadb-continuous-integration-continuous-delivery/>`_, this makes it easier to identify the exact commit of an installed plugin. 
+When the script installs a plugin, it records a 1-line summary of the last commit for that plugin, including the hash and a summary of the commit in the :code:`$ydb_dist/plugin/version` directory. Since plugins are `continuously released <https://yottadb.com/yottadb-continuous-integration-continuous-delivery/>`_, this makes it easier to identify the exact commit of an installed plugin.
 
 ++++++++
 Examples

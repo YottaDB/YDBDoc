@@ -42,7 +42,7 @@ Other copyrights and trademarks are the property of their respective owners.
 Acculturation Workshop Expectations
 -----------------------------------
 
-The Acculturation Workshop is a hands-on “boot camp” for those interested in the configuration, administration and operation of applications on YottaDB. This file is the script (or workbook) for the workshop, consisting of the exercises below.
+The Acculturation Workshop is a hands-on "boot camp" for those interested in the configuration, administration and operation of applications on YottaDB. This file is the script (or workbook) for the workshop, consisting of the exercises below.
 
 At the end of these exercises, you will have a basic working knowledge of the essential aspects of YottaDB Administration and Operation. While this workshop alone will not by any means make you a YottaDB expert, the basic working knowledge it will give you will help you to quickly understand the concepts explained in the user documentation and put you on the path to becoming an expert.
 
@@ -62,7 +62,7 @@ YottaDB is architected with the following objectives:
 
 - Without compromise, the robustness, security and integrity of the information entrusted to it.
 - Easy access to information in the database.
-- Continuity of business – YottaDB has unique functionality for the deployment of mission-critical applications that must be available 24 hours a day, 365 days a year, with no down time even for planned events.
+- Continuity of business - YottaDB has unique functionality for the deployment of mission-critical applications that must be available 24 hours a day, 365 days a year, with no down time even for planned events.
 - Throughput, performance and scalability to meet the needs of the largest applications.
 
 Free support for YottaDB is available from the community on `various mailing lists and forums <https://yottadb.com/resources/communities/>`_. Support for YottaDB with assured service levels is available from YottaDB LLC on a commercial basis.
@@ -180,7 +180,7 @@ YottaDB user documentation is organized into Manuals and Release Notes. Current 
 Packaging
 ---------
 
-**The exercises in this workshop are carried out by booting guest virtual machines on your host computer**. A `virtual machine <https://en.wikipedia.org/wiki/Virtual_machine>`_ is a “computer within a computer”. A guest virtual machine can run a different operating system from that of the host computer. The host computer might itself run Linux, Windows, OS X, or another operating system and the guest can run YottaDB on Linux. "Emulation" or "virtualization" software helps you set up a guest system on a host computer. On the host computer, the disk images of the Acculturation Workshop guide look like ordinary files in the file system.
+**The exercises in this workshop are carried out by booting guest virtual machines on your host computer**. A `virtual machine <https://en.wikipedia.org/wiki/Virtual_machine>`_ is a "computer within a computer". A guest virtual machine can run a different operating system from that of the host computer. The host computer might itself run Linux, Windows, OS X, or another operating system and the guest can run YottaDB on Linux. "Emulation" or "virtualization" software helps you set up a guest system on a host computer. On the host computer, the disk images of the Acculturation Workshop guide look like ordinary files in the file system.
 
 **Make sure to download the virtual machine before you begin the exercises**
 
@@ -244,7 +244,7 @@ Using kvm on a Linux host, the following command boots the vmdk image with port 
 Control of the Keyboard & Mouse
 +++++++++++++++++++++++++++++++
 
-When you boot a guest virtual machine, booting it “headless” (i.e., without a console - no keyboard and mouse attached), means that the host always has control of the keyboard and mouse. If it is not headless, ownership of the keyboard or mouse may need to toggle between the host and guest. The software you use for virtualization determines how to transfer control.
+When you boot a guest virtual machine, booting it "headless" (i.e., without a console - no keyboard and mouse attached), means that the host always has control of the keyboard and mouse. If it is not headless, ownership of the keyboard or mouse may need to toggle between the host and guest. The software you use for virtualization determines how to transfer control.
 
 ++++++++++++++++++
 Terminal Emulation
@@ -389,7 +389,7 @@ YottaDB comes with a `C API <../MultiLangProgGuide/cprogram.html>`_ and all you 
 Access from Go
 ~~~~~~~~~~~~~~
 
-`Accessing YottaDB from Go <../MultiLangProgGuide/goprogram.html>`_ requires the Go :code:`yottadb` package to be downloaded and installed, to provide a YottaDB Go “wrapper”. After installing the Go wrapper, you can run a test to ensure that it was installed successfully:
+`Accessing YottaDB from Go <../MultiLangProgGuide/goprogram.html>`_ requires the Go :code:`yottadb` package to be downloaded and installed, to provide a YottaDB Go "wrapper". After installing the Go wrapper, you can run a test to ensure that it was installed successfully:
 
 .. code-block:: bash
 
@@ -727,7 +727,7 @@ Journaling
 
 You should journal any database files whose integrity you care about. Conversely, you need not journal any database file that you are prepared to delete & recreate anew in the event of an unclean shutdown, like a system crash.
 
-YottaDB uses journaling (called “logging” by some databases) to restore data integrity and provide continuity of business after an unplanned event such as a system crash. There are two switches to turn on journaling – ENABLE / DISABLE and ON / OFF. Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use.
+YottaDB uses journaling (called "logging" by some databases) to restore data integrity and provide continuity of business after an unplanned event such as a system crash. There are two switches to turn on journaling - ENABLE / DISABLE and ON / OFF. Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use.
 
 +++++++++++++++++++++
 Exercise - Journaling
@@ -823,7 +823,7 @@ Start by cleaning out old journal files. Verify that there are no shared memory 
 
    YDB>
 
-Now simulate a crash by killing the virtual machine by clicking on the “X” of the console window, or with a :code:`kill -9` of the virtual machine process on the host. It is important that you kill the virtual machine with the database open by the :code:`yottadb` process, because otherwise the process will shut down the database cleanly on exit and you will not simulate a crash with an open database file.
+Now simulate a crash by killing the virtual machine by clicking on the "X" of the console window, or with a :code:`kill -9` of the virtual machine process on the host. It is important that you kill the virtual machine with the database open by the :code:`yottadb` process, because otherwise the process will shut down the database cleanly on exit and you will not simulate a crash with an open database file.
 
 Reboot the virtual machine, change to the :code:`jnlex` directory, source the :code:`jnlex_env` and attempt to access the data. Note the error because the database was not cleanly shut down.
 
@@ -863,7 +863,7 @@ Look at the animation of journaling in action at the beginning of `Chapter 6: Yo
 
 .. note::
 
-   Robust operation of YottaDB recovery after a crash requires robust recovery of the file system. If your file system requires an option to ensure that meta-data is written to disk only after the corresponding data is written, ensure that it is set. Also, if you are running in a virtual machine or container, ensure that it is configured so that when the guest does a “sync” to commit data to the file system, the host commits the data to the underlying persistent storage.
+   Robust operation of YottaDB recovery after a crash requires robust recovery of the file system. If your file system requires an option to ensure that meta-data is written to disk only after the corresponding data is written, ensure that it is set. Also, if you are running in a virtual machine or container, ensure that it is configured so that when the guest does a "sync" to commit data to the file system, the host commits the data to the underlying persistent storage.
 
 .. _gbl-dir-gbl-var:
 
@@ -887,7 +887,7 @@ In YottaDB, sets of M global variables (Names or Name spaces) are mapped to Regi
 
 .. image:: globaldir.svg
 
-In this example, there are four M global variables that we would like to separate from the rest (e.g., for purposes of sharing globals between applications, or for reasons of protection – perhaps they contain special information, so that only mammalogists are to have access to globals ^Horse and ^Platypus, and only carcinologists are to have access to globals ^Crab and ^Lobster). This is accomplished by creating five name spaces (note that a name space can contain a single variable, as in this example, or a range of global variables, e.g., everything starting with ^A through ^Horse). There is always a default (:code:`*`) name space.
+In this example, there are four M global variables that we would like to separate from the rest (e.g., for purposes of sharing globals between applications, or for reasons of protection - perhaps they contain special information, so that only mammalogists are to have access to globals ^Horse and ^Platypus, and only carcinologists are to have access to globals ^Crab and ^Lobster). This is accomplished by creating five name spaces (note that a name space can contain a single variable, as in this example, or a range of global variables, e.g., everything starting with ^A through ^Horse). There is always a default (:code:`*`) name space.
 
 One or more name spaces are mapped to a Region. All global variables in a region share a common set of M global variable properties, such as the maximum record length, whether null subscripts are permitted, etc. In this case ^Horse and ^Platypus are mapped to the region MAMMALS, whereas ^Crab and ^Lobster are mapped to the region CRUSTACEANS. The default name space * is mapped to a region called DEFAULT (while region names are case insensitive, they are frequently written in upper case).
 
@@ -953,7 +953,7 @@ In this case, there is only one name space, the default. There is also only one 
     DEFAULT                         DEFAULT                            0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
    GDE>
 
-Notice the region parameters – review them in the `Region Qualfiers section of the Administration and Operations Guide <../AdminOpsGuide/gde.html#region-qualifiers>`_. Since there is one region, there is also one segment, also called DEFAULT. (Although the region and segment names can be different; it is good practice to keep them the same).
+Notice the region parameters - review them in the `Region Qualfiers section of the Administration and Operations Guide <../AdminOpsGuide/gde.html#region-qualifiers>`_. Since there is one region, there is also one segment, also called DEFAULT. (Although the region and segment names can be different; it is good practice to keep them the same).
 
 .. code-block:: bash
 
@@ -1012,7 +1012,7 @@ Exercise - Separate Regions for Mammalogists and Carcinologists
 
 Continue using the directory you created for the journaling exercise.
 
-While not essential, it may be conceptually helpful to build the global directory from the bottom up – first create the segments, then the regions, and then the name spaces.
+While not essential, it may be conceptually helpful to build the global directory from the bottom up - first create the segments, then the regions, and then the name spaces.
 
 .. code-block:: bash
 
@@ -1427,7 +1427,7 @@ There is an installation option to restrict access to YottaDB to a group. If you
 Database Replication
 ----------------------
 
-When an application must have the best possible continuity of business, use database replication in addition to before-image journaling to create a logical multi-site configuration. Unlike techniques like high-availability clustering that have a single point of failure (the cluster hardware and software), YottaDB replication uses “share nothing” logical multi-site instances with no single point of failure.
+When an application must have the best possible continuity of business, use database replication in addition to before-image journaling to create a logical multi-site configuration. Unlike techniques like high-availability clustering that have a single point of failure (the cluster hardware and software), YottaDB replication uses "share nothing" logical multi-site instances with no single point of failure.
 
 Furthermore, YottaDB database replication can be used to provide continuous application availability in the face of not just unplanned events, such as system crashes, but also planned events like application and system upgrades, and even most upgrades that involve application schema changes. Database replication has functionality beyond business continuity, as discussed in the `Database Replication chapter of the Administration and Operations Guide <../AdminOpsGuide/dbrepl.html>`_.
 
@@ -1437,7 +1437,7 @@ The restriction of YottaDB replication today is the 20,000 kilometer distance li
 Exercise - Replication
 ++++++++++++++++++++++
 
-Because replication builds on journaling, use the :code:`jnlex` directory created above. Enhance the :code:`jnlex_env` shell script to assign values to two more environment variables, :code:`ydb_repl_instance` and :code:`ydb_repl_instname`. :code:`ydb_repl_instance` is the name of a file where a replicated instance stores information about the state of replication and :code:`ydb_repl_instname` is the name of an instance – in this case, :code:`dummy`, but we will change it as we create copies of the instances.
+Because replication builds on journaling, use the :code:`jnlex` directory created above. Enhance the :code:`jnlex_env` shell script to assign values to two more environment variables, :code:`ydb_repl_instance` and :code:`ydb_repl_instname`. :code:`ydb_repl_instance` is the name of a file where a replicated instance stores information about the state of replication and :code:`ydb_repl_instname` is the name of an instance - in this case, :code:`dummy`, but we will change it as we create copies of the instances.
 
 .. code-block:: bash
 
@@ -1534,7 +1534,7 @@ Delete the prior generation journal files, to keep the directory clean, and make
 
 Shut down the Acculturation Workshop virtual machine cleanly and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original Debian-12_yottadbworkshop.vmdk file.
 
-If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a feature that allows a disk image to be created off a base image so that the base image does not change and all changes go to the new disk image. Check with your virtualization software to determine whether it supports this feature. Execute commands such as the following on the host (with the guest shut down) – depending on the version of QEMU/kvm on your PC, the exact command may vary.
+If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a feature that allows a disk image to be created off a base image so that the base image does not change and all changes go to the new disk image. Check with your virtualization software to determine whether it supports this feature. Execute commands such as the following on the host (with the guest shut down) - depending on the version of QEMU/kvm on your PC, the exact command may vary.
 
 .. code-block:: bash
 
@@ -1551,7 +1551,7 @@ If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a
    -rw-r--r-- 1 bhaskar gtc   13172736 Apr 12 17:24 Santiago.vmdk
    $
 
-Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Santiago, 2222 & 5000 for Paris, and 2223 & 6000 for Melbourne. The commands given here use kvm on Linux – use the commands appropriate to virtualization on your host).
+Now boot the three virtual machines. Each virtual machine will need two ports to be forwarded from the host, one for ssh access forwarded to port 22 on each virtual machine and one for replication forwarded to port 3000 on each virtual machine (i.e., a total of six ports on the host for the three instances). The examples here use host ports 2221 & 4000 for Santiago, 2222 & 5000 for Paris, and 2223 & 6000 for Melbourne. The commands given here use kvm on Linux - use the commands appropriate to virtualization on your host).
 
 .. code-block:: bash
 
@@ -1577,7 +1577,7 @@ To avoid confusion when you are working with multiple machines, change the name 
 
 You may also want to change the window/tab labels on your terminal emulator on the host to show which machine each session is connected to.
 
-To make it more realistic (and to reduce the probability of operator error) on each machine, execute :code:`sudo dpkg-reconfigure tzdata` to specify the “local” time zone.
+To make it more realistic (and to reduce the probability of operator error) on each machine, execute :code:`sudo dpkg-reconfigure tzdata` to specify the "local" time zone.
 
 On each machine, edit :code:`jnlex_env` in each instance and change the line :code:`export ydb_repl_instname=dummy` and the line :code:`export ydb_repl_instance=$ydb_dir/ydb.repl` to an instance file name for that instance. For example, on the Santiago instance:
 
@@ -1722,13 +1722,13 @@ Restart Melbourne as a replicating instance and notice that it catches up with u
 
    YDB>
 
-Now, simulate an unplanned outage of Paris by clicking on the “X” of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Melbourne the new originating instance and Santiago its replicating instance. When an instance in a primary role goes down, YottaDB does not automatically bring up another instance in a primary role. As YottaDB does not have visibility of network status, a YottaDB instance in a secondary role cannot distinguish between a crashed primary and a network blip or outage that disrupts communication between it and the primary instance. YottaDB instances must be told whether to come up in a primary role or a secondary role.
+Now, simulate an unplanned outage of Paris by clicking on the "X" of the virtual machine console window, kill -9 of the process on the host, or otherwise powering down the virtual machine. Make Melbourne the new originating instance and Santiago its replicating instance. When an instance in a primary role goes down, YottaDB does not automatically bring up another instance in a primary role. As YottaDB does not have visibility of network status, a YottaDB instance in a secondary role cannot distinguish between a crashed primary and a network blip or outage that disrupts communication between it and the primary instance. YottaDB instances must be told whether to come up in a primary role or a secondary role.
 
 .. note::
 
    In a controlled switchover/planned outage, bringing down the originating primary first helps to ensure that you do not have two concurrently operating originating primary instances.
 
-Bring down Melbourne as a replicating instance and bring it up as the originating instance. Notice that you can bring up the Source Server process to replicate to Paris – it will make the connection when Paris comes up.
+Bring down Melbourne as a replicating instance and bring it up as the originating instance. Notice that you can bring up the Source Server process to replicate to Paris - it will make the connection when Paris comes up.
 
 .. code-block:: bash
 
@@ -1808,7 +1808,7 @@ Both Santiago and Paris should perform a rollback fetchresync before they become
    Wed Apr 13 15:55:58 2022 : Initiating START of source server for secondary instance [dummy]
    ydbuser@santiago:~/jnlex$
 
-The purpose of the MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC operation is for Santiago to roll its database state back to a common state shared with Melbourne, so that when Santiago starts to operate in a secondary role to Melbourne in a primary role, and it catches up to Melbourne, the two instances are logically in the same state. Any transactions rolled off are called “lost” transactions (see :ref:`repl-bcklogs`). In this case,  no lost (unreplicated) transaction file was created as no transactions (updates) had to be rolled off to synchronize the instances.
+The purpose of the MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC operation is for Santiago to roll its database state back to a common state shared with Melbourne, so that when Santiago starts to operate in a secondary role to Melbourne in a primary role, and it catches up to Melbourne, the two instances are logically in the same state. Any transactions rolled off are called "lost" transactions (see :ref:`repl-bcklogs`). In this case,  no lost (unreplicated) transaction file was created as no transactions (updates) had to be rolled off to synchronize the instances.
 
 Now reboot Paris to simulate its recovery. When the system comes up (before performing any other database access), perform a rollback fetchresync.
 
@@ -1939,7 +1939,7 @@ In order to provide continuity of business, when an originating primary instance
 | Repaired and brought back up |        P:120 (processing has moved it ahead)                                                             |
 +------------------------------+----------------------------------------------------------------------------------------------------------+
 
-This situation needs to be remedied, because updates (transactions) 96-100 on Santiago are different from updates 96-100 on Melbourne. This has a YottaDB part and an application software part. The YottaDB part is to rollback the transactions on the former originating primary instance with the MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC command. These rolled back updates (“unreplicated” or “lost” transactions) are placed in a file and must be transmitted to the new originating instance for reprocessing/reconciliation by application logic.
+This situation needs to be remedied, because updates (transactions) 96-100 on Santiago are different from updates 96-100 on Melbourne. This has a YottaDB part and an application software part. The YottaDB part is to rollback the transactions on the former originating primary instance with the MUPIP JOURNAL ROLLBACK BACKWARD FETCHRESYNC command. These rolled back updates ("unreplicated" or "lost" transactions) are placed in a file and must be transmitted to the new originating instance for reprocessing/reconciliation by application logic.
 
 +---------------------------------------------------------------------------------+-------------------------------------------------------------------+
 | Santiago                                                                        |      Melbourne                                                    |
@@ -2142,7 +2142,7 @@ In Santiago:
 
    YDB>
 
-Now crash Santiago. You have a choice of bringing up Paris or Melbourne. If you don't have time to make a decision as to which replicating instance to make the new primary, just choose the most convenient. If you have time to make a decision, you can see which one is further ahead by looking at the “Region Seqno” field in the database file header with DSE (in a multi-region database, you need to look at all replicated regions and take the maximum).
+Now crash Santiago. You have a choice of bringing up Paris or Melbourne. If you don't have time to make a decision as to which replicating instance to make the new primary, just choose the most convenient. If you have time to make a decision, you can see which one is further ahead by looking at the "Region Seqno" field in the database file header with DSE (in a multi-region database, you need to look at all replicated regions and take the maximum).
 
 In Paris:
 
@@ -2317,15 +2317,15 @@ Santiago can now start as a replicating instance and notice that its database no
 
    YDB>
 
-Shut down whichever were the replicating secondary instances - Santiago and Melbourne in the example above – and use the originating primary instance (Paris) for the backup exercises.
+Shut down whichever were the replicating secondary instances - Santiago and Melbourne in the example above - and use the originating primary instance (Paris) for the backup exercises.
 
 ------
 Backup
 ------
 
-Backup when an application is not running is straightforward – just copy the database files. Backup when an application is operating normally, without impacting the application (except of course for the additional IO load of the backup activity) is easy with YottaDB, and can be accomplished in two ways, one non-YottaDB and other YottaDB:
+Backup when an application is not running is straightforward - just copy the database files. Backup when an application is operating normally, without impacting the application (except of course for the additional IO load of the backup activity) is easy with YottaDB, and can be accomplished in two ways, one non-YottaDB and other YottaDB:
 
-- The non-YottaDB way is to use a disk mirror (e.g., RAID or SAN). Issue a `MUPIP FREEZE <../AdminOpsGuide/dbmgmt.html#mupip-freeze>`_ to momentarily freeze updates and flush updates to disk. Then break the mirror and release the freeze. After backing up the mirror, rebuild it, and let it “catch up.” This is not discussed further here.
+- The non-YottaDB way is to use a disk mirror (e.g., RAID or SAN). Issue a `MUPIP FREEZE <../AdminOpsGuide/dbmgmt.html#mupip-freeze>`_ to momentarily freeze updates and flush updates to disk. Then break the mirror and release the freeze. After backing up the mirror, rebuild it, and let it "catch up." This is not discussed further here.
 
 - The YottaDB way: a transaction-consistent backup of an entire multi-region database can be accomplished with a single YottaDB `MUPIP BACKUP <../AdminOpsGuide/dbmgmt.html#mupip-backup>`_ command. There are numerous options to satisfy virtually every type of backup need.
 

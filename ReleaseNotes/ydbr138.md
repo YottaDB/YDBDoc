@@ -1,7 +1,7 @@
 <!---
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2023 YottaDB LLC and/or its subsidiaries.     #
+.. # Copyright (c) 2023-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -19,9 +19,10 @@
 
 ### Release Note Revision History
 
-| Revision  | Date              | Summary               |
-| --------- | ----------------- | --------------------- |
-| 1.00      |  April 3, 2023 | r1.38 Initial Release |
+| Revision | Date          | Summary               |
+|----------|---------------|-----------------------|
+| 1.00     | April 3, 2023 | r1.38 Initial Release |
+| 1.01     | June 4, 2025  | Fix typo(s)           |
 
 ### Contact Information
 #### YottaDB LLC
@@ -195,7 +196,7 @@ The following message is modified to make it more helpful:
 
 Run Time Error: This indicates that the call-name invoked by the C program does not have a corresponding entry in the call-in table specified by ydb_ci environment variable.
 
-Action: Add an entry to the call-in table for the call-name. Refer to the [External Calls section in the Programmer’s Guide](https://docs.yottadb.com/ProgrammersGuide/langfeat.html#ext-calls).
+Action: Add an entry to the call-in table for the call-name. Refer to the [External Calls section in the Programmer's Guide](https://docs.yottadb.com/ProgrammersGuide/langfeat.html#ext-calls).
 
 ### Legal Stuff
 

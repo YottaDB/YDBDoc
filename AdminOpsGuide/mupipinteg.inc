@@ -1,6 +1,6 @@
 .. ################################################################
 .. #                                                              #
-.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries. #
+.. # Copyright (c) 2021-2025 YottaDB LLC and/or its subsidiaries. #
 .. # All rights reserved.                                         #
 .. #                                                              #
 .. #     This source code contains the intellectual property      #
@@ -65,9 +65,9 @@ YottaDB strongly recommends fixing the following errors as soon as they are disc
 
 * Blocks incorrectly marked free - these may cause accelerating damage when processes make updates to any part of the database region.
 
-* Integrity errors in an index block - these may cause accelerating damage when processes make updates to that area of the database region using the faulty index. For more information, refer to `Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_.
+* Integrity errors in an index block - these may cause accelerating damage when processes make updates to that area of the database region using the faulty index. For more information, refer to `Chapter 11: "Maintaining Database Integrity" <./integrity.html>`_.
 
-MUPIP INTEG FAST and the "regular" INTEG both report these errors (These qualifiers are described later in this section). Other database errors do not pose the threat of rapidly spreading problems in GDS files. After the YottaDB database repair, assess the type of damage, the risk of continued operations, and the disruption in normal operation caused by the time spent repairing the database. For information on analyzing and correcting database errors, refer to `Chapter 11: “Maintaining Database Integrity” <./integrity.html>`_. Contact your YottaDB support channel for help assessing INTEG errors.
+MUPIP INTEG FAST and the "regular" INTEG both report these errors (These qualifiers are described later in this section). Other database errors do not pose the threat of rapidly spreading problems in GDS files. After the YottaDB database repair, assess the type of damage, the risk of continued operations, and the disruption in normal operation caused by the time spent repairing the database. For information on analyzing and correcting database errors, refer to `Chapter 11: "Maintaining Database Integrity" <./integrity.html>`_. Contact your YottaDB support channel for help assessing INTEG errors.
 
 ~~~~~~~~~~~~~~~~~
 INTEG Qualifiers
@@ -289,7 +289,7 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 * The region-list identifies the target of INTEG. region-list may specify more than one region of the current global directory in a list. Region names in the list are case-insensitive, separated by commas, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order. INTEG processes regions based on the order specified in the list after wild-card expansion.
 
-* INTEG REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: “Global Directory Editor” <./gde.html>`__.
+* INTEG REGION requires the environment variable ydb_gbldir to specify a valid Global Directory. For more information on defining ydb_gbldir, refer to `Chapter 4: "Global Directory Editor" <./gde.html>`__.
 
 * Because a KILL may briefly defer marking the blocks it releases "free" in the bit maps, INTEG REGION may report spurious "block incorrectly marked busy" errors. These errors are benign. If these errors occur in conjunction with a "Kill in progress" error, resolve the errors after the "Kill in progress" error is no longer present.
 

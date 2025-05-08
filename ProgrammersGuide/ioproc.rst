@@ -179,7 +179,7 @@ $K[EY] contains the string that terminated the most recent READ command from the
 
   * $KEY includes information about a new socket in the form of CONNECT|handle|<address> where <address> is the IP address for TCP sockets and path for LOCAL sockets. Read more about `Socket Device Operation`_.
 
-  * As an OPEN deviceparameter: For LISTEN, $KEY is set to the format of “LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}” when listening for a connection is successful. Otherwise, $KEY is assigned the empty string. Read more about `LISTEN deviceparameter <./ioproc.html#listen>`_.
+  * As an OPEN deviceparameter: For LISTEN, $KEY is set to the format of "LISTENING|<socket_handle>|{<portnumber>|</path/to/LOCAL_socket>}" when listening for a connection is successful. Otherwise, $KEY is assigned the empty string. Read more about `LISTEN deviceparameter <./ioproc.html#listen>`_.
 
 
 ~~~
@@ -468,7 +468,7 @@ Example:
    y=""
    zb=""
 
-While the first READ Y:0 picks up the sequence after the first character, notice how the graphic portion of the sequence appears on the terminal – this is because the READ \*X separated the escape character from the rest of the sequence thus preventing the terminal driver logic from recognizing it as a sequence, and suppressing its echo. The explicit suppression of echo removes this visual artifact. In the case of the final READ \*X, the FLUSH clears the input buffer so that it is empty by the time of the READ Y:0.
+While the first READ Y:0 picks up the sequence after the first character, notice how the graphic portion of the sequence appears on the terminal - this is because the READ \*X separated the escape character from the rest of the sequence thus preventing the terminal driver logic from recognizing it as a sequence, and suppressing its echo. The explicit suppression of echo removes this visual artifact. In the case of the final READ \*X, the FLUSH clears the input buffer so that it is empty by the time of the READ Y:0.
 
 ++++++++++++++++++++++++++++++++++++
 READ X#maxlen Command for Terminals
@@ -682,7 +682,7 @@ By default, EDITING mode is disabled.
 
 Applies to : TRM
 
-Enables or disables insert mode for the $PRINCIPAL device. When a terminal has INSERT mode enabled, input characters are inserted at the logical position in the input stream designated by the cursor, for example in the middle of the line/record. When a terminal has INSERT mode disabled, input characters overwrite existing characters in the input stream at the logical position designated by the cursor. The insert mode can be toggled within a direct mode line or if EDITING is enabled, a single READ argument’s input using the terminal’s INSERT key. The INSERT mode is reset to the default or what was last specified with USE at the beginning of each direct mode line or READ argument.
+Enables or disables insert mode for the $PRINCIPAL device. When a terminal has INSERT mode enabled, input characters are inserted at the logical position in the input stream designated by the cursor, for example in the middle of the line/record. When a terminal has INSERT mode disabled, input characters overwrite existing characters in the input stream at the logical position designated by the cursor. The insert mode can be toggled within a direct mode line or if EDITING is enabled, a single READ argument's input using the terminal's INSERT key. The INSERT mode is reset to the default or what was last specified with USE at the beginning of each direct mode line or READ argument.
 
 By default, INSERT mode is enabled.
 
@@ -710,35 +710,35 @@ PASTHRU supersedes line editing.
 Environment Variable
 ~~~~~~~~~~~~~~~~~~~~~
 
-By defining the environment variable "ydb_principal_editing", the defaults for EDITING and INSERT modes can be changed for the $PRINCIPAL device when it is a terminal. The value of the variable can be [NO]EDITING and/or [NO]INSERT. If both modes are specified they should be separated by a colon (i.e. “:”) and can be in any order.
+By defining the environment variable "ydb_principal_editing", the defaults for EDITING and INSERT modes can be changed for the $PRINCIPAL device when it is a terminal. The value of the variable can be [NO]EDITING and/or [NO]INSERT. If both modes are specified they should be separated by a colon (i.e. ":") and can be in any order.
 
 Examples:
 
 .. code-block:: bash
 
-   ydb_principal_editing=”NOINSERT:EDITING”
+   ydb_principal_editing="NOINSERT:EDITING"
    export ydb_principal_editing
 
-   ydb_principal_editing=”EDITING”
+   ydb_principal_editing="EDITING"
    export ydb_principal_editing
 
 ~~~~~~~~~~~~~~~~~~~~~
 Direct Mode Editing
 ~~~~~~~~~~~~~~~~~~~~~
 
-When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the ydb_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by a USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal’s INSERT key.
+When entering commands at the direct mode prompt, the insert mode can be toggled for that line by using the insert key. When YottaDB starts, insert mode is enabled unless the value of the ydb_principal_editing environment variable includes the string NOINSERT. If insert mode is disabled or enabled for the $PRINCIPAL device by a USE statement before returning to direct mode, it will remain disabled or enabled at direct mode. The insert mode can be toggled within a direct mode line using the terminal's INSERT key.
 
 ~~~~~~~~~~~~~~~~~~~~
 ZSHOW "D"
 ~~~~~~~~~~~~~~~~~~~~
 
-When EDITING mode is enabled or INSERT mode is disabled, the ZSHOW “D” output for the $PRINCIPAL device will include this information.
+When EDITING mode is enabled or INSERT mode is disabled, the ZSHOW "D" output for the $PRINCIPAL device will include this information.
 
 Example:
 
 .. code-block:: bash
 
-   YDB>zshow “D”
+   YDB>zshow "D"
    /dev/pts/4 OPEN TERMINAL NOPAST NOESCA NOREADS TYPE WIDTH=80 LENG=24 EDIT NOINSE TTSYNC NOHOSTSYNC
 
 
@@ -1990,7 +1990,7 @@ A listening socket used for accepting new connections goes through these three s
 
 Each socket may have one or more sockets waiting for either an incoming connection or data available to READ (observable through $ZKEY). $ZKEY contains semi- colon (";") separated list of entries detailing any waiting sockets for a current SOCKET device.
 
-For more information on $KEY and $ZKEY, refer to `“Intrinsic Special Variables” <./isv.html>`_.
+For more information on $KEY and $ZKEY, refer to `"Intrinsic Special Variables" <./isv.html>`_.
 
 +++++++++++++++++++++++++++++++
 Socket Deviceparameter Summary
@@ -3695,7 +3695,7 @@ A trap character enabled by CTRAP produces one of the following actions:
 * Otherwise, if $ZTRAP is not the empty string, the process executes $ZTRAP.
 * Otherwise, the YottaDB image terminates.
 
-For more information on error handling, refer to `Chapter 13: “Error Processing” <./errproc.html>`_.
+For more information on error handling, refer to `Chapter 13: "Error Processing" <./errproc.html>`_.
 
 When CTRAP includes <CTRL-C>, [NO]CENABLE has no effect. CTRAPping <CTRL-C> also takes precedence over CENABLE.
 
@@ -3909,7 +3909,7 @@ EXCEPTION=expr Applies to: All devices
 
 Defines an error handler for an I/O device. The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current ydb_ztrap_form.
 
-For more information on error handling, refer to `Chapter 13: “Error Processing” <./errproc.html>`_.
+For more information on error handling, refer to `Chapter 13: "Error Processing" <./errproc.html>`_.
 
 .. _use-fflf:
 
@@ -4224,7 +4224,7 @@ Makes the socket specified by the handle named in expr the current socket for th
 .. note::
    SOCKET is compatible with DELIMITER only.
 
-For a usage example, refer to the socketexamplemulti2.m in `“Socket Device Examples” <./ioproc.html#socket-device-examples>`_.
+For a usage example, refer to the socketexamplemulti2.m in `"Socket Device Examples" <./ioproc.html#socket-device-examples>`_.
 
 ~~~~~~~~~~~
 TERMINATOR
@@ -4637,7 +4637,7 @@ The format of the WRITE command is:
 * An expression argument supplies the text of a WRITE.
 * When a WRITE argument consists of a leading asterisk (*) followed by an integer expression, WRITE outputs one character associated with the ASCII code specified by the integer evaluation of the expression.
 * WRITE also accepts format control characters as arguments; format control characters modify the position of a virtual cursor: an exclamation point (!) produces the device specific record terminator (for example, new line for a terminal), a number sign (#) produces device specific page terminator (for example, form feed for a terminal) and a question mark (?) followed by an expression moves the virtual cursor to the column specified by the integer evaluation of the expression if the virtual cursor is to the "left" of the specified column.
-* When directed to a device bound to a mnemonicspace, WRITE also accepts controlmnemonics, which are keywords specific to the binding – they are delimited by a slash (/) prefix and optionally followed by a parenthetical list of arguments. The parentheses "( )" are optional when there are no arguments, but must appear even if there is a single argument
+* When directed to a device bound to a mnemonicspace, WRITE also accepts controlmnemonics, which are keywords specific to the binding - they are delimited by a slash (/) prefix and optionally followed by a parenthetical list of arguments. The parentheses "( )" are optional when there are no arguments, but must appear even if there is a single argument
 * An indirection operator and an expression atom evaluating to a list of one or more WRITE arguments form a legal argument for a WRITE.
 * In the UTF-8 mode, the WRITE command uses the character set specified on the device OPEN as the character encoding of the output device. If the character set specifies "M" or "UTF-8", YottaDB WRITEs the data with no transformation. If the character set specifies "UTF-16", "UTF-16LE" or "UTF-16BE", the data is assumed to be encoded in UTF-8 and WRITE transforms it to the character encoding specified by character set device parameter.
 * If a WRITE command encounters an illegal character in UTF-8 mode, it produces a run-time error irrespective of the setting of VIEW "BADCHAR".
@@ -4747,7 +4747,7 @@ Defines an error handler for an I/O device. The expression must contain a fragme
 
 The expression must contain a fragment of YottaDB code (for example, GOTO ERRFILE) that YottaDB XECUTEs when the driver for the device detects an error, or an entryref to which YottaDB transfers control, as appropriate for the current ydb_ztrap_form.
 
-For more information on error handling, refer to `Chapter 13: “Error Processing” <./errproc.html>`_.
+For more information on error handling, refer to `Chapter 13: "Error Processing" <./errproc.html>`_.
 
 .. _close-group:
 
@@ -4850,27 +4850,27 @@ In order to modify file security, the user who issues the CLOSE must have owners
 +------------------------------------+--------------------+------------------+------------+--------------+
 | CLOSE Deviceparameter              | TRM                | SD               | FIFO       | SOC          |
 +====================================+====================+==================+============+==============+
-| “DELETE”                           |                    | X                | X          | X            |
+| "DELETE"                           |                    | X                | X          | X            |
 +------------------------------------+--------------------+------------------+------------+--------------+
-| “DESTROY”                          |                    | X                | X          | X            |
+| "DESTROY"                          |                    | X                | X          | X            |
 +------------------------------------+--------------------+------------------+------------+--------------+
-| “EXCEPTION”                        | X                  | X                | X          | X            |
+| "EXCEPTION"                        | X                  | X                | X          | X            |
 +------------------------------------+--------------------+------------------+------------+--------------+
-| “GROUP”                            |                    | X                | X          |              |
+| "GROUP"                            |                    | X                | X          |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
-| “OWNER”                            |                    | X                | X          |              |
+| "OWNER"                            |                    | X                | X          |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
-| “RENAME”                           |                    | X                | X          |              |
+| "RENAME"                           |                    | X                | X          |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
-| “REPLACE"                          |                    | X                | X          |              |
+| "REPLACE"                          |                    | X                | X          |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
-| “REWIND”                           |                    | X                |            |              |
+| "REWIND"                           |                    | X                |            |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
-| “SOCKET”                           |                    |                  |            | X            |
+| "SOCKET"                           |                    |                  |            | X            |
 +------------------------------------+--------------------+------------------+------------+--------------+
-| “UIC”                              |                    | X                | X          |              |
+| "UIC"                              |                    | X                | X          |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
-| “WORLD”                            |                    | X                | X          |              |
+| "WORLD"                            |                    | X                | X          |              |
 +------------------------------------+--------------------+------------------+------------+--------------+
 
 SD: Valid for sequential disk files

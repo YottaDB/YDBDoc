@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -70,7 +70,7 @@ Processes with normal user and group ids do not have adequate permissions to eff
 * Interprocess communication, including sending SIGALARM and SIGCONT between processes where normal UNIX permissions do not permit such signals to be sent.
 * Cleanup after processes that terminate abnormally, including removing semaphores, shared memory segments, and flushing database file headers (but not database blocks) from shared memory segments to disk.
 
-Whenever a YottaDB process lacks adequate permissions to effect any of the above operations, it automatically invokes gtmsecshr if it is not already running. A complete list of gtmsecshr functionality appears in “gtmsecshr commands” .
+Whenever a YottaDB process lacks adequate permissions to effect any of the above operations, it automatically invokes gtmsecshr if it is not already running. A complete list of gtmsecshr functionality appears in "gtmsecshr commands" .
 
 In order to run as root, and to be invoked by a process that has normal user and group ids, the invocation chain for gtmsecshr requires an executable image that is owned by root and which has the setuid bit turned on in its file permissions.
 

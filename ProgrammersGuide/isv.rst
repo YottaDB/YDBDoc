@@ -61,7 +61,7 @@ $EC[ODE] contains a list of error codes for "active" errors - error conditions w
 The value of $ECODE can be SET, and when it is set to a non-NULL value, error processing starts.
 
 .. note::
-   See `Chapter 13: “Error Processing” <./errproc.html>`_ to learn about $ECODE's role in error processing.
+   See `Chapter 13: "Error Processing" <./errproc.html>`_ to learn about $ECODE's role in error processing.
 
 The list of codes in $ECODE start with a comma, and are seperated by commas. A code starts with "M", "U", or "Z", with the rest of it being numeric. "M" codes are assigned by MDC (M Development Committee), "U" by application (programmers), and "Z" codes by M implementors (in this case YottaDB).
 
@@ -170,7 +170,7 @@ The effect of a READ \*glvn on $KEY is unspecified.
 For terminals, $KEY and $ZB both have the terminator.
 
 .. note::
-   See the READ and WRITE commands in `Chapter 6: “Commands” <commands.html>`_.
+   See the READ and WRITE commands in `Chapter 6: "Commands" <commands.html>`_.
 
 For SOCKET:
 
@@ -242,7 +242,7 @@ Input and output for a process may come from separate devices, namely, the stand
 
 For an image invoked interactively, $PRINCIPAL is the user's terminal. For an image invoked from a terminal by means of a shell script, $PRINCIPAL is the shell script's standard input (usually the terminal) and standard output (also usually the terminal) for output, unless the shell redirects the input or output.
 
-YottaDB provides a mechanism for the user to create a name for $PRINCIPAL in the shell before invoking YottaDB. The environment variable ydb_principal, if defined, becomes a synonym for the actual device and the value for $PRINCIPAL. $IO holds the same value as $PRINCIPAL. $ZIO in this case, holds the fully expanded name of the actual device. See “$ZIO” for an example of its usage.
+YottaDB provides a mechanism for the user to create a name for $PRINCIPAL in the shell before invoking YottaDB. The environment variable ydb_principal, if defined, becomes a synonym for the actual device and the value for $PRINCIPAL. $IO holds the same value as $PRINCIPAL. $ZIO in this case, holds the fully expanded name of the actual device. See "$ZIO" for an example of its usage.
 
 YottaDB ignores a CLOSE specifying the principal device. YottaDB does not permit the SET command to modify $PRINCIPAL.
 
@@ -254,7 +254,7 @@ YottaDB creates a SOCKET device for $PRINCIPAL when standard input is a LOCAL do
 
 When $PRINCIPAL identifies a device that supports REWIND, the REWIND or INREWIND device parameters perform a REWIND of the input and OUTREWIND performs a REWIND of the output.
 
-When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables $ZPIN or $ZPOUT and applies appropriate deviceparameters to the input or output side of $PRINCIPAL, respectively. A USE with $ZPIN or $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. For more information refer to “$ZPIN” or “$ZPOUT” .
+When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables $ZPIN or $ZPOUT and applies appropriate deviceparameters to the input or output side of $PRINCIPAL, respectively. A USE with $ZPIN or $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. For more information refer to "$ZPIN" or "$ZPOUT" .
 
 ---------------
 $QUIT
@@ -398,7 +398,7 @@ Example:
 
    IF $TLEVEL TROLLBACK
 
-This example performs a TROLLBACK if a transaction is in progress. A statement like this should appear in any error handler used with transaction processing. For more information on transaction processing, see `Chapter 5: “General Language Features of M” <./langfeat.html>`_.
+This example performs a TROLLBACK if a transaction is in progress. A statement like this should appear in any error handler used with transaction processing. For more information on transaction processing, see `Chapter 5: "General Language Features of M" <./langfeat.html>`_.
 
 ---------------
 $TRESTART
@@ -488,7 +488,7 @@ For more information on $ZA, refer `"Input/Output Processing" <./ioproc.html>`_.
 $ZALLOCSTOR
 -------------
 
-$ZALLOCSTOR contains the number of bytes that are (sub) allocated (including overhead) by YottaDB for various activities. It provides one view (see also “$ZREalstor” and “$ZUSedstor”) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZALLOCSTOR to be SET or NEWed.
+$ZALLOCSTOR contains the number of bytes that are (sub) allocated (including overhead) by YottaDB for various activities. It provides one view (see also "$ZREalstor" and "$ZUSedstor") of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZALLOCSTOR to be SET or NEWed.
 
 .. _zaudit-isv:
 
@@ -604,7 +604,7 @@ When the environment variable ydb_compile is defined, YottaDB initializes $ZCOMP
 
 ZCOMPILE returns a status of 1 after any error in compilation.
 
-When $ZCOMPILE is null, YottaDB uses the default M command qualifiers -IGNORE, -LABEL=LOWER, -NOLIST, and -OBJECT. See `Chapter 3: “Development Cycle” <./devcycle.html>`_ for detailed descriptions of the M command qualifiers.
+When $ZCOMPILE is null, YottaDB uses the default M command qualifiers -IGNORE, -LABEL=LOWER, -NOLIST, and -OBJECT. See `Chapter 3: "Development Cycle" <./devcycle.html>`_ for detailed descriptions of the M command qualifiers.
 
 Example:
 
@@ -1346,7 +1346,7 @@ Establishing the value from $ydb_routines
 
 If the environment variable :code:`ydb_routines` is not set when the :code:`yottadb` process starts, or if it is set to the empty string (:code:`""`), YottaDB sets it in the environment to :code:`$ydb_dist/libyottadbutil.so` in M mode, if it exists, or to :code:`$ydb_dist/utf8/libyottadbutil.so` in UTF-8 mode, if it exists, and to :code:`$ydb_dist` if it does not, and then uses that value.
 
-Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `“Development Cycle” <devcycle.html>`_ and `“Commands” <commands.html>`_ chapters.
+Commands or functions such as DO, GOTO, ZGOTO, ZBREAK, ZPRINT, and $TEXT may auto-ZLINK and thereby indirectly use $ZROUTINES. If their argument does not specify a directory, ZEDIT and explicit ZLINK use $ZROUTINES. ZPRINT and $TEXT use $ZROUTINES to locate a source file if YottaDB cannot find the source file pointed to by the object file. For more information on ZLINK and auto-ZLINK, see the `"Development Cycle" <devcycle.html>`_ and `"Commands" <commands.html>`_ chapters.
 
 +++++++++++++++++++++++++++++++
 Setting a Value for $ZROUTINES
@@ -1519,7 +1519,7 @@ To perform object-source match searches, YottaDB looks at each column starting a
 
 As illustrated in the preceding table, YottaDB searches for source-files in the directory "." in column one. If YottaDB cannot locate the source file in ".", it omits column two because it is an object-only directory and instead searches column three. Since column three specifies /usr/jon/utl/so and /usr/smi/utl, YottaDB searches for the source-file in these directories in column three and not in /usr/jon/utl. If YottaDB cannot locate the source-file in column three, it terminates the search and issues a run-time error.
 
-Once the object-source match search is done, YottaDB now has either the object-file or source-file or both available. YottaDB then recompiles the source-file based on certain conditions, before linking the object-file into the current image. See “ZLink” for more information on those conditions.
+Once the object-source match search is done, YottaDB now has either the object-file or source-file or both available. YottaDB then recompiles the source-file based on certain conditions, before linking the object-file into the current image. See "ZLink" for more information on those conditions.
 
 If auto-ZLINK or ZLINK determines that the source file requires [re]compilation, YottaDB places the object file in the above object directory in the same column as the source file. For example, if YottaDB locates the source file in /usr/smi/utl in column three, YottaDB places the resultant object file in /usr/jon/utl.
 
@@ -1529,7 +1529,7 @@ Shared Library File Specification in $ZROUTINES
 
 The $ZROUTINES ISV allows individual UNIX shared library file names to be specified in the search path. During a search for auto-ZLINK, when a shared library is encountered, it is probed for a given routine and, if found, that routine is linked/loaded into the image. During an explicit ZLINK, all shared libraries in $ZROUTINES are ignored and are not searched for a given routine.
 
-$ZROUTINES syntax contains a file-specification indicating shared library file path. YottaDB does not require any designated extension for the shared library component of $ZROUTINES. Any file specification that does not name a directory is treated as a shared library. However, it is recommended that the extension commonly used on a given platform for shared library files be given to any YottaDB shared libraries. See “Linking YottaDB Shared Images”. A shared library component cannot specify source directories. YottaDB reports an error at an attempt to associate any source directory with a shared library in $ZROUTINES.
+$ZROUTINES syntax contains a file-specification indicating shared library file path. YottaDB does not require any designated extension for the shared library component of $ZROUTINES. Any file specification that does not name a directory is treated as a shared library. However, it is recommended that the extension commonly used on a given platform for shared library files be given to any YottaDB shared libraries. See "Linking YottaDB Shared Images". A shared library component cannot specify source directories. YottaDB reports an error at an attempt to associate any source directory with a shared library in $ZROUTINES.
 
 The following traits of $ZROUTINES help support shared libraries:
 
@@ -1872,7 +1872,7 @@ $ZTRAP
 $ZT[RAP] contains a string value that YottaDB XECUTEs when an error occurs during routine execution.
 
 .. note::
-   The following discussion assumes that $ETRAP error handling is simultaneously not in effect (that is, $ETRAP="").  See `Chapter 13: “Error Processing” <./errproc.html>`_ for more information on the interaction between $ETRAP and $ZTRAP.
+   The following discussion assumes that $ETRAP error handling is simultaneously not in effect (that is, $ETRAP="").  See `Chapter 13: "Error Processing" <./errproc.html>`_ for more information on the interaction between $ETRAP and $ZTRAP.
 
 When the $ZTRAP variable is not null, YottaDB executes $ZTRAP at the current level. The $ZTRAP variable has the initial value of "B," and puts the process in Direct Mode when an error condition occurs. If the value of $ZTRAP is null (""), an exception causes the image to run-down with the condition code associated with the exception. If $ZTRAP contains invalid source code, YottaDB displays an error message and puts the process into Direct Mode.
 

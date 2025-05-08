@@ -35,7 +35,7 @@ A set of M global variables (Names or Name spaces) and/or their subscripts map t
 
 The location of the global directory is pointed to by the Intrinsic Special Variable $ZGBLDIR. YottaDB processes initialize $ZGBLDIR at process startup from the environment variable ydb_gbldir and can modify it during execution. For example, with a simple SET $ZGBLDIR command, a process can switch back and forth between development and testing databases.
 
-Consider a global variable ^TMP that holds only temporary data that is no longer meaningful when a system is rebooted. A global directory can map ^TMP to region TEMP that maps to a database file called scratch.dat, with all other globals mapped to yottadb.dat. A global directory allows the separation of persistent data (yottadb.dat) from non-persistent data(scratch.dat), so that each database file may get appropriately configured for operations — for example, the database administrator may choose to exclude scratch.dat from backup/archival procedures or periodically delete and recreate scratch.dat using MUPIP CREATE.
+Consider a global variable ^TMP that holds only temporary data that is no longer meaningful when a system is rebooted. A global directory can map ^TMP to region TEMP that maps to a database file called scratch.dat, with all other globals mapped to yottadb.dat. A global directory allows the separation of persistent data (yottadb.dat) from non-persistent data(scratch.dat), so that each database file may get appropriately configured for operations - for example, the database administrator may choose to exclude scratch.dat from backup/archival procedures or periodically delete and recreate scratch.dat using MUPIP CREATE.
 
 Consider the following illustration:
 
@@ -347,7 +347,7 @@ If you select the -JOURNAL option when you ADD or CHANGE a region in a Global Di
    --------------------------------------------------------------------------------------------------------
    DEFAULT           $gtmdir/$ydb_rel/g/yottadb.mjl         Y         2308    2048     2048    8386560
 
-For more information about journaling, see the section on the JOURNAL qualifier in this chapter and `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`__.
+For more information about journaling, see the section on the JOURNAL qualifier in this chapter and `Chapter 6: "YottaDB Journaling" <./ydbjournal.html>`__.
 
 -----------------------
 Using GDE
@@ -1330,7 +1330,7 @@ This qualifier establishes characteristics for the journal file on newly created
 
 Although you do not have to establish the criteria for your journaling process at this point, it is efficient to do so, even if you are not entirely sure you will use journaling. The options available for -JOURNAL set up the environment, so it is ready for you to enable with MUPIP SET -JOURNAL. You can also change or add any of the established options at that time.
 
-For more information about journaling, see `Chapter 6: “YottaDB Journaling” <./ydbjournal.html>`__.
+For more information about journaling, see `Chapter 6: "YottaDB Journaling" <./ydbjournal.html>`__.
 
 The journal-option-list includes:
 
@@ -1388,7 +1388,7 @@ Example:
 
    CHANGE -REGION DEFAULT -JOURNAL=(ALLOCATION=2048,AUTOSWITCHLIMIT=8386560,BEFORE_IMAGE,BUFFER_SIZE=2312,EXTENSION=2048)
 
-For information on all Journal options and their allowable minimum and maximum values, see “SET -JOURNAL Options ” in the "YottaDB Journaling" chapter.
+For information on all Journal options and their allowable minimum and maximum values, see "SET -JOURNAL Options " in the "YottaDB Journaling" chapter.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 -K[EY_SIZE]=size in bytes
@@ -1497,7 +1497,7 @@ Note that a process disables itself from maintaining the shared statistics when 
 
 By default, GDE uses STATS.
 
-For more information, refer to VIEW "[NO]STATSHARE" and ^%YGBLSTAT in the Programmer's Guide and ydb_statshare and ydb_statsdir in “Environment Variables”.
+For more information, refer to VIEW "[NO]STATSHARE" and ^%YGBLSTAT in the Programmer's Guide and ydb_statshare and ydb_statsdir in "Environment Variables".
 
 ~~~~~~~~~~~~~~~~~~~~
 -[NO]STD[NULLCOLL]
@@ -1563,7 +1563,7 @@ Specifies the access method or the YottaDB buffering strategy for storing and re
 
 * code can have 2 values - Buffered Global (BG) or Memory Mapped (MM). The default value is BG.
 
-* With BG, the global buffer pool manages the buffers (the OS/file system may also provide additional buffering). You get the choice of using BEFORE_IMAGE or NOBEFORE_IMAGE journaling for your database. For details on the implications of these forms of Journaling, see `Chapter 6: “YottaDB Journaling” <ydbjournal.html>`__.
+* With BG, the global buffer pool manages the buffers (the OS/file system may also provide additional buffering). You get the choice of using BEFORE_IMAGE or NOBEFORE_IMAGE journaling for your database. For details on the implications of these forms of Journaling, see `Chapter 6: "YottaDB Journaling" <ydbjournal.html>`__.
 
   - BG supports both forward and backward recovery and rollback to recover a database without a restore. For more information see `forward and backward recovery <ydbjournal.html#recovery-from-a-journal-file>`__.
 

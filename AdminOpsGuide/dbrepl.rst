@@ -575,7 +575,7 @@ Implementing and managing switchover is outside the scope of YottaDB. YottaDB re
 4. Failing to follow these rules may result in the loss of database consistency between an originating instance and its replicating instances.
 
 .. note::
-   A switchover is a wholesome practice for maximizing business continuity. YottaDB strongly recommends setting up a switchover mechanism to keep a YottaDB application up in the face of disruptions that arise due to errors in the underlying platform. In environments where a switchover is not feasible due to operational constraints, consider setting up an Instance Freeze mechanism for your application. For more information, refer to “Instance Freeze” below.
+   A switchover is a wholesome practice for maximizing business continuity. YottaDB strongly recommends setting up a switchover mechanism to keep a YottaDB application up in the face of disruptions that arise due to errors in the underlying platform. In environments where a switchover is not feasible due to operational constraints, consider setting up an Instance Freeze mechanism for your application. For more information, refer to "Instance Freeze" below.
 
 .. _instance-freeze:
 
@@ -2767,7 +2767,7 @@ on B:
 
    While adding triggers, bear in mind that triggers get replicated if you add them when replication is turned on. However, when you add triggers when replication is turned off, those triggers and the database updates resulting from the executing their trigger code do not get replicated.
 
-Here is an example to upgrade A and B deployed in an A→B replication configuration from r1.10 to r1.20. This example uses instructions from the “Upgrade the originating instance first (A→B)” procedure.
+Here is an example to upgrade A and B deployed in an A→B replication configuration from r1.10 to r1.20. This example uses instructions from the "Upgrade the originating instance first (A→B)" procedure.
 
 .. code-block:: bash
 
@@ -3370,7 +3370,7 @@ Command Syntax:
 -file and -region
 ~~~~~~~~~~~~~~~~~
 
-Use these qualifiers in the same manner that you would use them for a MUPIP SET. For more information refer to `Chapter 5: “Database Management Tool” <dbmgmt.html>`_.
+Use these qualifiers in the same manner that you would use them for a MUPIP SET. For more information refer to `Chapter 5: "Database Management Tool" <dbmgmt.html>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -replication=replication-state
@@ -4775,7 +4775,7 @@ Allows specifying a comment/reason associated with an Instance Freeze. Specify -
 Promptly sets or clears an Instance Freeze on an instance irrespective of whether a region is enabled for an Instance Freeze. -freeze with no arguments displays the current state of the Instance Freeze on the instance.
 
 
-For more information on enabling a region to invoke an Instance Freeze on custom errors, refer to the -INST_FREEZE_ON_ERROR section of “SET”.
+For more information on enabling a region to invoke an Instance Freeze on custom errors, refer to the -INST_FREEZE_ON_ERROR section of "SET".
 
 For more information on Instance Freeze, refer to :ref:`instance-freeze`.
 
@@ -4926,7 +4926,7 @@ Used when starting a rollback command with the -resync qualifier. The command mu
 Update Helper Processes
 -----------------------------
 
-On a secondary instance, it is now possible to start "helper" processes to improve the rate at which the transaction stream from the primary can be processed. mupip replicate –receiver -start now accepts an additional qualifier -he[lpers]=[m[,n]], where m is the total number of helper processes and n is the number of reader helper processes. There are additional parameters in the database file header to tune the performance of the update process and its helpers. DSE can be used to modify these parameters.
+On a secondary instance, it is now possible to start "helper" processes to improve the rate at which the transaction stream from the primary can be processed. mupip replicate -receiver -start now accepts an additional qualifier -he[lpers]=[m[,n]], where m is the total number of helper processes and n is the number of reader helper processes. There are additional parameters in the database file header to tune the performance of the update process and its helpers. DSE can be used to modify these parameters.
 
 ++++++++++++++++++++++
 Description

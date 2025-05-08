@@ -862,8 +862,8 @@ Python release()
 
 Returns a string consisting of six space separated pieces to provide version information for the Python wrapper and underlying YottaDB release:
 
-- The first piece is always “pywr” to identify the Python wrapper.
-- The Python wrapper release number, which starts with “v” and is followed by three numbers separated by a period (“.”), e.g., “v0.90.0” mimicking `Semantic Versioning <https://semver.org/>`_. The first is a major release number, the second is a minor release number under the major release and the third is a patch level. Even minor and patch release numbers indicate formally released software. Odd minor release numbers indicate software builds from “in flight” code under development, between releases. Note that although they follow the same format, Python wrapper release numbers are different from the release numbers of the underlying YottaDB release as reported by :ref:`zyrelease-isv`.
+- The first piece is always "pywr" to identify the Python wrapper.
+- The Python wrapper release number, which starts with "v" and is followed by three numbers separated by a period ("."), e.g., "v0.90.0" mimicking `Semantic Versioning <https://semver.org/>`_. The first is a major release number, the second is a minor release number under the major release and the third is a patch level. Even minor and patch release numbers indicate formally released software. Odd minor release numbers indicate software builds from "in flight" code under development, between releases. Note that although they follow the same format, Python wrapper release numbers are different from the release numbers of the underlying YottaDB release as reported by :ref:`zyrelease-isv`.
 - The third through sixth pieces are :ref:`zyrelease-isv` from the underlying YottaDB release.
 
 .. code-block:: python

@@ -25,9 +25,9 @@
 
 Direct Mode is an important tool in YottaDB because it allows you to interactively debug, modify, and execute M routines. Direct Mode is a shell that immediately compiles and executes YottaDB commands providing an interpretive-like interface. M simplifies debugging by using the same commands for debugging that are used for programming.
 
-The focus of this chapter is to describe the debugging process in Direct Mode, and to illustrate the YottaDB language extensions that enhance the process. Command functionality is described only in enough detail to illustrate why a particular command is useful for a debugging activity being described. If you have specific functionality questions about a command or variable, see the `“Commands” <./commands.html>`_, `“Functions” <./functions.html>`_, or `“Intrinsic Special Variables” <./isv.html>`_ chapter.
+The focus of this chapter is to describe the debugging process in Direct Mode, and to illustrate the YottaDB language extensions that enhance the process. Command functionality is described only in enough detail to illustrate why a particular command is useful for a debugging activity being described. If you have specific functionality questions about a command or variable, see the `"Commands" <./commands.html>`_, `"Functions" <./functions.html>`_, or `"Intrinsic Special Variables" <./isv.html>`_ chapter.
 
-It is also from Direct Mode that you activate YottaDB tools used to create M source code. The interaction of M commands used for editing and compiling is described in greater detail within `Chapter 3: “Development Cycle” <./devcycle.html>`_.
+It is also from Direct Mode that you activate YottaDB tools used to create M source code. The interaction of M commands used for editing and compiling is described in greater detail within `Chapter 3: "Development Cycle" <./devcycle.html>`_.
 
 -------------------------------------
 Operating in Direct Mode
@@ -224,7 +224,7 @@ You can also begin a debugging session by pressing <CTRL-C> after running an M a
 
 When YottaDB receives a <CTRL-C> command from the principal device, it invokes Direct Mode at the next opportunity, (usually at a point corresponding to the beginning of the next source line). YottaDB can also interrupt at a FOR loop iteration or during a command of indeterminate duration such as LOCK, OPEN or READ. The YottaDB USE command enables/disables the <CTRL-C> interrupt with the [NO]CENABLE deviceparameter. By default, YottaDB starts <CTRL-C> enabled. The default setting for <CTRL-C> is controlled by $ydb_nocenable which controls whether <CTRL-C> is enabled at process startup. If $ydb_nocenable has a value of 1, "TRUE" or "YES" (case-insensitive), and the process principal device is a terminal, $PRINCIPAL is initialized to a NOCENABLE state where the process does not recognize <CTRL-C> as a signal to enter direct mode. No value, or other values of $ydb_nocenable initialize $PRINCIPAL with the CENABLE state. The [NO]CENABLE deviceparameter on a USE command can still control this characteristic from within the process.
 
-YottaDB displays the YDB> prompt on the principal device. Direct Mode accepts commands from, and reports errors to, the principal device. YottaDB uses the current device for all other I/O. If the current device does not match the principal device when YottaDB enters Direct Mode, YottaDB issues a warning message on the principal device. A USE command changes the current device. For more information on the USE command, see `Chapter 9: “Input/Output Processing” <./ioproc.html>`_.
+YottaDB displays the YDB> prompt on the principal device. Direct Mode accepts commands from, and reports errors to, the principal device. YottaDB uses the current device for all other I/O. If the current device does not match the principal device when YottaDB enters Direct Mode, YottaDB issues a warning message on the principal device. A USE command changes the current device. For more information on the USE command, see `Chapter 9: "Input/Output Processing" <./ioproc.html>`_.
 
 The default "compile-as-written" mode of the YottaDB compiler lets you run a program with errors as part of the debugging cycle. The object code produced includes all lines that are correct and all commands on a line with an error, up to the error. When YottaDB encounters an error, it XECUTEs non empty values of $ETRAP or $ZTRAP. By default $ZTRAP contains a BREAK command, so YottaDB enters Direct Mode.
 
@@ -301,7 +301,7 @@ $ECODE is read-write intrinsic special variable that maintains a list of comma d
 $ZSTATUS is a read-write intrinsic special variable that maintains a string containing the error condition code and location of the last exception condition occurring during routine execution. YottaDB updates $ZSTATUS only for errors found in routines and not for errors entered at the Direct Mode prompt.
 
 .. note::
-   For more information on $ECODE and $STATUS see `Chapter 8: “Intrinsic Special Variables” <./isv.html>`_.
+   For more information on $ECODE and $STATUS see `Chapter 8: "Intrinsic Special Variables" <./isv.html>`_.
 
 Example:
 
@@ -802,9 +802,9 @@ This example uses ZSYSTEM to create a child process, perform some shell actions,
 Summary of Debugging Tools
 ----------------------------------
 
-The following table summarizes YottaDB commands, functions, and intrinsic special variables available for debugging. For more information on these commands, functions, and special variables, see the `“Commands” <./commands.html>`_, `“Functions” <./functions.html>`_, and `“Intrinsic Special Variables” <./isv.html>`_ chapters.
+The following table summarizes YottaDB commands, functions, and intrinsic special variables available for debugging. For more information on these commands, functions, and special variables, see the `"Commands" <./commands.html>`_, `"Functions" <./functions.html>`_, and `"Intrinsic Special Variables" <./isv.html>`_ chapters.
 
-For more information on syntax and run-time errors during Direct Mode, see `Chapter 13: “Error Processing” <./errproc.html>`_.
+For more information on syntax and run-time errors during Direct Mode, see `Chapter 13: "Error Processing" <./errproc.html>`_.
 
 **Debugging Tools**
 

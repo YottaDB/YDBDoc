@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -603,7 +603,7 @@ Example:
    . W !,"Successful Read in region: ",reg," of ",g
    S reg="" F  S reg=$O(reg(reg)) Q:reg=""  D
    W !,"Write to region: ",reg
-   S @(reg(reg)_"="_reg(reg)) W "–OK"
+   S @(reg(reg)_"="_reg(reg)) W "-OK"
    Q
    S reg=$V("GVFIRST"),com="dbcheck" o com:newv u com
    W "dse <<yz > dbcheck.lis",!
@@ -624,7 +624,7 @@ Example:
    . W !,"Successful Read in region: ",reg," of ",g
    S reg="" F  S reg=$O(reg(reg)) Q:reg=""  D
    . W !,"Write to region: ",reg
-   . S @(reg(reg)_"="_reg(reg)) W "–OK"
+   . S @(reg(reg)_"="_reg(reg)) W "-OK"
    Q
 
 This routine provides a generalized approach to automating some of the tasks described in this section. It contains argumentless DO commands primarily for typesetting reasons. The routine issues a report if any region is frozen, but does not report which regions are in that state. It may hang while reading or writing a database. However, unless the region(s) holding ^% and the next global after ^% has a problem, it displays the name of the region that it is about to try. If this routine runs to completion, the databases in the current Global Directory are completely accessible. The limitations of this routine can be overcome by writing custom shell scripts and/or M programs that include embedded information about one or more Global Directories.
@@ -818,7 +818,7 @@ Example:
    do EDITACCT
    lock ^ACCT(acct)
    if x=^ACCT(acct) set ^ACCT(acct)=y
-   else  write !,"Update conflict–Please Reenter"
+   else  write !,"Update conflict-Please Reenter"
    lock
    QUIT $TEST
 
@@ -1629,7 +1629,7 @@ Run-Time Error Messages Identifying Potential System Problems
 +--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
 | GDINVALID          | Unrecognized Global Directory format: fff                                 | :ref:`i5-more-database-access-problems`            |
 +--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
-| GTMCHECK           | Internal error–report to YottaDB                                          | :ref:`r6-gtmassert-and-gtmcheck-errors`            |
+| GTMCHECK           | Internal error-report to YottaDB                                          | :ref:`r6-gtmassert-and-gtmcheck-errors`            |
 +--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
 | GVDATAFAIL         | Global variable $DATA function failed. Failure code: cccc                 | :ref:`r2-structural-database-integrity-errors`     |
 +--------------------+---------------------------------------------------------------------------+----------------------------------------------------+
