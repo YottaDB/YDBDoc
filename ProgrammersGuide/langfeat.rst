@@ -2124,7 +2124,7 @@ Here is an example message:
 TP Example
 ++++++++++++++++++++++
 
-Here is a transaction processing example that lets you exercise the concept. If you use this example, be mindful that the functions "holdit" and "trestart" are included as tools to allow you access to information within a transaction which would normally be hidden from users. These types of functions would not normally appear in production code. Comments have been inserted into the code to explain the function of various segments.
+Here is a transaction processing example that lets you exercise the concept. If you use this example, be mindful that the functions "doit" and "trestart" below are included to allow you access to information within a transaction which would normally be hidden from users. These types of functions would not normally appear in production code. Comments have been inserted into the code to explain the function of various segments.
 
 .. code-block:: none
 
