@@ -394,6 +394,8 @@ ydb_crypt_fips
 +++++++++++++++++
 **ydb_crypt_fips (gtmcrypt_FIPS)** specifies whether the plugin reference implementation should attempt to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. When the environment variable $ydb_crypt_fips is set to 1 (or evaluates to a non-zero integer or any case-insensitive string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode." Note that to comply with FIPS 140-2 you should be knowledgeable with that standard and take many steps beyond setting this environment variable. By default YottaDB does not enforce "FIPS mode.
 
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
+
 +++++++++++++++++++
 ydb_crypt_plugin
 +++++++++++++++++++
@@ -553,6 +555,8 @@ ydb_flushoncallout
 ++++++++++++++++++++++
 **ydb_flushoncallout** specifies whether the process should startup with `VIEW FLUSHONCALLOUT <../ProgrammersGuide/commands.html#view-flushoncallout>`_. If set to a non-zero numeric value. "yes" or "TRUE" (case-insensitive), or a leading substring thereof, causes the process to startup with VIEW FLUSHONCALLOUT. Any other value, or no value causes the process to startup with VIEW NOFLUSHONCALLOUT.
 
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
+
 ydb_flushoncallout was added to YottaDB effective release `r1.36 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.36>`_.
 
 ++++++++++++++++++++++
@@ -594,6 +598,8 @@ ydb_hugetlb_shm
 ++++++++++++++++
 
 **ydb_hugetlb_shm (gtm_hugetlb_shm)** specifies the initial value that determines whether a YottaDB process should use hugepages to back shared memory. If it is defined, and evaluates to a non-zero integer or any case-insensitive string or leading substring of "TRUE" or "YES" in a YottaDB process creating shared memory, YottaDB attempts to back all such shared memory segments with hugepages, using the default hugepage size. If hugepages cannot be used, YottaDB backs the shared memory with base pages instead, and attempts to pin the shared memory if requested with $ydb_pinshm.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 +++++++++++++++
 ydb_hupenable
@@ -975,6 +981,15 @@ See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 ydb_stdxkill
 +++++++++++++++
 **ydb_stdxkill (gtm_stdxkill)** enables the standard-compliant behavior to kill local variables in the exclusion list if they had an alias that was not in the exclusion list. By default, this behavior is disabled.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
+
+.. _ydb-stp-gcol-nosort-env-var:
+
+++++++++++++++++++++
+ydb_stp_gcol_nosort
+++++++++++++++++++++
+**ydb_stp_gcol_nosort** when set to a non-zero numeric value, "yes" or "TRUE" (case-insensitive) or a leading substring of those string values, signals future garbage collections, in any YottaDB process with this env var setting, to happen without sorting. This is equivalent to a `VIEW "STP_GCOL_NOSORT":1 <../ProgrammersGuide/commands.html#view-stpgcolnosort>`_. Setting this env var to any other value or leaving it undefined signals future garbage collections to happen with sorting. This is equivalent to a `VIEW "STP_GCOL_NOSORT":0 <../ProgrammersGuide/commands.html#view-stpgcolnosort>`_. Sorted garbage collection are the default. Avoiding sorting could improve garbage collection runtimes but could also result in increased memory needs depending on the application.
 
 See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
