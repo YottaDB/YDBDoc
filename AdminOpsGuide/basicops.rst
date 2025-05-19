@@ -938,6 +938,13 @@ ydb_stdxkill
 +++++++++++++++
 **ydb_stdxkill (gtm_stdxkill)** enables the standard-compliant behavior to kill local variables in the exclusion list if they had an alias that was not in the exclusion list. By default, this behavior is disabled.
 
+.. _ydb-stp-gcol-nosort-env-var:
+
+++++++++++++++++++++
+ydb_stp_gcol_nosort
+++++++++++++++++++++
+**ydb_stp_gcol_nosort** when set to a non-zero numeric value, "yes" or "TRUE" (case-insensitive) or a leading substring of those string values, signals future garbage collections, in any YottaDB process with this env var setting, to happen without sorting. This is equivalent to a `VIEW "STP_GCOL_NOSORT":1 <../ProgrammersGuide/commands.html#view-stpgcolnosort>`_. Setting this env var to any other value or leaving it undefined signals future garbage collections to happen with sorting. This is equivalent to a `VIEW "STP_GCOL_NOSORT":0 <../ProgrammersGuide/commands.html#view-stpgcolnosort>`_. Sorted garbage collection are the default. Avoiding sorting could improve garbage collection runtimes but could also result in increased memory needs depending on the application.
+
 ++++++++++++
 ydb_sysid
 ++++++++++++
