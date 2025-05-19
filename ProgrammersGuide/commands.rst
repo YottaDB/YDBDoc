@@ -2079,6 +2079,18 @@ Starts a string-pool garbage collection, which normally happens automatically at
 .. note::
    There are no visible effects from STP_GCOL, LV_GCOL and LV_REHASH except for the passage of time depending on the state of your process. YottaDB uses these VIEW "LV_GCOL","LV_REHASH","STP_GCOL" facilities in testing. They are documented to ensure completeness in product documentation. You may (or may not) find them useful during application development for debugging or performance testing implementation alternatives.
 
+.. _view-stpgcolnosort:
+
+~~~~~~~~~~~~~~~~~~~~~~
+STP_GCOL_NOSORT:value
+~~~~~~~~~~~~~~~~~~~~~~
+
+VIEW "STP_GCOL_NOSORT":1 signals future garbage collections to happen without sorting the strings in the stringpool. VIEW "STP_GCOL_NOSORT":0 signals future garbage collections to happen with sorting.
+
+Sorted garbage collections are the default. Avoiding sorting could improve garbage collection runtimes but could also result in increased memory needs depending on the application. Note that avoiding sorting could not only increase the steady-state stringpool memory usage, but could spike the stringpool memory usage to double the steady-state for a short period of time during the garbage collection.
+
+The env var `ydb_stp_gcol_nosort <../AdminOpsGuide/basicops.html#ydb-stp-gcol-nosort-env-var>`_ provides an alternative way to choose sorted or unsorted garbage collections.
+
 ~~~~~~~~~~~~~~~~~~~~~~
 TRACE:value:<expr>
 ~~~~~~~~~~~~~~~~~~~~~~
