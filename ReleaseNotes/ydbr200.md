@@ -595,7 +595,7 @@ If WRITE remains blocked after the specified retries, the WRITE sets [$DEVICE](h
 
 - If ``handle`` is specified, the command waits for the condition to occur at a specific socket in the current SOCKET device. Otherwise, it waits till the condition is satisfied for any socket in tne current SOCKET device.
 
-A WRITE to a non-blocking socket, which is not enabled for TLS, may terminate early on the following events: <CTRL-C>; exceeding [$ZMAXTPTIME](https://docs.yottadb.com/YDBDoc/ProgGuide/_build/html/isv.html#zmaxtptime), or [$ZTIMEOUT](https://docs.yottadb.com/YDBDoc/ProgGuide/_build/html/isv.html#ztimeout) expiring. These events result in a transfer to the interrupt vector or error handler at the next execution boundary as described in [Interrupt Handling](https://docs.yottadb.com/YDBDoc/ProgGuide/_build/html/langfeat.html#interrupt-handling).
+A WRITE to a non-blocking socket, which is not enabled for TLS, may terminate early on the following events: <CTRL-C>; exceeding [$ZMAXTPTIME](https://docs.yottadb.com/YDBDoc/ProgrammersGuide/_build/html/isv.html#zmaxtptime), or [$ZTIMEOUT](https://docs.yottadb.com/YDBDoc/ProgrammersGuide/_build/html/isv.html#ztimeout) expiring. These events result in a transfer to the interrupt vector or error handler at the next execution boundary as described in [Interrupt Handling](https://docs.yottadb.com/YDBDoc/ProgrammersGuide/_build/html/langfeat.html#interrupt-handling).
 
 When non-blocking WRITEs are enabled for a socket, WRITE /WAIT can check if that socket would not block on WRITE and/or a READ. The optional second argument can be a string containing ``"READ"`` and/or ``"WRITE"``.
 
@@ -607,7 +607,7 @@ When non-blocking WRITEs are enabled for a socket, WRITE /WAIT can check if that
 
 - If the second argument is omitted or contains ``"WRITE"`` but not ``"READ"``, WRITE /WAIT checks for readiness for WRITE on non-blocking sockets, but never checks readiness to WRITE on blocking sockets, even if explicitly requested.
 
-[$ZKEY](https://docs.yottadb.com/YDBDoc/ProgGuide/_build/html/isv.html#zkey) after a prior WRITE /WAIT will contain a piece of the form ``"WRITE|sockethandle|ipaddress"`` if a non-blocking socket was considered writable, which we expect to be typical. If a socket was also readable, there will be two pieces in $ZKEY for the socket, one for WRITE and the other for READ.
+[$ZKEY](https://docs.yottadb.com/YDBDoc/ProgrammersGuide/_build/html/isv.html#zkey) after a prior WRITE /WAIT will contain a piece of the form ``"WRITE|sockethandle|ipaddress"`` if a non-blocking socket was considered writable, which we expect to be typical. If a socket was also readable, there will be two pieces in $ZKEY for the socket, one for WRITE and the other for READ.
 
 An application can determine whether a socket is enabled for non-blocking WRITEs with ``$ZSOCKET(device,"BLOCKING",index)`` which returns either 1 (TRUE) for blocking, or 0 (FALSE) for non-blocking.
 

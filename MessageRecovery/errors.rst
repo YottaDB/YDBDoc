@@ -14899,7 +14899,7 @@ Run Time Error: This indicates that YottaDB encountered an unsupported data type
 Action: Review the relevant call-in or call-out table to ensure that the parameter types match the following table:
 
 ..
-  Remember to update the tables in ProgGuide/extrout.rst when you update this table.
+  Remember to update the tables in ProgrammersGuide/extrout.rst when you update this table.
 
 +-----------+---------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | Parameter | Language      | Allowed Parameter Types                                                                                                                |

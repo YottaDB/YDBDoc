@@ -16,7 +16,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    = -W --keep-going -q
 SPHINXBUILD   = sphinx-build
-SOURCEDIRS    = AcculturationGuide AdminOpsGuide ApplicationsManual MessageRecovery MultiLangProgGuide ProgGuide StyleGuide Plugins
+SOURCEDIRS    = AcculturationGuide AdminOpsGuide ApplicationsManual MessageRecovery MultiLangProgGuide ProgrammersGuide StyleGuide Plugins
 SOURCEDIR     = .
 BUILDDIR      = public
 # newline used in the foreach statements to make "make" stop at an erroring step.
