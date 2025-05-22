@@ -34,9 +34,11 @@ Since Python is a dynamically typed, object oriented language whereas C is stati
 The Python wrapper provides two ways of calling YottaDB API functions:
 
 * Python functions that directly call YottaDB API functions, mapping one Python interface to each YottaDB API function
-* Methods on a YottaDB `Key` class provided in the :code:`yottadb` Python module
+* Methods on a YottaDB `Node` class provided in the :code:`yottadb` Python module
 
 Note that the YDBPython doesn't include any threaded YottaDB C API functions. These omissions are due to Python's lack of support for thread-level parallelism, which is in turn due to the constraints of the Python `Global Interpreter Lock <https://wiki.python.org/moin/GlobalInterpreterLock>`_. Accordingly, users seeking concurrent computation when programming YottaDB from Python will need to use process-level parallelism via the `multiprocessing <https://docs.python.org/3/library/multiprocessing.html>`_ library module. An example of such parallelization is given in `YDBPython/tests/test_threenp1.py <https://gitlab.com/YottaDB/Lang/YDBPython/-/blob/master/tests/test_threenp1.py>`_.
+
+Note also the underlying YDBPython C API currently only returns string types, which comes at a performance penalty when processing numeric values passed from Python to the C API.
 
 As a matter of vocabulary, note that Python class methods like :code:`__init__()` and :code:`__iter__()` are called "magic methods" in this document, though they are also sometimes called "dunder" methods.
 
@@ -170,12 +172,12 @@ Note that if using a virtual environment ("venv"), you will need to activate it 
 Python Concepts
 ---------------
 
-As the YottaDB wrapper is distributed as a Python package, function calls to YottaDB are prefixed in Python code with :code:`yottadb.` (e.g., application code to call the :code:`get()` function would be written :code:`yottadb.get(...)`). Alternatively, users may instantiate a :code:`Key` object and use the methods on that object to call YottaDB API functions, e.g.:
+As the YottaDB wrapper is distributed as a Python package, function calls to YottaDB are prefixed in Python code with :code:`yottadb.` (e.g., application code to call the :code:`get()` function would be written :code:`yottadb.get(...)`). Alternatively, users may instantiate a :code:`Node` object and use the methods on that object to call YottaDB API functions, e.g.:
 
 .. code-block:: python
 
-    key = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    key.get()
+    node = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    node.get()
 
 +++++++++++++++++++++++++
 Python Exception Handling
@@ -203,7 +205,7 @@ Below are examples illustrating how to handle exceptions both with and without u
         print("Specific case: handle YDB_ERR_NODEEND differently")
 
     try:
-        yottadb.Key("^\x80").data
+        yottadb.Node("^\x80").data
     except YDBError as e:
         if yottadb.YDB_ERR_INVVARNAME == e.code():
             print("Invalid variable name")
@@ -243,22 +245,25 @@ Python API
 
 YottaDB global and local variable nodes may be represented in multiple ways within the YDBPython wrapper. First, YottaDB nodes may be represented as two-element native Python tuples with the variable name as the first element of the tuple and a tuple containing a set of subscripts as the second element. For example, :code:`("mylocal", ("sub1", "sub2"))` represents the YottaDB local variable node :code:`mylocal("sub1","sub2")`. Similarly, YottaDB nodes may be represented by tuples, e.g.: :code:`("^test3", ("sub1", "sub2"))`. Unsubscripted local or global variable nodes may be represented by simply omitting the subscripts from the tuple or function call, for example: :code:`("mylocal",)` or :code:`yottadb.get("mylocal")`.
 
-The Python wrapper also provides a :code:`Key` class for interacting with YottaDB nodes in an object-oriented fashion. Each :code:`Key` represents a combination of a global or local variable name and zero or more subscripts. Operations on this node may be performed by instantiating a :code:`Key` object representing that node's variable name and subscript combination and calling the method corresponding to the desired YottaDB API function on that object. For example:
+The Python wrapper also provides a :code:`Node` class for interacting with YottaDB nodes in an object-oriented fashion. Each :code:`Node` represents a combination of a global or local variable name and zero or more subscripts. Operations on this node may be performed by instantiating a :code:`Node` object representing that node's variable name and subscript combination and calling the method corresponding to the desired YottaDB API function on that object. For example:
 
 .. code-block:: python
 
-    key = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    key.set("myvalue")
-    key.get()  # Returns b"myvalue"
+    node = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    node.set("myvalue")
+    node.get()  # Returns b"myvalue"
 
 Note that :code:`yottadb.get()` and some other functions return Python :code:`bytes` objects instead of :code:`str` objects. This is because YottaDB stores arbitrary binary data, which is not guaranteed to be UTF-8 encoded, as Python :code:`str` objects are by default. Accordingly, returning `bytes` objects allows users to retrieve arbitrary binary data from YottaDB without getting a :code:`UnicodeEncodeError` for binary data that is not UTF-8 formatted. When *accepting* data (or subscripts, etc.), on the other hand, YDBPython accepts both :code:`str` and :code:`bytes` objects.
 
-New :code:`Key` objects may be created from existing :code:`Key` objects by specifying additional subscripts in brackets, e.g.:
+New :code:`Node` objects may be created from existing :code:`Node` objects by calling a :code:`Node` object with subscripts as arguments or by specifying additional subscripts in brackets, e.g.:
 
 .. code-block:: python
 
-    key1 = yottadb.Key("mylocal")  # key1 represents YottaDB node: `mylocal`
-    key2 = key1["sub1"]["sub2"]  # key2 represents YottaDB node: `mylocal("sub1","sub2")`
+    node1 = yottadb.Node("mylocal")  # node1 represents YottaDB node: `mylocal`
+    node2 = node1("sub1", "sub2")  # node2 represents YottaDB node: `mylocal("sub1","sub2")`
+    node3 = node1["sub1"]["sub2"]  # node3 represents YottaDB node: `mylocal("sub1","sub2")`
+
+Note that the "callable" method generates only one new :code:`Node` object to yield the final return value. In contrast, the bracket method will create one new :code:`Node` object for each set of brackets, e.g. 2 :code:`Node` objects in the above example. Consequently the "callable" method is more performant and preferred.
 
 Intrinsic special variables may be accessed in the same way as global or local variables, with the provision that no subscripts are specified within the node tuple, as such variables are not actual YottaDB nodes. For example:
 
@@ -306,11 +311,11 @@ Python API Functions
 Python Data Structures & Type Definitions
 -----------------------------------------
 
-As noted above, Python and C have significantly different approaches to data structures and memory management. Consequently, the YDBPython wrapper has no data structures that map directly to any C-level structure. Rather, the Python wrapper provides a combination of native Python tuples and :code:`Key` objects for interacting with the underlying YottaDB C API.
+As noted above, Python and C have significantly different approaches to data structures and memory management. Consequently, the YDBPython wrapper has no data structures that map directly to any C-level structure. Rather, the Python wrapper provides a combination of native Python tuples and :code:`Node` objects for interacting with the underlying YottaDB C API.
 
 Thus only one custom type is provided by the :code:`yottadb` Python module:
 
-- :code:`Key` an object class for representing a YottaDB local, global, or intrinsic special variable providing methods by which to access wrapper functions
+- :code:`Node` an object class for representing a YottaDB local, global, or intrinsic special variable providing methods by which to access wrapper functions
 
 All memory is managed internally and implicitly either by the YottaDB wrapper code (and YottaDB itself, for its own operations) or else by the Python runtime. Accordingly, users need not concern themselves with memory management or C-level data structures.
 
@@ -558,21 +563,21 @@ Python lock()
 
 .. code-block:: python
 
-    def lock(keys: Tuple[Tuple[Union[tuple, Optional["Key"]]]] = (), timeout_nsec: int = 0) -> None
+    def lock(nodes: Tuple[Tuple[Union[tuple, Optional["Node"]]]] = (), timeout_nsec: int = 0) -> None
 
 As a wrapper for the C function :ref:`ydb-lock-s-st-fn`, :code:`lock()` releases all lock resources currently held and then attempts to acquire the named lock resources referenced. If no lock resources are specified, it simply releases all lock resources currently held and returns.
 
-Lock resources are specified by passing YottaDB keys as a tuple or list of Python :code:`tuple` or :code:`yottadb.Key` objects. Each tuple representing a key must be of the form :code:`(variable_name, (subscript1, subscript2, ...))`, i.e. consist of two elements, a string representing a variable name and a tuple containing a series of strings representing subscripts, if any.
+Lock resources are specified by passing YottaDB nodes as a tuple or list of Python :code:`tuple` or :code:`yottadb.Node` objects. Each tuple representing a node must be of the form :code:`(variable_name, (subscript1, subscript2, ...))`, i.e. consist of two elements, a string representing a variable name and a tuple containing a series of strings representing subscripts, if any.
 
 If lock resources are specified, upon return, the process will have acquired all of the named lock resources or none of the named lock resources.
 
 - If :code:`timeout_nsec` exceeds :code:`yottadb.YDB_MAX_TIME_NSEC`, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_TIME2LONG == YDBError.code()`
 - If the lock resource names exceeds the maximum number supported (currently 11), the function raises a :code:`ValueError` exception.
-- If :code:`keys` is not a Tuple of tuples representing variable name and subscript pairs, or a series of :code:`yottadb.Key` objects, then the function raises a :code:`TypeError` exception.
+- If :code:`nodes` is not a Tuple of tuples representing variable name and subscript pairs, or a series of :code:`yottadb.Node` objects, then the function raises a :code:`TypeError` exception.
 - If it is able to acquire the lock resource within :code:`timeout_nsec` nanoseconds, it returns holding the lock, otherwise it raises a :code:`YDBTimeoutError` exception. If :code:`timeout_nsec` is zero, the function makes exactly one attempt to acquire the lock, which is the default behavior if a value for :code:`timeout_nsec` is omitted.
 - If the underlying :ref:`ydb-lock-s-st-fn` call returns any other error, the function raises an exception containing the error code and message.
 
-The following example provides a demonstration of basic locking operations. The example locks several keys, then attempts to increment the lock on each key by calling a separately defined :code:`lock_value()` helper function as a separate Python process. Due to the initial locking of each key, each of these :code:`lock_value()` fails with an exit code of 1. Next, all locks are released and a number of new :code:`lock_value()` processes are spawned that again attempt to increment a lock on each key. Since all locks were previously released, these new attempts succeed with each process exiting with a 0 exit code.
+The following example provides a demonstration of basic locking operations. The example locks several nodes, then attempts to increment the lock on each node by calling a separately defined :code:`lock_value()` helper function as a separate Python process. Due to the initial locking of each node, each of these :code:`lock_value()` fails with an exit code of 1. Next, all locks are released and a number of new :code:`lock_value()` processes are spawned that again attempt to increment a lock on each node. Since all locks were previously released, these new attempts succeed with each process exiting with a 0 exit code.
 
 .. code-block:: python
 
@@ -580,18 +585,18 @@ The following example provides a demonstration of basic locking operations. The 
     import datetime
 
     # Lock a value in the database
-    def lock_value(key: Union[yottadb.Key, tuple], interval: int = 2, timeout: int = 1):
-        # Extract key information from key object to compose lock_incr()/lock_decr() calls
-        if isinstance(key, yottadb.Key):
-            varname = key.varname
-            subsarray = key.subsarray
+    def lock_value(node: Union[yottadb.Node, tuple], interval: int = 2, timeout: int = 1):
+        # Extract node information from node object to compose lock_incr()/lock_decr() calls
+        if isinstance(node, yottadb.Node):
+            varname = node.varname
+            subsarray = node.subsarray
         else:
-            varname = key[0]
-            subsarray = key[1]
+            varname = node[0]
+            subsarray = node[1]
         if len(subsarray) == 0:
             subsarray = None
 
-        # Attempt to increment lock on key
+        # Attempt to increment lock on node
         has_lock = False
         try:
             yottadb.lock_incr(varname, subsarray, timeout_nsec=(timeout * 1_000_000_000))
@@ -604,7 +609,7 @@ The following example provides a demonstration of basic locking operations. The 
             print(f"Lock Error: {repr(e)}")
             sys.exit(2)
 
-        # Attempt to decrement lock on key, after a brief pause to ensure increment has taken effect
+        # Attempt to decrement lock on node, after a brief pause to ensure increment has taken effect
         if has_lock:
             time.sleep(interval)
             yottadb.lock_decr(varname, subsarray)
@@ -614,16 +619,16 @@ The following example provides a demonstration of basic locking operations. The 
         sys.exit(0)
 
 
-    t1 = yottadb.Key("^test1")
-    t2 = yottadb.Key("^test2")["sub1"]
-    t3 = yottadb.Key("^test3")["sub1"]["sub2"]
-    keys_to_lock = (t1, t2, t3)
-    # Attempt to get locks for keys t1,t2 and t3
-    yottadb.lock(keys=keys_to_lock, timeout_nsec=0)
+    t1 = yottadb.Node("^test1")
+    t2 = yottadb.Node("^test2", ("sub1",))
+    t3 = yottadb.Node("^test3", ("sub1", "sub2"))
+    nodes_to_lock = (t1, t2, t3)
+    # Attempt to get locks for nodes t1,t2 and t3
+    yottadb.lock(nodes=nodes_to_lock, timeout_nsec=0)
     # Attempt to increment/decrement locks
     processes = []
-    for key in keys_to_lock:
-        process = multiprocessing.Process(target=lock_value, args=(key,))
+    for node in nodes_to_lock:
+        process = multiprocessing.Process(target=lock_value, args=(node,))
         process.start()
         processes.append(process)
     for process in processes:
@@ -633,8 +638,8 @@ The following example provides a demonstration of basic locking operations. The 
     yottadb.lock()
     # Attempt to increment/decrement locks
     processes = []
-    for key in keys_to_lock:
-        process = multiprocessing.Process(target=lock_value, args=(key,))
+    for node in nodes_to_lock:
+        process = multiprocessing.Process(target=lock_value, args=(node,))
         process.start()
         processes.append(process)
     for process in processes:
@@ -914,7 +919,7 @@ Python subscript_next()
 
     def subscript_next(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> bytes
 
-As a wrapper for the C function :ref:`ydb-subscript-next-s-st-fn`, :code:`subscript_next()` facilitates traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
+As a wrapper for the C function :ref:`ydb-subscript-next-s-st-fn`, :code:`subscript_next()` facilitates traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified node.
 
 - If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the subscript level is zero, and variable names should be iterated over instead of subscripts.
 - If there is a next subscript with a node and/or a subtree, this function returns the subscript at the level of the last subscript in :code:`subsarray`
@@ -965,7 +970,7 @@ Python subscript_previous()
 
     def subscript_previous(varname: AnyStr, subsarray: Tuple[AnyStr] = ()) -> bytes
 
-As a wrapper for the C function :ref:`ydb-subscript-previous-s-st-fn`, :code:`subscript_previous()` facilitates reverse traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified key.
+As a wrapper for the C function :ref:`ydb-subscript-previous-s-st-fn`, :code:`subscript_previous()` facilitates reverse traversal of a local or global variable sub-tree. A node or subtree does not have to exist at the specified node.
 
 - If :code:`subsarray` is omitted, an empty :code:`Tuple` is passed by default, signifying that the subscript level is zero, and variable names should be iterated over instead of subscripts.
 - If there is a previous subscript with a node and/or a subtree, it returns the subscript at the level of the last subscript in :code:`subsarray`
@@ -1088,9 +1093,9 @@ The following example demonstrates a simple usage of :code:`tp()`. Specifically,
     from typing import Callable, Tuple, AnyStr, Dict
 
     # Define a simple callback function that attempts to transfer items between two "accounts", represented
-    # by two global variable nodes that are referenced by the given Key objects. If a YDBTPRestart is encountered,
+    # by two global variable nodes that are referenced by the given Node objects. If a YDBTPRestart is encountered,
     # the function will continue attempting the account transfer operation until it succeeds.
-    def callback(inventory: yottadb.Key, basket: yottadb.Key, fruits: Dict) -> int:
+    def callback(inventory: yottadb.Node, basket: yottadb.Node, fruits: Dict) -> int:
         while True:
             try:
                 for fruit in fruits:
@@ -1113,19 +1118,19 @@ The following example demonstrates a simple usage of :code:`tp()`. Specifically,
     def wrapper(function: Callable[..., object], args: Tuple[AnyStr]) -> int:
         return yottadb.tp(function, args=args)
 
-    # Create a dictionary to store initial keys and values
+    # Create a dictionary to store initial nodes and values
     fruits = {
             "apples": "1500",
             "bananas": "1000",
             "oranges": "2000"
     }
-    # Create keys representing top-level "accounts"
-    inventory = yottadb.Key("^inventory")
-    basket = yottadb.Key("^basket")
+    # Create nodes representing top-level "accounts"
+    inventory = yottadb.Node("^inventory")
+    basket = yottadb.Node("^basket")
     # Initialize accounts with starting values
-    for key, value in fruits.items():
-        inventory[key].value = value
-        basket[key].value = "0"
+    for node, value in fruits.items():
+        inventory[node].value = value
+        basket[node].value = "0"
 
     # Initialize the random number generator for use in the callback function
     random.seed()
@@ -1148,8 +1153,8 @@ The following example demonstrates a simple usage of :code:`tp()`. Specifically,
         assert process.exitcode == 0
 
     # Confirm that the total number of items is the same after transaction processing
-    for key, value in fruits.items():
-        assert int(inventory[key].value) + int(basket[key].value) == int(value)
+    for node, value in fruits.items():
+        assert int(inventory[node].value) + int(basket[node].value) == int(value)
 
 
 ++++++++++++++++++++
@@ -1176,21 +1181,21 @@ Since this function simply wraps the passed function in a new function definitio
 
     # Wrap a simple function with the transaction
     @yottadb.transaction
-    def my_transaction(key1: yottadb.Key, value1: str, key2: yottadb.Key, value2: str) -> None:
-         key1.value = value1
-         key2.value = value2
+    def my_transaction(node1: yottadb.Node, value1: str, node2: yottadb.Node, value2: str) -> None:
+         node1.value = value1
+         node2.value = value2
 
-    # Create Key objects to pass to the newly defined and decorated my_transaction() function
-    key1 = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    key2 = yottadb.Key("^myglobal")["sub1"]["sub3"]
+    # Create Node objects to pass to the newly defined and decorated my_transaction() function
+    node1 = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    node2 = yottadb.Node("^myglobal", ("sub1", "sub3"))
 
     # Call the function decorated with transaction()
-    status = my_transaction(key1, "val1", key2, "val2")
+    status = my_transaction(node1, "val1", node2, "val2")
     # Handle possible results of the call as one would handle results of a call to tp()
     if yottadb.YDB_OK == status:
         # Transaction successful
-        print(key1.value)  # Prints 'val1'
-        print(key2.value)  # Prints 'val2'
+        print(node1.value)  # Prints 'val1'
+        print(node2.value)  # Prints 'val2'
     elif yottadb.YDB_TP_RESTART == status:
         # Restart the transaction
         print(status)
@@ -1223,11 +1228,11 @@ Note that the return value of this function is always a :code:`bytes` object, re
     print(yottadb.zwr2str(b'"X"_$C(0)_"ABC"'))  # Prints b'X\x00ABC'
 
 ----------------------------
-YottaDB Key class properties
+YottaDB Node class properties
 ----------------------------
 
 ++++++++
-Key.data
+Node.data
 ++++++++
 
 .. code-block:: python
@@ -1235,23 +1240,23 @@ Key.data
     @property
     def data(self) -> int
 
-Matching `Python data()`_, the :code:`Key.data` property method returns the result of :ref:`ydb-data-s-st-fn` (0, 1, 10, or 11).
+Matching `Python data()`_, the :code:`Node.data` property method returns the result of :ref:`ydb-data-s-st-fn` (0, 1, 10, or 11).
 
 In the event of an error in :ref:`ydb-data-s-st-fn`, a :code:`YDBError` exception is raised reflecting YottaDB error code and message.
 
 .. code-block:: python
 
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    key.value = "test"
-    print(key.data) # Prints 1
-    print(key.parent.data) # Prints 10
-    print(key["sub3"].data) # Prints 0
-    key["sub3"].value = "test2"
-    print(key["sub3"].data) # Prints 1
-    print(key.data) # Prints 11
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    node.value = "test"
+    print(node.data) # Prints 1
+    print(node.parent.data) # Prints 10
+    print(node["sub3"].data) # Prints 0
+    node["sub3"].value = "test2"
+    print(node["sub3"].data) # Prints 1
+    print(node.data) # Prints 11
 
 +++++++++++++
-Key.has_value
+Node.has_value
 +++++++++++++
 
 .. code-block:: python
@@ -1259,96 +1264,224 @@ Key.has_value
     @property
     def has_value(self) -> bool
 
-:code:`Key.has_value` provides a class property that returns :code:`True` or :code:`False` depending on whether the global or local variable node represented by the given :code:`Key` object has a value or does not have a value, respectively.
+:code:`Node.has_value` provides a class property that returns :code:`True` or :code:`False` depending on whether the global or local variable node represented by the given :code:`Node` object has a value or does not have a value, respectively.
 
 In the event of an error in the underlying :ref:`ydb-data-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the error code and message.
 
-This property references :code:`Key.data` internally, and is provided for convenience.
+This property references :code:`Node.data` internally, and is provided for convenience.
 
 .. code-block:: python
 
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    print(key.has_value) # Prints False
-    key.value = "test"
-    print(key.has_value) # Prints True
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.has_value) # Prints False
+    node.value = "test"
+    print(node.has_value) # Prints True
 
-++++++++++++
-Key.has_tree
-++++++++++++
++++++++++++++
+Node.has_both
++++++++++++++
 
 .. code-block:: python
 
     @property
-    def has_tree(self) -> bool
+    def has_both(self) -> bool
 
-:code:`Key.has_tree` provides a class property that returns :code:`True` or :code:`False` depending on whether the global or local variable node represented by the given :code:`Key` object has a (sub)tree or does not have a (sub)tree, respectively.
+:code:`Node.has_both` provides a class property that returns :code:`True` if the global or local variable node represented by the given :code:`Node` object has both a value and a subtree, or :code:`False` if it does not have both a value and subtree.
 
-In the event of an error in the underlying :ref:`ydb-data-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
+In the event of an error in the underlying :ref:`ydb-data-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the error code and message.
 
-This property references :code:`Key.data` internally, and is provided for convenience.
+This property references :code:`Node.data` internally, and is provided for convenience.
 
 .. code-block:: python
 
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    key.value = "test"
-    print(key.has_tree) # Prints False
-    print(key.parent.has_tree) # Prints True
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.has_both) # Prints False
+    node.value = "test"
+    print(node.has_both) # Prints False
+    node["sub3"].value = "test2"
+    print(node.has_both) # Prints True
 
-+++++++++++++
-Key.subsarray
-+++++++++++++
+++++++++++++++++
+Node.has_neither
+++++++++++++++++
+
+.. code-block:: python
+
+    @property
+    def has_neither(self) -> bool
+
+:code:`Node.has_neither` provides a class property that returns :code:`True` if the global or local variable node represented by the given :code:`Node` object has neither a value nor a subtree, or :code:`False` if it has either a value or a subtree.
+
+In the event of an error in the underlying :ref:`ydb-data-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the error code and message.
+
+This property references :code:`Node.data` internally, and is provided for convenience.
+
+.. code-block:: python
+
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.has_neither) # Prints True
+    node.value = "test"
+    print(node.has_neither) # Prints False
+    node["sub3"].value = "test2"
+    print(node.has_neither) # Prints False
+
+++++++++++++++++
+Node.has_subtree
+++++++++++++++++
+
+.. code-block:: python
+
+    @property
+    def has_subtree(self) -> bool
+
+:code:`Node.has_subtree` provides a class property that returns :code:`True` or :code:`False` depending on whether the global or local variable node represented by the given :code:`Node` object has a subtree or not.
+
+In the event of an error in the underlying :ref:`ydb-data-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
+
+This property references :code:`Node.data` internally, and is provided for convenience.
+
+.. code-block:: python
+
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    node.value = "test"
+    print(node.has_tree) # Prints False
+    print(node.parent.has_tree) # Prints True
+
++++++++++
+Node.leaf
++++++++++
+
+.. code-block:: python
+
+    @property
+    def leaf(self) -> AnyStr
+
+The :code:`Node.leaf` property method returns the last name defined for the calling :code:`Node` object, i.e. the last subscript in its subscript array or, if there are no subscripts, the variable name.
+
+.. code-block:: python
+
+   node = yottadb.Node("mylocal", ("sub1", "sub2"))
+   node.leaf
+
++++++++++++
+Node.mutable
++++++++++++
+
+.. code-block:: python
+
+    @property
+    def mutable(self) -> bool
+
+The :code:`Node.mutable` property method returns :code:`True` if the calling :code:`Node` object may be changed after creation, and :code:`False` if not. If a :code:`Node` is mutable, it may be modified as a side-effect of executing code. :code:`Node` objects are immutable by default.
+
+Note that only :code:`Node.mutate()` and :code:`Node.__iter__()` output mutable nodes.
+
+.. code-block:: python
+
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.mutable) # prints False
+
++++++++++++
+Node.name
++++++++++++
+
+.. code-block:: python
+
+    @property
+    def name(self) -> AnyStr
+
+:code:`Node.name` provides a class property that returns the name of the global or local variable node represented by the given :code:`Node` object as a :code:`bytes` or :code:`str` object, depending on how the :code:`Node` variable name was specified.
+
+.. code-block:: python
+
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.name) # Prints 'mylocal'
+
++++++++++++
+Node.parent
++++++++++++
+
+.. code-block:: python
+
+    @property
+    def parent(self) -> Node
+
+The :code:`Node.parent` property method returns a new Node object representing the parent Node of the caller, if there is one. If there is no parent, :code:`None` is returned.
+
+.. code-block:: python
+
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.parent) # prints mylocal("sub1")
+
+++++++++++++++
+Node.subsarray
+++++++++++++++
 
 .. code-block:: python
 
     @property
     def subsarray(self) -> List[AnyStr]
 
-:code:`Key.subsarray` provides a class property that returns the subscripts of the global or local variable node represented by the given :code:`Key` object as a :code:`List` of :code:`str` or :code:`bytes` objects, depending on whether the :code:`Key` was constructed using :code:`str` or :code:`bytes` objects to specify the variable name or subscripts.
+:code:`Node.subsarray` provides a class property that returns the subscripts of the global or local variable node represented by the given :code:`Node` object as a :code:`List` of :code:`str` or :code:`bytes` objects, depending on whether the :code:`Node` was constructed using :code:`str` or :code:`bytes` objects to specify the variable name or subscripts.
 
 .. code-block:: python
 
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    print(key.subsarray) # Prints ["sub1", "sub2"]
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.subsarray) # Prints ["sub1", "sub2"]
 
-++++++++++++++
-Key.subscripts
-++++++++++++++
++++++++++++++++
+Node.subscripts
++++++++++++++++
 
 .. code-block:: python
 
     @property
     def subscripts(self) -> Generator
 
-:code:`Key.subscripts` provides a class property that returns a Generator for iterating over subscripts at the level of the global or local variable node represented by the given :code:`Key` object. Each iteration will :code:`yield` the result of a call to :code:`subscript_next`, i.e. a :code:`bytes` object representing a YottaDB subscript.
+:code:`Node.subscripts` provides a class property that returns a Generator for iterating over subscripts at the next subscript level of the global or local variable node represented by the calling :code:`Node` object. Each iteration will :code:`yield` the result of a call to :code:`subscript_next`, i.e. a :code:`bytes` object representing a YottaDB subscript.
 
 In the event of an error in an underlying :ref:`ydb-subscript-next-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
-Example
+Example:
 
 .. code-block:: python
 
-    key = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    for subscript in key.subscripts:
-        print(subscript)  # Prints the next subscript at the "sub2" subscript level of the key
+    node = yottadb.Node("^myglobal", ("sub1",))
+    child1 = node["sub2"]
+    child2 = node["sub3"]
+    child3 = node["sub4"]
+    child1.value = "1"
+    child2.value = "2"
+    child3.value = "3"
+
+    print(f"node == {repr(node)}")
+    for subscript in node.subscripts:
+        print(f"node[\"{subscript.decode('utf-8')}\"] == {node[subscript].value}")
+
+    ## Prints:
+    # node == Node("^myglobal", ("sub1",))
+    # node["sub2"] == b'1'
+    # node["sub3"] == b'2'
+    # node["sub4"] == b'3'
 
 ++++++++++++++++++
-Key.subsarray_keys
+Node.subsarray_nodes
 ++++++++++++++++++
 
 .. code-block:: python
 
     @property
-    def subsarray_keys(self) -> List["Key"]:
+    def subsarray_nodes(self) -> List["Node"]:
 
-:code:`Key.subsarray_keys` provides a class property that returns the subscripts of the global or local variable node represented by the given :code:`Key` object as a :code:`List` of other :code:`Key` objects. Each of these :code:`Key` objects represents a full YottaDB global or local variable node (variable name and subscripts).
+:code:`Node.subsarray_nodes` provides a class property that returns the subscripts of the global or local variable node represented by the given :code:`Node` object as a :code:`List` of other :code:`Node` objects. Each of these :code:`Node` objects represents a full YottaDB global or local variable node (variable name and subscripts).
 
 .. code-block:: python
 
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    print(key.subsarray_keys) # Prints [Key:mylocal("sub1"), Key:mylocal("sub1","sub2")]
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.subsarray_nodes) # Prints [Node:mylocal("sub1"), Node:mylocal("sub1","sub2")]
 
 +++++++++
-Key.value
+Node.value
 +++++++++
 
 .. code-block:: python
@@ -1359,7 +1492,7 @@ Key.value
     @value.setter
     def value(self, value: AnyStr) -> None
 
-Acting as a class property, :code:`Key.value` wraps both :ref:`ydb-get-s-st-fn` and :ref:`ydb-set-s-st-fn` to set or get the value at the global or local variable node or intrinsic special variable represented by the given :code:`Key` object.
+Acting as a class property, :code:`Node.value` wraps both :ref:`ydb-get-s-st-fn` and :ref:`ydb-set-s-st-fn` to set or get the value at the global or local variable node or intrinsic special variable represented by the given :code:`Node` object.
 
 In the event of an error in the underlying :ref:`ydb-get-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
@@ -1367,117 +1500,102 @@ Example:
 
 .. code-block:: python
 
-    key = yottadb.Key("^myglobal")
-    key.value = "such wow"
-    print(key.value)  # Prints "such wow"
-
-+++++++++++++++
-Key.varname_key
-+++++++++++++++
-
-.. code-block:: python
-
-    @property
-    def varname_key(self) -> Optional["Key"]:
-
-:code:`Key.varname_key` provides a class property that returns a :code:`Key` object for the unsubscripted global or local variable node represented by the given :code:`Key` object as a :code:`str` object.
-
-.. code-block:: python
-
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    print(key.varname_key) # Prints Key:mylocal
-
-+++++++++++
-Key.varname
-+++++++++++
-
-.. code-block:: python
-
-    @property
-    def varname(self) -> AnyStr
-
-:code:`Key.varname` provides a class property that returns the name of the global or local variable node represented by the given :code:`Key` object as a :code:`bytes` or :code:`str` object, depending on how the :code:`Key` variable name was specified.
-
-.. code-block:: python
-
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    print(key.varname) # Prints 'mylocal'
+    node = yottadb.Node("^myglobal")
+    node.value = "such wow"
+    print(node.value)  # Prints "such wow"
 
 -----------------------------------
-YottaDB Key class regular methods
+YottaDB Node class regular methods
 -----------------------------------
 
 +++++++++++++++++
-Key.delete_node()
+Node.copy()
++++++++++++++++++
+
+.. code-block:: python
+
+    def copy(self) -> Node
+
+:code:`Node.copy()` returns an immutable copy of the calling :code:`Node` object as a new :code:`Node`.
+
+.. code-block:: python
+
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node)  # mylocal("sub1","sub2")
+    node_copy = node.copy()
+    print(node_copy)  # mylocal("sub1","sub2")
+
++++++++++++++++++
+Node.delete_node()
 +++++++++++++++++
 
 .. code-block:: python
 
     def delete_node(self) -> None
 
-Matching `Python delete_node()`_, :code:`Key.delete_node()` wraps :ref:`ydb-delete-s-st-fn` with a value of :code:`YDB_DEL_NODE` for :code:`deltype` to delete a local or global variable node, specifying that only the node should be deleted, leaving the (sub)tree untouched.
+Matching `Python delete_node()`_, :code:`Node.delete_node()` wraps :ref:`ydb-delete-s-st-fn` with a value of :code:`YDB_DEL_NODE` for :code:`deltype` to delete a local or global variable node, specifying that only the node should be deleted, leaving the (sub)tree untouched.
 
 In the event of an error in the underlying :ref:`ydb-delete-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
 .. code-block:: python
 
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    key.value = "test"
-    print(key.value) # Prints b'test'
-    key.delete_node()
-    print(key.value) # Prints None
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    node.value = "test"
+    print(node.value) # Prints b'test'
+    node.delete_node()
+    print(node.value) # Prints None
 
 +++++++++++++++++
-Key.delete_tree()
+Node.delete_tree()
 +++++++++++++++++
 
 .. code-block:: python
 
     def delete_tree(self) -> None
 
-Matching `Python delete_tree()`_, :code:`Key.delete_tree()` wraps :ref:`ydb-delete-s-st-fn` with a value of :code:`YDB_DEL_TREE` for :code:`deltype` to delete the local or global variable node represented by the :code:`Key` object, along with its (sub)tree.
+Matching `Python delete_tree()`_, :code:`Node.delete_tree()` wraps :ref:`ydb-delete-s-st-fn` with a value of :code:`YDB_DEL_TREE` for :code:`deltype` to delete the local or global variable node represented by the :code:`Node` object, along with its (sub)tree.
 
 In the event of an error in the underlying :ref:`ydb-delete-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
 .. code-block:: python
 
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    print(key.data) # Prints 0
-    key.value = "test"
-    print(key.data) # Prints 1
-    print(key.parent.data) # Prints 10
-    key.parent.delete_tree()
-    print(key.data) # Prints 0
-    print(key.parent.data) # Prints 0
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.data) # Prints 0
+    node.value = "test"
+    print(node.data) # Prints 1
+    print(node.parent.data) # Prints 10
+    node.parent.delete_tree()
+    print(node.data) # Prints 0
+    print(node.parent.data) # Prints 0
 
 +++++++++
-Key.get()
+Node.get()
 +++++++++
 
 .. code-block:: python
 
     def get(self) -> Optional[bytes]
 
-Matching `Python get()`_, :code:`Key.get()` wraps :ref:`ydb-get-s-st-fn` to retrieve the value of the local or global variable node represented by the given :code:`Key` object, returning it as a :code:`bytes` object.
+Matching `Python get()`_, :code:`Node.get()` wraps :ref:`ydb-get-s-st-fn` to retrieve the value of the local or global variable node represented by the given :code:`Node` object, returning it as a :code:`bytes` object.
 
 In the event of an error in the underlying :ref:`ydb-get-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
 .. code-block:: python
 
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    print(key.get()) # Prints None
-    key.set("test")
-    print(key.get()) # Prints b'test'
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.get()) # Prints None
+    node.set("test")
+    print(node.get()) # Prints b'test'
 
 ++++++++++
-Key.incr()
+Node.incr()
 ++++++++++
 
 .. code-block:: python
 
     def incr(self, increment: Union[int, float, str, bytes] = "1") -> bytes
 
-Matching `Python incr()`_, :code:`Key.incr()` wraps :ref:`ydb-incr-s-st-fn` to atomically increment the global or local variable node represented by the :code:`Key` object coerced to a number, with :code:`increment` coerced to a number. If successful, the call returns the resulting value as a :code:`bytes` object.
+Matching `Python incr()`_, :code:`Node.incr()` wraps :ref:`ydb-incr-s-st-fn` to atomically increment the global or local variable node represented by the :code:`Node` object coerced to a number, with :code:`increment` coerced to a number. If successful, the call returns the resulting value as a :code:`bytes` object.
 
 - If :code:`increment` is omitted, a value of 1 is used by default.
 - If :ref:`ydb-incr-s-st-fn` returns an error such as NUMOFLOW, an exception will be raised.
@@ -1488,20 +1606,20 @@ If unspecified, the default increment is 1. Note that the value of the empty str
 
 .. code-block:: python
 
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    print(key.value) # Prints None
-    print(key.incr()) # Prints b'1'
-    print(key.incr()) # Prints b'2'
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.value) # Prints None
+    print(node.incr()) # Prints b'1'
+    print(node.incr()) # Prints b'2'
 
 +++++++++++++++
-Key.load_json()
+Node.load_json()
 +++++++++++++++
 
 .. code-block:: python
 
-    def load_json(self, key: Key = None, spaces: str = "") -> object
+    def load_json(self, node: Node = None, spaces: str = "") -> object
 
-The inverse of `Key.save_json()`_, ``Key.load_json()`` retrieves JSON data stored under the YottaDB database node represented by the calling `Key` object, and returns it as a Python object. For example:
+The inverse of `Node.save_json()`_, ``Node.load_json()`` retrieves JSON data stored under the YottaDB database node represented by the calling `Node` object, and returns it as a Python object. For example:
 
 .. code-block:: python
 
@@ -1512,32 +1630,33 @@ The inverse of `Key.save_json()`_, ``Key.load_json()`` retrieves JSON data store
 
     response = requests.get("https://rxnav.nlm.nih.gov/REST/relatedndc.json?relation=product&ndc=0069-3060")
     original_json = json.loads(response.content)
-    key = yottadb.Key("^rxnorm")
-    key.delete_tree()
-    key.save_json(original_json)
+    rxnorm = yottadb.Node("^rxnorm")
+    rxnorm.delete_tree()
+    rxnorm.save_json(original_json)
 
-    saved_json = key.load_json()
-    key["ndcInfoList"]["ndcInfo"]["3"]["ndc11"].value = b'00069306087'
-    revised_json = key.load_json()
+    saved_json = node.load_json()
+    # Set database node: ^rxnorm("ndcInfoList","ndcInfo","3","ndc11")="00069306087"
+    rxnorm("ndcInfoList", "ndcInfo", "3", "ndc11").value = b'00069306087'
+    revised_json = rxnorm.load_json()
 
     with open('original.json', 'w', encoding='utf-8') as f:
-        json.dump(original_json, f, sort_keys = True, indent=4)
+        json.dump(original_json, f, sort_nodes = True, indent=4)
     with open('saved.json', 'w', encoding='utf-8') as f:
-        json.dump(saved_json, f, sort_keys = True, indent=4)
+        json.dump(saved_json, f, sort_nodes = True, indent=4)
     with open('revised.json', 'w', encoding='utf-8') as f:
-        json.dump(revised_json, f, sort_keys = True, indent=4)
+        json.dump(revised_json, f, sort_nodes = True, indent=4)
 
 +++++++++++++++
-Key.load_tree()
+Node.load_tree()
 +++++++++++++++
 
 .. code-block:: python
 
    def load_tree(self) -> dict
 
-The :code:`Key.load_tree()` method retrieves the entire subtree stored under the database node represented by the given :code:`Key` and stores it in a series of nested Python dictionaries.
+The :code:`Node.load_tree()` method retrieves the entire subtree stored under the database node represented by the given :code:`Node` and stores it in a series of nested Python dictionaries.
 
-The nested dictionaries are structured using YottaDB subscripts as keys, with node values stored under a :code:`"value"` key at the appropriate subscript level.
+The nested dictionaries are structured using YottaDB subscripts as nodes, with node values stored under a :code:`"value"` node at the appropriate subscript level.
 
 For example, these YottaDB database nodes:
 
@@ -1557,15 +1676,15 @@ For example, these YottaDB database nodes:
    ^test4("sub3","subsub2")="test4sub3subsub2"
    ^test4("sub3","subsub3")="test4sub3subsub3"
 
-To convert these nodes into a Python dictionary, :code:`Key.load_tree()` can be used like so:
+To convert these nodes into a Python dictionary, :code:`Node.load_tree()` can be used like so:
 
 .. code-block:: python
 
     import yottadb
 
 
-    key = yottadb.Key("^test4")
-    print(key.load_tree())
+    node = yottadb.Node("^test4")
+    print(node.load_tree())
 
 This will produce the following dictionary (formatted for clarity):
 
@@ -1612,21 +1731,21 @@ This will produce the following dictionary (formatted for clarity):
     }
 
 ++++++++++
-Key.lock()
+Node.lock()
 ++++++++++
 
 .. code-block:: python
 
     def lock(self, timeout_nsec: int = 0) -> None
 
-Matching `Python lock()`_, :code:`Key.lock()` releases all lock resources currently held and then attempts to acquire the named lock resource represented by the given :code:`Key` object. In other words, :code:`Key.lock()` will attempt to acquire a lock for the single key represented by the given :code:`Key` object.
+Matching `Python lock()`_, :code:`Node.lock()` releases all lock resources currently held and then attempts to acquire the named lock resource represented by the given :code:`Node` object. In other words, :code:`Node.lock()` will attempt to acquire a lock for the single node represented by the given :code:`Node` object.
 
 - If :code:`timeout_nsec` is omitted, a value of 0 is used by default.
 - If :code:`timeout_nsec` exceeds :code:`yottadb.YDB_MAX_TIME_NSEC`, a :code:`yottadb.YDBError` exception will be raised where :code:`yottadb.YDB_ERR_TIME2LONG == YDBError.code()`
 - If it is able to acquire the lock resource within :code:`timeout_nsec` nanoseconds, it returns holding the lock, otherwise it raises a :code:`YDBTimeoutError` exception. If :code:`timeout_nsec` is zero, the function makes exactly one attempt to acquire the lock.
 - If the underlying :ref:`ydb-lock-s-st-fn` call returns any other error, the function raises a YDBError exception containing the error code and message.
 
-The following example provides a demonstration of basic :code:`Key` locking operations. The example locks the given :code:`Key`, then attempts to increment the lock on it by calling a separately defined :code:`lock_value()` helper function as a separate Python process. Due to the initial locking of the key, this :code:`lock_value()` fails with an exit code of 1. Next, all locks are released and a new :code:`lock_value()` process is spawned that again attempts to increment the lock on the key. Since all locks were previously released, this new attempt succeeds and the process exits with a 0 exit code.
+The following example provides a demonstration of basic :code:`Node` locking operations. The example locks the given :code:`Node`, then attempts to increment the lock on it by calling a separately defined :code:`lock_value()` helper function as a separate Python process. Due to the initial locking of the node, this :code:`lock_value()` fails with an exit code of 1. Next, all locks are released and a new :code:`lock_value()` process is spawned that again attempts to increment the lock on the node. Since all locks were previously released, this new attempt succeeds and the process exits with a 0 exit code.
 
 .. code-block:: python
 
@@ -1635,13 +1754,13 @@ The following example provides a demonstration of basic :code:`Key` locking oper
 
 
     # Lock a value in the database
-    def lock_value(key: Union[yottadb.Key, tuple], interval: int = 2, timeout: int = 1):
-        if isinstance(key, yottadb.Key):
-            varname = key.varname
-            subsarray = key.subsarray
+    def lock_value(node: Union[yottadb.Node, tuple], interval: int = 2, timeout: int = 1):
+        if isinstance(node, yottadb.Node):
+            varname = node.varname
+            subsarray = node.subsarray
         else:
-            varname = key[0]
-            subsarray = key[1]
+            varname = node[0]
+            subsarray = node[1]
         if len(subsarray) == 0:
             subsarray = None
 
@@ -1666,31 +1785,31 @@ The following example provides a demonstration of basic :code:`Key` locking oper
         sys.exit(0)
 
 
-    key = yottadb.Key("^test4")["sub1"]["sub2"]
+    node = yottadb.Node("^test4", ("sub1", "sub2"))
     # Attempt to get the lock
-    key.lock()
+    node.lock()
     # Attempt to increment/decrement the lock
-    process = multiprocessing.Process(target=lock_value, args=(key,))
+    process = multiprocessing.Process(target=lock_value, args=(node,))
     process.start()
     process.join()
     print(process.exitcode)  # Prints 1
     # Release all locks
     yottadb.lock()
     # Attempt to increment/decrement the lock
-    process = multiprocessing.Process(target=lock_value, args=(key,))
+    process = multiprocessing.Process(target=lock_value, args=(node,))
     process.start()
     process.join()
     print(process.exitcode)  # Prints 0
 
 +++++++++++++++
-Key.lock_decr()
+Node.lock_decr()
 +++++++++++++++
 
 .. code-block:: python
 
     def lock_decr(self) -> None
 
-Matching `Python lock_decr()`_ :code:`Key.lock_decr()` wraps :ref:`ydb-lock-decr-s-st-fn` to decrement the count of the lock name represented by the given :code:`Key` object, releasing it if the count goes to zero or ignoring the invocation if the process does not hold the lock.
+Matching `Python lock_decr()`_ :code:`Node.lock_decr()` wraps :ref:`ydb-lock-decr-s-st-fn` to decrement the count of the lock name represented by the given :code:`Node` object, releasing it if the count goes to zero or ignoring the invocation if the process does not hold the lock.
 
 In the event of an error in the underlying :ref:`ydb-lock-decr-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
@@ -1700,64 +1819,87 @@ In the event of an error in the underlying :ref:`ydb-lock-decr-s-st-fn` call, a 
     import datetime
 
 
-    key = yottadb.Key("^myglobal")["sub1"]
-    # For the definition of lock_value(), see the entry for Key.lock()
-    process = multiprocessing.Process(target=lock_value, args=(key,))
+    node = yottadb.Node("^myglobal", ("sub1",))
+    # For the definition of lock_value(), see the entry for Node.lock()
+    process = multiprocessing.Process(target=lock_value, args=(node,))
     process.start()
     time.sleep(0.5)  # Wait for new process to spawn
 
     t1 = datetime.datetime.now()
-    yottadb.Key("mylocal").lock_incr()
+    yottadb.Node("mylocal").lock_incr()
     t2 = datetime.datetime.now()
 
     time_elapse = t2.timestamp() - t1.timestamp()
     print(time_elapse)  # Prints number of seconds elapsed
-    key.lock_decr()
+    node.lock_decr()
     time.sleep(0.5)  # Wait for lock to release
     process.join()
 
 +++++++++++++++
-Key.lock_incr()
+Node.lock_incr()
 +++++++++++++++
 
 .. code-block:: python
 
     def lock_incr(self, timeout_nsec: int = 0) -> None
 
-Matching `Python lock_incr()`_, :code:`Key.lock_incr()` wraps :ref:`ydb-lock-incr-s-st-fn` to attempt to acquire the lock resource name represented by the given :code:`Key` object without releasing any locks the process already holds.
+Matching `Python lock_incr()`_, :code:`Node.lock_incr()` wraps :ref:`ydb-lock-incr-s-st-fn` to attempt to acquire the lock resource name represented by the given :code:`Node` object without releasing any locks the process already holds.
 
 - If :code:`timeout_nsec` is omitted, a value of 0 is used by default.
 - If the process already holds the named lock resource, the method increments its count and returns.
 - If :code:`timeout_nsec` exceeds :code:`yottadb.YDB_MAX_TIME_NSEC`, the method raises a TIME2LONGError exception.
 - If it is able to acquire the lock resource within :code:`timeout_nsec` nanoseconds, it returns holding the lock, otherwise it raises a YDBTimeoutError exception. If :code:`timeout_nsec` is zero, the method makes exactly one attempt to acquire the lock.
 
-For an example of how to use this function, see `Key.lock_decr()`_.
+For an example of how to use this function, see `Node.lock_decr()`_.
+
++++++++++++++++++
+Node.mutate()
++++++++++++++++++
+
+.. code-block:: python
+
+    def mutate(self, name: AnyStr) -> Node
+
+:code:`Node.mutate()` returns a mutable :code:`Node` object with the trailing subscript or variable name changed to the value in the :code:`name` parameter. If the calling :code:`Node` object is mutable, then the calling :code:`Node` object is updated using the value in the :code:`name` argument and a reference to that :code:`Node` is returned. If the calling :code:`Node` is immutable, then a new, mutable :code:`Node` is returned with the trailing subscript or variable set to the value in the :code:`name` argument.
+
+.. code-block:: python
+
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node)  # Prints mylocal("sub1","sub2")
+    print(node.mutable)  # Prints False
+    mutable_node = node.mutate("sub3")
+    print(mutable_node)  # Prints mylocal("sub1","sub3")
+    print(mutable_node.mutable)  # Prints True
+    node = mutable_node.mutate("sub4")
+    print(mutable_node)  # Prints mylocal("sub1","sub4")
+    print(node.mutable)  # Prints True
+    print(node is mutable_node)  # Prints True
 
 ++++++++++++++++++
-Key.replace_tree()
+Node.replace_tree()
 ++++++++++++++++++
 
 .. code-block:: python
 
     def replace_tree(self, tree: dict)
 
-``Key.replace_tree()`` stores data from a nested Python dictionary in YottaDB, replacing the tree in the database with the one defined by the ``tree`` argument. The dictionary must have been previously created using the ``Key.load_tree()`` method, or otherwise match the format used by that method.
+``Node.replace_tree()`` stores data from a nested Python dictionary in YottaDB, replacing the tree in the database with the one defined by the ``tree`` argument. The dictionary must have been previously created using the ``Node.load_tree()`` method, or otherwise match the format used by that method.
 
 Note that this method will delete any nodes and subtrees that exist in the database but are absent from ``tree``.
 
 +++++++++++++++
-Key.save_json()
+Node.save_json()
 +++++++++++++++
 
 .. code-block:: python
 
-    def save_json(self, json: object, key: Key = None)
+    def save_json(self, json: object, node: Node = None)
 
-``Key.save_json()`` saves JSON data stored in a Python object under the YottaDB node represented by the calling ``Key`` object. This saved JSON data can subsequently be loaded with `Key.load_json()`_.
+``Node.save_json()`` saves JSON data stored in a Python object under the YottaDB node represented by the calling ``Node`` object. This saved JSON data can subsequently be loaded with `Node.load_json()`_.
 
 Data is stored in the following format:
 
-* Each key in a JSON object becomes a string subscript.
+* Each node in a JSON object becomes a string subscript.
 * Each index in a JSON array becomes an integer subscript.
 * Each value in a JSON object or array becomes a variable.
 * String values are indicated with a "\s" subscript.
@@ -1771,8 +1913,8 @@ A simple example that saves a json payload:
 
     import yottadb
 
-    key = yottadb.Key("^pythontest2")
-    key.save_json({
+    node = yottadb.Node("^pythontest2")
+    node.save_json({
         "empty_dict": {},
         "empty_list": [],
         "list": [1, 2, 3],
@@ -1797,16 +1939,16 @@ That data will be stored in the database as follows:
 
 
 ++++++++++++++++
-Key.save_tree()
+Node.save_tree()
 ++++++++++++++++
 
 .. code-block:: python
 
-    def save_tree(self, tree: dict, key: Key = None)
+    def save_tree(self, tree: dict, node: Node = None)
 
-The :code:`Key.save_tree()` method performs the reverse operation of the :code:`Key.load_tree()` method, and stores a Python dictionary representing a YottaDB tree or subtree in the database.
+The :code:`Node.save_tree()` method performs the reverse operation of the :code:`Node.load_tree()` method, and stores a Python dictionary representing a YottaDB tree or subtree in the database.
 
-The dictionary passed to :code:`Key.save_tree()` must have been previously generated by a call to :code:`Key.load_tree()` or otherwise maintain the same format. Any such dictionary may, however, be modified after its creation and subsequently passed to :code:`Key.save_tree()`.
+The dictionary passed to :code:`Node.save_tree()` must have been previously generated by a call to :code:`Node.load_tree()` or otherwise maintain the same format. Any such dictionary may, however, be modified after its creation and subsequently passed to :code:`Node.save_tree()`.
 
 For example, consider again these database nodes:
 
@@ -1826,18 +1968,18 @@ For example, consider again these database nodes:
    ^test4("sub3","subsub2")="test4sub3subsub2"
    ^test4("sub3","subsub3")="test4sub3subsub3"
 
-These can be retrieved and stored in a dictionary using :code:`Key.load_tree()`, modified, and then stored again in the database using :code:`Key.save_tree()`:
+These can be retrieved and stored in a dictionary using :code:`Node.load_tree()`, modified, and then stored again in the database using :code:`Node.save_tree()`:
 
 .. code-block:: python
 
     import yottadb
 
 
-    key = yottadb.Key("^test4")
-    key_dict = key.load_tree()
+    node = yottadb.Node("^test4")
+    node_dict = node.load_tree()
 
-    key_dict["value"] = "test4new"
-    key_dict["sub3"]["subsub3"] = "test4sub3subsub3new"
+    node_dict["value"] = "test4new"
+    node_dict["sub3"]["subsub3"] = "test4sub3subsub3new"
 
 The database will now contain the following nodes:
 
@@ -1859,277 +2001,289 @@ The database will now contain the following nodes:
 
 
 +++++++++
-Key.set()
+Node.set()
 +++++++++
 
 .. code-block:: python
 
     def set(self, value: AnyStr = "") -> None
 
-Matching `Python set()`_, :code:`Key.set()` wraps :ref:`ydb-set-s-st-fn` to set the local or global variable node represented by the given :code:`Key` object to the value specified by :code:`value`.
+Matching `Python set()`_, :code:`Node.set()` wraps :ref:`ydb-set-s-st-fn` to set the local or global variable node represented by the given :code:`Node` object to the value specified by :code:`value`.
 
 In the event of an error in the underlying :ref:`ydb-set-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
 .. code-block:: python
 
-    key = yottadb.Key("mylocal")["sub1"]["sub2"]
-    print(key.get()) # Prints None
-    key.set("test")
-    print(key.get()) # Prints b'test'
+    node = yottadb.Node("mylocal", ("sub1", "sub2"))
+    print(node.get()) # Prints None
+    node.set("test")
+    print(node.get()) # Prints b'test'
 
 ++++++++++++++++++++
-Key.subscript_next()
+Node.subscript_next()
 ++++++++++++++++++++
 
 .. code-block:: python
 
-    def subscript_next(self, reset: bool = False) -> bytes
+    def subscript_next(self) -> bytes
 
-Matching `Python subscript_next()`_, :code:`Key.subscript_next()` wraps :ref:`ydb-subscript-next-s-st-fn` to facilitate traversal of the local or global variable sub-tree at the subscript level represented by the given :code:`Key` object. A node or subtree does not have to exist at the specified key. The :code:`reset` parameter may be used to instruct :code:`Key.subscript_next()` to begin traversal at the first subscript at the current subscript level, even if :code:`Key.subscript_next()` has already traversed over it.
+Matching `Python subscript_next()`_, :code:`Node.subscript_next()` wraps :ref:`ydb-subscript-next-s-st-fn` to facilitate traversal of the local or global variable sub-tree at the subscript level represented by the given :code:`Node` object. A node or subtree does not have to exist at the specified node.
 
-- If :code:`reset` is omitted, it is set to :code:`False` by default.
 - At the level of the last subscript, if there is a next subscript with a node and/or a subtree that subscript will be returned as a :code:`bytes` object.
-- If there is no next node or subtree at that level of the subtree, a :code:`yottadb.YDBNodeEnd` exception will be raised.
-- A :code:`yottadb.YDBNodeEnd` exception will be raised on all subsequent calls to :code:`Key.subscript_next()` after exhausting all nodes and/or subtrees as described above
-- To enable re-traversal of the current subscript level, the user may pass a value of :code:`True` to :code:`Key.subscript_next()`, which will cause the function to return the next subscript at the current level, as if :code:`Key.subscript_next()` was not previously called and a :code:`yottadb.YDBNodeEnd` exception was not previously raised.
+- If the `Node` consists only of a variable name and no subscripts, then the next variable name in the database will be returned as a :code:`bytes` object.
+- If there is no next node, subtree, or variable at the given level of the subtree, a :code:`yottadb.YDBNodeEnd` exception will be raised.
 - In the event of any other error in the underlying :ref:`ydb-subscript-next-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
-The following example sets a value on multiple nodes at the first subscript level of a local variable, then iterates over each subscript at this level in two ways. First, the subscripts are iterated over using a :code:`Key.subscript_next()` manually in a succession of hard-coded calls.  Then, the starting subscript of the iteration is reset after iterating over all subscripts at that level. Finally, the subscripts are again iterated over, but this time using a :code:`while` loop instead of hard-coded individual calls to :code:`Key.subscript_next()`.
+Note that it may be easier to use :code:`Node.subscripts` for iterating over subscripts, unless iteration is desired to begin at a specific node, and not at the beginning of a given subscript level.
+
+The following example sets a value on multiple nodes at the first subscript level of a local variable, then iterates over each subscript at this level using a :code:`Node.subscript_next()` manually in a succession of hard-coded calls. Then, values are set on multiple variables and these variables are then iterated over.
 
 .. code-block:: python
 
-    key = yottadb.Key("testsubsnext")
-    key["sub1"] = "1"
-    key["sub2"] = "2"
-    key["sub3"] = "3"
-    key["sub4"] = "4"
+    node = yottadb.Node("testsubsnext")
+    node["sub1"] = "1"
+    node["sub2"] = "2"
+    node["sub3"] = "3"
+    node["sub4"] = "4"
 
-    print(key.subscript_next())  # Prints "sub1"
-    print(key.subscript_next())  # Prints "sub2"
-    print(key.subscript_next())  # Prints "sub3"
-    print(key.subscript_next())  # Prints "sub4"
-
-    try:
-        key.subscript_next()
-    except yottadb.YDBNodeEnd:
-        print(key[key.subscript_next(reset=True)].value)  # Prints b"1"
-        print(key[key.subscript_next()].value)  # Prints b"2"
-        print(key[key.subscript_next()].value)  # Prints b"3"
-        print(key[key.subscript_next()].value)  # Prints b"4"
+    next_sub = node[""].subscript_next()
+    print(next_sub)  # Prints "sub1"
+    next_sub = node[next_sub].subscript_next()
+    print(next_sub)  # Prints "sub2"
+    next_sub = node[next_sub].subscript_next()
+    print(next_sub)  # Prints "sub3"
+    next_sub = node[next_sub].subscript_next()
+    print(next_sub)  # Prints "sub4"
 
     try:
-        sub = key.subscript_next(reset=True)  # Resets starting subscript to ""
+        next_sub = node[next_sub].subscript_next()
     except yottadb.YDBNodeEnd:
-        # There are subscripts defined for the given Key, so a reset of subscript_next's
-        # next subscript to the default starting subscript of "" should not return
-        # a YDBError of YDB_ERR_NODEEND. If, on the other hand, there were no subscripts for the
-        # given Key, subscript.next() would always raise a YDBError of YDB_ERR_NODEEND, regardless of
-        # whether the `reset` argument is set to True or not.
-        assert False
+        print(next_sub)  # Prints "sub4"
 
-    count = 1
-    print(sub)  # Prints "sub1"
-    while True:
-        try:
-            sub = key.subscript_next()
-            count += 1
-            assert sub == "sub" + str(count)
-        except yottadb.YDBNodeEnd:
-            break
+    yottadb.set("var1", value="1")
+    yottadb.set("var2", value="2")
+    yottadb.set("var3", value="3")
+    yottadb.set("var4", value="4")
 
-++++++++++++++++++++++++
-Key.subscript_previous()
-++++++++++++++++++++++++
+    node = yottadb.Node("var1")
+    try:
+        while True:
+            next_sub = node.subscript_next()
+            print(next_sub)  # Prints, successively: "var2", "var3", "var4"
+            node = node.mutate(next_sub)
+    except yottadb.YDBNodeEnd:
+        print(next_sub)  # Prints "var4"
+
+
++++++++++++++++++++++++++
+Node.subscript_previous()
++++++++++++++++++++++++++
 
 .. code-block:: python
 
-    def subscript_previous(self, reset: bool = False) -> bytes
+    def subscript_previous(self) -> bytes
 
-Matching `Python subscript_previous()`_, :code:`Key.subscript_previous()` wraps :ref:`ydb-subscript-previous-s-st-fn` to facilitate reverse traversal of the local or global variable sub-tree at the subscript level represented by the given :code:`Key` object. A node or subtree does not have to exist at the specified key.
+Matching `Python subscript_previous()`_, :code:`Node.subscript_previous()` wraps :ref:`ydb-subscript-previous-s-st-fn` to facilitate traversal of the local or global variable sub-tree at the subscript level represented by the given :code:`Node` object. A node or subtree does not have to exist at the specified node.
 
-- If :code:`reset` is omitted, it is set to :code:`False` by default.
 - At the level of the last subscript, if there is a previous subscript with a node and/or a subtree that subscript will be returned as a :code:`bytes` object.
-- If there is no previous node or subtree at that level of the subtree, a :code:`yottadb.YDBNodeEnd` exception will be raised.
-- In the event of an error in the underlying :ref:`ydb-subscript-previous-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
+- If the `Node` consists only of a variable name and no subscripts, then the previous variable name in the database will be returned as a :code:`bytes` object.
+- If there is no previous node, subtree, or variable at the given level of the subtree, a :code:`yottadb.YDBNodeEnd` exception will be raised.
+- In the event of any other error in the underlying :ref:`ydb-subscript-previous-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
-The following example sets a value on multiple nodes at the first subscript level of a local variable, then iterates over each subscript at this level in two ways. First, the subscripts are iterated over using a :code:`Key.subscript_previous()` manually in a succession of hard-coded calls.  Then, the starting subscript of the iteration is reset after iterating over all subscripts at that level. Finally, the subscripts are again iterated over, but this time using a :code:`while` loop instead of hard-coded individual calls to :code:`Key.subscript_previous()`.
+The following example sets a value on multiple nodes at the first subscript level of a local variable, then iterates over each subscript at this level using a :code:`Node.subscript_previous()` manually in a succession of hard-coded calls. Then, values are set on multiple variables and these variables are then iterated over.
 
 .. code-block:: python
 
-    key = yottadb.Key("testsubsprevious")
-    key["sub1"] = "1"
-    key["sub2"] = "2"
-    key["sub3"] = "3"
-    key["sub4"] = "4"
+    node = yottadb.Node("testsubsprev")
+    node["sub1"] = "1"
+    node["sub2"] = "2"
+    node["sub3"] = "3"
+    node["sub4"] = "4"
 
-    print(key.subscript_previous())  # Prints "sub4"
-    print(key.subscript_previous())  # Prints "sub3"
-    print(key.subscript_previous())  # Prints "sub2"
-    print(key.subscript_previous())  # Prints "sub1"
-
-    try:
-        key.subscript_previous()
-    except yottadb.YDBNodeEnd:
-        print(key[key.subscript_previous(reset=True)].value)  # Prints b"4"
-        print(key[key.subscript_previous()].value)  # Prints b"3"
-        print(key[key.subscript_previous()].value)  # Prints b"2"
-        print(key[key.subscript_previous()].value)  # Prints b"1"
+    prev_sub = node["sub4"].subscript_previous()
+    print(prev_sub)  # Prints "sub3"
+    prev_sub = node[prev_sub].subscript_previous()
+    print(prev_sub)  # Prints "sub2"
+    prev_sub = node[prev_sub].subscript_previous()
+    print(prev_sub)  # Prints "sub1"
 
     try:
-        sub = key.subscript_previous(reset=True)  # Resets starting subscript to ""
+        prev_sub = node[prev_sub].subscript_previous()
     except yottadb.YDBNodeEnd:
-        # There are subscripts defined for the given Key, so a reset of subscript_previous's
-        # previous subscript to the default starting subscript of "" should not return
-        # a YDBError of YDB_ERR_NODEEND. If, on the other hand, there were no subscripts for the
-        # given Key, subscript.previous() would always raise a YDBError of YDB_ERR_NODEEND, regardless of
-        # whether the `reset` argument is set to True or not.
-        assert False
+        print(prev_sub)  # Prints "sub1"
 
-    count = 4
-    print(sub)  # Prints "sub4"
-    while True:
-        try:
-            sub = key.subscript_previous()
-            count -= 1
-            assert sub == "sub" + str(count)
-        except yottadb.YDBNodeEnd as e:
-            break
+    yottadb.set("var1", value="1")
+    yottadb.set("var2", value="2")
+    yottadb.set("var3", value="3")
+    yottadb.set("var4", value="4")
+
+    node = yottadb.Node("var4")
+    try:
+        while True:
+            prev_sub = node.subscript_previous()
+            print(prev_sub)  # Prints, successively: "var3", "var2", "var1", "testsubsprev"
+            node = node.mutate(prev_sub)
+    except yottadb.YDBNodeEnd:
+        print(prev_sub)  # Prints "testsubsprev"
+
 
 -----------------------------------
-YottaDB Key class magic methods
+YottaDB Node class magic methods
 -----------------------------------
+
+++++++++++++++
+Node.__call__()
+++++++++++++++
+
+.. code-block:: python
+
+    def __call__(self, *args) -> Node
+
+The :code:`Node.__call__()` magic method creates a new :code:`Node` object using the variable name and subscripts of the calling :code:`Node` object with the passed arguments in :code:`*args` appended as additional subscripts. In other words, it concatenates the calling :code:`Node` with the passed subscripts.
+
+.. code-block:: python
+
+        node = Node("mylocal", ("sub1", "sub2"))
+        node2 = node("sub3", "sub4")
+        print(node2)  # Prints mylocal("sub1","sub2","sub3","sub4")
 
 ++++++++++++
-Key.__eq__()
+Node.__eq__()
 ++++++++++++
 
 .. code-block:: python
 
     def __eq__(self, other) -> bool
 
-The :code:`Key.__eq__()` magic method allows for easy comparison between two :code:`Key` objects, using the Python :code:`==` operator. If the two :code:`Key` objects represent the same YottaDB local or global variable node, then :code:`Key.__eq__()` will return :code:`True`, otherwise it will return :code:`False`. For example:
+The :code:`Node.__eq__()` magic method allows for easy comparison between two :code:`Node` objects, using the Python :code:`==` operator. If the two :code:`Node` objects represent the same YottaDB local or global variable node, then :code:`Node.__eq__()` will return :code:`True`, otherwise it will return :code:`False`. For example:
 
 .. code-block:: python
 
-    key = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    key2 = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    print(key == key2) # Prints True
+    node = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    node2 = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    print(node == node2) # Prints True
 
-    key = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    key2 = yottadb.Key("^myglobal")["sub1"]
-    print(key == key2) # Prints False
+    node = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    node2 = yottadb.Node("^myglobal", ("sub1",))
+    print(node == node2) # Prints False
 
 +++++++++++++++++
-Key.__getitem__()
+Node.__getitem__()
 +++++++++++++++++
 
 .. code-block:: python
 
     def __getitem__(self, item)
 
-The :code:`Key.__getitem__()` magic method creates a new :code:`Key` object by adding the specified :code:`item` as an additional subscript on the given :code:`Key` object.
+The :code:`Node.__getitem__()` magic method creates a new :code:`Node` object by adding the specified :code:`item` as an additional subscript on the given :code:`Node` object.
 
-This enables usage of the standard index bracket syntax (:code:`[]`) for the transparent production of new :code:`Key` objects for both in-line, one-off usage and for the creation of new objects for later use.
+This enables usage of the standard index bracket syntax (:code:`[]`) for the transparent production of new :code:`Node` objects for both in-line, one-off usage and for the creation of new objects for later use.
 
 For example:
 
 .. code-block:: python
 
-    key1 = yottadb.Key("^myglobal")
-    key2 = key1["sub1"]
-    key3 = key2["sub2"]
-    key4 = key2["sub3"]
-    print(str(key1)) # Prints '^myglobal'
-    print(str(key2)) # Prints '^myglobal("sub1")'
-    print(str(key3)) # Prints '^myglobal("sub1","sub2")'
-    print(str(key4)) # Prints '^myglobal("sub1","sub3")'
+    node1 = yottadb.Node("^myglobal")
+    node2 = node1["sub1"]
+    node3 = node2["sub2"]
+    node4 = node2["sub3"]
+    print(node1) # Prints '^myglobal'
+    print(node2) # Prints '^myglobal("sub1")'
+    print(node3) # Prints '^myglobal("sub1","sub2")'
+    print(node4) # Prints '^myglobal("sub1","sub3")'
+
+    node = yottadb.Node("^myglobal")["sub1"]["sub2"]
+    print(node) # Prints '^myglobal("sub1","sub2")'
+
 
 ++++++++++++++
-Key.__iadd__()
+Node.__iadd__()
 ++++++++++++++
 
 .. code-block:: python
 
-    def __iadd__(self, num: Union[int, float, str, bytes]) -> Optional["Key"]
+    def __iadd__(self, num: Union[int, float, str, bytes]) -> Optional["Node"]
 
-The :code:`Key.__iadd__()` magic method allows for easy incrementation of the YottaDB local or global variable node represented by the :code:`Key` object, using the Python :code:`+=` operator. For example:
+The :code:`Node.__iadd__()` magic method allows for easy incrementation of the YottaDB local or global variable node represented by the :code:`Node` object, using the Python :code:`+=` operator. For example:
 
 In the event of an error in the underlying :ref:`ydb-incr-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
 .. code-block:: python
 
-    key = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    key.value = 2
-    key += 2
-    print(key.value) # Prints '4'
+    node = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    node.value = "2"
+    node += "2"
+    print(node.value) # Prints b'4'
 
 ++++++++++++++
-Key.__init__()
+Node.__init__()
 ++++++++++++++
 
 .. code-block:: python
 
-    def __init__(self, name: AnyStr, parent: Key = None) -> None
+    def __init__(self, name: AnyStr, subsarray: Tuple[AnyStr] = None) -> None
 
-The :code:`Key.__init__()` function acts as the constructor for the :code:`Key` class and is used to create new :code:`Key` objects.
+The :code:`Node.__init__()` function acts as the constructor for the :code:`Node` class and is used to create new :code:`Node` objects. The :code:`name` parameter represents a local or global variable name, while the :code:`subsarray` parameter represents a subscript array.
 
-Note: Users should not attempt to set :code:`parent`, but omit this parameter. This is because :code:`parent` is used implicitly by several :code:`Key` methods and not intended for use by users. If a user nonetheless passes a valid :code:`parent` argument, i.e. a :code:`Key` object, then a new :code:`Key` will be generated where :code:`name` is appended as an additional subscript at the end of the subscript array of the :code:`parent` :code:`Key`.
-
-The following errors are possible during :code:`Key` creation:
+The following errors are possible during :code:`Node` creation:
 - :code:`TypeError`: when :code:`name` is not of type :code:`bytes` or :code:`str`.
-- :code:`TypeError`: when :code:`parent` is not of type :code:`Key` or :code:`None`.
+- :code:`TypeError`: when :code:`subsarray` is not of type :code:`Tuple`, :code: `List`, or :code:`None`.
 - :code:`ValueError`: if a subscript array is specified for a YottaDB Intrinsic Special Variable (ISV), i.e. :code:`parent` is not :code:`None` and :code:`name` specifies an ISV.
-- :code:`ValueError`: if the subscript array, passed via :code:`parent`, exceeds :code:`yottadb.YDB_MAX_SUBS` in length.
+- :code:`ValueError`: if the subscript array exceeds :code:`yottadb.YDB_MAX_SUBS` in length.
 
 .. code-block:: python
 
-    key = yottadb.Key("^myglobal")["sub1"]["sub2"]
+    node = yottadb.Node("^myglobal")
+    print(node) # Prints '^myglobal'
+    node = yottadb.Node("^myglobal", ("sub1",))
+    print(node) # Prints '^myglobal("sub1")'
+    node = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    print(node) # Prints '^myglobal("sub1","sub2")'
 
-    # Set `parent` explicitly (not recommended)
-    key = yottadb.Key("sub3", parent=key)  # Raises TypeError for non-Key `parent` argument
-    print(str(key)) # Prints '^myglobal("sub1","sub2","sub3")'
-    key = yottadb.Key("^myglobal", parent="not a key object")  # Raises TypeError for non-Key `parent` argument
-
-    # Proper ISV Key creation
-    key = yottadb.Key("$ZSTATUS")
-    print(str(key)) # Prints '$ZSTATUS'
-    # Invalid ISV Key creation
-    key = yottadb.Key("$ZSTATUS")["sub1"]["sub2"]  # Raises ValueError for subscripted ISV
+    # Proper ISV Node creation
+    node = yottadb.Node("$ZSTATUS")
+    print(node) # Prints '$ZSTATUS'
+    # Invalid ISV Node creation
+    node = yottadb.Node("$ZSTATUS", ("sub1","sub2"))  # Raises ValueError for subscripted ISV
 
 ++++++++++++++
-Key.__isub__()
+Node.__isub__()
 ++++++++++++++
 
 .. code-block:: python
 
-    def __isub__(self, num: Union[int, float, str, bytes]) -> Optional["Key"]
+    def __isub__(self, num: Union[int, float, str, bytes]) -> Optional["Node"]
 
-The :code:`Key.__isub__()` magic method allows for easy decrementation of the YottaDB local or global variable node represented by the :code:`Key` object, using the Python :code:`-=` operator. For example:
+The :code:`Node.__isub__()` magic method allows for easy decrementation of the YottaDB local or global variable node represented by the :code:`Node` object, using the Python :code:`-=` operator. For example:
 
 In the event of an error in the underlying :ref:`ydb-incr-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
 .. code-block:: python
 
-    key = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    key.value = 2
-    key -= 2
-    print(key.value) # Prints '0'
+    node = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    node.value = "2"
+    node -= "2"
+    print(node.value) # Prints b'0'
 
 ++++++++++++++
-Key.__iter__()
+Node.__iter__()
 ++++++++++++++
 
 .. code-block:: python
 
     def __iter__(self) -> Generator
 
-The :code:`Key.__iter__()` magic method allows for easy iteration over the subscripts at the subscript level of the given :code:`Key` object, beginning from the first subscript. For example,
+The :code:`Node.__iter__()` magic method allows for easy iteration over the subscripts at the next subscript level relative to the calling :code:`Node` object, beginning from the first subscript.
+
+For each subscript at the next subscript level of the calling :code:`Node` object, :code:`Node.__iter__()` will return a new :code:`Node` object containing a copy of the subscript array of the calling :code:`Node` object with the next subscript appended.
+
+Note that :code:`Node.__iter__()` returns a mutable node. Mutable nodes can be converted to immutable nodes by calling their :code:`Node.copy()` method.
 
 In the event of an error in an underlying :ref:`ydb-subscript-next-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
 .. code-block:: python
 
-    fruits = yottadb.Key("^inventory")["fruits"]
+    fruits = yottadb.Node("^inventory", ("fruits",))
     fruits["apples"] = 'in stock'
     fruits["bananas"] = 'in stock'
     fruits["oranges"] = 'sold out'
@@ -2150,49 +2304,49 @@ In the event of an error in an underlying :ref:`ydb-subscript-next-s-st-fn` call
     # inventory("fruits",$ZCH(128)_"pomegranates"): b'\x80sold out'
 
 ++++++++++++++
-Key.__repr__()
+Node.__repr__()
 ++++++++++++++
 
 .. code-block:: python
 
     def __repr__(self) -> str
 
-The :code:`Key.__repr__()` magic method returns a Python-readable representation of the :code:`Key` object. Specifically, :code:`Key.__repr__()` produces a representation of the :code:`Key` object that can be passed to the built-in :code:`eval()` function to produce a new instance of the object.
+The :code:`Node.__repr__()` magic method returns a Python-readable representation of the :code:`Node` object. Specifically, :code:`Node.__repr__()` produces a representation of the :code:`Node` object that can be passed to the built-in :code:`eval()` function to produce a new instance of the object.
 
-Note, however, that this cannot be done with perfect reliability, as successful object reproduction will depend on how the :code:`yottadb` module is imported. To provide flexibility, :code:`Key.__repr__()` produces a representation as if the :code:`Key` class is imported directly, i.e. `from yottadb import Key`. This allows for :code:`eval()` to be used to reproduce a :code:`Key` object, provided that the :code:`str` passed to it includes any module import prefixes qualifying the :code:`Key` name. For example:
+Note, however, that this cannot be done with perfect reliability, as successful object reproduction will depend on how the :code:`yottadb` module is imported. To provide flexibility, :code:`Node.__repr__()` produces a representation as if the :code:`Node` class is imported directly, i.e. `from yottadb import Node`. This allows for :code:`eval()` to be used to reproduce a :code:`Node` object, provided that the :code:`str` passed to it includes any module import prefixes qualifying the :code:`Node` name. For example:
 
 .. code-block:: python
 
     import yottadb
 
-    key = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    print(repr(key)) # Prints Key("^myglobal")["sub1"]["sub2"]
+    node = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    print(repr(node)) # Prints Node("^myglobal", ("sub1", "sub2"))
 
-    # Attempt to call eval() without fully qualifying the import prefix for the Key class
+    # Attempt to call eval() without fully qualifying the import prefix for the Node class
     try:
-        eval(repr(key))
+        eval(repr(node))
     except NameError:
-        # eval() raises: "NameError: name 'Key' is not defined"
+        # eval() raises: "NameError: name 'Node' is not defined"
         assert True
 
-    # Call eval() with a fully qualified import prefix for the Key class
-    print(repr(eval("yottadb." + repr(key))))  # Prints Key("^myglobal")["sub1"]["sub2"]
+    # Call eval() with a fully qualified import prefix for the Node class
+    print(repr(eval("yottadb." + repr(node))))  # Prints Node("^myglobal", ("sub1", "sub2"))
 
 ++++++++++++++++++
-Key.__reversed__()
+Node.__reversed__()
 ++++++++++++++++++
 
 .. code-block:: python
 
     def __reversed__(self) -> Generator
 
-The :code:`Key.__reversed__()` magic method allows for easy iteration over the subscripts at the subscript level of the given :code:`Key` object, beginning from the last subscript. For example,
+The :code:`Node.__reversed__()` magic method allows for easy iteration over the subscripts at the subscript level of the given :code:`Node` object, beginning from the last subscript. For example,
 
 In the event of an error in an underlying :ref:`ydb-subscript-previous-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
 .. code-block:: python
 
-    vegetables = yottadb.Key("^inventory")["vegetables"]
+    vegetables = yottadb.Node("^inventory", ("vegetables",))
     vegetables["carrots"] = 'in stock'
     vegetables["cabbages"] = 'sold out'
     vegetables["potatoes"] = 'in stock'
@@ -2207,34 +2361,34 @@ In the event of an error in an underlying :ref:`ydb-subscript-previous-s-st-fn` 
     # carrots: in stock
 
 +++++++++++++++++
-Key.__setitem__()
+Node.__setitem__()
 +++++++++++++++++
 
 .. code-block:: python
 
     def __setitem__(self, item, value)
 
-The :code:`Key.__setitem__()` magic method provides a simple interface for updating the value at the YottaDB local or global variable node represented by the :code:`Key` object, using the Python :code:`=` operator. For example:
+The :code:`Node.__setitem__()` magic method provides a simple interface for updating the value at the YottaDB local or global variable node represented by the :code:`Node` object, using the Python :code:`=` operator. For example:
 
 In the event of an error in the underlying :ref:`ydb-set-s-st-fn` call, a :code:`YDBError` exception is raised reflecting the underlying YottaDB error code and message.
 
 .. code-block:: python
 
-    key = yottadb.Key("^myglobal")["sub1"]
-    key["sub2"] = "my value"
-    print(key["sub2"].value) # Prints 'my value'
+    node = yottadb.Node("^myglobal")["sub1"]
+    node["sub2"] = "my value"
+    print(node["sub2"].value) # Prints 'my value'
 
 +++++++++++++
-Key.__str__()
+Node.__str__()
 +++++++++++++
 
 .. code-block:: python
 
     def __str__(self) -> str
 
-The :code:`Key.__str__()` magic method returns a human-readable representation of the :code:`Key` object as a Python :code:`str` object. For a Python-readable representation of the object, use `Key.__repr__()`_.
+The :code:`Node.__str__()` magic method returns a human-readable representation of the :code:`Node` object as a Python :code:`str` object. For a Python-readable representation of the object, use `Node.__repr__()`_.
 
 .. code-block:: python
 
-    key = yottadb.Key("^myglobal")["sub1"]["sub2"]
-    print(str(key)) # Prints '^myglobal("sub1","sub2")'
+    node = yottadb.Node("^myglobal", ("sub1", "sub2"))
+    print(str(node)) # Prints '^myglobal("sub1","sub2")'
