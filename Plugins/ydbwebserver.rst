@@ -21,6 +21,10 @@ YottaDB Web Server
 Overview
 --------
 
+.. note::
+
+   The YottaDB web server is intended as a back-end tool to provide access to YottaDB databases using the Hypertext Transfer Protocol, and to support the YottaDB GUI. It is not intended to be a general purpose web server like `Apache <https://httpd.apache.org/>`_ or `NGINX <https://nginx.org/>`_ and aims to comply with the `YottaDB Security Philosophy <../AdminOpsGuide/securityph.html>`_. It is not intended to be used as a front-end web server. Please deploy it accordingly.
+
 +++++++++++++
 Prerequisites
 +++++++++++++
@@ -483,8 +487,8 @@ To transfer a large amount of data, a YottaDB global variable may be preferable,
         set @httprsp@("mime")="text/plain; charset=utf-8"
 
 .. note::
-        
-    If ``httprsp`` begins with a ``^``, it's interpreted as a global. If you want to send a literal ``^`` in your data, you can do 
+
+    If ``httprsp`` begins with a ``^``, it's interpreted as a global. If you want to send a literal ``^`` in your data, you can do
     that by setting ``httprsp(1)`` to ``^rest_of_data`` and not setting ``httprsp``.
 
 ``httprsp`` can also be used to send chunked-encoded data as well. Here's how you do it:
@@ -510,7 +514,7 @@ Things get more interesting with lines 5 and 6. These are routine
 callbacks, allowing you to custom produce chunks dynamically:
 
 Here's ``chunkcallback1^myroutine``, which sends a single chunk:
-    
+
 .. code-block::
 
     new oldio set oldio=$io
