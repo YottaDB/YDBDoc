@@ -12739,7 +12739,7 @@ Action: Look for a non-alphanumeric character in the READ argument.
 RWFORMAT
 ----------------
 
-RWFORMAT, A valid format expression (!!, #, or ?expr) expected here
+RWFORMAT, A valid format expression (!, #, or ?expr) expected here
 
 Compile Time Error: This indicates that a READ or WRITE command specified a format with invalid trailing characters.
 

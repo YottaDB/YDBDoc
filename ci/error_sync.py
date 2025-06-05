@@ -262,6 +262,8 @@ def normalize_msg(err, msg):
         if err not in NO_AUTO_DELIMITERS:
             placeholder = r"[\[(]?(0x)?" + placeholder + r"[\])]?"
         msg = re.sub(placeholder, PLACEHOLDER, msg)
+    # NOTE: this has to be done after we replace placeholders
+    msg = msg.replace("!!", "!")
     return msg
 
 
