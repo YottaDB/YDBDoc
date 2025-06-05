@@ -50,9 +50,13 @@ if ! diff -c1 $err_file <(uniq $errmsg_file) > err_diff.out; then
 		cat err_diff.out
 		rm sorted_diff.out
 	else
-		# Here as a backup check, but this should have already been caught by the python script.
-		echo "FATAL: mismatch between YDB errors and errormsgref.rst"
-		echo "Please check diff output below (undocumented YDB errors on < left, documentation for errors that do not exist on > right):"
+		# Normally this will be caught by the python script, but we can get here if a code is documented but does not
+		# have an error number.
+		# NOTE: all MUPIP and GDE errors do not have an error number.
+		# TODO: this should be possible to automatically fix.
+		echo "FATAL: some error codes in errormsgref.rst do not have an error number"
+		echo "NOTE: you can find the number in $ydb/sr_port/ydb*errors.h"
+		echo "Please check diff output below (errors without a code on < left, documentation for errors that do not exist on > right):"
 		cat sorted_diff.out
 		rm err_diff.out
 	fi
