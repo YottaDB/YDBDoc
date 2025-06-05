@@ -5343,6 +5343,30 @@ Action: Report this database error to the group responsible for database integri
 
 
 ----------------------
+GVDBGNAKEDMISMATCH
+----------------------
+
+GVDBGNAKEDMISMATCH, Invalid GVNAKED in gv_optimize: $REFERENCE did not match OP_GVNAKED: AAAA != BBBB. Opcodes seen: CCCC
+
+Run Time Error: An internal compiler error was detected.
+
+Action: Report the error to your YottaDB support channel, including the CCCC error code as well as the source code line that generated the error.
+
+Note that this error only occurs in DBG builds of YottaDB, not PRO builds.
+
+----------------------
+GVDBGNAKEDUNSET
+----------------------
+
+GVDBGNAKEDUNSET, Invalid GVNAKED in gv_optimize: $REFERENCE was unset. Opcodes seen: CCCC
+
+Run Time Error: An internal compiler error was detected.
+
+Action: Report the error to your YottaDB support channel, including the CCCC error code as well as the source code line that generated the error.
+
+Note that this error only occurs in DBG builds of YottaDB, not PRO builds.
+
+----------------------
 GVFAILCORE
 ----------------------
 
