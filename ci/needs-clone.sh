@@ -24,7 +24,8 @@ if [ $# = 0 ] || [ $# -gt 3 ]; then
 fi
 
 remote="$1"
-branch="${2:-upstream/HEAD}"
+branch_with_remote="${2:-upstream/HEAD}"
+branch=$(echo "$branch_with_remote"| cut -d / -f 2-)
 workdir=${3:-git-checkouts/$(echo "$remote" | sed 's#/$##; s#\.git$##' | rev | cut -d/ -f1 | rev | cut -d. -f1)}
 workdir_path=$(realpath .)/$workdir
 local_dir="${4:-../$(basename "$workdir")}"
@@ -40,9 +41,9 @@ if [ ! -d "$workdir" ]; then \
 			if ! git remote | grep -qFx upstream; then
 				git remote add upstream "$remote"
 			fi
-			git fetch upstream
+			git fetch upstream "$branch"
 			git remote set-head upstream -a
-			git worktree add --force --detach "$workdir_path" "$branch"
+			git worktree add --force --detach "$workdir_path" "$branch_with_remote"
 		)
 	else
 		git clone "$remote" "$workdir"
@@ -51,15 +52,12 @@ if [ ! -d "$workdir" ]; then \
 		git fetch upstream
 		git remote set-head upstream -a
 	fi
-else
-	cd "$workdir"
-	git fetch upstream
 fi >&2
 
 {
 	cd "$workdir_path"
-	git fetch --tags upstream
-	git checkout --detach "$branch"
+	git fetch --tags upstream "$branch"
+	git checkout --detach "$branch_with_remote"
 } >&2
 
 echo "$workdir"
