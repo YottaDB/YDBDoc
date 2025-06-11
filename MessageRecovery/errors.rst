@@ -6469,6 +6469,36 @@ Run Time Error: This indicates that the intrinsic special variable xxxx was pass
 
 Action: Fix the application code bug.
 
+--------------
+JANSSONDLERROR
+--------------
+
+JANSSONDLERROR, Attempt to load Jansson JSON library failed: xxxx - in yyyy call
+
+Run Time Error: This indicates that the process encountered a problem attempting to load the Jansson dynamically linked library, or one of its symbols, during a call to function yyyy.
+
+Action: Refer to the associated details in xxxx for more information.
+
+------------------
+JANSSONENCODEERROR
+------------------
+
+JANSSONENCODEERROR, JSON encoding error: xxxx - in yyyy call
+
+Run Time Error: An error occurred while trying to encode data from an M local or global array as JSON, during a call to function yyyy. Since the Jansson library uses the UTF-8 encoding, this error most likely indicates that a byte sequence that is invalid UTF-8 was encountered while processing a subscript or value in an M local or global array.
+
+Action: Refer to the associated details in xxxx for more information.
+
+------------------
+JANSSONINVALIDJSON
+------------------
+
+JANSSONINVALIDJSON, Invalid JSON: xxxx - in yyyy call
+
+Run Time Error: An error occurred while trying to decode data from JSON, in to an M local or global array, during a call to function yyyy.
+
+Action: Refer to the associated details in xxxx for more information.
+
 ---------------------
 JIUNHNDINT
 ---------------------
