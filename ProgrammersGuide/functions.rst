@@ -2004,6 +2004,7 @@ Sends its argument to an audit/logger listener process. This function requires s
 * If LGDE is specified as an option for the AZA_ENABLE facility, GDE logs all commands. YottaDB ignores this option if specified with other A*_ENABLE audit logging facilities. When it fails to log a command, GDE issues a `GDELOGFAIL <../MessageRecovery/errors.html#gdelogfail>`_ error. The following table characterizes $ZAUDITLOG() and GDE audit logging behavior:
 
 **$ZAUDITLOG() / GDE Logging Characteristics**
+
 +------------+------+-----------------+-------------------+---------------------+
 | AZA_ENABLE | LGDE | Logging Success | GDE Audit Logging | $ZAUDITLOG() result |
 +============+======+=================+===================+=====================+
