@@ -248,6 +248,12 @@ YottaDB supports both ydb_* environment variables and GT.M environment variables
 
 Environment variables of the form ydb_xc_<package> are used to point to `external call tables <../ProgrammersGuide/extrout.html#using-external-calls>`_; the GT.M names of these variables are of the form GTMXC_<package>.
 
+Boolean environment variables are:
+
+* **True** when set to a non-zero numeric value, "yes" or "TRUE" (case-insensitive), or a leading substring of "yes" or "true".
+
+* **False** when set to a zero numeric value, "no" or "FALSE" (case-insensitive), or a leading substring of "no" or "false".
+
 A comprehensive list follows of environment variables that are directly or indirectly used by YottaDB:
 
 +++++++++
@@ -295,13 +301,13 @@ ydb_autorelink_ctlmax
 +++++++++++++++++++++++++
 ydb_autorelink_keeprtn
 +++++++++++++++++++++++++
-**ydb_autorelink_keeprtn (gtm_autorelink_keeprtn)**: When ydb_autorelink_keeprtn is set to 1, t[rue], or y[es] , exiting processes leave auto-relinked routines in shared memory. When the environment variable ydb_autorelink_keeprtn is undefined, 0, f[alse] or n[o], exiting processes purge auto-relinked routines in shared memory if no other processes are using them. Regardless of the value of ydb_autorelink_keeprtn, the Operating System removes an auto-relink shared memory repository when there are no processes accessing it.
-
-All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE:
+**ydb_autorelink_keeprtn (gtm_autorelink_keeprtn)**: When set to a true value, exiting processes leave auto-relinked routines in shared memory. When the environment variable ydb_autorelink_keeprtn is undefined or false, exiting processes purge auto-relinked routines in shared memory if no other processes are using them. Regardless of the value of ydb_autorelink_keeprtn, the Operating System removes an auto-relink shared memory repository when there are no processes accessing it.
 
 * Processes do less work on exiting, with some performance gain - faster process termination - likely only observable when a large number of processes exit concurrently.
 
 * In a production environment, an application that frequently invokes YottaDB routines in short running processes (such as YottaDB routines invoked by web servers using interfaces such as CGI) may give better performance when setting ydb_autorelink_keeprtn or using at least one long running auto-relink process that remains attached to the shared memory to keep routines available in shared memory for use when short running processes need them.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 +++++++++++++++++++++
 ydb_autorelink_shm
@@ -312,6 +318,8 @@ ydb_autorelink_shm
 ydb_badchar
 ++++++++++++++
 **ydb_badchar (gtm_badchar)** specifies the initial setting that determines whether YottaDB should raise an error when it encounters an illegal UTF-8 character sequence. This setting can be changed with a `VIEW "[NO]BADCHAR" command <../ProgrammersGuide/commands.html#no-badchar>`_, and is ignored for I/O processing and in M mode.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++++++
 ydb_baktmpdir
@@ -384,7 +392,7 @@ ydb_crypt_config
 +++++++++++++++++
 ydb_crypt_fips
 +++++++++++++++++
-**ydb_crypt_fips (gtmcrypt_FIPS)** specifies whether the plugin reference implementation should attempt to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. When the environment variable $ydb_crypt_fips is set to 1 (or evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode." Note that to comply with FIPS 140-2 you should be knowledgeable with that standard and take many steps beyond setting this environment variable. By default YottaDB does not enforce "FIPS mode.
+**ydb_crypt_fips (gtmcrypt_FIPS)** specifies whether the plugin reference implementation should attempt to use either OpenSSL or Libgcrypt to provide database encryption that complies with FIPS 140-2. When the environment variable $ydb_crypt_fips is set to 1 (or evaluates to a non-zero integer or any case-insensitive string or leading substring of "TRUE" or "YES"), the plugin reference implementation attempts to use libgcrypt (from GnuPG) and libcrypto (OpenSSL) in "FIPS mode." Note that to comply with FIPS 140-2 you should be knowledgeable with that standard and take many steps beyond setting this environment variable. By default YottaDB does not enforce "FIPS mode.
 
 +++++++++++++++++++
 ydb_crypt_plugin
@@ -413,7 +421,9 @@ ydb_cur_gbldir was added to YottaDB effective release `r1.36 <https://gitlab.com
 ++++++++++++++++++++++++++++++
 ydb_dbfilext_syslog_disable
 ++++++++++++++++++++++++++++++
-**ydb_dbfilext_syslog_disable (gtm_dbfilext_syslog_disable)** Controls whether database file extensions are logged in the syslog or not. If the environment variable is set to a non-zero numeric value or case-independent string or leading substring of TRUE or YES, database file extensions are not logged to the syslog.
+**ydb_dbfilext_syslog_disable (gtm_dbfilext_syslog_disable)** controls whether database file extensions are logged in the syslog or not. If the environment variable is set to a true value, database file extensions are not logged to the syslog.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 +++++++++++++
 ydb_dbglvl
@@ -499,13 +509,17 @@ Effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, at 
 +++++++++++++
 ydb_dmterm
 +++++++++++++
-**ydb_dmterm (gtm_dmterm)** specifies an initial value at process startup for `VIEW "DMTERM" <../ProgrammersGuide/commands.html#no-dmterm>`_. A case-insensitive value of "1", "yes", or "true" establishes a DMTERM state at process initiation where direct mode uses default terminal characteristics and ignores application settings for $PRINCIPAL; all other values, including no value, result in the default VIEW "NODMTERM" behavior.
+**ydb_dmterm (gtm_dmterm)** specifies an initial value at process startup for `VIEW "DMTERM" <../ProgrammersGuide/commands.html#no-dmterm>`_. A true value establishes a DMTERM state at process initiation where direct mode uses default terminal characteristics and ignores application settings for $PRINCIPAL; all other values, including no value, result in the default VIEW "NODMTERM" behavior.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++++++
 ydb_dollartest
 ++++++++++++++++
 
 **ydb_dollartest** provides an initial value for `$TEST <../ProgrammersGuide/isv.html#test>`_. When ydb_dollartest is set to 0 or 1, the value of $TEST will be set to 0 or 1 respectively. If ydb_dollartest is undefined then the value of $TEST will be set to 1.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 .. _ydb-env-translate-env-var:
 
@@ -563,7 +577,9 @@ ydb_gbldir_translate
 ++++++++++++++
 ydb_gdscert
 ++++++++++++++
-**ydb_gdscert (gtm_gdscert)** specifies the initial setting that controls whether YottaDB processes should test updated database blocks for structural damage. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", YottaDB performs a block-level integrity check on every block as a process commits it. Within a running process, `VIEW "GDSCERT":value <../ProgrammersGuide/commands.html#gdscert-value>`_ controls this setting. By default, YottaDB does not check database blocks for structural damage, because the impact on performance is usually unwarranted.
+**ydb_gdscert (gtm_gdscert)** specifies the initial setting that controls whether YottaDB processes should test updated database blocks for structural damage. If it is defined and evaluates to a true value, YottaDB performs a block-level integrity check on every block as a process commits it. Within a running process, `VIEW "GDSCERT":value <../ProgrammersGuide/commands.html#gdscert-value>`_ controls this setting. By default, YottaDB does not check database blocks for structural damage, because the impact on performance is usually unwarranted.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++++
 ydb_hostname
@@ -577,14 +593,16 @@ If the environment variable **ydb_hostname** is set, YottaDB uses its value inst
 ydb_hugetlb_shm
 ++++++++++++++++
 
-**ydb_hugetlb_shm (gtm_hugetlb_shm)** specifies the initial value that determines whether a YottaDB process should use hugepages to back shared memory. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES" in a YottaDB process creating shared memory, YottaDB attempts to back all such shared memory segments with hugepages, using the default hugepage size. If hugepages cannot be used, YottaDB backs the shared memory with base pages instead, and attempts to pin the shared memory if requested with $ydb_pinshm.
+**ydb_hugetlb_shm (gtm_hugetlb_shm)** specifies the initial value that determines whether a YottaDB process should use hugepages to back shared memory. If it is defined, and evaluates to a non-zero integer or any case-insensitive string or leading substring of "TRUE" or "YES" in a YottaDB process creating shared memory, YottaDB attempts to back all such shared memory segments with hugepages, using the default hugepage size. If hugepages cannot be used, YottaDB backs the shared memory with base pages instead, and attempts to pin the shared memory if requested with $ydb_pinshm.
 
 +++++++++++++++
 ydb_hupenable
 +++++++++++++++
-**ydb_hupenable (gtm_hupenable)** specifies the initial value that determines whether a YottaDB process should recognize a disconnect signal from a PRINCIPAL device that is a terminal. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has disconnected. Within a running process, `USE $PRINCIPAL:[NO]HUP[ENABLE] <../ProgrammersGuide/ioproc.html#hupenable>`_ controls this behavior. By default, YottaDB ignores such a signal, but a process that ignores the signal may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the syslog.
+**ydb_hupenable (gtm_hupenable)** specifies the initial value that determines whether a YottaDB process should recognize a disconnect signal from a PRINCIPAL device that is a terminal. If it is defined and evaluates to a true value, the process receives a TERMHANGUP error if the OS signals that the terminal assigned to the process as the PRINCIPAL device has disconnected. Within a running process, `USE $PRINCIPAL:[NO]HUP[ENABLE] <../ProgrammersGuide/ioproc.html#hupenable>`_ controls this behavior. By default, YottaDB ignores such a signal, but a process that ignores the signal may subsequently receive an IOEOF or a TERMWRITE error from an attempt to respectively READ from, or WRITE to the missing device. YottaDB terminates a process that ignores more than one of these messages and, if the process is not in Direct Mode, sends a NOPRINCIO message to the syslog.
 
 ydb_hupenable was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++++++++
 ydb_icu_version
@@ -594,7 +612,9 @@ ydb_icu_version
 ++++++++++++++++
 ydb_ipv4_only
 ++++++++++++++++
-**ydb_ipv4_only (gtm_ipv4_only)** specifies whether a Source Server should establish only IPv4 connections with a Receiver Server or sockets associated with a SOCKET device. If it is defined, and evaluates to a non-zero integer, or any case-independent string or leading substring of "TRUE" or "YES", the Source Server establishes only IPv4 connections with the Receiver Server. ydb_ipv4_only is useful for environments where different server names are not used for IPv4 and IPv6 addresses.
+**ydb_ipv4_only (gtm_ipv4_only)** specifies whether a Source Server should establish only IPv4 connections with a Receiver Server or sockets associated with a SOCKET device. If it is defined and evaluates to a true value, the Source Server establishes only IPv4 connections with the Receiver Server. ydb_ipv4_only is useful for environments where different server names are not used for IPv4 and IPv6 addresses.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++++++++++++++++
 ydb_jnl_release_timeout
@@ -610,6 +630,8 @@ ydb_keep_obj
 ydb_lct_stdnull
 ++++++++++++++++++
 **ydb_lct_stdnull (gtm_lct_stdnull)** specifies whether a YottaDB process should use standard collation for local variables with null subscripts or `historical null collation <../ProgrammersGuide/langfeat.html#null-subs-colltn>`_.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 +++++++++++
 ydb_link
@@ -703,14 +725,18 @@ ydb_mupjnl_parallel
 ++++++++++++++++
 ydb_nocenable
 ++++++++++++++++
-**ydb_nocenable (gtm_nocenable)** specifies whether the $principal terminal device should ignore <CTRL-C> or use <CTRL-C> as a signal to place the process into direct mode; a USE command can modify this device characteristic. If ydb_nocenable is defined and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", $principal ignores <CTRL-C>. If ydb_nocenable is not set or evaluates to a value other than a positive integer or any case-independent string or leading substring of "FALSE" or "NO", <CTRL-C> on $principal places the process into direct mode at the next opportunity (usually at a point corresponding to the beginning of the next source line).
+**ydb_nocenable (gtm_nocenable)** specifies whether the $principal terminal device should ignore <CTRL-C> or use <CTRL-C> as a signal to place the process into direct mode; a USE command can modify this device characteristic. If ydb_nocenable is defined and evaluates to a true value, $principal ignores <CTRL-C>. If ydb_nocenable is not set or evaluates to a value other than a positive integer or any case-insensitive string or leading case-insensitive substring of "FALSE" or "NO", <CTRL-C> on $principal places the process into direct mode at the next opportunity (usually at a point corresponding to the beginning of the next source line).
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 +++++++++++++
 ydb_nofflf
 +++++++++++++
-**ydb_nofflf (gtm_nofflf)** specifies the default WRITE # behavior for STREAM and VARIABLE format sequential files. If it is set to 1, Y[ES] or T[RUE], WRITE # writes only a form-feed <FF> character in conformance to the M standard. If it is not defined or set to 0, N[O] or F[ALSE], WRITE # writes <FF><LF> characters. The [NO]FFLF deviceparameter for USE and OPEN commands takes precedence over any value of ydb_nofflf.
+**ydb_nofflf (gtm_nofflf)** specifies the default WRITE # behavior for STREAM and VARIABLE format sequential files. If it is set to a true value, WRITE # writes only a form-feed <FF> character in conformance to the M standard. If it is not defined or set to false, WRITE # writes <FF><LF> characters. The [NO]FFLF deviceparameter for USE and OPEN commands takes precedence over any value of ydb_nofflf.
 
 ydb_nofflf was added to YottaDB effective release `r1.34 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.34>`_.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++++++++++++++++++++++
 ydb_non_blocked_write_retries
@@ -734,7 +760,9 @@ ydb_nontprestart_log_first
 ++++++++++++++
 ydb_noundef
 ++++++++++++++
-**ydb_noundef (gtm_noundef)** specifies the initial setting that controls whether a YottaDB process should treat undefined global or local variables as having an implicit value of an empty string. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES", then YottaDB treats undefined variables as having an implicit value of an empty string. The VIEW "[NO]UNDEF" command can alter this behavior in an active process. By default, YottaDB signals an error on an attempt to use the value of an undefined variable.
+**ydb_noundef (gtm_noundef)** specifies the initial setting that controls whether a YottaDB process should treat undefined global or local variables as having an implicit value of an empty string. If it is defined and evaluates to a true value, then YottaDB treats undefined variables as having an implicit value of an empty string. The VIEW "[NO]UNDEF" command can alter this behavior in an active process. By default, YottaDB signals an error on an attempt to use the value of an undefined variable.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++++++++++++
 ydb_obfuscation_key
@@ -761,7 +789,9 @@ ydb_pattern_file/ydb_pattern_table
 +++++++++++
 ydb_pinshm
 +++++++++++
-**ydb_pinshm (gtm_pinshm)** specifies whether a YottaDB process should attempt to pin shared memory it creates into physical memory. If it is defined and evaluates to a non-zero integer or any case-independent string or leading substring of "TRUE" or "YES" in a process creating shared memory, YottaDB attempts to pin shared memory used for database global buffers, replication buffers, and routine buffers into physical memory. As hugepages are implicitly locked in physical memory, YottaDB does not attempt to pin shared memory buffers backed by hugepages. $ydb_pinshm does not pin memory used by online INTEG (integ snapshot). Pinning may not succeed due to insufficient physical memory and/or OS configuration. By default, YottaDB does not attempt to pin shared memory.
+**ydb_pinshm (gtm_pinshm)** specifies whether a YottaDB process should attempt to pin shared memory it creates into physical memory. If it is defined and evaluates to a true value, YottaDB attempts to pin shared memory used for database global buffers, replication buffers, and routine buffers into physical memory. As hugepages are implicitly locked in physical memory, YottaDB does not attempt to pin shared memory buffers backed by hugepages. $ydb_pinshm does not pin memory used by online INTEG (integ snapshot). Pinning may not succeed due to insufficient physical memory and/or OS configuration. By default, YottaDB does not attempt to pin shared memory.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++++++
 ydb_poollimit
@@ -823,11 +853,13 @@ ydb_quiet_halt
 +++++++++++++++++
 **ydb_quiet_halt (gtm_quiet_halt)** specifies whether YottaDB should disable the FORCEDHALT message when the process is stopped via MUPIP STOP or by a SIGTERM signal (as sent by some web servers).
 
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
+
 +++++++++++++++++
 ydb_readline
 +++++++++++++++++
 
-**ydb_readline** when set to 1 (recommended) or a case insensitive t[rue] or y[es], specifies that `M Direct Mode <../ProgrammersGuide/opdebug.html#operating-and-debugging-in-direct-mode>`_, LKE, DSE and MUPIP should use `GNU Readline <https://www.gnu.org/software/readline/>`_ if it is installed on the system. Otherwise, YottaDB direct mode uses a traditional implementation that is part of YottaDB, whereas LKE, DSE and MUPIP have no recall capability, and very basic line editing. A short summary of YottaDB use of Readline is provided here; refer to the `Readline documentation <https://tiswww.cwru.edu/php/chet/readline/rltop.html#Documentation>`_ for details. :ref:`ydb-env-set` sets ydb_readline to 1.
+**ydb_readline** when set to a true (recommended) value, specifies that `M Direct Mode <../ProgrammersGuide/opdebug.html#operating-and-debugging-in-direct-mode>`_, LKE, DSE and MUPIP should use `GNU Readline <https://www.gnu.org/software/readline/>`_ if it is installed on the system. Otherwise, YottaDB direct mode uses a traditional implementation that is part of YottaDB, whereas LKE, DSE and MUPIP have no recall capability, and very basic line editing. A short summary of YottaDB use of Readline is provided here; refer to the `Readline documentation <https://tiswww.cwru.edu/php/chet/readline/rltop.html#Documentation>`_ for details. :ref:`ydb-env-set` sets ydb_readline to 1.
 
 Command history is saved in $HOME/.ydb_{YottaDB,DSE,LKE,MUPIP}_history. When Readline is enabled:
 
@@ -864,10 +896,14 @@ Limitations include:
 
 * Readline is not supported for the `READ <../ProgrammersGuide/commands.html#read>`_ command.
 
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
+
 ++++++++++++++++++++++++++
 ydb_recompile_newer_src
 ++++++++++++++++++++++++++
-**ydb_recompile_newer_src** when set to 1, t[rue], or y[es], specifies that a ZLINK/DO/GOTO/ZBREAK/ZGOTO/ZPRINT/$TEXT should recompile the :code:`.m` file only if it has a newer modification time than the corresponding :code:`.o` file. The default behavior is for the :code:`.m` file to be recompiled if its modification time is later than OR equal to that of the corresponding :code:`.o` file. ydb_recompile_newer_src was added effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+**ydb_recompile_newer_src** when set to a true value, specifies that a ZLINK/DO/GOTO/ZBREAK/ZGOTO/ZPRINT/$TEXT should recompile the :code:`.m` file only if it has a newer modification time than the corresponding :code:`.o` file. The default behavior is for the :code:`.m` file to be recompiled if its modification time is later than OR equal to that of the corresponding :code:`.o` file. ydb_recompile_newer_src was added effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++
 ydb_rel
@@ -931,12 +967,16 @@ ydb_statsdir
 ++++++++++++++++
 ydb_statshare
 ++++++++++++++++
-**ydb_statshare (gtm_statshare)** specifies an initial value for the `VIEW "[NO]STATSHARE" <../ProgrammersGuide/commands.html#view-nostatshare>`_ setting.
+**ydb_statshare (gtm_statshare)** specifies an initial boolean value for the `VIEW "[NO]STATSHARE" <../ProgrammersGuide/commands.html#view-nostatshare>`_ setting. If set to a true value, VIEW "STATSHARE" is specified. If set to a false value, VIEW "NOSTATSHARE" is specified.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 +++++++++++++++
 ydb_stdxkill
 +++++++++++++++
 **ydb_stdxkill (gtm_stdxkill)** enables the standard-compliant behavior to kill local variables in the exclusion list if they had an alias that was not in the exclusion list. By default, this behavior is disabled.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++
 ydb_sysid
@@ -989,9 +1029,11 @@ ydb_trace_gbl_name
 ++++++++++++++++++++++++++++++++
 ydb_treat_sigusr2_like_sigusr1
 ++++++++++++++++++++++++++++++++
-**ydb_treat_sigusr2_like_sigusr1** when set to a non-zero numeric value, "yes" or "TRUE" (case-insensitive), or a leading substring of "yes" or "true", causes a YottaDB process to treat a USR2 signal just as it would a SIGUSR1 (by invoking `$ZINTERRUPT <../ProgrammersGuide/isv.html#zinterrupt>`_ mechanism). The default behavior is to ignore SIGUSR2.
+**ydb_treat_sigusr2_like_sigusr1**, when set to a true value, causes a YottaDB process to treat a USR2 signal just as it would a SIGUSR1 (by invoking `$ZINTERRUPT <../ProgrammersGuide/isv.html#zinterrupt>`_ mechanism). The default behavior is to ignore SIGUSR2.
 
 ydb_treat_sigusr2_like_sigusr1 was added to YottaDB release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++++++++++
 ydb_trigger_etrap
@@ -1023,7 +1065,9 @@ ydb_zlib_cmp_level
 +++++++++++++++++++
 ydb_zquit_anyway
 +++++++++++++++++++
-**ydb_zquit_anyway (gtm_zquit_anyway)** specifies whether the code of the form QUIT <expr> execute as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT, where <tmp> is a temporary local variable in the YottaDB runtime system that is not visible to application code. This setting is a run-time setting, rather than a compiler-time setting. If ydb_zquit_anyway is defined and evaluates to 1 or any case-independent string or leading substring of "TRUE" or "YES", code of the form QUIT <expr> executes as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT. If ydb_zquit_anyway is not defined or evaluates to 0 or any case-independent string or leading substring of "FALSE" or "NO", YottaDB executes QUIT <expr> as specified by the standard.
+**ydb_zquit_anyway (gtm_zquit_anyway)** specifies whether the code of the form QUIT <expr> execute as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT, where <tmp> is a temporary local variable in the YottaDB runtime system that is not visible to application code. This setting is a run-time setting, rather than a compiler-time setting. If ydb_zquit_anyway is defined and evaluates to a true value, code of the form QUIT <expr> executes as if it were SET <tmp>=<expr> QUIT:$QUIT tmp QUIT. If ydb_zquit_anyway is not defined or evaluates to a false value, YottaDB executes QUIT <expr> as specified by the standard.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 ++++++++++++
 ydb_zstep
@@ -1038,7 +1082,9 @@ ydb_ztrap_form/ydb_zyerror
 ++++++++++++++++
 ydb_ztrap_new
 ++++++++++++++++
-**ydb_ztrap_new (gtm_ztrap_new)** specifies whether a SET $ZTRAP also implicitly performs a NEW $ZTRAP before the SET.
+**ydb_ztrap_new (gtm_ztrap_new)**, if set to a true value, specifies whether a SET $ZTRAP also implicitly performs a NEW $ZTRAP before the SET.
+
+See :ref:`Environment Variables <env-vars>` for accepted Boolean values.
 
 --------------------------
 Some Things To Remember
