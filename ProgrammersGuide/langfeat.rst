@@ -1412,7 +1412,7 @@ Commands that affect the flow of control may accept postconditionals on individu
 Timeouts
 +++++++++++++++++
 
-M provides timeouts as a tool to retain program control over commands of indefinite duration. A timeout consists of a colon (:) delimiter on an argument, followed by a numeric expression specifying the number of seconds to millisecond (three decimal place) precision for M to attempt to execute the command. When the timeout is zero (0), M makes a single attempt to complete the command.
+M provides timeouts as a tool to retain program control over commands of indefinite duration. A timeout consists of a colon (:) delimiter on an argument, followed by a numeric expression specifying the number of seconds to millisecond (three decimal place) resolution for M to attempt to execute the command. When the timeout is zero (0), M makes a single attempt to complete the command.
 
 YottaDB caps the maximum timeout to 2,147,483.647 seconds (about 24.8 days), and converts values greater than the maximum timeout to that cap. When a command has a timeout, M maintains the $TEST intrinsic special variable as the command completes. If the command completes successfully, M sets $TEST to TRUE (1). If the command times out before successful completion, M sets $TEST to FALSE (0). When a command argument does not specify a timeout, M does not maintain $TEST.
 
