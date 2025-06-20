@@ -1227,13 +1227,13 @@ Note that the return value of this function is always a :code:`bytes` object, re
 
     print(yottadb.zwr2str(b'"X"_$C(0)_"ABC"'))  # Prints b'X\x00ABC'
 
-----------------------------
+-----------------------------
 YottaDB Node class properties
-----------------------------
+-----------------------------
 
-++++++++
++++++++++
 Node.data
-++++++++
++++++++++
 
 .. code-block:: python
 
@@ -1255,9 +1255,9 @@ In the event of an error in :ref:`ydb-data-s-st-fn`, a :code:`YDBError` exceptio
     print(node["sub3"].data) # Prints 1
     print(node.data) # Prints 11
 
-+++++++++++++
+++++++++++++++
 Node.has_value
-+++++++++++++
+++++++++++++++
 
 .. code-block:: python
 
@@ -1363,9 +1363,9 @@ The :code:`Node.leaf` property method returns the last name defined for the call
    node = yottadb.Node("mylocal", ("sub1", "sub2"))
    node.leaf
 
-+++++++++++
+++++++++++++
 Node.mutable
-+++++++++++
+++++++++++++
 
 .. code-block:: python
 
@@ -1381,9 +1381,9 @@ Note that only :code:`Node.mutate()` and :code:`Node.__iter__()` output mutable 
     node = yottadb.Node("mylocal", ("sub1", "sub2"))
     print(node.mutable) # prints False
 
-+++++++++++
++++++++++
 Node.name
-+++++++++++
++++++++++
 
 .. code-block:: python
 
@@ -1464,9 +1464,9 @@ Example:
     # node["sub3"] == b'2'
     # node["sub4"] == b'3'
 
-++++++++++++++++++
+++++++++++++++++++++
 Node.subsarray_nodes
-++++++++++++++++++
+++++++++++++++++++++
 
 .. code-block:: python
 
@@ -1480,9 +1480,9 @@ Node.subsarray_nodes
     node = yottadb.Node("mylocal", ("sub1", "sub2"))
     print(node.subsarray_nodes) # Prints [Node:mylocal("sub1"), Node:mylocal("sub1","sub2")]
 
-+++++++++
+++++++++++
 Node.value
-+++++++++
+++++++++++
 
 .. code-block:: python
 
@@ -1504,13 +1504,13 @@ Example:
     node.value = "such wow"
     print(node.value)  # Prints "such wow"
 
------------------------------------
+----------------------------------
 YottaDB Node class regular methods
------------------------------------
+----------------------------------
 
-+++++++++++++++++
++++++++++++
 Node.copy()
-+++++++++++++++++
++++++++++++
 
 .. code-block:: python
 
@@ -1525,9 +1525,9 @@ Node.copy()
     node_copy = node.copy()
     print(node_copy)  # mylocal("sub1","sub2")
 
-+++++++++++++++++
+++++++++++++++++++
 Node.delete_node()
-+++++++++++++++++
+++++++++++++++++++
 
 .. code-block:: python
 
@@ -1545,9 +1545,9 @@ In the event of an error in the underlying :ref:`ydb-delete-s-st-fn` call, a :co
     node.delete_node()
     print(node.value) # Prints None
 
-+++++++++++++++++
+++++++++++++++++++
 Node.delete_tree()
-+++++++++++++++++
+++++++++++++++++++
 
 .. code-block:: python
 
@@ -1568,9 +1568,9 @@ In the event of an error in the underlying :ref:`ydb-delete-s-st-fn` call, a :co
     print(node.data) # Prints 0
     print(node.parent.data) # Prints 0
 
-+++++++++
+++++++++++
 Node.get()
-+++++++++
+++++++++++
 
 .. code-block:: python
 
@@ -1587,9 +1587,9 @@ In the event of an error in the underlying :ref:`ydb-get-s-st-fn` call, a :code:
     node.set("test")
     print(node.get()) # Prints b'test'
 
-++++++++++
++++++++++++
 Node.incr()
-++++++++++
++++++++++++
 
 .. code-block:: python
 
@@ -1611,9 +1611,9 @@ If unspecified, the default increment is 1. Note that the value of the empty str
     print(node.incr()) # Prints b'1'
     print(node.incr()) # Prints b'2'
 
-+++++++++++++++
+++++++++++++++++
 Node.load_json()
-+++++++++++++++
+++++++++++++++++
 
 .. code-block:: python
 
@@ -1646,9 +1646,9 @@ The inverse of `Node.save_json()`_, ``Node.load_json()`` retrieves JSON data sto
     with open('revised.json', 'w', encoding='utf-8') as f:
         json.dump(revised_json, f, sort_nodes = True, indent=4)
 
-+++++++++++++++
+++++++++++++++++
 Node.load_tree()
-+++++++++++++++
+++++++++++++++++
 
 .. code-block:: python
 
@@ -1730,9 +1730,9 @@ This will produce the following dictionary (formatted for clarity):
         }
     }
 
-++++++++++
++++++++++++
 Node.lock()
-++++++++++
++++++++++++
 
 .. code-block:: python
 
@@ -1801,9 +1801,9 @@ The following example provides a demonstration of basic :code:`Node` locking ope
     process.join()
     print(process.exitcode)  # Prints 0
 
-+++++++++++++++
+++++++++++++++++
 Node.lock_decr()
-+++++++++++++++
+++++++++++++++++
 
 .. code-block:: python
 
@@ -1835,9 +1835,9 @@ In the event of an error in the underlying :ref:`ydb-lock-decr-s-st-fn` call, a 
     time.sleep(0.5)  # Wait for lock to release
     process.join()
 
-+++++++++++++++
+++++++++++++++++
 Node.lock_incr()
-+++++++++++++++
+++++++++++++++++
 
 .. code-block:: python
 
@@ -1852,9 +1852,9 @@ Matching `Python lock_incr()`_, :code:`Node.lock_incr()` wraps :ref:`ydb-lock-in
 
 For an example of how to use this function, see `Node.lock_decr()`_.
 
-+++++++++++++++++
++++++++++++++
 Node.mutate()
-+++++++++++++++++
++++++++++++++
 
 .. code-block:: python
 
@@ -1875,9 +1875,9 @@ Node.mutate()
     print(node.mutable)  # Prints True
     print(node is mutable_node)  # Prints True
 
-++++++++++++++++++
++++++++++++++++++++
 Node.replace_tree()
-++++++++++++++++++
++++++++++++++++++++
 
 .. code-block:: python
 
@@ -1887,9 +1887,9 @@ Node.replace_tree()
 
 Note that this method will delete any nodes and subtrees that exist in the database but are absent from ``tree``.
 
-+++++++++++++++
+++++++++++++++++
 Node.save_json()
-+++++++++++++++
+++++++++++++++++
 
 .. code-block:: python
 
@@ -2000,9 +2000,9 @@ The database will now contain the following nodes:
     ^test4("sub3","subsub3")="test4sub3subsub3"
 
 
-+++++++++
+++++++++++
 Node.set()
-+++++++++
+++++++++++
 
 .. code-block:: python
 
@@ -2019,9 +2019,9 @@ In the event of an error in the underlying :ref:`ydb-set-s-st-fn` call, a :code:
     node.set("test")
     print(node.get()) # Prints b'test'
 
-++++++++++++++++++++
++++++++++++++++++++++
 Node.subscript_next()
-++++++++++++++++++++
++++++++++++++++++++++
 
 .. code-block:: python
 
@@ -2127,13 +2127,13 @@ The following example sets a value on multiple nodes at the first subscript leve
         print(prev_sub)  # Prints "testsubsprev"
 
 
------------------------------------
+--------------------------------
 YottaDB Node class magic methods
------------------------------------
+--------------------------------
 
-++++++++++++++
++++++++++++++++
 Node.__call__()
-++++++++++++++
++++++++++++++++
 
 .. code-block:: python
 
@@ -2147,9 +2147,9 @@ The :code:`Node.__call__()` magic method creates a new :code:`Node` object using
         node2 = node("sub3", "sub4")
         print(node2)  # Prints mylocal("sub1","sub2","sub3","sub4")
 
-++++++++++++
++++++++++++++
 Node.__eq__()
-++++++++++++
++++++++++++++
 
 .. code-block:: python
 
@@ -2167,9 +2167,9 @@ The :code:`Node.__eq__()` magic method allows for easy comparison between two :c
     node2 = yottadb.Node("^myglobal", ("sub1",))
     print(node == node2) # Prints False
 
-+++++++++++++++++
+++++++++++++++++++
 Node.__getitem__()
-+++++++++++++++++
+++++++++++++++++++
 
 .. code-block:: python
 
@@ -2196,9 +2196,9 @@ For example:
     print(node) # Prints '^myglobal("sub1","sub2")'
 
 
-++++++++++++++
++++++++++++++++
 Node.__iadd__()
-++++++++++++++
++++++++++++++++
 
 .. code-block:: python
 
@@ -2215,9 +2215,9 @@ In the event of an error in the underlying :ref:`ydb-incr-s-st-fn` call, a :code
     node += "2"
     print(node.value) # Prints b'4'
 
-++++++++++++++
++++++++++++++++
 Node.__init__()
-++++++++++++++
++++++++++++++++
 
 .. code-block:: python
 
@@ -2246,9 +2246,9 @@ The following errors are possible during :code:`Node` creation:
     # Invalid ISV Node creation
     node = yottadb.Node("$ZSTATUS", ("sub1","sub2"))  # Raises ValueError for subscripted ISV
 
-++++++++++++++
++++++++++++++++
 Node.__isub__()
-++++++++++++++
++++++++++++++++
 
 .. code-block:: python
 
@@ -2265,9 +2265,9 @@ In the event of an error in the underlying :ref:`ydb-incr-s-st-fn` call, a :code
     node -= "2"
     print(node.value) # Prints b'0'
 
-++++++++++++++
++++++++++++++++
 Node.__iter__()
-++++++++++++++
++++++++++++++++
 
 .. code-block:: python
 
@@ -2303,9 +2303,9 @@ In the event of an error in an underlying :ref:`ydb-subscript-next-s-st-fn` call
     # inventory("fruits","oranges"): b'sold out'
     # inventory("fruits",$ZCH(128)_"pomegranates"): b'\x80sold out'
 
-++++++++++++++
++++++++++++++++
 Node.__repr__()
-++++++++++++++
++++++++++++++++
 
 .. code-block:: python
 
@@ -2332,9 +2332,9 @@ Note, however, that this cannot be done with perfect reliability, as successful 
     # Call eval() with a fully qualified import prefix for the Node class
     print(repr(eval("yottadb." + repr(node))))  # Prints Node("^myglobal", ("sub1", "sub2"))
 
-++++++++++++++++++
++++++++++++++++++++
 Node.__reversed__()
-++++++++++++++++++
++++++++++++++++++++
 
 .. code-block:: python
 
@@ -2360,9 +2360,9 @@ In the event of an error in an underlying :ref:`ydb-subscript-previous-s-st-fn` 
     # cabbages: sold out
     # carrots: in stock
 
-+++++++++++++++++
+++++++++++++++++++
 Node.__setitem__()
-+++++++++++++++++
+++++++++++++++++++
 
 .. code-block:: python
 
@@ -2378,9 +2378,9 @@ In the event of an error in the underlying :ref:`ydb-set-s-st-fn` call, a :code:
     node["sub2"] = "my value"
     print(node["sub2"].value) # Prints 'my value'
 
-+++++++++++++
+++++++++++++++
 Node.__str__()
-+++++++++++++
+++++++++++++++
 
 .. code-block:: python
 
