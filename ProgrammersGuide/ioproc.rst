@@ -2042,6 +2042,34 @@ The following table provides a brief summary of deviceparameters for socket devi
 |                        |                                | to the setsockopt system call. ZNODELAY must be fully spelled out.                        |
 +------------------------+--------------------------------+-------------------------------------------------------------------------------------------+
 
+.. _socket-deviceparameter-options:
+
+**Socket OPTIONS Deviceparameter**
+
+OPTIONS=expr Applies to SOC
+
+The OPTIONS deviceparameter specifies setsockopt() options to be set for sockets. The value of the expression is a comma separated list of option names. If the option takes a value, it is given after an equal sign (=) following the name.
+
+The supported options are:
+
+.. code-block:: none
+
+   KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.
+   KEEPCNT     sets the TCP_KEEPCNT socket value.
+   KEEPIDLE    sets the TCP_KEEPIDLE socket value.
+   KEEPINTVL   sets the TCP_KEEPINTVL socket value.
+   SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
+
+Example:
+
+.. code-block:: none
+
+   OPEN dev:(LISTEN="1234:TCP":OPTIONS="KEEPALIVE=1,KEEPIDLE=50)::"SOCKET"
+
+This enables SO_KEEPALIVE and sets TCP_KEEPIDLE to 50 seconds.
+
+.. note::
+   Please review the man page for setsockopt() for more information on the use of these options. :code:`man 7 socket` and :code:`man 7 tcp` provide additional information.
 
 **Format Deviceparameters**
 
@@ -2903,30 +2931,7 @@ This example opens a new version of test49.txt with Read Write acess for the own
 OPTIONS
 ~~~~~~~
 
-OPTIONS=expr Applies to SOC
-
-Specifies setsockopt() options to be set for sockets. The value of the expression is a comma separated list of option names. If the option takes a value, it is given after an equal sign (=) following the name.
-
-The supported options are:
-
-.. code-block:: none
-
-   KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.
-   KEEPCNT     sets the TCP_KEEPCNT socket value.
-   KEEPIDLE    sets the TCP_KEEPIDLE socket value.
-   KEEPINTVL   sets the TCP_KEEPINTVL socket value.
-   SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
-
-Example:
-
-.. code-block:: none
-
-   OPEN dev:(LISTEN="1234:TCP":OPTIONS="KEEPALIVE=1,KEEPIDLE=50)::"SOCKET"
-
-This enables SO_KEEPALIVE and sets TCP_KEEPIDLE to 50 seconds.
-
-.. note::
-   Please review the man page for setsockopt() for more information on the use of these options. :code:`man 7 socket` and :code:`man 7 tcp` provide additional information.
+See :ref:`socket-deviceparameter-options` for details.
 
 ~~~~
 PAD
@@ -4118,30 +4123,7 @@ For more information, refer to the description of :ref:`KEY <key-open>` devicepa
 OPTIONS
 ~~~~~~~
 
-OPTIONS=expr Applies to SOC
-
-Specifies setsockopt() options to be set for sockets. The value of the expression is a comma separated list of option names. If the option takes a value, it is given after an equal sign (=) following the name.
-
-The supported options are:
-
-.. code-block:: none
-
-   KEEPALIVE   a non zero value enables SO_KEEPALIVE.  A zero value disables SO_KEEPALIVE.
-   KEEPCNT     sets the TCP_KEEPCNT socket value.
-   KEEPIDLE    sets the TCP_KEEPIDLE socket value.
-   KEEPINTVL   sets the TCP_KEEPINTVL socket value.
-   SNDBUF      sets the size of the socket's network send buffer (SO_SNDBUF) in bytes.
-
-Example:
-
-.. code-block:: none
-
-   OPEN dev:(LISTEN="1234:TCP":OPTIONS="KEEPALIVE=1,KEEPIDLE=50)::"SOCKET"
-
-This enables SO_KEEPALIVE and sets TCP_KEEPIDLE to 50 seconds.
-
-.. note::
-   Please review the man page for setsockopt() for more information on the use of these options. ``man 7 socket`` and ``man 7 tcp`` provide additional information.
+See :ref:`socket-deviceparameter-options` for details.
 
 ~~~~~~~~~~
 OUTREWIND
