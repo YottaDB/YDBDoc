@@ -46,7 +46,13 @@ DIRECTORIES=(
 # In particular, updating the title of `ProgrammersGuide/index.rst` will not update any other subproject files, even though it's linked in e.g. `StyleGuide/index.html`.
 # Overrule sphinx and force it to rebuild the headers.
 rm -f public/*/index.html
-sphinx-build . public
+# $CI is set by GitLab, per https://docs.gitlab.com/ci/variables/predefined_variables/
+if [[ "${CI:-}" = "true" ]]; then
+	# When running in the pipeline, fail the build if there are any warnings
+	sphinx-build -W . public
+else
+	sphinx-build . public
+fi
 # Copy the HTML files
 for directory in "${DIRECTORIES[@]}"; do
 	pushd $directory >/dev/null
@@ -60,6 +66,7 @@ done
 # 1. Building Octo independently of the other subprojects
 # 2. Using rsync to copy it over.
 # 3. Using a small shim in YDBDoc/Octo/index.rst to force sphinx generate a link to it.
+
 # This has the downside that Octo will not backlink to the main documentation; but that seems better than breaking URLs.
 octo=$(ci/needs-clone.sh https://gitlab.com/YottaDB/DBMS/YDBOcto.git/)
 echo "Building Octo HTML docs..."

@@ -2931,7 +2931,7 @@ This example opens a new version of test49.txt with Read Write acess for the own
 OPTIONS
 ~~~~~~~
 
-See :ref:`socket-deviceparameter-options` for details.
+See :ref:`Socket Deviceparameter Options <socket-deviceparameter-options>` for details.
 
 ~~~~
 PAD
@@ -4123,7 +4123,7 @@ For more information, refer to the description of :ref:`KEY <key-open>` devicepa
 OPTIONS
 ~~~~~~~
 
-See :ref:`socket-deviceparameter-options` for details.
+See :ref:`Socket Deviceparameter Options <socket-deviceparameter-options>` for details.
 
 ~~~~~~~~~~
 OUTREWIND
