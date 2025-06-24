@@ -172,6 +172,22 @@ Make sure to transfer any relevant files or reports to YottaDB. Please also comm
 Repairing the Database with DSE
 --------------------------------
 
+Doing repairs with DSE should only be necessary if things have gone very wrong. MUPIP ROLLBACK and RECOVER are much better options in the vast majority of situations.
+
+When using DSE:
+
+* Always work in pairs to ensure appropriate planning and risk minimization.
+
+* Restrict concurrent activity at least to the portion of the database on which you are working - for small changes, use CRIT -SEIZE to temporarily suspend database updates and CRIT -RELEASE to allow database updates.
+
+* If at all possible, take a backup of the database before starting.
+
+* Before changing a block, do a save and/or dump to a file - remember saves are in memory and lost on exit from DSE
+
+* Address bit maps "incorrectly marked free" first - they can result in additional problems
+
+* Address bit maps "incorrectly marked busy" last - they are protected from further problems, and can be addressed last
+
 When doing repairs with DSE, understanding the nature of the information in the database provides a significant advantage in choosing an appropriate and efficient repair design.
 
 For example, if you know that certain data is purged weekly, and you find damage in some of this type of data that is already five or six days old, you may be able to discard it rather than repair it. Similarly, you might find damage to a small cross-index global and have a program that can quickly rebuild it.
@@ -503,6 +519,8 @@ When such an event occurs, YottaDB sends a series of messages to the operator fa
 
 If such events are delivered to the operator facility, you should investigate whether it is appropriate to modify your procedures to prevent abnormal termination, to reconfigure your disk subsystem, or to change the nature or schedule of disk activities so that database access is not disrupted during key periods of operation.
 
+Also see section :ref:`r3-runtime-database-cache-problems`.
+
 .. _h1-process-hangs:
 
 +++++++++++++++++++++++++++
@@ -574,7 +592,7 @@ Use the following diagnostic steps and references to determine an appropriate co
 
 * Determine whether the database files used by the application are accessible for writing.
 
-  SET a node in each database equal to itself.
+  SET a safe dummy node in each database and then KILL it if appropriate. Alternatively make a harmless modification to an existing node, or modify a node and then change it back to its original value. YottaDB detects when a SET makes no actual change (the SET value is the same as the original value) and does not perform an actual update in that case.
 
 *IF THE DATA CAN BE BOTH READ AND WRITTEN*, the problem is not a database problem. Refer to :ref:`h8-application-problems`.
 
@@ -584,48 +602,40 @@ Example:
 
 .. code-block:: none
 
-   S reg=$V("GVNEXT",""),com="dbcheck.com" o     m-*  com:newv u com
-   W "$ DEFINE/USER SYS$OUTPUT dbcheck.lis",!,"$ DSE",!
-   F  Q:reg=""  D
-   . W "FIND /REGION=",reg,!,"DUMP /FILEHEADER",!
-   . S reg(reg)="",reg=$V("GVNEXT",reg)
-   W "$ SEARCH dbcheck.lis ""Cache freeze""",!
-   ; CAUTION: in the above line, "Cache freeze"
-   ; MUST be mixed-case as shown
-   W "$ DELETE dbcheck.lis.",!,"$ EXIT",!
-   C com ZSY "@dbcheck"
-   O com C com:delete
-   W !,"Attempting first access"
-   S g="^%" D:$D(^%)  F  S g=$O(@g) Q:g=""  D
-   . S reg=$V("REGION",g) Q:$l(reg(reg))
-   . I $D(@g)'[0 S reg(reg)=g
-   . E  S reg(reg)=$Q(@g)
-   . W !,"Successful Read in region: ",reg," of ",g
-   S reg="" F  S reg=$O(reg(reg)) Q:reg=""  D
-   W !,"Write to region: ",reg
-   S @(reg(reg)_"="_reg(reg)) W "-OK"
-   Q
-   S reg=$V("GVFIRST"),com="dbcheck" o com:newv u com
-   W "dse <<yz > dbcheck.lis",!
-   F  Q:reg=""  D
-   . W "find -region=",reg,!,"dump -fileheader",!
-   . S reg(reg)="",reg=$V("GVNEXT",reg)
-   W "yz",!,"cat dbcheck.lis | grep 'Cache freeze'"
-   ; CAUTION: in the above line, "Cache freeze"
-   ; MUST be mixed-case as shown
-   W "|awk '{print $1, $2, $3}'"
-   C com ZSY "/bin/csh -c ""source dbcheck"""
-   O com,dbcheck.lis C com:delete,dbcheck.lis:delete
-   W !,"Attempting first access"
-   S g="^%" D:$D(^%)  F  S g=$O(@g) Q:g=""  D
-   . S reg=$V("REGION",g) Q:$l(reg(reg))
-   . I $D(@g)'[0 S reg(reg)=g
-   . E  S reg(reg)=$Q(@g)
-   . W !,"Successful Read in region: ",reg," of ",g
-   S reg="" F  S reg=$O(reg(reg)) Q:reg=""  D
-   . W !,"Write to region: ",reg
-   . S @(reg(reg)_"="_reg(reg)) W "-OK"
-   Q
+                Set pipe="pipe"
+                Open pipe:(command="/bin/csh")::pipe
+                Use pipe
+                Set reg="",cmd=$ztrnlnm("gtm_dist")_"/mupip dumpfhead "
+                For  Set reg=$View("GVNEXT",reg) Quit:""=reg  Do
+                . Set reg(reg)="",file=$view("GVFILE",reg)
+                . Write cmd,file,!
+                . For i=1:1 read x(i):1 Quit:(x(i)["sgmnt_data.freeze")!$ZEOF!'$Test
+                . Set pid=+$Piece(x(i),"=",2)
+                . Set:pid frozen(reg)=pid
+                Close pipe
+                Set g="^%",$etrap="Write $ZStatus Set $ecode="""" Quit"
+                Write !,"Attempting read access"
+                If $Data(^%) Set reg=$View("REGION",g) Do read1
+                For  Set g=$Order(@g) Quit:""=g  Set reg=$View("REGION",g)  Do:""=(reg(reg)) read1
+                Set reg=""
+                Write !!,"Attempting write access"
+                For  Set reg=$Order(reg(reg)) Quit:""=reg  Do write1
+                Write !
+                Quit
+        read1
+                Write !,"Read in region: ",reg," of ",g," successful"
+                If ($Data(@g)#2) Set reg(reg)=g
+                Else  Set reg(reg)=$Query(@g)
+                Quit
+        write1
+                If $Data(frozen(reg)) Write !,"Region ",reg," Frozen by PID ",frozen(reg) Quit
+                If ""=reg(reg) Write !,"Region ",reg," has no data" Quit
+                Write !,"Write to region: ",reg
+                Set x=$Get(@reg(reg),"Yndef")
+                Set @reg(reg)=1,@reg(reg)=x
+                If "Yndef"=x ZKill @ref(ref); assumption that a value of Yndef is very unlikely
+                Write " of ",reg(reg)," successful"
+                Quit
 
 This routine provides a generalized approach to automating some of the tasks described in this section. It contains argumentless DO commands primarily for typesetting reasons. The routine issues a report if any region is frozen, but does not report which regions are in that state. It may hang while reading or writing a database. However, unless the region(s) holding ^% and the next global after ^% has a problem, it displays the name of the region that it is about to try. If this routine runs to completion, the databases in the current Global Directory are completely accessible. The limitations of this routine can be overcome by writing custom shell scripts and/or M programs that include embedded information about one or more Global Directories.
 
@@ -693,11 +703,9 @@ H6 - UNIX Problems
 H7 - Disk Hardware Problems
 ++++++++++++++++++++++++++++
 
-*IF YOU HAVE DETERMINED THAT A DISK VOLUME IS INACCESSIBLE TO the OS FOR READ AND/OR WRITE*,use the DCL command SHOW DEVICE /FULL to check that the correct volume is properly mounted. If the volume cannot be written, examine the physical device to see whether write lock switches or plugs have been disturbed.
+* IF YOU HAVE DETERMINED THAT A DISK VOLUME IS INACCESSIBLE TO THE OS FOR READ AND/OR WRITE, use the df command to check that the correct volume is properly mounted. If the volume cannot be written, examine the physical device to see whether write lock switches or plugs have been disturbed.
 
-*IF YOU HAVE DETERMINED THAT A DISK VOLUME IS INACCESSIBLE TO UNIX FOR READ AND/OR WRITE*, use the df command to check that the correct volume is properly mounted. If the volume cannot be written, examine the physical device to see whether write lock switches or plugs have been disturbed.
-
-*IF YOU CANNOT LOCATE THE PROBLEM*, run disk diagnostics. Be aware that many disk diagnostics are destructive (i.e., destroy your files). Avoid these diagnostics until you have exhausted all other avenues. If you have to run destructive disk diagnostics, or you determine that a disk spindle must be replaced, start planning for the recovery immediately.
+* IF YOU CANNOT LOCATE THE PROBLEM, run disk diagnostics. Be aware that many disk diagnostics are destructive (that is, destroy your files). Avoid these diagnostics until you have exhausted all other avenues. If you have to run destructive disk diagnostics, or you determine that a disk spindle must be replaced, start planning for the recovery immediately.
 
 .. _h8-application-problems:
 
@@ -854,26 +862,30 @@ Can be Deferred:
 * Any bitmap errors flag not only the incorrectly marked block, but also the associated bitmap, and sometimes the master map. Therefore, local and master map errors should be corrected only after all bitmap marked busy or free errors are corrected.
 * Transaction number errors usually impact only incremental and online backups.
 * File size errors can misdirect MUPIP but do not cause the YottaDB run-time system to generate further errors. An exception is auto-extend, which may not work properly if there are file size errors.
-* Reference count errors and free block errors are informational only.
-
-The following list of INTEG messages classifies error severity using the following codes, and refers you to a section identifying appropriate follow-up action.
-
-* A Access: prevents database access
-* B Benign: presents no risk of additional damage and has little or no effect on database performance
-* D Dangerous: presents a high risk that continuing updates may cause significant additional damage
-* I Index: if the block is an index block, continuing updates will be quite dangerous: treat as a D; if the block is a data block, continuing updates can only cause limited additional damage
-* S Spanning: prevents access to a block spanning node value
-* T Transient: usually cleared by an update to the database
-
-Repair Dangerous and Access errors immediately. You may assess the benefits of deferring correction of less severe errors until normally scheduled down-time.
+* Reference count errors, free block count errors, and block size exceeding user-specified limit errors are informational only.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 MUPIP INTEG Error Messages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The following list of INTEG messages classifies error severity using the following codes, and refers you to a section identifying appropriate follow-up action.
+
+* A Access: prevents database access - these indicate an operational error or a fundamental file damage that prevents INTEG from providing more information.
+* B Benign: presents no risk of additional damage and has little or no effect on database performance; many bit map errors come under this nature code, but "incorrectly marked free errors" are dangerous.
+* D Dangerous: presents a high risk that continuing updates may cause significant additional damage
+* I Index: if the block is an index block, continuing updates will be very dangerous: INTEG reports such errors with a nature of DANGER; if the block is a data block, reported by INTEG with a nature of Data, continuing updates can only cause limited additional damage, but some data may be lost, become inaccessible, or cause processes to inappropriately loop
+* S Spanning: prevents access to a block spanning node value; INTEG reports these with a nature of Data
+* T Transient: usually cleared by an update to the database or possibly a straightforward operator action
+
+INTEG reports these codes for many of the errors and in so doing transforms Index errors on index block to DANGER and otherwise to Data, meaning the issue is confined to a level 0 data block, and so very localized. However, when an index block has damage, YottaDB cannot correctly navigate the tree and if operations continue, subsequent updates can go where they do not belong, causing increasing damage. When a data block has damage, the worst thing that can happen from a YottaDB standpoint is that you get an indefinite loop. More commonly, some confined set of nodes becomes inaccessible, which may or may not be important from an application perspective, most commonly the application gets an error when it tries to use the data in question. It is possible for a single issue to cause multiple reports, and, in such a case, focus first on the most serious report.
+
+Repair Dangerous and Access errors immediately. You may assess the benefits of deferring correction of less severe errors until normally scheduled down-time.
+
 +------------+--------------------+------------------------------------------------------------------------------------+-----------------------------------------+
 | Severity   | Mnemonic           | Error Message                                                                      | Section                                 |
 +============+====================+====================================================================================+=========================================+
+| B          | BSIZTOOLARGE       | ffff Block larger than specified maximum size.                                     | :ref:`o6-block-size-errors`             |
++------------+--------------------+------------------------------------------------------------------------------------+-----------------------------------------+
 | T          | BUFFLUFAILED       | Error flushing buffers from rrrr for database file ffff.                           | :ref:`i7-database-rundown-problem`      |
 +------------+--------------------+------------------------------------------------------------------------------------+-----------------------------------------+
 | B          | DBBADFREEBLKCTR    | Free blocks counter in file header: nnnn appears incorrect, should be mmmm.        | :ref:`i3-file-header-errors`            |
@@ -1070,7 +1082,7 @@ These errors indicate damage to the control or reference information in the file
 
 To correct the other errors of this type use the DSE CHANGE FILEHEADER command with the BLK_SIZE=, BLOCKS_FREE=, and TOTAL_BLKS qualifiers.
 
-"Free blocks counter ..." indicates that the count of free blocks in the file header is not correct. This error only affects $VIEW("FREECNT",region) and DUMP FILEHEADER which return the information.
+"Free blocks counter ..." indicates that the count of free blocks in the file header is not correct. This error only affects $VIEW("FREECNT",region), MUPIP DUMPFHEAD and DSE DUMP FILEHEADER which return the information.
 
 .. _i4-file-size-errors:
 
@@ -1084,7 +1096,7 @@ These errors indicate that the total block count does not agree with the file si
 
 .. code-block:: none
 
-   ((file size - starting VBN + 1) / (block size / 512))
+        (file_size_in_bytes-(starting_VBN-1)*512)/DB_block_size_in_bytes-1 ; where 512 is bytes/block
 
 A decimal number results from this formula. Convert this decimal to a hexadecimal number, then change the total block count to this hexadecimal value using DSE CHANGE FILEHEADER TOTAL_BLKS= . You may also need to adjust the free blocks count with BLOCKS_FREE=. MUPIP INTEG informs you if this is necessary and gives the correct values.
 
@@ -1101,8 +1113,6 @@ Use printenv to check ydb_gbldir or use the M command WRITE $ZGBLDIR to verify t
 Examine the Global Directory using GDE. If the Global Directory is not appropriate, correct or recreate it with GDE. For more information on the use of GDE, refer to the `"Global Directory Editor (GDE)" <gde.html>`_ chapter.
 
 *IF THE GLOBAL DIRECTORY IS DAMAGED BUT ACCESSIBLE WITH GDE*, investigate who may have used GDE to perform the modifications. If the Global Directory is damaged and not accessible with GDE, investigate what program, other than YottaDB and its utilities, might have written to the file. Except for GDE, all YottaDB components treat the Global Directory as static and read-only.
-
-*IF THE GLOBAL DIRECTORY APPEARS CORRECT*, use the DCL command SHOW LOGICAL to verify that any logical names it uses are properly defined for the process experiencing the problem. If the process has an environment to which you do not have access, you may have to carefully read the command procedures used to establish that environment.
 
 *IF THE GLOBAL DIRECTORY APPEARS CORRECT*, use printenv to verify that any environment variables that it uses are properly defined for the process experiencing the problem. If the process has an environment to which you do not have access, you may have to carefully read the shell scripts used to establish that environment.
 
@@ -1138,11 +1148,11 @@ If you are not running TP or incremental backup this is a benign error (from the
 
   Where <HHHHHHH+1> is the largest transaction number + 1. This command sets the current transaction number to one more than the largest transaction number found in the database. Note that HHHHHHH is in hexadecimal form.
 
-"Current tn and early tn are not equal" indicates that the critical section has been damaged. "Reference count is not zero" indicates an improper file close. The first access that references a questionable database should correct these errors. Generally, these errors indicate that the file was not closed normally. This problem is typically caused by an unscheduled shutdown of the system. Review your institution's shutdown procedures to ensure a controlled shutdown.
+"Current tn and early tn are not equal" indicates that the critical section has been damaged. "Reference count is not zero" indicates an improper file close. The first access that references a questionable database should correct these errors. Generally, these errors indicate that the file was not closed normally. This problem is typically caused by an unscheduled shutdown of the system. Review your institution's startup and shutdown procedures to ensure a controlled shutdown.
 
 "Cannot determine access method..." indicates that the fileheader has been damaged. When INTEG detects this error, it forces the access method to BG and continues. If there is no other damage to the file header, no other action may be required.
 
-However, if the access method should be MM, use MUPIP SET ACCESS_METHOD= to correct the database.
+However, if the access method should be MM, use MUPIP SET ACCESS_METHOD=MM to correct the database.
 
 .. _i7-database-rundown-problem:
 
@@ -1150,7 +1160,7 @@ However, if the access method should be MM, use MUPIP SET ACCESS_METHOD= to corr
 I7 - Database Rundown Problem
 +++++++++++++++++++++++++++++++
 
-A MUPIP INTEG may be performed without write access to the file. However, in the case where the file was improperly closed, it must be RUNDOWN prior to being INTEGed. To do this, MUPIP requires write access to the file, so either increase the privileges for the process, change the protection on the file, or use a more privileged process and repeat the MUPIP INTEG.
+However, in the case where the database file was improperly closed, it must be put in an appropriate state with a MUPIP JOURNAL ROLLBACK/RECOVER or MUPIP RUNDOWN prior to a MUPIP INTEG.
 
 .. _i8-repair-induced-problems:
 
@@ -1203,7 +1213,7 @@ When the error is a misplaced key, the keys are not in proper collating sequence
 K3 - Blocks Doubly Allocated
 +++++++++++++++++++++++++++++
 
-A doubly allocated block is dangerous because it causes data to be inappropriately mingled. As long as no KILLs occur, double allocation does not cause permanent loss of additional data. However, it may cause the application programs to generate errors and/or inappropriate results. When a block is doubly allocated, a KILL may remove data outside its proper scope.
+A doubly allocated block is dangerous because it causes data to be inappropriately mingled. As long as no KILLs occur, double allocation might not cause permanent loss of additional data. However, it may cause the application programs to generate errors and/or inappropriate results. When a block is doubly allocated, a KILL may remove data outside its proper scope.
 
 A doubly allocated index block may also cause increasing numbers of blocks to become corrupted. Use the following process to correct the problem.
 
@@ -1237,11 +1247,11 @@ While they occur very infrequently, invalid pointers do not permit the same stra
 K5 - Star Key Problems
 ++++++++++++++++++++++++++++++++
 
-The last record in every index block must be a star-key record that points to a block that continues the path to all data not covered by the preceding records in the block. Star-key records have a unique format with a size of seven (7), or eight (8), depending on the platform, and a compression count of zero (0). The errors discussed in this section indicate a missing or damaged star-key and may be attacked with two strategies.
+The last record in every index block must be a star-key record that points to a block that continues the path to all data not covered by the preceding records in the block. Star-key records have a unique format with a size of twelve (12) with the V7 block format, and a compression count of zero (0). Star keys have a size of eight (8) with the V6 block format. The errors discussed in this section indicate a missing or damaged star-key and may be attacked with two strategies.
 
 In general, you should turn the last existing record into a star-key. This works well as long as the block holds at least one valid record. If you choose this strategy, locate the last record using DUMP RECORD=9999. Then DUMP the last record and note its pointer. Next, REMOVE the last record. Finally, ADD STAR POINTER= to the key you noted.
 
-If the star-key is the only record in a root block, you should add a new empty level 0 descendent. If you choose this strategy, add a new star-key using FIND FREEBLOCK HINT=this-block to locate a nearby block. Next, MAP the new block BUSY and CHANGE LEVEL= 0 and BSIZ=7(or 8, if your platform dictates). If the new block has a level of zero (0), return to the damaged block and ADD STAR POINTER=the-first-new-block.
+If the star-key is the only record in a root block, you should add a new empty level 0 descendent. If you choose this strategy, add a new star-key using FIND FREEBLOCK HINT=this-block to locate a nearby block. Next, MAP the new block BUSY and CHANGE LEVEL= 0 and BSIZ=8 if V6 format and 12 if V7 format. If the new block has a level of zero (0), return to the damaged block and ADD STAR POINTER=the-first-new-block.
 
 .. _k6-compression-count-error:
 
@@ -1285,7 +1295,7 @@ INTEG reports each block that it concludes is incorrectly marked, and also the l
 
 Because bitmap errors are typically secondary to other errors, correcting the primary errors usually also cures the bitmap errors. For this reason and, more importantly, because bitmap errors tend to locate "lost" data, they should always be corrected at, or close to, the end of a repair session.
 
-The DSE command MAP provides a way to switch bits in local maps with FREE and BUSY, propagate the status of a local map to the master map with MASTER, and completely rebuild all maps from the B-tree with RESTORE. Never use MAP MASTER until all non-bitmap errors have been resolved.
+The DSE command MAP provides a way to switch bits in local maps with FREE and BUSY, propagate the status of a local map to the master map with MASTER, and completely rebuild all maps from the B-tree with RESTORE. Before beginning any MAP MASTER operation, first ensure that the database has no active updaters and that there are no non-bitmap errors to resolve.
 
 .. _m2-bitmap-header-problems:
 
@@ -1329,7 +1339,7 @@ The errors described in this section include damage to the header, the records, 
 
 *IF THE BLOCK IS LEVEL ZERO (0)*, use DSE DUMP to examine the contents of the block. Note any information that might allow you to correct the problem or might help to identify and recreate the endangered data. If you are familiar with GDS and hexadecimal representations, you may be able to recognize data that DSE cannot recognize because of misalignment.
 
-*IF THE BEGINNING OF THE BLOCK IS VALID*, DUMP GLO may be able to capture its contents up to the point where it is damaged. In the worst case, REMOVE the record that points to the block, MAP it FREE, and lose its entire contents. The extent and importance of the damage depends on the size of the block and what it should be holding. In a similar but not quite as drastic case, REMOVE the record with the problem and lose the contents of that record.
+*IF THE BEGINNING OF THE BLOCK IS VALID*, DUMP GLO may be able to capture its contents up to the point where it is damaged. In the worst case, REMOVE the record that points to the block, MAP it FREE, and lose its entire contents. The extent and importance of the damage depends on the size of the block and what it should be holding. In a similar but not quite as drastic case, REMOVE the record with the problem and lose the contents of that record. Use application and business process knowledge to research and if appropriate reconstruct lost data; remember, if recently processed, it may exist in journal files.
 
 .. _o4-salvage-of-data-blocks-with-lost-indices:
 
@@ -1343,7 +1353,7 @@ The algorithm is based on the fact that most bitmap errors are secondary to inde
 
 *IF THE INDICES HAVE BEEN DAMAGED FOR SOME TIME AND THE DAMAGE CAUSED DUPLICATE KEYS TO BE CREATED*, this strategy raises the issue of which value is the "correct" value. Because most applications either form new nodes or update existing nodes rather than simply overlaying them, this issue seldom arises. Usually the application will fail in an attempt to update any "misplaced" node. If the problem does arise, the issue may not be determining the "correct" value, but the best available value.
 
-*IF THE DUPLICATE NODE PROBLEM COULD BE AN APPLICATION ISSUE*, you can load the sequential file produced in DSE with an M program that detects and reports duplicate nodes. You can also use the block transaction numbers as clues to the order in which blocks were updated. However, remember that you generally cannot know which record was modified on the last update, and that DSE repair actions modify the block transaction number.
+*IF YOU HAVE A DUPLICATE NODE PROBLEM*, you can load the sequential file produced in DSE with an M program that detects and reports duplicate nodes. You can also use the block transaction numbers as clues to the order in which blocks were updated. However, remember that you generally cannot know which record was modified on the last update, and that DSE repair actions modify the block transaction number.
 
 If the duplicate node problem poses a significant problem, you should probably not use DSE to repair the database, but instead, use journals to recover or restore from backups.
 
@@ -1542,6 +1552,14 @@ Load the salvaged global:
    When can their glory fade?  O the wild charge they made!  All the world wondered.
    Honour the charge they made!  Honour the Light Brigade, Noble six hundred!
 
+.. _o6-block-size-errors:
+
+++++++++++++++++++++++
+O6 - Block Size Errors
+++++++++++++++++++++++
+
+If INTEG is passed one of -IMAXBLOCKSIZE=n and/or -DMAXBLOCKSIZE=m, it will check index and/or data blocks, respectively, to verify that the data they contain does not exceed the specified size. Errors of this kind do not themselves indicate any database damage, although they can indicate that a newly-imposed reserved bytes value has not propagated to blocks that have not since been affected by new updates, or that a fill_factor passed to reorg was imposed successfully on blocks that existed when the reorg took place but not on newly created blocks. Errors of this kind therefore do not call for any recovery efforts, but may indicate the need for an additional reorg if the intent is to ensure that all blocks in the database meet a certain level of sparseness.
+
 .. _p1-process-damage:
 
 +++++++++++++++++++++++++
@@ -1663,7 +1681,7 @@ Most of these errors terminate with a four-character failure code. Each characte
 .. _runtime-db-failure-codes:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Run-time Database Failure Codes
+Run-time Database Restart Codes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following table lists the failure codes, whether or not they require a MUPIP INTEG, a brief description of the code's meaning, and a section reference for locating more information. Except in the context of a final retry (four codes in a row), they can be ignored when they are reported in the syslog in conjunction with `NONTPRESTART <../MessageRecovery/errors.html#nontprestart>`_ or `TPRESTART <../MessageRecovery/errors.html#tprestart>`_ messages. They cannot be ignored in the context of :ref:`r1-runtime-errors` above, e.g., `GVGETFAIL <../MessageRecovery/errors.html#gvgetfail>`_.
