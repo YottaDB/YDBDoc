@@ -5496,16 +5496,6 @@ Run Time Error: This indicates that database query and Lookup in the same atomic
 
 Action: Contact the system administrator and if needed, report to your YottaDB support channel.
 
--------------------
-GVREPLERR
--------------------
-
-GVREPLERR, Error replicating global in region xxxx
-
-Run Time Error: This indicates that the database system successfully updated a global node on the primary copy of the database but it encountered an error making the same update on a replicated copy.
-
-Action: Examine any secondary error. Investigate whether the problem is with the disk where the copy is located or with the communications system to the secondary copy, if it is remote. Correct the problem and resynchronize the copies.
-
 --------------------
 GVRUNDOWN
 --------------------
