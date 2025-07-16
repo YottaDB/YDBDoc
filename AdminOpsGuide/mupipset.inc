@@ -380,7 +380,7 @@ The default is Sep(arate)/FALSE.
 For more information, refer to :ref:`region-qualifiers`.
 
 ^^^^^^^^^^^^
-PROBLKSPLIT
+-PROBLKSPLIT
 ^^^^^^^^^^^^
 
 Specifies the approximate number of records a block in the region must exceed before YottaDB considers a proactive block split. The format of the PROBLKSPLIT qualifier is:
