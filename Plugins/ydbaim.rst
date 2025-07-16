@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -21,7 +21,7 @@ YDB AIM
 Overview
 -----------
 
-All applications need metadata. By providing an API to manage metadata, and enable content-based access to data, the YottaDB AIM (Application Independent Metadata) plugin removes the need for each YottaDB application to create its own separate framework.
+Applications need metadata. By providing an API to manage metadata, and enable content-based access to data, the YottaDB AIM (Application Independent Metadata) plugin removes the need for each YottaDB application to create its own separate framework.
 
 .. _quickstart:
 
@@ -29,7 +29,7 @@ All applications need metadata. By providing an API to manage metadata, and enab
 Quickstart
 -------------
 
-As a YottaDB plugin, AIM requires YottaDB. Install YottaDB and AIM together:
+As a YottaDB plugin, AIM requires YottaDB. You can install YottaDB and AIM together:
 
 .. code:: bash
 
@@ -38,6 +38,8 @@ As a YottaDB plugin, AIM requires YottaDB. Install YottaDB and AIM together:
    sudo ./ydbinstall.sh --utf8 --aim
 
 Omit the ``--utf8`` option if you do not want UTF-8 support installed. If you already have YottaDB installed, use ``sudo $ydb_dist/ydbinstall --aim --plugins-only --overwrite-existing`` to install or reinstall the AIM plugin without reinstalling YottaDB.
+
+When used to install `Octo <../Octo/>`_, ``ydbinstall`` / ``ydbinstall.sh`` automatically installs AIM, as it is a requirement for Octo.
 
 -------------
 Installation
@@ -68,6 +70,10 @@ As an example consider a global variable whose first subscript is the year a US 
    ^USPresidents(1797,1801)="John||Adams" and
    ^USPresidents(1835,1839)="John|Quincy|Adams"
 
+~~~~~~~~~~~~~~~~~~~~~~
+Data Cross References
+~~~~~~~~~~~~~~~~~~~~~~
+
 The call :code:`$$XREFDATA^%YDBAIM("^USPresidents",2,"|",3)` cross references the third piece of node values (last names), with the cross reference global having values such as :code:`^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(3,"Adams",1797,1801)=""`, :code:`^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(3,"Adams",1835,1839)=""`, and many others including :code:`^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(3,"Obama",2009,2017)=""`.
 
 Suppose only Presidents who left office in the 19th century should be cross referenced. A local variable node such as :code:`cent19(2)="1801:1899"` can be created, and passed by reference, and :code:`$$XREFDATA^%YDBAIM("^USPresidents",.cent19,"|",3)` produces the two cross references as above, but in a different global variable name since the trigger signatures are different. Unlike the first cross reference, this does not cross reference Barack Obama who assumed office in 2009 and left in 2017.
@@ -85,7 +91,7 @@ To cross reference all three names, the call :code:`$$XREFDATA^%YDBAIM("^USPresi
    ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(3,"Adams",1797,1801)=""
    ^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(3,"Adams",1835,1839)=""
 
-Since the first President Adams record does not include a middle name, the corresponding record has an empty string ("") subscript. *Any region to which ^%ydbAIMD\* global variables are mapped should have NULL_SUBSCRIPTS set to ALWAYS.* Since the subscripts will include pieces of global nodes, or even entire global nodes, it would be prudent to set YottaDB's maximum key size (1019 bytes) for that region.
+Since the first President Adams record does not include a middle name, the corresponding record has an empty string ("") subscript. *Any region to which ^%ydbAIM\* global variables are mapped must have NULL_SUBSCRIPTS set to ALWAYS.* Since the subscripts will include pieces of global nodes, or even entire global nodes, it would be prudent to set YottaDB's maximum key size (1019 bytes) for that region.
 
 .. note::
 
@@ -114,6 +120,51 @@ Since the first President Adams record does not include a middle name, the corre
         ^%ydbAIMDvjlGbD84bQ5u5hXGOtIe37(1,"ABC",100)
         YDB>
 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Subscript Cross References
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AIM can also cross reference subscripts. To search values of subscripts other than the first subscript requires using `$ORDER() <../ProgrammersGuide/functions.html#order>`_ to loop through higher level subscripts, which can be time-consuming for a large dataset. The call ``$$XREFSUB^%YDBAIM("^USPresidents",2,2)`` cross references the second subscript of the two-subscript global variable ^USPresidents, with values such as:
+
+.. code:: none
+
+   ^%ydbAIMSrNrMckj7LkdFXjsHkuT91D(2,1913,1909)=""
+   ^%ydbAIMSrNrMckj7LkdFXjsHkuT91D(2,1921,1913)=""
+   ^%ydbAIMSrNrMckj7LkdFXjsHkuT91D(2,1923,1921)=""
+
+The first subscript of ``^%ydbAIMSrNrMckj7LkdFXjsHkuT91D`` is the subscript number of the cross reference, in this case 2 for the second subscript. The second subscript of ``^%ydbAIMSrNrMckj7LkdFXjsHkuT91D`` are values of the cross referenced second subscript, and the third subscript is a corresponding first subscript for the cross referenced first subscript. So ``^%ydbAIMSrNrMckj7LkdFXjsHkuT91D(2,1921,1913)=""`` says that there is a node ``^USPresidents(1913.1921)``.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example - Using a Subscript Cross Reference
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This illustrates the use of :ref:`xrefsub` to replace scanning of application subscripts.
+
+Consider a global variable ``^X(a,b,c)`` where an application needs to find all nodes whose second subscript (``b``) meets some criterion. In SQL terms, this is like a table with a primary key consisting of three columns, and statement SELECT a,b,c WHERE b meets some condition. This is illustrated in the M program `<scandemo2.m>`_; equivalent programs can be written in any supported language.
+
+The program generates a global with a number of nodes. The number can be specified on the command line to run the program, e.g., ``yottadb -run scandemo2 10000``, with the number defaulting to 100,000 if not specfied. Each of the subscripts is a random number from 0 through 999,999. The program then scans the global variable to find nodes (i.e., SELECTs from the table) that meet four different criteria. For each criterion, it scans in two ways, without using XREFSUB() and using XREFSUB(). In each case it prints the time taken and the number of nodes/rows found; the latter must be the same regardless of how the global variable is scanned.
+
+- The first is to identify all nodes where b>750000, i.e., a simple numerical scan.
+- The second is to scan all nodes where b follows "700000", i.e., a `lexical scan <#forcing>`_. For example, US zip codes are numeric, but should be ordered lexically (a numeric scan would ignore leading zeroes).
+- The third is a scan based on the value of a 1:1 `transformation function <#transformation>`_, i.e., f(b) satisfies some criterion. A sample use case of such a transformation function is one where times are stored in local time, but need to be converted to UTC for processing / selection. In the `scandemo2 <scandemo2.m>`_ program, the 1:1 transformation is the square root of b ($$FUNC^%SQROOT(b)), and the selection criterion is nodes where the square root is greater than 750.
+- The fourth is a scan based on the value of a many:1 transformation function. A hypothetical use case might be the checksum of other values, or where the values are the orbital parameters of a celestial object, and the transformation function is the next date that the object is likely to pass within 100,000 kilometers of Planet Earth. In the ``scandemo2`` program, the many:1 transformation function is the sum of the digits of the second subscript, and the selection criterion is nodes where the sum is greater than 30.
+
+Sample output:
+
+.. code:: bash
+
+   $ yottadb -run scandemo2 10000
+   Traversal without XREFSUB() took 4,209 microseconds for 2,495 nodes/rows
+   Traversal with XREFSUB() took 2,933 microseconds for 2,495 nodes/rows
+   Traversal without XREFSUB() using string collation took 4,961 microseconds for 2,795 nodes/rows
+   Traversal with XREFSUB() using string collation took 3,494 microseconds for 2,795 nodes/rows
+   Traversal without XREFSUB() using a 1:1 transformation function took 7,896 microseconds for 4,335 nodes/rows
+   Traversal with XREFSUB() using a 1:1 transformation function took 5,769 microseconds for 4,335 nodes/rows
+   Traversal without XREFSUB() using a many:1 transformation function took 8,049 microseconds for 3,139 nodes/rows
+   Traversal with XREFSUB() using a many:1 transformation function took 3,041 microseconds for 3,139 nodes/rows
+   $
+
 .. _statistics:
 
 +++++++++++++
@@ -126,9 +177,9 @@ The optional parameter :code:`stat` can be used to instruct AIM that the applica
 
 * **stat=2**: in addition to the count of each value, also counts the number of different values, and also a total count of the number of values maintained. Thus, the call :code:`$$XREFDATA^%YDBAIM("^USPresidents",2,"|","1:3",,,,2)` would compute and maintain nodes such as :code:`^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(-3)=39` to indicate that there are 39 distinct last names and :code:`^%ydbAIMDf1x7fSMuGT4HtAEXAx0g65(11)=135` to indicate that there are 135 nodes maintained (as of 2021, the 45 former US Presidents times 3 names for each ex-President).
 
-~~~~~~~~~
-Example
-~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+Example - Statistics
+~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: bash
 
@@ -222,10 +273,10 @@ Transformation Functions
 
 The most common use of cross reference is to find global nodes that contain the data being cross referenced, for example to traverse that data in order. But cross references are useful for many reasons. For example:
 
-* There are multiple formats for storing dates and times, and comparing values directly can slow Octo queries. But if the cross reference for each time stamp is its `UNIX time <https://en.wikipedia.org/wiki/Unix_time>`_ (i.e., its `$ZUT <../ProgrammersGuide/isv.html#zut>`_ value), then comparing time stamps, or choosing dates and times within a range becomes a much simpler proposition.
-* Cross referencing a hash allows an application to locate the original data for a hash.
+* There are multiple formats for storing dates and times, and comparing values directly can slow Octo queries. But if the cross reference for each time stamp is its `UNIX time <https://en.wikipedia.org/wiki/Unix_time>`_ (i.e., its `$ZUT <../ProgrammersGuide/isv.html#zut>`_ value), then comparing time stamps, or choosing dates and times within a range becomes a much simpler proposition. This is a 1:1 transformation function.
+* Cross referencing a hash or checksum allows an application to locate the original data for the hash or checksum. This is potentially a many:1 transformation function.
 
-Transformation is accomplished by provding the M code for a function in the :code:`force` parameter with a value of 2 or 3 for the :code:`type` parameter. For example, if :code:`"$$ABC^DEF()"` is the value passed in :code:`force`, triggers for cross referenced nodes will use the value returned by the transformation function as the value to cross reference. When the function is called at runtime by the trigger, the first parameter is the actual node or piece value, e.g., :code:`$$ABC^DEF("2024-02-21T13:31:48.05098021+07:00")` would be the actual cross-referenced value if the timestamp in the global node is :code:`2024-02-21T13:31:48.05098021+07:00`. If the function requires additional parameters, they can be specified as comma separated values for the second and subsequent parameters, e.g., :code:`"$$ABC^DEF(,1,""two"")"`. As local variables cannot be passed to triggers, these additional parameters can only be constants, global variable references, or function calls whose parameters are constants, global variables, or function calls. Application code that needs to pass local variable values to the transformation function should use `$ZTWORMHOLE <../ProgrammersGuide/isv.html#ztwormhole-isv>`_.
+Transformation is accomplished by provding the M code for a function in the :code:`force` parameter with a value of 2 or 3 for the :code:`type` parameter. For example, if :code:`"$$ABC^DEF()"` is the value passed in :code:`force`, triggers for cross referenced nodes will use the value returned by the transformation function as the value to cross reference. When the function is called at runtime by the trigger, the first parameter is the actual node or piece value, e.g., :code:`$$ABC^DEF("2024-02-21T13:31:48.05098021+07:00")` would yield the actual cross-referenced value if the timestamp in the global node is :code:`2024-02-21T13:31:48.05098021+07:00`. If the function requires additional parameters, they can be specified as comma separated values for the second and subsequent parameters, e.g., :code:`"$$ABC^DEF(,1,""two"")"`. As local variables cannot be passed to triggers, these additional parameters can only be constants, global variable references, or function calls whose parameters are constants, global variables, or function calls. Application code that needs to pass local variable values to the transformation function should use `$ZTWORMHOLE <../ProgrammersGuide/isv.html#ztwormhole-isv>`_.
 
 For example, with the ^USPresidents global variable mentioned earlier, the node :code:`^USPresidents(1797,1801)="John||Adams"` would generate the cross refence :code:`^%ydbAIMDHgTwbHgcmyZEIfADw7Xq07(3,"0x5d156e592ad2e9a83eb48043c59213d0",1797,1801)=""` with a call to :code:`$$XREFDATA^%YDBAIM("^USPresidents",2,"|",3,0,0,0,0,2,"$ZYHASH()"`.
 
@@ -241,13 +292,13 @@ Functions
 XREFDATA()
 +++++++++++
 
-XREFDATA() is used to create triggers to maintain cross references and compute cross references for a global variable at a specified subscript level.
+XREFDATA() computes and maintain cross references for nodes values or pieces of node values, of a global variable at a specified subscript level.
 
 The format for XREFDATA() is as follows:
 
- .. code:: none
+.. code:: none
 
-   $$XREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force)
+  $$XREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force)
 
 where,
 
@@ -263,9 +314,9 @@ where,
 
 * **sep** is the piece separator for values at that node; if unspecified or the empty string, the cross reference is for entire node values.
 
-* **pnum** is a semi-colon separated list of integer piece numbers for which cross references should exist; ignored for xrefs of entire node values, effectively a no-op if pieces specified are already cross-referenced.
+* **pnum** is a semi-colon separated list of integer piece numbers for which cross references should exist; ignored for cross references of entire node values, effectively a no-op if pieces specified are already cross-referenced.
 
-* **nmonly**, if 1, means just return the xref global variable name but don't set triggers or compute xrefs.
+* **nmonly**, if 1, means just return the cross reference global variable name but don't set triggers or compute cross references.
 
 * **zpiece**, if 1, means that $ZPIECE() should be used as the piece separator instead of $PIECE(). AIM can have cross references for the same nodes with both options; the cross references are in different global variables.
 
@@ -275,84 +326,180 @@ where,
 
 * **type**, defaulting to the empty string, specifies the application schema for which AIM is being asked to compute and maintain metadata.
 
-* **force**, defaulting to the empty string, specifies that AIM cross references should prepend a hash (:code:`#`) to the data being cross referenced if non-zero. See :ref:`forcing`. YottDB recommends using 1 for this purpose.
+* **force**, defaults to the empty string. A value of 1 specifies that AIM cross references should prepend a hash (:code:`#`) to the data being cross referenced. If **type** is 1 or 3, **force** specifies either string collation or a transformation function for an application global using the Fileman schema; if **type** is 2, **force** specifies a transformation function. See :ref:`forcing`.
 
-+++++++++++++
-LSXREFDATA()
-+++++++++++++
+The relationship between **type** and **force** is shown below. Combinations of values other than those shown are reserved.
 
-LSXREFDATA() lists metadata for a cross reference, all cross references for a global variable, or all cross references.
++-----------------------------------------------------------------------------------------------------------------------------------------+
+|	                                                            **type**                                                              |
++-------------------------------+----------------------------+------------------------+-------------------------+-------------------------+
+|                               | **0, "", or omitted**      |          **1**         |          **2**          |          **3**          |
++===========+===================+============================+========================+=========================+=========================+
+|           | **0, "", or**     | Normal schema;             | Fileman schema;        |                                                   |
+|           | **omitted**       | normal M ordering          | normal M ordering      |                                                   |
+|           +-------------------+----------------------------+------------------------+                                                   |
+|           |       **1**       | Normal schema;             | Fileman schema;        |                                                   |
+| **force** |                   | forced String ordering     | forced string ordering |                                                   |
+|           +-------------------+----------------------------+------------------------+-------------------------+-------------------------+
+|           |                   |                                                     | Normal schema           | Fileman schema;         |
+|           |  **Function**     |                                                     | transformation function | transformation function |
+|           |                   |                                                     | ordering                | ordering                |
++-----------+-------------------+-----------------------------------------------------+-------------------------+-------------------------+
 
-The format for LSXREFDATA() is as follows:
+Metadata about the cross reference itself is stored in nodes of the cross-reference global variable as follows:
+
+*  The root node is the application global variable name (the **gbl** parameter of the function call).
+
+*  Subscripted nodes are:
+
+  *  \(0) space separated `$ZUT <../ProgrammersGuide/isv.html#zut>`_ of the time the cross reference was completed, `$JOB <../ProgrammersGuide/isv.html#job>`_ of the process, `$ZYRELEASE <../ProgrammersGuide/isv.html#zyrelease-isv>`_ of the YottaDB release number and, a format version number for the metadata.
+  *  \(1) number of cross-referenced subscripts of the application global variable.
+  *  \(2) piece separator, if any. The empty string specifies whole-node cross references.
+  *  \(3) \& \(4) piece numbers, in the form of a bit-map like string, prefixed with ``"#"`` to prevent numeric conversion, e.g., the value for pieces 2, 4 and 5 would be ``"#01011"``, the empty string for an cross reference of the entire node. The (3) node identifies the piece numbers for which cross referencing is complete whereas (4) identifies those for which triggers exist. If they are not equal, it means that a process created triggers, but is still working on cross referencing existing global nodes. It is also possible that the process terminated, or was terminated, before completing its work.
+  *  \(5) 1 means $ZPIECE() was used for pieces; the default empty string is $PIECE().
+  *  \(6) SET trigger for this cross reference.
+  *  \(7) KILL trigger for this cross reference; see also comment for (12) below.
+  *  \(8) ZKILL trigger for this cross reference.
+  *  \(9) 1 means that omitting fixed subscripts was requested, whether or not any subscripts were actually omitted.
+  *  \(10) if 1 or 2 means that statistics are maintained, as specified by the ``stat`` parameter.
+  *  \(11) unused, but reserved.
+  *  \(12) & up - triggers for KILLs of higher level nodes.
+
+Applications can read and use the above metadata, but should not attempt to alter it. Changes can result in unpredictable and/or undesirable behavior.
+
+.. _xrefsub:
+
+++++++++++
+XREFSUB()
+++++++++++
+
+XREFSUB() computes and maintain cross references for subscripts of a global variable at specified subscript levels.
+
+The format for XREFDATA() is as follows:
+
+.. code:: none
+
+   XREFSUB(gbl,xsub,snum,nmonly,omitfix,stat,type,force)
+
+where
+
+* **gbl**, **xsub**, **nmonly**, **omitfix**, and **stat** are the same as for XREFDATA().
+
+* **snum** uses the same syntax as **pnum** for XREFDATA() to specify subscripts that should be cross-referenced. Unlike **pnum**, it is not optional. Any subscript that is specified by **snum** must be part of **xsub**, e.g., if **snum** specifies cross referencing of the third subscript, **xsub** must specify a global variable with at least 3 subscripts.
+
+**type** defaults to the empty string, which is also equivalent to 0. A value of 2 indicates that **force** is a transformation function. Unlike XREFDATA(), XREFSUB() does not implement special logic for Fileman subscripts.
+
+**force** defaults to the empty string, which is equivalent to 0. A value of 1 when **type** is defaulted or zero indicates that AIM cross references should prepend a hash (``#``) to the cross reference, which forces string collation even for numbers (e.g., US zip codes). If **type** is 2, **force** should be a string specifying a transformation function for cross references (see :ref:`forcing`).
+
+
+The relationship between **type** and **force** is shown below. Combinations of values other than those shown are reserved.
+
++--------------------------------------------------------------------------------------+
+| **type**                                                                             |
++-------------------------------+----------------------------+-------------------------+
+|                               | **0, "", or omitted**      |         **2**           |
++===========+===================+============================+=========================+
+|           | **0, "", or**     | Normal schema;             |                         |
+|           | **omitted**       | normal M ordering          |                         |
+|           +-------------------+----------------------------+                         |
+|           |       **1**       | Normal schema;             |                         |
+| **force** |                   | forced String ordering     |                         |
+|           +-------------------+----------------------------+-------------------------+
+|           |                   |                            | Normal schema           |
+|           |  **Function**     |                            | transformation function |
+|           |                   |                            | ordering                |
++-----------+-------------------+----------------------------+-------------------------+
+
+Metadata about the cross reference itself is stored in nodes of the cross-reference global variable as follows:
+
+*  The root node is the application global variable name (the **gbl** parameter of the function call).
+
+*  Subscripted nodes are:
+
+  *  \(0) space separated `$ZUT <../ProgrammersGuide/isv.html#zut>`_ of the time the cross reference was completed, `$JOB <../ProgrammersGuide/isv.html#job>`_ of the process, `$ZYRELEASE <../ProgrammersGuide/isv.html#zyrelease-isv>`_ of the YottaDB release number and, a format version number for the metadata.
+  *  \(1) number of cross-referenced subscripts of the application global variable.
+  *  \(2) unused, but reserved.
+  *  \(3) \& \(4) subscript numbers, in the form of bit strings manipulated by `$ZBIT*() <../ProgrammersGuide/functions.html#zbit-functions>`_ functions. The (3) node identifies the piece numbers for which cross referencing is complete whereas (4) identifies those for which triggers exist. If they are not equal, it means that a process created triggers, but is still working on cross referencing existing global nodes. It is also possible that the process terminated, or was terminated, before completing its work.
+  *  \(5) unused but reserved.
+  *  \(6) SET trigger for this cross reference.
+  *  \(7) KILL trigger for this cross reference; see also comment for (12) below.
+  *  \(8) ZKILL trigger for this cross reference.
+  *  \(9) 1 means that omitting fixed subscripts was requested, whether or not any subscripts were actually omitted.
+  *  \(10) if 1 or 2 means that statistics are maintained, as specified by the ``stat`` parameter.
+  *  \(11) unused, but reserved.
+  *  \(12) & up - triggers for KILLs of higher level nodes.
+
+Applications can read and use the above metadata, but should not attempt to alter it. Changes can result in unpredictable and/or undesirable behavior.
+
++++++++++++++++++++++++++++
+LSXREFDATA() / LSXREFSUB()
++++++++++++++++++++++++++++
+
+LSXREFDATA() lists metadata for a data cross reference, all data cross references for a global variable, or all data cross references. LSXREFSUB() lists metadata for a subscript cross reference, all subscript cross references for a global variable, or all subscript cross references.
+
+The format for LSXREFDATA() / LSXREFSUB() is as follows:
 
  .. code:: none
 
    DO LSXREFDATA^%YDBAIM(lvn[,gbl])
+   DO LSXREFSUB^%YDBAIM(lvn[,gbl])
 
 where,
 
 * **lvn** is a local variable passed by reference. In that local variable, the function describes all cross references as follows:
 
-    * The first subscript is the cross reference global variable name, e.g., :code:`^%ydbAIMDgBPWsnL76HLyVnlvsrvE19`. The value of that node (i.e., with a first subscript and no second subscript) is the application global variable name, e.g., :code:`^xyz`.
-    * Nodes with positive integer second subscripts have metadata about the metadata. These are described in :ref:`xrefdata`.
+    * The first subscript is the cross reference global variable name, e.g., :code:`^%ydbAIMDgBPWsnL76HLyVnlvsrvE19` or ``^%ydbAIMSrNrMckj7LkdFXjsHkuT91D``. The value of its root node (i.e., with no subscript) is the application global variable name, e.g., :code:`^USPresidents`.
+    * Nodes with positive integer second subscripts have metadata about the metadata. These are described in :ref:`xrefdata` and :ref:`xrefsub`.
 
   Nodes of lvn other than those corresponding to reported cross references remain unaltered.
 
 * **gbl** is a global variable name. There are three cases:
 
-    * It is an application global variable name, e.g., :code:`^USPresidents`. In lvn as described above, the function returns all cross references for that global variable.
-    * It starts with :code:`^%ydbAIMD`. In lvn, the function returns information about the specified cross reference.
-    * It is omitted or the empty string (""). In lvn, the function returns information about all cross references.
+    * It is an application global variable name, e.g., :code:`^USPresidents`. In ``lvn`` as described above, the function returns all data or subscript cross references for that global variable, depending on whether the function is LSXREFDATA() or LSXREFSUB().
+    * It starts with :code:`^%ydbAIMD` or ``^%ydbAIMS``. In ``lvn``, the function returns information about the specified cross reference.
+    * It is omitted or the empty string (""). In ``lvn``, the function returns information about all data or subscript cross references, depending on whether the function called is LSXREFDATA() or LSXREFSUB().
 
-+++++++++++++
-UNXREFDATA()
-+++++++++++++
++++++++++++++++++++++++++++
+UNXREFDATA() / UNXREFSUB()
++++++++++++++++++++++++++++
 
-* UNXREFDATA() deletes all metadata
-* UNXREFDATA(gbl) where gbl is an application global name deletes all AIM metadata for that application global.
-* UNXREFDATA(aimgbl) where aimgbl is an AIM metadata global variable, removes that metadata.
+* UNXREFDATA() removes all data metadata; UNXREFSUB() removes all subscript metadata
+* UNXREFDATA(aimgbl) and UNXREFSUB(aimgbl) where aimgbl is an AIM metadata global variable, removes the metadata stored in that AIM global. Note that an AIM global variable stores either data metadata or subscript metadata, but not both.
+* UNXREFDATA(gbl) where gbl is an application global name removes all data metadata for that application global; UNXREFSUB(gbl) does likewise for subscript metadata.
 
-The format for UNXREFDATA() is as follows:
+UNXREFDATA() and UNXREFSUB() provide an API for removing specific cross references. The APIs mirror those of :ref:`xrefdata` and :ref:`xrefsub`, allowing for removal of a specific cross reference by replicating the paramaters used to call the functions that created the cross references in the first place. The APIs are as follows and the parameters are described in :ref:`xrefdata` and :ref:`xrefsub`. Note that some parameters are specific to one function or the othyer.
 
  .. code:: none
 
    DO UNXREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force)
+   DO UNXREFSUB^%YDBAIM(gbl,xsub,snum,nmonly,omitfix,stat,type,force)
 
 where,
 
-* **gbl** is the global variable name, e.g., :code:`^ABC` for which the specified triggers are to be removed. If omitted, all xrefs and triggers for xrefs are removed.
+* **gbl** is the global variable name, e.g., :code:`^ABC` for which the metadata is to be removed. If omitted, all cross references and triggers for cross references are removed as discussed above.
 
-* **xsub** is a specification of the subscripts in the cross reference to be removed. There are four cases:
-
-    * xsub is unspecified or its root node is zero and there is no subtree. In this case, all cross references for the specified global variable are removed. In the following three cases, as the subscript specification is part of the "signature" of a cross reference, the subscript specification of xsub must match that of the trigger being removed.
-    * xsub has a positive integer value at the root, and no subtrees ($DATA(xsub) is 1): The value specifies the level (number of subscripts) of the global variable for which the cross reference is to be removed, with all subscripts at each level in the signature of the cross reference. In this case, the actual parameter can be a literal or a variable passed by value. In both the following cases it must be passed by reference.
-    * xsub has no value at the root, but positive integer subscripts (1), (2), (3), etc. ($DATA(xsub) is 10): The subscripts of the local variable specify the values of the global variable subscript in the signature cross referenced, using the same syntax as trigvn field of trigger definitions. The last subscript defines the level of the global variable to be cross referenced. Any omitted intervening subscript (e.g., if the local variable has nodes (1) and (3) but not (2)), means that all subscripts at that level are in the cross reference signature.
-    * xsub has both a value at the root, as well as positive integer subscripts ($DATA(xsub) is 11): This is similar to the previous case, except that should the number at the root exceed the last subscript, the value at the root is the level of the cross reference signature, with all global variables to be included at the levels beyond those of the last local variable subscript. A value at the root smaller than the last subscript is ignored.
-
-  Other cases (e.g., non integer subscripts of xsub) raise errors.
+* **xsub** is a specification of the subscripts in the cross reference to be removed.
 
 * **sep** is the piece separator for values at that node; if unspecified or the empty string, the cross reference signature is entire node values.
 
-* **pnum** exists to allow the parameters of UNXREFDATA() to match those of XREFDATA() and is ignored. Note that it is not possible to remove the cross reference of one piece of a node.
+* **pnum** and **snum** exists to allow the parameters of UNXREFDATA() and UNXREFSUB() to match those of :ref:`xrefdata` and :ref:`xrefsub` and are ignored. Note that regardless of the values of these parameters, calling the functions removes the metadata for all pieces, and all subscripts.
 
-* **nmonly** exists to allow the parameters of UNXREFDATA() to match those of XREFDATA() and is ignored.
+* **nmonly** is ignored.
 
-* **zpiece**, if 1 means that $ZPIECE() was used as the piece separator instead of $PIECE(); this is part of the trigger signature.
+* **zpiece**, must match that of the :ref:`xrefdata` call that set up the cross reference.
 
-* **omitfix** and **stat** exist only to allow the parameters of UNXREFDATA() to match those of XREFDATA() and are ignored.
+* **omitfix** and **stat** are ignored.
 
-* **type** is used to get the name of the AIM global, and is optional. If used in the XREFDATA() call, it should be passed here.
-
-* **force** is used to get the name of the AIM global, and is optional. If used in the XREFDATA() call, it should be passed here.
+* **type** and **force** must match the :ref:`xrefdata` or :ref:`xrefsub` that set up the criss reference.
 
 ----------------------------
 Operational Considerations
 ----------------------------
 
-* Any region to which :code:`^%ydbAIMD*` global variables are mapped should have NULL_SUBSCRIPTS set to ALWAYS.
+* Any region to which :code:`^%ydbAIM*` global variables are mapped should have NULL_SUBSCRIPTS set to `ALWAYS <../AdminOpsGuide/gde.html#no-n-ull-subscripts-always-never-existing>`_, and implement `standard null collation <../AdminOpsGuide/gde.html#no-std-nullcoll>`_.
 * YottaDB recommends setting journaling and replication to the YDBAIM region to match the settings of the application database region(s) that AIM cross references. This is because AIM sets `triggers <../ProgrammersGuide/triggers.html#triggers>`_ in those regions to maintain AIM metadata in sync with application data.
 * If the YDBAIM region and application data become out of sync with each other, use UNXREFDATA() followed by XREFDATA() to resynchronize them.
-* If `ydb-treat-sigusr2-like-sigusr1 <../AdminOpsGuide/basicops.html#ydb-treat-sigusr2-like-sigusr1>`_ is set, on receipt of a SIGUSR2 %YDBAIM terminates indexing of data and returns to its caller; otherwise it ignores SIGUSR2. This facilitates use of %YDBAIM with Octo.
+* If `ydb-treat-sigusr2-like-sigusr1 <../AdminOpsGuide/basicops.html#ydb-treat-sigusr2-like-sigusr1>`_ is set, on receipt of a SIGUSR2, %YDBAIM terminates indexing of data and returns to its caller; otherwise it ignores SIGUSR2. This facilitates use of %YDBAIM by Octo.
 
 .. raw:: html
 
