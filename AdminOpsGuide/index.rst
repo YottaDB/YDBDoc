@@ -18,9 +18,6 @@
 Administration and Operations Guide
 ###################################
 
-Welcome to the Administration and Operations Guide!
-====================================================
-
 .. toctree::
    :maxdepth: 5
 

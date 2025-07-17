@@ -18,9 +18,6 @@
 Plugins
 #######
 
-Welcome to Plugins documentation!
-===================================
-
 .. toctree::
    :maxdepth: 2
 

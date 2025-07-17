@@ -18,9 +18,6 @@
 Acculturation Guide
 ###################
 
-Welcome to the Acculturation Guide!
-=========================================
-
 .. toctree::
    :maxdepth: 5
 

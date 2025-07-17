@@ -18,9 +18,6 @@
 Style Guide
 ###########
 
-Welcome to the Style Guide!
-======================================
-
 .. toctree::
    :maxdepth: 2
 

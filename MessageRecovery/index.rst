@@ -18,9 +18,6 @@
 Messages and Recovery Procedures
 ################################
 
-Welcome to the Messages and Recovery Procedures Reference Manual!
-=================================================================
-
 .. toctree::
    :maxdepth: 2
 

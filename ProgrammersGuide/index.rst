@@ -18,9 +18,6 @@
 M Programmer's Guide
 ####################
 
-Welcome to The M Programmer's Guide!
-==============================================
-
 .. toctree::
    :maxdepth: 5
 

@@ -18,13 +18,6 @@
 Applications Manual
 ###################
 
-Index
-========
-.. toctree::
-   :hidden:
-
-   self
-
 .. toctree::
    :maxdepth: 7
 
