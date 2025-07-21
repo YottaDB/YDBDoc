@@ -11540,7 +11540,7 @@ RELINKCTLERR
 
 RELINKCTLERR, Error with relink control structure for $ZROUTINES directory dddd
 
-Run Time Error: Indicates a problem accessing a relink control file in the temporary directory typically specified by the ydb_linktmpdir environment variable.
+Run Time Error: Indicates a problem accessing a relink control file in the temporary directory typically specified by the ydb_linktmpdir environment variable or, if ydb_linktmpdir is undefined, the ydb_tmp environment variable.
 
 Action: Use the accompanying message(s) for a detailed error status to diagnose and address the access issue.
 
