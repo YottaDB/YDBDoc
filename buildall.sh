@@ -60,19 +60,6 @@ for directory in "${DIRECTORIES[@]}"; do
 	popd >/dev/null
 done
 
-# Sphinx does not allow us to modify the generated directory structure,
-# and additionally embeds that structure into the header of every sub-project.
-# Trick it by:
-# 1. Building Octo independently of the other subprojects
-# 2. Using rsync to copy it over.
-# 3. Using a small shim in YDBDoc/Octo/index.rst to force sphinx generate a link to it.
-
-# This has the downside that Octo will not backlink to the main documentation; but that seems better than breaking URLs.
-octo=$(ci/needs-clone.sh https://gitlab.com/YottaDB/DBMS/YDBOcto.git/)
-echo "Building Octo HTML docs..."
-make -C "$octo"/doc html >/dev/null
-rsync "$octo"/doc/_build/html/ "$target/Octo"
-
 # Verify that there are no duplicate references. Every duplicate reference will be automatically named as a numbered link
 # containing for example "#id1", "#id2" etc. by Sphinx so we look for that below. And expect NO such lines in "index.html".
 # If we do find such lines, they need to be fixed to remove the duplicate reference thereby every reference will have a

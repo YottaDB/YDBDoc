@@ -14,11 +14,12 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    = -W --keep-going -q
-SPHINXBUILD   = sphinx-build
-SOURCEDIRS    = AcculturationGuide AdminOpsGuide ApplicationsManual MessageRecovery MultiLangProgGuide ProgrammersGuide StyleGuide Plugins
-SOURCEDIR     = .
-BUILDDIR      = public
+SPHINXOPTS	= -W --keep-going -q
+SPHINXBUILD	= sphinx-build
+SOURCEDIRS	= AcculturationGuide AdminOpsGuide ApplicationsManual MessageRecovery MultiLangProgGuide ProgrammersGuide StyleGuide Plugins Octo
+SOURCEDIR	= .
+BUILDDIR	= public
+OCTODIR		= $(shell ci/needs-clone.sh https://gitlab.com/YottaDB/DBMS/YDBOcto.git/)
 # newline used in the foreach statements to make "make" stop at an erroring step.
 define newline
 
@@ -40,6 +41,8 @@ help:
 clean:
 	@$(foreach dir, $(SOURCEDIRS), rm -rf "$(dir)/favicon.png" "$(dir)/_static" "$(dir)/_templates" "$(dir)/LICENSE.rst" "$(dir)/logo.png" $(newline))
 	@rm -f MultiLangProgGuide/YDBLua-ydbdocs.rst YDBLua-ydbdocs.rst
+	@rm -rf ./src/
+	@rm -rf ./Octo/
 	@rm -rf ./public/
 	@rm -f err_*.out
 
@@ -64,8 +67,16 @@ man: SPHINXOPTS=-q
 MultiLangProgGuide/YDBLua-ydbdocs.rst:
 	wget --no-verbose https://yottadb.gitlab.io/lang/ydblua/YDBLua-ydbdocs.rst --directory-prefix=MultiLangProgGuide/
 
+# Fetch Octo documentation from YDBOcto repository and replicate file structure
+# to allow build without modification to upstream YDBOcto.
+.PHONY: octo
+octo:
+	mkdir -p ./Octo ./src/aux
+	rsync -ar $(OCTODIR)/doc/ ./Octo
+	cp $(OCTODIR)/src/aux/octo.conf.default ./src/aux/
+	rm ./Octo/conf.py
 
-html: MultiLangProgGuide/YDBLua-ydbdocs.rst
+html: MultiLangProgGuide/YDBLua-ydbdocs.rst octo
 	+./buildall.sh
 
 .PHONY: checklinks
