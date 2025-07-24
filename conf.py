@@ -38,8 +38,8 @@ from datetime import datetime
 copyright = "2017-{}, YottaDB LLC. Portions Copyright Fidelity National Information Services, Inc".format(datetime.today().year)
 author = "YottaDB LLC"
 
-# The short X.Y version -- substitute 1 simply because it is required to build epub
-version = "1"
+# The short X.Y version -- required to build epub
+version = ""
 # The full version, including alpha/beta/rc tags
 release = ""
 
