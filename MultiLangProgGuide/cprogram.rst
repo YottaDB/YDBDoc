@@ -599,6 +599,127 @@ The error :code:`YDB_ERR_PARAMINVALID` is returned when
 
 Please see the :ref:`Simple API introduction <c-simple-api>` for details about parameter allocation.
 
+.. _ydb-decode-s-st-fn:
+
+++++++++++++++++++++++++++++++++++++++++++
+ydb_decode_s() / ydb_decode_st()
+++++++++++++++++++++++++++++++++++++++++++
+
+.. code-block:: C
+
+        int ydb_decode_s(const ydb_buffer_t *varname,
+                int subs_used,
+                const ydb_buffer_t *subsarray,
+                const char *format,
+                const char *value);
+
+        int ydb_decode_st(uint64_t tptoken,
+                ydb_buffer_t *errstr,
+                const ydb_buffer_t *varname,
+                int subs_used,
+                const ydb_buffer_t *subsarray,
+                const char *format,
+                const char *value);
+
+The :code:`ydb_decode_s()` and :code:`ydb_decode_st()` functions parse a null-terminated JSON string in :code:`value`, then load :code:`value` into the specified local or global variable (sub)tree. :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the destination array. Existing nodes in the (sub)tree whose subscripts are matched by a node in the input data are overwritten; other nodes remain unaltered. While :code:`format` points to a null-terminated string which has the case-independent value "JSON". A NULL :code:`value` parameter makes each function into a no-op.
+
+Return values are:
+
+- :code:`YDB_OK` for a normal return;
+- :code:`YDB_ERR_PARAMINVALID` when :code:`len_alloc < len_used` for at least 1 subscript in :code:`subsarray`; or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL for at least one subscript in :code:`subsarray`; or :code:`buf_addr` is too small for at least one key in JSON input; or length of at least 1 array in JSON input is greater than :code:`YDB_MAX_SUBS`; or size for string value in JSON input is greater than :code:`YDB_MAX_STR`;
+- :code:`ERR_MINNRSUBSCRIPTS` or :code:`ERR_MAXNRSUBSCRIPTS` if subscript counts are less than zero or greater than :code:`YDB_MAX_SUBS`;
+- :code:`ERR_JANSSONDLERROR` if a function from the Jansson library fails to dynamically load;
+- :code:`ERR_JANSSONINVALIDJSON` if there is a syntax error in the value string;
+- another applicable :ref:`error return code <err-ret-codes>`.
+
+Please see the :ref:`Simple API introduction <c-simple-api>` for details about parameter allocation.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:code:`simple.c` sample program
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For an example of how to use :code:`ydb_decode_s()`/:code:`ydb_decode_st()`, see:
+* :code:`simple.c` sample C program available on GitLab at `simple.c <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/simple.c>`_.
+* :code:`Makefile` for building :code:`simple.c` available on GitLab at `Makefile <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/Makefile>`_.
+
+To run the example :code:`simple.c` program:
+
+#. Download the above files.
+#. Set :code:`ydb_dist` by sourcing :code:`ydb_env_set` from a YottaDB installation.
+#. Build and run the program: :code:`make simple && ./simple`
+
+If the program was built and ran correctly, it will output dummy JSON data hardcorded into :code:`simple.c`, followed by the same data after having been decoded into a YottaDB variable and encoded back out of that variable.
+
+To verify that the JSON was persisted, run :code:`zwrite ^simpleJSON` in YottaDB, e.g. in a direct mode session: :code:`$ydb_dist/mumps -dir`. For example:
+
+.. code-block::
+
+        $ $ydb_dist/mumps -dir
+
+        YDB>zwrite ^simpleJSON
+        ^simpleJSON("sub1","sub2")=9
+        ^simpleJSON("sub1","sub2",1)="true"
+        ^simpleJSON("sub1","sub2",2)="false"
+        ^simpleJSON("sub1","sub2","food","kind",0)=3
+        ^simpleJSON("sub1","sub2","food","kind",1)="oranges"
+        ^simpleJSON("sub1","sub2","food","kind",2)="bananas"
+        ^simpleJSON("sub1","sub2","food","kind",3)="apples"
+        ^simpleJSON("sub1","sub2","food","kind",4)=$C(0)_"null"
+        ^simpleJSON("sub1","sub2","food","plate")=$C(0)_"false"
+        ^simpleJSON("sub1","sub2","food","type")=2
+        ^simpleJSON("sub1","sub2","food","type","color")="red"
+        ^simpleJSON("sub1","sub2","food","type","size")="large"
+        ^simpleJSON("sub1","sub2","food","water")=$C(0)_"true"
+        ^simpleJSON("sub1","sub2","three")="null"
+
+        YDB>
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:code:`users.c` sample program
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For another example of how to use :code:`ydb_decode_s()`/:code:`ydb_decode_st()`, see:
+
+* :code:`users.c` sample C program available on GitLab at `users.c <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/users.c>`_.
+* :code:`Makefile` for building :code:`users.c` available on GitLab at `Makefile <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/Makefile>`_.
+
+To run the example :code:`users.c` program:
+
+#. Download the above files.
+#. Set :code:`ydb_dist` by sourcing :code:`ydb_env_set` from a YottaDB installation.
+#. Build and run the program: :code:`make users && ./users`
+
+If the program was built and ran correctly, it will output JSON user data pulled from :code:`https://randomuser.me`, followed by the same data after having been decoded into a YottaDB variable and encoded back out of that variable.
+
+To verify that the JSON was persisted, run :code:`zwrite ^usersJSON` in YottaDB, e.g. in a direct mode session: :code:`$ydb_dist/mumps -dir`.
+
+To use this program to load different JSON, change the URL in the :code:`url` C variable in :code:`main()` to point to a different URL. Similarly, change the :code:`vn` C variable in :code:`main()` to change which YottaDB local or global variable node will store the decoded JSON.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Sample error-handling programs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For examples of how to recover from common errors from :code:`ydb_decode_s()`/:code:`ydb_decode_st()`, see:
+
+* :code:`invalid.c` sample C program that generates an :code:`JANSSONINVALIDJSON` error, available on GitLab at `invalid.c <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/invalid.c>`_.
+* :code:`longkey.c` sample C program that generates an :code:`GVSUBOFLOW` error, available on GitLab at `longkey.c <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/longkey.c>`_.
+* :code:`longvalue.c` sample C program that generates an :code:`REC2BIG` error, available on GitLab at `longvalue.c <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/longvalue.c>`_.
+* :code:`Makefile` for building the above programs available on GitLab at `Makefile <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/Makefile>`_.
+
+To run the above example programs:
+
+#. Download the above files.
+#. Set :code:`ydb_dist` by sourcing :code:`ydb_env_set` from a YottaDB installation.
+#. Set :code:`ydb_gbldir` to a new global directory, e.g. :code:`export ydb_gbldir="mumps.gld"`.
+#. Create a new global directory file with limited key size and record size: :code:`$ydb_dist/mumps -r GDE change -region DEFAULT -key_size=32 -record_size=64`.
+#. Create a new database file with :code:`ydb_dist/mupip create`.
+#. Build and run the programs, e.g.:
+
+        - :code:`make invalid && ./invalid`
+        - :code:`make longkey && ./longkey`
+        - :code:`make longvalue && ./longvalue`
+
 .. _ydb-delete-s-st-fn:
 
 ++++++++++++++++++++++++++++++++
@@ -657,6 +778,77 @@ If your application mixes M and non M code, and you wish to use :code:`ydb_delet
 Note that specifying a larger value for :code:`namecount` than the number of variable names actually provided in :code:`*varnames` can result in a buffer overflow.
 
 Please see the :ref:`Simple API introduction <c-simple-api>` for details about parameter allocation.
+
+.. _ydb-encode-s-st-fn:
+
+++++++++++++++++++++++++++++++++++++++++++
+ydb_encode_s() / ydb_encode_st()
+++++++++++++++++++++++++++++++++++++++++++
+
+.. code-block:: C
+
+        int ydb_encode_s(const ydb_buffer_t *varname,
+                int subs_used,
+                const ydb_buffer_t *subsarray,
+                const char *format,
+                ydb_buffer_t *ret_value);
+
+        int ydb_encode_st(uint64_t tptoken,
+                ydb_buffer_t *errstr,
+                const ydb_buffer_t *varname,
+                int subs_used,
+                const ydb_buffer_t *subsarray,
+                const char *format,
+                ydb_buffer_t *ret_value);
+
+The :code:`ydb_encode_s()` and :code:`ydb_encode_st()` functions serialize a YottaDB local or global variable tree into a JSON string. :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the source array. While :code:`format` points to a null-terminated string which has the case-independent value "JSON", and :code:`ret_value` contains the JSON output string.
+
+Return values are:
+
+- :code:`YDB_OK` for a normal return;
+- :code:`YDB_ERR_GVUNDEF` or :code:`YDB_ERR_LVUNDEF` as appropriate if no such (sub)tree exists;
+- :code:`YDB_ERR_INVSTRLEN` if :code:`ret-value->len_alloc` is insufficient for the encoded (sub)tree;
+- :code:`YDB_ERR_PARAMINVALID` when ret_value is NULL; or :code:`ret_value->buf_addr` is NULL; or :code:`len_alloc < len_used` for at least 1 subscript in :code:`subsarray`; or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL for at least one subscript in :code:`subsarray`;
+- :code:`ERR_MINNRSUBSCRIPTS` or :code:`ERR_MAXNRSUBSCRIPTS` if subscript counts are less than zero or greater than :code:`YDB_MAX_SUBS`;
+- :code:`ERR_JANSSONDLERROR` if a function from the Jansson library fails to dynamically load;
+- :code:`ERR_JANSSONINVALIDJSON` if :code:`ret_value->buf_addr` is empty after the encoder finishes;
+- :code:`ERR_JANSSONENCODEERROR` if an error occurs when calling one of the Jansson encoding functions;
+- another applicable :ref:`error return code <err-ret-codes>`.
+
+Please see the :ref:`Simple API introduction <c-simple-api>` for details about parameter allocation.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:code:`encode.c` sample program
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For an example of how to use :code:`ydb_encode_s()`/:code:`ydb_encode_st()`, see:
+
+* :code:`encode.c` sample C program available on GitLab at `encode.c <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/encode.c>`_.
+* :code:`Makefile` for building :code:`encode.c` available on GitLab at `Makefile <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/Makefile>`_.
+
+Before running the example program, set the following nodes in the database for the program to encode into JSON:
+
+.. code-block::
+
+        $ $ydb_dist/mumps -dir
+        YDB>set ^encodeJSON("sub1","sub2")="blank"
+        YDB>set ^encodeJSON("sub1","sub2","container")="basket"
+        YDB>set ^encodeJSON("sub1","sub2","fruit","name")="oranges"
+        YDB>set ^encodeJSON("sub1","sub2","fruit","type")="citrus"
+
+Then, to run the example :code:`encode.c` program:
+
+#. Download the above files.
+#. Set :code:`ydb_dist` by sourcing :code:`ydb_env_set` from a YottaDB installation.
+#. Build and run the program: :code:`make encode && ./encode`
+
+If the program was built and ran correctly, it will output JSON corresponding to the above global variable nodes, i.e.:
+
+.. code-block::
+
+        {"": "blank", "container": "basket", "fruit": {"name": "oranges", "type": "citrus"}}
+
+For a more advanced example of how to use :code:`ydb_encode_s()`/:code:`ydb_encode_st()`, see the sample program at :ref:`ydb_decode_s()/ydb_decode_st() <ydb-decode-s-st-fn>`.
 
 .. _ydb-get-s-st-fn:
 
