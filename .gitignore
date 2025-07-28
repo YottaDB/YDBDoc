@@ -11,12 +11,6 @@
 #################################################################
 
 MultiLangProgGuide/YDBLua-ydbdocs.rst
-MultiLangProgGuide/examples/users
-MultiLangProgGuide/examples/simple
-MultiLangProgGuide/examples/invalid
-MultiLangProgGuide/examples/longkey
-MultiLangProgGuide/examples/longvalue
-MultiLangProgGuide/examples/encode
 /commit_verify.sh
 /deadlinks
 /git-checkouts
