@@ -890,7 +890,7 @@ ydb_cip_t
 
 .. code-block:: C
 
-   int ydb_cip_t(uint64_t tptoken, ydb_buffer_t *errstr, ci_name_descriptor *ci_info, const char *c_rtn_name, ...);
+   int ydb_cip_t(uint64_t tptoken, ydb_buffer_t *errstr, ci_name_descriptor *ci_info, ...);
 
 The function ydb_cip_t is an interface for a multi-threaded application to invoke an M routine.
 
