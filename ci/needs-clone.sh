@@ -28,36 +28,29 @@ branch_with_remote="${2:-upstream/HEAD}"
 branch=$(echo "$branch_with_remote"| cut -d / -f 2-)
 workdir=${3:-git-checkouts/$(echo "$remote" | sed 's#/$##; s#\.git$##' | rev | cut -d/ -f1 | rev | cut -d. -f1)}
 workdir_path=$(realpath .)/$workdir
-local_dir="${4:-../$(basename "$workdir")}"
 
 mkdir -p "$(basename "$workdir")"
 
 echo "Updating git checkout of $workdir" >&2
 
 if [ ! -d "$workdir" ]; then \
-	if [ -d "$local_dir" ]; then
-		(
-			cd "$local_dir"
-			if ! git remote | grep -qFx upstream; then
-				git remote add upstream "$remote"
-			fi
-			git fetch upstream "$branch"
-			git remote set-head upstream -a
-			git worktree add --force --detach "$workdir_path" "$branch_with_remote"
-		)
-	else
-		git clone "$remote" "$workdir"
-		cd "$workdir"
-		git remote add upstream "$remote"
-		git fetch upstream
-		git remote set-head upstream -a
-	fi
+	git clone "$remote" "$workdir"
+	cd "$workdir"
+	git remote add upstream "$remote"
+	git fetch upstream
+	git remote set-head upstream -a
 fi >&2
 
 {
 	cd "$workdir_path"
-	git fetch --tags upstream "$branch"
-	git checkout --detach "$branch_with_remote"
+	if [[ "$branch" =~ ^[0-9]+$ ]]; then
+		# It is an MR branch
+		git fetch origin merge-requests/${branch}/head:mr-${branch}
+		git checkout --detach mr-${branch}
+	else
+		git fetch --tags upstream "$branch"
+		git checkout --detach "$branch_with_remote"
+	fi
 } >&2
 
 echo "$workdir"

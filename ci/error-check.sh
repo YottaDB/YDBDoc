@@ -16,6 +16,8 @@ set -e
 # This section of script responsible for detecting undocumented or incorrectly documented messages
 # More details on https://gitlab.com/YottaDB/DB/YDBDoc/-/issues/409
 
+source ci/settings.sh
+
 if [ -z $YDB_TARGET_COMMIT ]; then
 	YDB_TARGET_COMMIT=$(ci/target-branch.sh ydb)
 fi

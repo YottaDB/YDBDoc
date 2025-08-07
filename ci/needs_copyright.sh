@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 #################################################################
 #								#
-# Copyright (c) 2020-2024 YottaDB LLC and/or its subsidiaries.	#
+# Copyright (c) 2020-2025 YottaDB LLC and/or its subsidiaries.	#
 # All rights reserved.						#
 #								#
 #	This source code contains the intellectual property	#

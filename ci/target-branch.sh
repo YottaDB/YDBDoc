@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #################################################################
 #                                                               #
 # Copyright (c) 2025 YottaDB LLC and/or its subsidiaries.       #
@@ -14,10 +14,15 @@ set -e
 
 # The master branch represents the latest *published* release of YDB.
 # So the error messages it documents may be different between the latest release and the latest commit to YDB master.
-# NOTE: this script hardcodes both the current development version and the latest published version of YDB.
 
-YDB_CURPRO_TAG=r2.02	# the YDB project tag corresponding to the latest production release
-YDBDOC_DEV_BRANCH=r2.04	# the YDBDoc branch name with documentation for the upcoming/next YDB release
+source ci/settings.sh
+
+if [[ "$CI_COMMIT_BRANCH" = "" ]]; then
+	# This script is running outside of the CI pipeline. In that case, the current YDBDoc branch name
+	# must be looked up explicitly for use in target-branch.sh and subsequent logic below. So, set
+	# CI_COMMIT_BRANCH to what it would be if this script were running in the pipeline.
+	export CI_COMMIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+fi
 
 case $1 in
 	ydb) ydb=1;;
@@ -57,8 +62,20 @@ if [ "$ydb" = 1 ]; then
 	# Check if current commit YDBDoc HEAD is based off the YDBDoc r2.04 branch.
 	if git merge-base --is-ancestor upstream/$YDBDOC_DEV_BRANCH HEAD; then
 		# HEAD is based off the YDBDoc r2.04 branch. In that case, we need to compare error messages against
-		# YDB master. Therefore, return "master" for this case.
-		echo upstream/master
+		# YDB master. Therefore, return "master" for this case, unless the current branch corresponds to an
+		# open upstream YDB merge request.
+		target_branch=master
+		# Check if there is an open upstream YDB MR corresponding to the current YDBDoc branch
+		# 7957109 is the GitLab project ID the upstream YDB repository
+		curl -s -k "https://gitlab.com/api/v4/projects/7957109/merge_requests?scope=all&state=opened" > ydb_open_mrs.json
+		ydbdoc_branches=$(jq -r '.[] | "\(.source_branch) \(.iid)"' ydb_open_mrs.json)
+		ydbdoc_mr=$(echo "$ydbdoc_branches" | grep "$CI_COMMIT_BRANCH" | cut -f 2 -d " ")
+		if [[ $CI_COMMIT_BRANCH != "master" ]] && [[ "$ydbdoc_mr" != "" ]]; then
+			# The YDBDoc commit branch matches the branch an upstream YDB MR.
+			# In that case, return that branch as the YDB target branch.
+			target_branch=$ydbdoc_mr
+		fi
+		echo $target_branch
 	else
 		# HEAD is based off the YDBDoc master branch. In that case, we need to compare error messages against
 		# the latest production release of YDB. Therefore, return that.

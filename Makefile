@@ -44,6 +44,7 @@ clean:
 	@rm -rf ./src/
 	@rm -rf ./Octo/
 	@rm -rf ./public/
+	@rm -rf ./git-checkouts/
 	@rm -f err_*.out
 
 # Test target: Create the "tarball" directory and run deadlinks on it
