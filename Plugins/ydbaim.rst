@@ -492,6 +492,28 @@ where,
 
 * **type** and **force** must match the :ref:`xrefdata` or :ref:`xrefsub` that set up the criss reference.
 
+++++++++++
+VERSION()
+++++++++++
+
+VERSION() provides `semantic version <https://semver.org/>`_ information for AIM, consisting of a major version number and a minor version number, separated by a period.
+
+* A change to the major version, number indicates a breaking change, which for AIM primarily means a change to the metadata schema. There are separate major version numbers for data and subscript metadata.
+* A change to the minor version number indidates an upward-compatible (non-breaking) change. The minor version number is common to data and subscript metadata.
+
+There is one optional parameter, as follows:
+
+* VERSION(str) where ``str`` is case-insensitive ``"TEXT"`` or ``"DATA"`` reports the major version number for selected type of metadata, as well as the minor version number.
+* VERSION() reports the greater of the text and subscript metadata, as well as the minor version number.
+
+For example:
+
+.. code:: none
+
+   YDB>write $$VERSION^%YDBAIM
+   2.1
+   YDB>
+
 ----------------------------
 Operational Considerations
 ----------------------------
