@@ -504,14 +504,14 @@ VERSION() provides `semantic version <https://semver.org/>`_ information for AIM
 There is one optional parameter, as follows:
 
 * VERSION(str) where ``str`` is case-insensitive ``"TEXT"`` or ``"DATA"`` reports the major version number for selected type of metadata, as well as the minor version number.
-* VERSION() reports the greater of the text and subscript metadata, as well as the minor version number.
+* VERSION() reports the major version as the sum of the text and subscript metadata, as well as the minor version number.
 
 For example:
 
 .. code:: none
 
    YDB>write $$VERSION^%YDBAIM
-   2.1
+   3.1
    YDB>
 
 ----------------------------
