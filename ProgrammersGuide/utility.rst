@@ -2569,6 +2569,8 @@ A colon (:) between two routines specifies a range.
 .. note::
    If a local variable %ZRSET is defined, %RSEL places the output information into a global variable (^%RSET) instead of the local variable %ZR.
 
+%RSEL follows symbolic links paths to report the actual pathnames of directories and shared libraries.
+
 **Prompts**
 
 Routine: Requests the name(s) of the routines; <RETURN> ends selection.
@@ -2579,7 +2581,7 @@ CALL: Performs %RSEL without reinitializing %ZR.
 
 OBJ: Searches only object files.
 
-SILENT: Provides non-interactive (batch) access to the functionality of %RSEL. The syntax is SILENT^%RSEL(pattern,label) where pattern is a string that specifies the routine names to be searched, label can be "OBJ", "SRC" or "CALL". The default value of "SRC" corresponds to ^%RSEL if invoked interactively.
+SILENT: Provides non-interactive (batch) access to the functionality of %RSEL. The syntax is SILENT^%RSEL(pattern,label) where pattern is a string that specifies the routine names to be searched, label can be case-independent "OBJ", "SRC" or "CALL". The default value of "SRC" corresponds to ^%RSEL if invoked interactively.
 
 SRC: Searches only source files (same as %RSEL).
 
