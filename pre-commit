@@ -19,6 +19,8 @@
 set nocopyright_extensions = "png gif svg css c m go pl rs"	# List of extensions that need not have copyrights.
 						                # .png, .gif and .svg are image format files
 						                # .c, .m, .go, .pl, and .rs are example program files
+set nowhitespace_extensions = "png gif svg"			# List of extensions that should not have whitespace removed.
+						                # .png, .gif and .svg are image format files.
 
 set filelist = `git diff --name-only HEAD`
 set fixlist = ""
@@ -73,8 +75,18 @@ endif
 # 2) Removes trailing white space
 # ------------------------------------------------------------------------------------------
 foreach file ($filelist)
-	if (! -e $file) then
-		# If file is being deleted as part of this commit, skip whitespace conversion on it
+	set skip = 0
+	if ("" != "$nowhitespace_extensions") then
+		set extension = $file:e
+		foreach ext ($nowhitespace_extensions)
+			if ($ext == $extension) then
+				set skip = 1
+				break
+			endif
+		end
+	endif
+	if ((! -e $file) || $skip) then
+		# If file is being deleted as part of this commit, or it is an image file, skip whitespace conversion on it
 		continue
 	endif
 	grep -q '[ 	][ 	]*$' $file
