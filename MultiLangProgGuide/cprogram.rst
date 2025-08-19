@@ -99,7 +99,9 @@ While the most common use of YDB_TP_TROLLBACK is to terminate transactions in ca
 Error Return Codes
 ~~~~~~~~~~~~~~~~~~
 
-Symbolic constants for error codes returned by calls to YottaDB are prefixed with :code:`YDB_ERR_` and are all less than zero. The symbolic constants below are not a complete list of all error messages that YottaDB functions can return - error return codes can indicate system errors and database errors, not just application errors. A process that receives a negative return code, including one not listed here, can call :ref:`ydb-get-s-st-fn` to get the value of :ref:`zstatus-isv`.
+Symbolic constants for error codes returned by calls to YottaDB are prefixed with :code:`YDB_ERR_` and are all less than zero. The symbolic constants below are not a complete list of all error messages that YottaDB functions can return - error return codes can indicate system errors and database errors, not just application errors.
+
+A process that receives a negative return code, including one not listed here, can call :ref:`ydb-get-s-st-fn` to get the value of :ref:`zstatus-isv`. The exceptions to this rule are a :code:`YDB_ERR_GVUNDEF` or :code:`YDB_ERR_LVUNDEF` return from :ref:`ydb-get-s-st-fn`. These exceptions are not considered error return codes (i.e. they do not populate :ref:`zstatus-isv`), even though they are negative return codes. Note that :code:`YDB_ERR_GVUNDEF` or :code:`YDB_ERR_LVUNDEF` return from functions other than :ref:`ydb-get-s-st-fn` are still considered errors and will populate :ref:`zstatus-isv`.
 
 Error messages can be raised by the YottaDB runtime system or by the underlying operating system.
 
@@ -883,6 +885,7 @@ Notes:
 - In the unlikely event an application wishes to know the length of the value at a node, but not access the data, it can call :code:`ydb_get_s()` or :code:`ydb_get_st()` and provide an output buffer (:code:`retvalue->len_alloc`) with a length of zero, since even in the case of a :code:`YDB_ERR_INVSTRLEN` error, :code:`retvalue->len_used` is set.
 - Within a transaction implemented by :ref:`ydb-tp-s-st-fn` application code observes stable data at global variable nodes because YottaDB :ref:`txn-proc` ensures ACID properties, restarting the transaction if a value changes.
 - Outside a transaction, a global variable node can potentially be changed by another, concurrent, process between the time that a process calls :ref:`ydb-data-s-st-fn` to ascertain the existence of the data and a subsequent call to :ref:`ydb-get-s-st-fn` to get that data. A caller of :ref:`ydb-get-s-st-fn` to access a global variable node should code in anticipation of a potential :code:`YDB_ERR_GVUNDEF`, unless it is known from application design that this cannot happen.
+- The error string corresponding to all non-:code:`YDB_OK` return values can be obtained by immediately calling :code:`ydb_zstatus()`. The only exceptions are :code:`YDB_ERR_GVUNDEF` and :code:`YDB_ERR_LVUNDEF` and :code:`ydb_zstatus()` should not be called in those cases.
 
 Please see the :ref:`Simple API introduction <c-simple-api>` for details about parameter allocation.
 
