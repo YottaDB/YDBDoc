@@ -875,7 +875,8 @@ ydb_get_s() / ydb_get_st()
 To the user-allocated location pointed to by :code:`ret_value->buf_addr`, :code:`ydb_get_s()` and :code:`ydb_get_st()` copy the value of the specified node or intrinsic special variable, setting :code:`ret_value->len_used` on both normal and error returns (the latter case as long as the data exists). Return values are:
 
 - :code:`YDB_OK` for a normal return;
-- :code:`YDB_ERR_GVUNDEF`, :code:`YDB_ERR_INVSVN`, or :code:`YDB_ERR_LVUNDEF` as appropriate if no such variable or node exists;
+- :code:`YDB_ERR_GVUNDEF` or :code:`YDB_ERR_LVUNDEF` as appropriate if the node has no value (note that these are not necessarily errors if used intentionally to test for a value so, for the sake of speed, they `do not populate <../MultiLangProgGuide/cprogram.html#err-ret-codes>`_ :code:`errstr` or :ref:`zstatus-isv` with an error message like errors do for every other function and error);
+- :code:`YDB_ERR_INVSVN` if an invalid special variable name is requested;
 - :code:`YDB_ERR_INVSTRLEN` if :code:`ret_value->len_alloc` is insufficient for the value at the node;
 - :code:`YDB_ERR_PARAMINVALID` when :code:`ret_value` is NULL or :code:`ret_value->buf_addr` is NULL and the return value has a non-zero :code:`len_used`; or :code:`len_alloc` < :code:`len_used` or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL in at least one subscript in :code:`subsarray`; or
 - another applicable :ref:`error return code <err-ret-codes>`.
