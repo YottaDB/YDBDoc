@@ -24,9 +24,9 @@
 .. contents::
    :depth: 5
 
-----------------------
+---------------------
 Introduction to MUPIP
-----------------------
+---------------------
 
 This chapter describes common database management operations such as creating database files, modifying database characteristics, database backup and restore, routine integrity checks, extracting or loading data, and optimizing performance.
 
@@ -139,7 +139,7 @@ The general format of MUPIP commands is:
 
 .. code-block:: bash
 
-   mupip command [-qualifier[...]] [object[,...]] [destination]
+   mupip command [[-]-qualifier[...]] [object[,...]] [destination]
 
 MUPIP allows the abbreviation of commands and qualifiers. In each section describing a command or qualifier, the abbreviation is also shown (for example, B[ACKUP]). The abbreviated version of B[ACKUP] you can use on the command line is B. To avoid future compatibility problems and improve readability, specify at least four characters when using MUPIP commands in scripts.
 
@@ -184,16 +184,16 @@ The format of the CREATE command is:
 
 .. code-block:: none
 
-   cr[eate] [-[no]v6] [-r[egion]=region-name | -r[egion] region name]
+   cr[eate] [[-]-[no]v6] [[-]-r[egion]=region-name | [-]-r[egion] region name]
 
-The single optional ``-region`` qualifier specifies a region for which to create a database file.
+The single optional ``[-]-region`` qualifier specifies a region for which to create a database file.
 
 One YottaDB database file can grow to a maximum size of 17,179,869,184(16Gi) blocks. This means, for example, that with a 4KiB block size, the maximum single database file size is 64TiB (4KiB*16Gi). This is just the size of one database file -- a logical database (a global variable namespace) can consist of an arbitrary number of database files, i.e., the size of a YottaDB database is limited only by available storage.
 
 Note that a MUPIP CREATE command that explicitly specifies a region which is tagged as :ref:`AutoDB <region-no-autodb>`, creates the database file for that region if it does not exist.
 
 ~~~~~~~~~~
-REGION
+[-]-REGION
 ~~~~~~~~~~
 
 Specifies a single region for creation of a database file. By default, MUPIP CREATE creates database files for all regions in the current Global Directory that do not already have a database file.
@@ -202,12 +202,12 @@ The format of the REGION qualifier is:
 
 .. code-block:: none
 
-   -r[egion]=region-name | -r[egion] region-name
+   [-]-r[egion]=region-name | [-]-r[egion] region-name
 
 The region-name is case-insensitive.
 
 ~~~~~~
-V6
+[-]-V6
 ~~~~~~
 
 Directs MUPIP to create an r1.x (GT.M V6.x) compatible database file. When the environment variable :ref:`ydb-db-create-ver` specifies the creation of r1.x compatible database files, this option can be negated (``-nov6``) to create r2.x format database files.
@@ -216,7 +216,7 @@ The format of the V6 qualifier is:
 
 .. code-block:: none
 
-   -[no]v6
+   [-]-[no]v6
 
 ``-nov6`` creates r2.x format database files, overriding the environment variable $ydb_db_create_ver.
 
@@ -240,32 +240,31 @@ The MUPIP DUMPFHEAD command displays information about one or more database file
 
 .. code-block:: none
 
-   DU[MPFHEAD] {-FI[LE] file-name | -R[EGION]=region-list | -R[EGION] region-list}
+   DU[MPFHEAD] {[-]-FI[LE] file-name | [-]-R[EGION]=region-list | [-]-R[EGION] region-list}
 
-
-~~~~~~~~~~~~~~~~
--FILE file-name
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+[-]-FILE file-name
+~~~~~~~~~~~~~~~~~~
 
 Specifies the name of the database file for the MUPIP DUMPFHEAD operation. FILE does not require a Global Directory. The format of the FILE qualifier is:
 
 .. code-block:: none
 
-   -F[ILE] file-name
+   [-]-F[ILE] file-name
 
 * The database filename must include the absolute or relative path.
 
 * The FILE qualifier is incompatible with the REGION qualifier.
 
-~~~~~~~~~~~~~~~~~~~~
--REGION region-list
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+[-]-REGION region-list
+~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies that the INTEG parameter identifies one or more regions rather than a database file. The format of the REGION qualifier is:
 
 .. code-block:: none
 
-   -R[EGION]=region-list | -R[EGION] region-list
+   [-]-R[EGION]=region-list | [-]-R[EGION] region-list
 
 * The region-list identifies the target of DUMPFHEAD. The region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order. INTEG processes regions based on the order specified in the list after wild-card expansion.
 
@@ -297,7 +296,7 @@ Converts a database file from one endian format to the other (BIG to LITTLE or L
 
 .. code-block:: none
 
-   ENDIANCVT [-OUTDB=<outdb-file>] -OV[ERRIDE] <db-file>
+   ENDIANCVT [[-]-OUTDB=<outdb-file>] [-]-OV[ERRIDE] <db-file>
 
 * <db-file> is the source database for endian conversion. By default ENDIANCVT converts <db-file> in place.
 
@@ -319,9 +318,9 @@ Converts a database file from one endian format to the other (BIG to LITTLE or L
 .. note::
    YottaDB on a big endian platform can convert a little endian database into big endian and vice versa; as can YottaDB on a little endian platform. YottaDB (run-time and utilities other than MUPIP ENDIANCVT) on a given endian platform opens and processes only those databases that are in the same endian format. An attempt to open a database of a format other than the native endian format produces an error.
 
-~~~~~~~~~~
--OVERRIDE
-~~~~~~~~~~
+~~~~~~~~~~~~
+[-]-OVERRIDE
+~~~~~~~~~~~~
 
 Enables MUPIP ENDIANCVT to continue operations even if YottaDB encounters the following errors:
 
@@ -370,7 +369,7 @@ The format of the MUPIP EXTEND command is:
 
 .. code-block:: none
 
-   EXTE[ND] [-BLOCKS=<data-blocks-to-add>] region-name
+   EXTE[ND] [[-]-BLOCKS=<data-blocks-to-add>] region-name
 
 * The only qualifier for MUPIP EXTEND is BLOCKS.
 
@@ -380,9 +379,9 @@ The format of the MUPIP EXTEND command is:
 
 * An r1.x database file can have a maximum of 992Mi blocks and an r2.x database file can have a maximum of 16Gi blocks. A request to EXTEND blocks beyond this limit produces an error. In such a case, performing a region split, REORG to reclaim free blocks, etc. may be some of the available options. YottaDB recommends operating procedures to proactively monitor DB growth to ensure that corrective actions are performed before reaching these limits.
 
-~~~~~~~~
--Blocks
-~~~~~~~~
+~~~~~~~~~~
+[-]-Blocks
+~~~~~~~~~~
 
 Specifies the number of GDS database blocks by which MUPIP should extend the file. GDS files use additional blocks for bitmaps. MUPIP EXTEND adds the specified number of blocks plus the bitmap blocks required as overhead. For more information about bitmaps, refer to `Chapter 9: "Database Structure (GDS file)" <gds.html>`_.
 
@@ -390,7 +389,7 @@ The format of the BLOCK qualifier is:
 
 .. code-block:: none
 
-   -BLOCKS=data-blocks-to-add
+   [-]-BLOCKS=data-blocks-to-add
 
 By default, EXTEND uses the extension value in the file header as the number of GDS blocks by which to extend the database file. You can specify as many blocks as needed as long as you are within the maximum total blocks limit (which could be as high as 224 million GDS blocks).
 
@@ -422,15 +421,15 @@ Backs up certain globals or extracts data from the database for use by another s
 
    EXTR[ACT]
    [
-    -FO[RMAT]={GO|B[INARY]|Z[WR]}
-    -FR[EEZE]
-    -LA[BEL]=text
-    -[NO]L[OG]
-    -[NO]NULL_IV
-    -R[EGION]=region-list | -R[EGION] region-list
-    -SE[LECT]=global-name-list]
+    [-]-FO[RMAT]={GO|B[INARY]|Z[WR]}
+    [-]-FR[EEZE]
+    [-]-LA[BEL]=text
+    [-]-[NO]L[OG]
+    [-]-[NO]NULL_IV
+    [-]-R[EGION]=region-list | [-]-R[EGION] region-list
+    [-]-SE[LECT]=global-name-list]
    ]
-   {-ST[DOUT]|file-name}
+   {[-]-ST[DOUT]|file-name}
 
 * By default, the FORMAT of MUPIP EXTRACT is ZWR.
 
@@ -450,15 +449,15 @@ For information on extracting globals with the %GO utility, refer to the `"Utili
 
 The following sections describe the qualifiers of MUPIP EXTRACT command.
 
-~~~~~~~
--FORMAT
-~~~~~~~
+~~~~~~~~~~
+[-]-FORMAT
+~~~~~~~~~~
 
 Specifies the format of the output file. The format of the FORMAT qualifier is:
 
 .. code-block:: none
 
-   -FO[RMAT]=format_code
+   [-]-FO[RMAT]=format_code
 
 The format code is any one of the following:
 
@@ -503,9 +502,9 @@ The GO and ZWR format output header was enhanced in release `r1.30. <https://git
 
 .. _mupip-extract-freeze:
 
-~~~~~~~
--FREEZE
-~~~~~~~
+~~~~~~~~~~
+[-]-FREEZE
+~~~~~~~~~~
 
 Prevents database updates to all database files from which the MUPIP EXTRACT command is copying records. FREEZE ensures that a MUPIP EXTRACT operation captures a "sharp" image of the globals, rather than one "blurred" by updates occurring while the copy is in progress.
 
@@ -513,47 +512,47 @@ The format of the FREEZE qualifier is:
 
 .. code-block:: none
 
-   -FR[EEZE]
+   [-]-FR[EEZE]
 
 By default, MUPIP EXTRACT does not "freeze" regions during operation.
 
 .. _mupip-extract-label:
 
-~~~~~~~~
--LABEL
-~~~~~~~~
+~~~~~~~~~
+[-]-LABEL
+~~~~~~~~~
 
 Specifies the text string that becomes the first record in the output file. MUPIP EXTRACT FORMAT=BINARY truncates the label text to 32 characters. The format of the LABEL qualifier is:
 
 .. code-block:: none
 
-   -LA[BEL]=text
+   [-]-LA[BEL]=text
 
 * By default, EXTRACT uses the label "MUPIP EXTRACT."
 
 * For more detailed information about the FORMAT=BINARY header label, refer to the description of EXTRACT FORMAT=BINARY.
 
-~~~~~~
--LOG
-~~~~~~
+~~~~~~~
+[-]-LOG
+~~~~~~~
 
 Displays a message on stdout for each global extracted with the MUPIP EXTRACT command. The message displays the number of global nodes, the maximum subscript length and maximum data length for each global. The format of the LOG qualifier is:
 
 .. code-block:: none
 
-   -[NO]LO[G]
+   [-]-[NO]LO[G]
 
 By default, EXTRACT operates -LOG.
 
-~~~~~~~~~
--NULL_IV
-~~~~~~~~~
+~~~~~~~~~~~
+[-]-NULL_IV
+~~~~~~~~~~~
 
 Creates an encrypted binary extract with null IVs from a database with non-null IVs, which can be restored to a version that does not support non-null IVs. The format of the NULL_IV qualifier is:
 
 .. code-block:: none
 
-   -[NO]NULL_IV
+   [-]-[NO]NULL_IV
 
 * Older versions of YottaDB used empty (all zeros or "NULL_IV") initialization vectors(IVs) to encrypt or decrypt FORMAT="BINARY" extracts.
 
@@ -565,27 +564,27 @@ Creates an encrypted binary extract with null IVs from a database with non-null 
 
 .. _extract-region:
 
-~~~~~~~
--REGION
-~~~~~~~
+~~~~~~~~~~
+[-]-REGION
+~~~~~~~~~~
 
 Restricts MUPIP EXTRACT to a set of regions. The format of the REGION qualifier is:
 
 .. code-block:: none
 
-   -R[EGION]=region-list | -R[EGION] region-list
+   [-]-R[EGION]=region-list | [-]-R[EGION] region-list
 
 region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
-~~~~~~~~
--SELECT
-~~~~~~~~
+~~~~~~~~~~
+[-]-SELECT
+~~~~~~~~~~
 
 Specifies globals for a MUPIP EXTRACT operation. The format of the SELECT qualifier is:
 
 .. code-block:: none
 
-   -S[ELECT]= global-specification
+   [-]-REGION [-]-S[ELECT]=global-specification
 
 * By default, EXTRACT selects all globals, as if it had the qualifier SELECT=*
 
@@ -601,15 +600,15 @@ The global-specification can be:
 .. note::
    If the rules for selection are complex, it may be easier to construct an ad hoc Global Directory that maps the global variables to be extracted to the database file. This may not be permissible if the database file is part of a replicated instance. If this is the case, work with a backup of the database.
 
-~~~~~~~~~
--STDOUT
-~~~~~~~~~
+~~~~~~~~~~
+[-]-STDOUT
+~~~~~~~~~~
 
 Redirects the database extract to the standard output stream. The format of the STDOUT qualifier is:
 
 .. code-block:: none
 
-   -ST[DOUT]
+   [-]-ST[DOUT]
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP EXTRACT
@@ -677,7 +676,7 @@ The format of the MUPIP FREEZE command is:
 
 .. code-block:: none
 
-   F[REEZE] {-OF[F] [-OV[ERRIDE]]|-ON [[-ONL[INE] [-[NO]AUTORELEASE]] | [-NOONL[INE]] [-R[ECORD]]]} region-list
+   F[REEZE] {[-]-OF[F] [[-]-OV[ERRIDE]]|[-]-ON [[[-]-ONL[INE] [[-]-[NO]AUTORELEASE]] | [[-]-NOONL[INE]] [[-]-R[ECORD]]]} region-list
 
 * The region-list identifies the target of the FREEZE. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
@@ -703,23 +702,23 @@ FREEZE must include one of the qualifiers:
 
 .. code-block:: none
 
-   -OF[F]
-   -ON
+   [-]-OF[F]
+   [-]-ON
 
 The optional qualifiers are:
 
 .. code-block:: none
 
-   -[NO]A[UTORELEASE] - only valid with -ONLINE
-   -DBG
-   -ON[LINE] - only valid with -ON
-   -OV[ERRIDE]
-   -R[ECORD] - only valid with -ON
-   -VERBOSE
+   [-]-[NO]A[UTORELEASE] - only valid with -ONLINE
+   [-]-DBG
+   [-]-ON[LINE] - only valid with -ON
+   [-]-OV[ERRIDE]
+   [-]-R[ECORD] - only valid with -ON
+   [-]-VERBOSE
 
-~~~~~
--OFF
-~~~~~
+~~~~~~~
+[-]-OFF
+~~~~~~~
 
 Clears a freeze set by another process with the same userid.
 
@@ -727,7 +726,7 @@ The format of the OFF qualifier is:
 
 .. code-block:: none
 
-   OF[F]
+   [-]-OF[F]
 
 * A FREEZE OFF which turns off a FREEZE ONLINE AUTORELEASE produces a OFRZNOTHELD warning to indicate that the freeze was automatically released and therefore did not protect whatever concurrent actions it was intended to guard.
 
@@ -735,27 +734,27 @@ The format of the OFF qualifier is:
 
 * Incompatible with: ON, RECORD
 
-~~~~
--ON
-~~~~
+~~~~~~
+[-]-ON
+~~~~~~
 
 Specifies the start of a MUPIP FREEZE operation. The format of the ON qualifier is:
 
 .. code-block:: none
 
-   -ON
+   [-]-ON
 
 Incompatible with: OFF, OVERRIDE
 
-~~~~~~~~~~~~~~~~~~
--[NO]A[UTORELEASE]
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+[-]-[NO]A[UTORELEASE]
+~~~~~~~~~~~~~~~~~~~~~
 
 Controls the behavior of a FREEZE specified with -ONLINE when YottaDB must write to a database file. The format of the AUTORELEASE qualifier is:
 
 .. code-block:: none
 
-   -[NO]A[UTORELEASE]
+   [-]-[NO]A[UTORELEASE]
 
 * AUTORELEASE, the default, causes YottaDB to release the freeze if it needs to update the file before a FREEZE OFF.
 
@@ -785,17 +784,17 @@ Controls the behavior of a FREEZE specified with -ONLINE when YottaDB must write
 
 .. _freeze-dbg:
 
-~~~~
--DBG
-~~~~
+~~~~~~~
+[-]-DBG
+~~~~~~~
 
 Produces verbose output to help with debugging. We recommend using :ref:`VERBOSE <freeze-verbose>` instead.
 
 .. _freeze-online:
 
-~~~~~~~~
--ONLINE
-~~~~~~~~
+~~~~~~~~~~
+[-]-ONLINE
+~~~~~~~~~~
 
 Controls the potential impact of a FREEZE on concurrently updating processes. The format of the ONLINE qualifier is:
 
@@ -825,15 +824,15 @@ Controls the potential impact of a FREEZE on concurrently updating processes. Th
 
 .. _freeze-override:
 
-~~~~~~~~~~
--OVERRIDE
-~~~~~~~~~~
+~~~~~~~~~~~~
+[-]-OVERRIDE
+~~~~~~~~~~~~
 
 Release a freeze set by a process with a different userid. YottaDB provides OVERRIDE to allow error recovery in case a procedure with a freeze fails to release. The format of the OVERRIDE qualifier is:
 
 .. code-block:: none
 
-   -OV[ERRIDE]
+   [-]-OV[ERRIDE]
 
 * OVERRIDE should not be necessary (and may even be dangerous) in most schemes.
 
@@ -841,9 +840,9 @@ Release a freeze set by a process with a different userid. YottaDB provides OVER
 
 .. _freeze-record:
 
-~~~~~~~~
--RECORD
-~~~~~~~~
+~~~~~~~~~~
+[-]-RECORD
+~~~~~~~~~~
 
 Specifies that a MUPIP FREEZE operation should record an event as a reference point. You might use MUPIP FREEZE to set up your database for a custom-backup mechanism (SAN or mirror-based).
 
@@ -851,7 +850,7 @@ The format of the RECORD qualifier is:
 
 .. code-block:: none
 
-   -R[ECORD]
+   [-]-R[ECORD]
 
 * You might use RECORD to integrate MUPIP BACKUP BYTESTREAM with an external backup mechanism.
 
@@ -861,9 +860,9 @@ The format of the RECORD qualifier is:
 
 .. _freeze-verbose:
 
-~~~~~~~~~
--VERBOSE
-~~~~~~~~~
+~~~~~~~~~~~
+[-]-VERBOSE
+~~~~~~~~~~~
 
 Produces verbose output to help with debugging.
 
@@ -917,23 +916,23 @@ The format of the MUPIP FTOK command is:
 
 .. code-block:: none
 
-   FT[OK] [-DB] [-JNLPOOL] [-RECVPOOL] [-ID] [-ONLY] [-[NO]HEADER] file-list
+   FT[OK] [[-]-DB] [[-]-JNLPOOL] [[-]-RECVPOOL] [[-]-ID] [[-]-ONLY] [[-]-[NO]HEADER] file-list
 
 where file-list is a space delimited list of files, such as that provided by the use of the * and ? shell wildcard characters.
 
 * With JNLPOOL or RECVPOOL, MUPIP FTOK ignores any files in the list.
 * With JNLPOOL or RECVPOOL, MUPIP FTOK uses the entire replication instance file path.
 
-~~~
--DB
-~~~
+~~~~~~
+[-]-DB
+~~~~~~
 
 Specifies that the file-name is a database file. By default, MUPIP FTOK uses DB.
 
 
-~~~~~~~~~~~
-[NO]HEADER
-~~~~~~~~~~~
+~~~~~~~~~~~~~~
+[-]-[NO]HEADER
+~~~~~~~~~~~~~~
 
 Displays or omits the header line of the tablular output. The output of the ONLY option has no header, but by default other forms include a header that NOHEADER suppresses.
 
@@ -941,31 +940,31 @@ HEADER qualifier was added to YottaDB effective release r1.36.
 
 .. _ftok-id:
 
-~~~
-ID
-~~~
+~~~~~~
+[-]-ID
+~~~~~~
 
 Specifies the ``prod_id`` value to use (see `man ftok <https://www.man7.org/linux/man-pages/man3/ftok.3.html>`_) when reporting the FTOK key. Specifying an id using the syntax ``-id=num`` where ``num`` is a decimal number 0 through 255 reports that value in the high byte of the FTOK key field reported by MUPIP FTOK. If unspecified, YottaDB uses 43, which shows up as hexadecimal ``2b`` and 44 (``2c``) for the Journal and Receive Pools (see examples below).
 
 ID qualifier was added to YottaDB effective release r1.36.
 
-~~~~~~~~~
--JNLPOOL
-~~~~~~~~~
+~~~~~~~~~~~
+[-]-JNLPOOL
+~~~~~~~~~~~
 
 Specifies that the reported key is for the Journal Pool of the instance corresponding to the current Global Directory.
 
-~~~~~~~
--ONLY
-~~~~~~~
+~~~~~~~~
+[-]-ONLY
+~~~~~~~~
 
 Restricts the output to only the FTOK key; if a file is not valid and accessible, FTOK reports -1. ONLY does not report the table header even when HEADER is specified. If the database file is unavailable, the utility defaults to the ONLY behavior.
 
 ONLY qualifier was added to YottaDB effective release r1.36.
 
-~~~~~~~~~
--RECVPOOL
-~~~~~~~~~
+~~~~~~~~~~~~
+[-]-RECVPOOL
+~~~~~~~~~~~~
 
 Specifies that the reported key is for the Receive Pool of the instance corresponding to the current Global Directory.
 
@@ -1047,12 +1046,12 @@ The format of the LOAD command is:
 .. code-block:: none
 
    L[OAD]
-   [-BE[GIN]=integer -E[ND]=integer
-   -FI[LLFACTOR]=integer
-   -FO[RMAT]={GO|B[INARY]|Z[WR]]}
-   -I[GNORECHSET]
-   -O[NERROR]={STOP|PROCEED|INTERACTIVE}
-   -S[TDIN]] file-name
+   [[-]-BE[GIN]=integer [-]-E[ND]=integer
+   [-]-FI[LLFACTOR]=integer
+   [-]-FO[RMAT]={GO|B[INARY]|Z[WR]]}
+   [-]-I[GNORECHSET]
+   [-]-O[NERROR]={STOP|PROCEED|INTERACTIVE}
+   [-]-S[TDIN]] file-name
 
 .. note::
    From an application perspective, performing a MUPIP LOAD operation while an application is running may result in an inconsistent application state for the database.
@@ -1078,9 +1077,9 @@ The following sections describe the optional qualifiers of the MUPIP LOAD comman
 
 .. _load-format:
 
-~~~~~~~~
--FORMAT
-~~~~~~~~
+~~~~~~~~~~
+[-]-FORMAT
+~~~~~~~~~~
 
 Specifies the format of the input file. If the format of the input file is not specified, MUPIP LOAD automatically detects the file format (BINARY/ZWR/GO) based on the file header or (when the header is absent) the key and value information in the file. If the format is specified, it must match the actual format of the input file for LOAD to proceed.
 
@@ -1106,15 +1105,15 @@ The format codes are:
 
 * FORMAT=ZWR expects the data for each global node in a single record.
 
-~~~~~~~
--BEGIN
-~~~~~~~
+~~~~~~~~~
+[-]-BEGIN
+~~~~~~~~~
 
 Specifies the record number of the input file with which LOAD should begin. Directing LOAD to begin at a point other than the beginning of a valid key causes an error. The format of the BEGIN qualifier is:
 
 .. code-block:: none
 
-   -BE[GIN]=integer
+   [-]-BE[GIN]=integer
 
 .. note::
    Always consider the number of header records for choosing a BEGIN point. See FORMAT qualifier for more information.
@@ -1126,27 +1125,27 @@ Specifies the record number of the input file with which LOAD should begin. Dire
 
 * By default, LOAD starts at the beginning of the input file.
 
-~~~~~
--END
-~~~~~
+~~~~~~~
+[-]-END
+~~~~~~~
 
 Specifies the record number of the input file at which LOAD should stop. END integer value must be greater than the BEGIN integer value for LOAD to operate. LOAD terminates after processing the record of the number specified by END or reaching the end of the input file. The format of the END qualifier is:
 
 .. code-block:: none
 
-   -E[ND]=integer
+   [-]-E[ND]=integer
 
 The value of FORMAT=GO input should normally be an even number. By default, LOAD continues to the end of the input file.
 
-~~~~~~~~~~~~
--FILLFACTOR
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+[-]-FILLFACTOR
+~~~~~~~~~~~~~~
 
 Specifies the quantity of data stored in a database block. Subsequent run-time updates to the block fill the remaining available space reserved by the FILL_FACTOR. Blocks that avoid block splits operate more efficiently. The format of the FILL_FACTOR qualifier is:
 
 .. code-block:: none
 
-   -FI[LL_FACTOR]=integer
+   [-]-FI[LL_FACTOR]=integer
 
 * Reserves room and avoids unnecessary block splits to accommodate the forecasted growth in a global variable that may experience significant rate of additions over a period of time.
 
@@ -1157,15 +1156,15 @@ Specifies the quantity of data stored in a database block. Subsequent run-time u
 .. note::
    FILL_FACTOR is useful when updates add or grow records reasonably uniformly across a broad key range. If updates are at ever-ascending or ever-descending keys, or if the record set and record sizes are relatively static in the face of updates, FILL_FACTOR does not provide much benefit.
 
-~~~~~~~~~~~~~~
--IGNORECHSET
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+[-]-IGNORECHSET
+~~~~~~~~~~~~~~~
 
 Notifies MUPIP LOAD to load the extract file even if it was created by a MUPIP process in another mode (UTF-8 mode vs. M mode). The format of the IGNORECHSET qualifier is:
 
 .. code-block:: none
 
-   -I[GNORECHSET]
+   [-]-I[GNORECHSET]
 
 .. note::
 
@@ -1173,15 +1172,15 @@ Notifies MUPIP LOAD to load the extract file even if it was created by a MUPIP p
 
 IGNORECHSET was added to YottaDB effective release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
-~~~~~~~~~
--ONERROR
-~~~~~~~~~
+~~~~~~~~~~~
+[-]-ONERROR
+~~~~~~~~~~~
 
 Determines the MUPIP LOAD behavior when it encounters an error. The format of the ONERROR qualifier is:
 
 .. code-block:: none
 
-   -O[NERROR]={STOP|PROCEED|INTERACTIVE}
+   [-]-O[NERROR]={STOP|PROCEED|INTERACTIVE}
 
 - STOP causes MUPIP LOAD to exit immediately.
 
@@ -1191,15 +1190,15 @@ Determines the MUPIP LOAD behavior when it encounters an error. The format of th
 
 By default MUPIP LOAD exits on encountering an error.
 
-~~~~~~~
--STDIN
-~~~~~~~
+~~~~~~~~~
+[-]-STDIN
+~~~~~~~~~
 
 Specifies that MUPIP LOAD takes input from standard input (stdin). The format of the STDIN qualifier is:
 
 .. code-block:: none
 
-   -S[TDIN]
+   [-]-S[TDIN]
 
 ~~~~~~~~~~~~~~~~~~~~~~~
 Examples for MUPIP LOAD
@@ -1303,22 +1302,22 @@ The format of the MUPIP REORG command is:
 
    REO[RG]
    [
-    -DOWNGRADE
-    -ENCR[YPT]=key
-    -E[XCLUDE]=global-name-list
-    -FILE=file-name
-    -FI[LL_FACTOR]=integer
-    -I[NDEX_FILL_FACTOR]=integer
-    -K[EEP]={blocks|percent%}
-    -MIN[_LEVEL]=integer
-    -NOCO[ALESCE]
-    -NOSP[LIT]
-    -NOSW[AP]
-    -R[ESUME]
-    -S[ELECT]=global-name-list
-    -T[RUNCATE][=percentage]
-    -UP[GRADE]
-    -REG[ION] region-list
+    [-]-DOWNGRADE
+    [-]-ENCR[YPT]=key
+    [-]-E[XCLUDE]=global-name-list
+    [-]-FILE=file-name
+    [-]-FI[LL_FACTOR]=integer
+    [-]-I[NDEX_FILL_FACTOR]=integer
+    [-]-K[EEP]={blocks|percent%}
+    [-]-MIN[_LEVEL]=integer
+    [-]-NOCO[ALESCE]
+    [-]-NOSP[LIT]
+    [-]-NOSW[AP]
+    [-]-R[ESUME]
+    [-]-S[ELECT]=global-name-list
+    [-]-T[RUNCATE][=percentage]
+    [-]-UP[GRADE]
+    [-]-REG[ION] region-list
    ]
 
 .. note::
@@ -1398,23 +1397,23 @@ The optional qualifiers for MUPIP REORG are:
 
 .. _reorg-downgrade:
 
-~~~~~~~~~~~~
--DOWNGRADE
-~~~~~~~~~~~~
+~~~~~~~~~~~~~
+[-]-DOWNGRADE
+~~~~~~~~~~~~~
 
 MUPIP REORG DOWNGRADE is deprecated, and not supported as of r2.00.
 
 .. _mupip-reorg-encrypt:
 
-~~~~~~~~~
--ENCRYPT
-~~~~~~~~~
+~~~~~~~~~~~
+[-]-ENCRYPT
+~~~~~~~~~~~
 
 Encrypts an unencrypted database or changes the encryption key of a database while the database continues to be used by applications. Whether or not the prior encryption uses non-zero initialization vectors (IVs), database blocks encrypted with the new key use non-zero IVs. The format of the ENCRYPT qualifier is:
 
 .. code-block:: none
 
-   -ENCR[YPT]=<key>
+   [-]-ENCR[YPT]=<key>
 
 MUPIP provides <key> to the encryption plugin. The reference implementation of the plugin expects a key with the specified name in the encryption configuration file identified by `$ydb_crypt_config <basicops.html#ydb-crypt-config>`_. The configuration file must contain an entry in the database section for each database file mapping to a region specified in <region-list> that names the specified key as its key. The ENCRYPT flag is incompatible with all other command line flags of MUPIP REORG except REGION, and performs no operation other than changing the encryption key. If the specified key is already the encryption key of a database region, MUPIP REORG ENCRYPT moves on to the next region after displaying a message (on stderr, where MUPIP operations send their output).
 
@@ -1490,9 +1489,9 @@ Blocking subsequent MUPIP REORG ENCRYPT operations after one completes, provides
 .. note::
    MUPIP REORG ENCRYPT does not enable switching between encryption algorithms. To migrate databases from Blowfish CFB to AES CFB requires that the data be extracted and loaded into newly created database files. To minimize the time your application is unavailable, you can deploy your application in a Logical Multi-Site (LMS) configuration, and migrate using a rolling upgrade technique. Refer to the `Chapter 7: "Database Replication" <./dbrepl.html>`_ for more complete documentation.
 
-~~~~~~~~~
--EXCLUDE
-~~~~~~~~~
+~~~~~~~~~~~
+[-]-EXCLUDE
+~~~~~~~~~~~
 
 Specifies that REORG not handle blocks that contain information about the globals in the associated list-this means they are neither reorganized nor swapped in the course of reorganizing other globals; EXCLUDE can reduce the efficiency of REORG because it complicates and interferes with the block swapping actions that try to improve adjacency.
 
@@ -1500,7 +1499,7 @@ The format of the EXCLUDE qualifier is:
 
 .. code-block:: none
 
-   -E[XCLUDE]=global-name-list
+   [-]-E[XCLUDE]=global-name-list
 
 * Assume that a single MUPIP command organizes a subset of the globals in a database or region. If a second MUPIP REORG command selects the remaining globals, it may tend to disrupt the results of the first REORG by de-optimizing the previously organized blocks. This is because there is no information passed from the previous MUPIP REORG command to the next command. The EXCLUDE qualifier allows users to list the name of the previously REORGed globals, so that the MUPIP REORG bypasses the GDS blocks containing these globals.
 
@@ -1524,15 +1523,15 @@ The format of the EXCLUDE qualifier is:
 
 * In case any global appears in the argument lists of both SELECT and EXCLUDE, REORG terminates with an error.
 
-~~~~~~~~~~~~~
--FILL_FACTOR
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+[-]-FILL_FACTOR
+~~~~~~~~~~~~~~~
 
 Specifies how full you want each database block to be. This is a target number. Individual blocks may be more or less full than the fill factor. The format of the FILL_FACTOR qualifier is:
 
 .. code-block:: none
 
-   F[ILL_FACTOR]=integer
+   [-]-F[ILL_FACTOR]=integer
 
 * The arguments for the FILL_FACTOR qualifier must be integers from 30 to 100. These integers represent the percentage of the data block that REORG can fill. By default, the FILL_FACTOR value is 100 for maximum data density.
 
@@ -1540,93 +1539,93 @@ Specifies how full you want each database block to be. This is a target number. 
 
 * The FILL_FACTOR for data that is relatively static, or grows by the addition of new nodes that collate before or after pre-existing nodes, should be 100 percent. The FILL_FACTOR for data that is growing by additions to existing nodes may be chosen to leave room in the typical node for the forecast growth for some period. Generally, this is the time between the LOAD and first REORG, or between two REORGs. This is also true for additions of nodes that are internal to the existing collating sequence.
 
-~~~~~~~~~~~~~~~~~~~
--INDEX_FILL_FACTOR
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+[-]-INDEX_FILL_FACTOR
+~~~~~~~~~~~~~~~~~~~~~
 
 Directs REORG to leave free space within index blocks for future updates. Arguments to this qualifier must be integers from 30 to 100 that represent the percentage of the index block that REORG can fill. REORG uses this number to decide whether to place more information in an index block, or create space by moving data to another block. The format of the INDEX_FILL_FACTOR qualifier is:
 
 .. code-block:: none
 
-   -I[NDEX_FILL_FACTOR]=integer
+   [-]-I[NDEX_FILL_FACTOR]=integer
 
 Under certain conditions, especially with large database block sizes, it may be possible to achieve faster throughput by using a smaller fill factor for index blocks than for data blocks. By default, the INDEX_FILL_FACTOR is the value of FILL_FACTOR regardless of whether that value is explicitly specified or implicitly obtained by default.
 
-~~~~
-KEEP
-~~~~
+~~~~~~~~
+[-]-KEEP
+~~~~~~~~
 
 For a :ref:`MUPIP REORG TRUNCATE <reorg-truncate>`, KEEP allows the specification, as a decimal integer number of blocks or a percentage from 0% to 99% of the starting total blocks, the total amount of space the truncate operation should leave (i.e., not truncate) in the database file at the completion of other REORG operations. The format of the KEEP qualifier is:
 
 .. code-block:: none
 
-   [-keep=blocks|percent%]
+   [[-]-keep=blocks|percent%]
 
-~~~~~~~~~~
-MIN_LEVEL
-~~~~~~~~~~
+~~~~~~~~~~~~~
+[-]-MIN_LEVEL
+~~~~~~~~~~~~~
 
 Directs REORG to only process blocks with a level greater than or equal to what is specified. ``-min_level=1``, for example, instructs REORG to only process index blocks. The format of the MIN_LEVEL qualifier is:
 
 .. code-block:: none
 
-   M[IN_LEVEL]=integer
+   [-]-M[IN_LEVEL]=integer
 
 When the user intends to target only a subset of the blocks in a database for splitting, coalescing, and swapping, this setting can significantly reduce the overhead of doing so. ``-min_level=1`` is conceptually the MUPIP REORG equivalent of an :ref:`MUPIP INTEG FAST <integ-fast>`.
 
-~~~~~~~~~~~~~
--NOCOALESCE
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+[-]-NOCOALESCE
+~~~~~~~~~~~~~~
 
 -NOCOALESCE specifies to MUPIP REORG to skip actions that increase block density. The format of the NOCOALESCE qualifier is :
 
 .. code-block:: none
 
-   -NOCO[ALESCE]
+   [-]-NOCO[ALESCE]
 
 By default, MUPIP REORG attempts to rearrange blocks which are below the specified fill-factor to pack data more densely. More tightly packed data can increase block I/O and reduce the storage requirements.
 
-~~~~~~~~~~
--NOSPLIT
-~~~~~~~~~~
+~~~~~~~~~~~
+[-]-NOSPLIT
+~~~~~~~~~~~
 
 NOSPLIT specifies to MUPIP REORG to skip actions that decrease block density. The format of the NOSPLIT qualifier is:
 
 .. code-block:: none
 
-   -NOSP[LIT]
+   [-]-NOSP[LIT]
 
 By default, MUPIP REORG attempts to rearrange blocks which are above the specified fill-factor to pack data less densely. Having empty space in blocks can reduce the need for block splits going forward, which may improve performance.
 
-~~~~~~~~~
--NOSWAP
-~~~~~~~~~
+~~~~~~~~~~
+[-]-NOSWAP
+~~~~~~~~~~
 
 NOSWAP specifies to MUPIP REORG to skip actions that increase block adjacency. The format of the NOSWAP qualifier is:
 
 .. code-block:: none
 
-   -NOSW[AP]
+   [-]-NOSW[AP]
 
 By default, MUPIP REORG attempts to rearrange blocks so that logically related blocks have adjacent block numbers. On rotating storage, this tends to improve performance; on solid state storage the results are device specific and may increase device wear. Swap activities tend to generate a lot of journal file volume.
 
-~~~~~~~~~
--RESUME
-~~~~~~~~~
+~~~~~~~~~~
+[-]-RESUME
+~~~~~~~~~~
 
 For an interrupted REORG operation, RESUME allows the user to resume the REORG operation from the point where the operation stopped. REORG stores the last key value in the database file header. The format of the RESUME qualifier is:
 
 .. code-block:: none
 
-   -R[ESUME]
+   [-]-R[ESUME]
 
 * With RESUME specified, the program retrieves the last key value, from the database file header, and restarts operations from that key.
 
 .. _reorg-region:
 
-~~~~~~~~
--REGION
-~~~~~~~~
+~~~~~~~~~~
+[-]-REGION
+~~~~~~~~~~
 
 Specifies that REORG operate in the regions in the associated list and restricts REORG to the globals in those regions that are mapped by the current global directory; it does not have the same interactions as EXCLUDE and SELECT, but it does not mitigate those interactions when combined with them.
 
@@ -1634,15 +1633,15 @@ The format of the REGION qualifier is:
 
 .. code-block:: none
 
-   -R[EGION=region-list | -R[EGION] region-list
+   [-]-R[EGION=region-list | [-]-R[EGION] region-list
 
 region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order.
 
 .. _reorg-select:
 
-~~~~~~~~~
--SELECT
-~~~~~~~~~
+~~~~~~~~~~
+[-]-SELECT
+~~~~~~~~~~
 
 Specifies that REORG reorganizes only the globals in the associated list; globals not on the list may be modified by block swaps with selected globals unless they are named with EXCLUDE; SELECT can be difficult to use efficiently because it tends to de-optimize unselected globals unless they are named in an EXCLUDE list (which introduces inefficiency).
 
@@ -1650,7 +1649,7 @@ The format of the SELECT qualifier is:
 
 .. code-block:: none
 
-   -S[ELECT]=global-name-list
+   [-]-S[ELECT]=global-name-list
 
 * By default, REORG operates on all globals in all database files identified by the current Global Directory for the process executing the MUPIP command.
 
@@ -1673,15 +1672,15 @@ The format of the SELECT qualifier is:
 
 .. _reorg-truncate:
 
-~~~~~~~~~~
-TRUNCATE
-~~~~~~~~~~
+~~~~~~~~~~~~
+[-]-TRUNCATE
+~~~~~~~~~~~~
 
 Specifies that REORG, after it has rearranged some or all of a region's contents, should attempt to reduce the size of the database file and return free space to the file system. TRUNCATE only applies to BG databases. The format of the TRUNCATE qualifier is:
 
 .. code-block:: none
 
-   -t[runcate][=percentage]
+   [-]-t[runcate][=percentage]
 
 The optional percentage (0-99) provides a minimum amount for the reclamation; in other words, REORG will not truncate the file unless it can release at least this percentage of the file; the default (0) has it release anything it can. TRUNCATE always returns space aligned with bit map boundaries, which fall at 512 database block intervals. TRUNCATE analyses the bit maps, and if appropriate, produces before image journal records as needed for recycled (formerly used) blocks. The journal extract of a truncated database file may contain INCTN records having the inctn opcode value 9 indicating that the specific block was marked from recycled to free by truncate.
 
@@ -1692,9 +1691,9 @@ The optional percentage (0-99) provides a minimum amount for the reclamation; in
 
 .. _mupip-reorg-upgrade:
 
-~~~~~~~~~~
-UPGRADE
-~~~~~~~~~~
+~~~~~~~~~~~
+[-]-UPGRADE
+~~~~~~~~~~~
 
 Upgrades blocks to current DB version format. A REORG with the UPGRADE option cannot run concurrently on a file or region with any other REORG on the same file or region, but can run concurrently with normal application code. Use REORG UPGRADE when it is a part of a release notes procedure to upgrade the DB version format of a database or when you encounter a database integrity error that requires running REORG UPGRADE.
 
@@ -1852,9 +1851,9 @@ Execute the following command when encryption completes.
 
 Always keep the keys in a secured location. Always set gtmcrypt_config and ydb_passwd to access the encrypted database.
 
-+++++++++++++++++++
-USER_DEFINED_REORG
-+++++++++++++++++++
+++++++++++++++++++++++
+[-]-USER_DEFINED_REORG
+++++++++++++++++++++++
 
 The major REORG operations are COALESCE, SPLIT and SWAP, in terms of how database files are defragmented and reorganized.
 
@@ -1918,7 +1917,7 @@ The format of the RESTORE command is:
 
 .. code-block:: none
 
-   RE[STORE] [-NET[TIMEOUT]] [-[NO]E[XTEND]] file-name bytestrm-bkup-list
+   RE[STORE] [[-]-NET[TIMEOUT]] [[-]-[NO]E[XTEND]] file-name bytestrm-bkup-list
 
 
 * file-name identifies the name of the database file that RESTORE uses as a starting point.
@@ -1933,9 +1932,9 @@ The format of the RESTORE command is:
 
 .. _restore-extend:
 
-~~~~~~~~~
--EXTEND
-~~~~~~~~~
+~~~~~~~~~~
+[-]-EXTEND
+~~~~~~~~~~
 
 Specifies whether a MUPIP RESTORE operation should extend the database file automatically if it is smaller than the size required to load the data.
 
@@ -1943,7 +1942,7 @@ The format of the EXTEND qualifier is:
 
 .. code-block:: none
 
-   -[NO]E[XTEND]
+   [-]-[NO]E[XTEND]
 
 M activity between backups may automatically extend a database file. Therefore, the database file specified as the starting point for a RESTORE may require an extension before the RESTORE. If the database needs an extension and the command specifies NOEXTEND, MUPIP displays a message and terminates. The message provides the sizes of the input and output database files and the number of blocks by which to extend the database. If the RESTORE specifies more than one incremental backup with a file list, the database file may require more than one extension.
 
@@ -1982,7 +1981,7 @@ The format of the MUPIP RUNDOWN command is:
 
 .. code-block:: none
 
-   RU[NDOWN] {-FILE file-name|-REGION region-list|-RELINKCTL [dir]|-OVERRIDE}
+   RU[NDOWN] {[-]-FILE file-name|[-]-REGION region-list|[-]-RELINKCTL [dir]|[-]-OVERRIDE}
 
 MUPIP RUNDOWN clears certain fields in a file that is already closed. This facilitates recovery from a system crash or any other operational anomaly.
 
@@ -1998,18 +1997,18 @@ The RUNDOWN command may include one of the following qualifiers:
 
 .. code-block:: none
 
-   -F[ILE]
-   -R[EGION]=region-list | -R[EGION] region-list
-   -REL[INKCTL] [dir1]
-   -O[VERRIDE]
+   [-]-F[ILE]
+   [-]-R[EGION]=region-list | [-]-R[EGION] region-list
+   [-]-REL[INKCTL] [dir1]
+   [-]-O[VERRIDE]
 
 If the RUNDOWN command does not specify either FILE or REGION, it checks all the IPC resources (shared memory) on the system and if they are associated with a YottaDB database, attempts to rundown that file. MUPIP RUNDOWN with no argument removes any statistics database file resources associated with actual database file resources it can remove.
 
 .. _rundown-file:
 
-~~~~~~
--FILE
-~~~~~~
+~~~~~~~~
+[-]-FILE
+~~~~~~~~
 
 Specifies that the argument is a file-name for a single database file. The FILE qualifier is incompatible with the REGION qualifier. If the rundown parameter consists of a list of files, the command only operates on the first item on the list.
 
@@ -2017,17 +2016,17 @@ Incompatible with: REGION
 
 .. _rundown-override:
 
-~~~~~~~~~
--OVERRIDE
-~~~~~~~~~
+~~~~~~~~~~~~
+[-]-OVERRIDE
+~~~~~~~~~~~~
 
 Overrides the protection that prevents MUPIP RUNDOWN from performing a rundown of a replication-enabled (with BEFORE_IMAGE) database or a non-replicated NOBEFORE-journaled database that was abnormally shutdown. The protection involves issuing the MUUSERLBK error for a previously crashed replication-enabled (with BEFORE IMAGE journaling) database and the MUUSERECOV error for a non-replicated or NOBEFORE-journaled database. Both these errors prevent complications related to data recovery from a journal file or a replication-enabled database.
 
 .. _rundown-region:
 
-~~~~~~~~
--REGION
-~~~~~~~~
+~~~~~~~~~~
+[-]-REGION
+~~~~~~~~~~
 
 The region-list identifies the target of the RUNDOWN. region-list may specify more than one region of the current global directory in a list. Regions are case-insensitive, separated by a comma, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and % (remember to escape them to protect them from inappropriate expansion by the shell). Any region-name expansion occurs in M (ASCII) collation order.
 
@@ -2037,9 +2036,9 @@ Incompatible with: FILE
 
 When MUPIP RUNDOWN has no qualifier, it performs rundown on all inactive database memory sections on the node. Because this form has no explicit list of databases, it does not perform any clean up on regions that have no abandoned memory segments but may not have been shutdown in a crash.
 
-~~~~~~~~~~~
--RELINKCTL
-~~~~~~~~~~~
+~~~~~~~~~~~~~
+[-]-RELINKCTL
+~~~~~~~~~~~~~
 
 Cleans up orphaned Relinkctl files. YottaDB strongly recommends avoiding actions that tend to make such cleanup necessary - for example, :code:`kill -9` of YottaDB processes or :code:`ipcrm -m` of active Relinkctl and/or Rtnobj shared memory segments.
 
@@ -2075,19 +2074,19 @@ Estimates and reports the size of global variables using a format that is simila
 
 .. code-block:: none
 
-   MUPIP SI[ZE] [-h[euristic]=estimation_technique] [-s[elect]=global-name-list] [-a[djacency]=integer] [-su[bscript]]=global-list [-r[egion]=region-list | r[egion] region-list]
+   MUPIP SI[ZE] [[-]-h[euristic]=estimation_technique] [[-]-s[elect]=global-name-list] [[-]-a[djacency]=integer] [[-]-su[bscript]]=global-list [[-]-r[egion]=region-list | r[egion] region-list]
 
 The optional qualifiers of MUPIP SIZE are:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--HEURISTIC=estimation_technique
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-HEURISTIC=estimation_technique
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the estimation technique that MUPIP SIZE should use to estimate the size of global variables. The format of the HEURISTIC qualifier is:
 
 .. code-block:: none
 
-   -h[euristic]={sc[an][,level=<lvl>] | a[rsample][,samples=<smpls>] | i[mpsample][,samples=<smpls>]}
+   [-]-h[euristic]={sc[an][,level=<lvl>] | a[rsample][,samples=<smpls>] | i[mpsample][,samples=<smpls>]}
 
   * smpls is the number of samples and must be greater than zero (0)
   * lvl is a positive or negative tree level designation and -(level of the root block) <= lvl <= (level of the root block)
@@ -2113,17 +2112,17 @@ The 2 sigma column for the two sampling techniques shows the dispersion of the s
 .. note::
    For large databases, MUPIP SIZE is faster than MUPIP INTEG FAST FULL. IMPSAMPLE is expected to be the fastest estimation technique, followed by ARSAMPLE and then SCAN. In terms of accuracy, MUPIP INTEG FAST FULL is the most accurate.
 
-~~~~~~~~~~~~~~~~~~~
--ADJACENCY=integer
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+[-]-ADJACENCY=integer
+~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the logical adjacency of data blocks that MUPIP SIZE should assume during estimation. By default, MUPIP SIZE assumes ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP SIZE report. Note that adjacency is only a proxy for database organization and its usefulness may be limited by the technology and configuration of your secondary storage. See the :ref:`mupip-integ` section of this chapter for additional comments on adjacency.
 
 .. _size-select:
 
-~~~~~~~~
--SELECT
-~~~~~~~~
+~~~~~~~~~~
+[-]-SELECT
+~~~~~~~~~~
 
 Specifies the global variables on which MUPIP SIZE runs. SELECT is incompatible with SUBSCRIPT. If neither SELECT nor SUBSCRIPT is specified, MUPIP SIZE selects all global variables in the specified region(s).
 
@@ -2131,7 +2130,7 @@ The format of the SELECT qualifier is:
 
 .. code-block:: none
 
-   -s[elect]=global-name-list
+   [-]-s[elect]=global-name-list
 
 global-name-list can be:
 
@@ -2142,23 +2141,23 @@ global-name-list can be:
 
 .. _size-region:
 
-~~~~~~~~
--REGION
-~~~~~~~~
+~~~~~~~~~~
+[-]-REGION
+~~~~~~~~~~
 
 Specifies the region on which MUPIP SIZE runs. If REGION is not specified, MUPIP SIZE selects all regions. The format of the REGION qualifier is:
 
 .. code-block:: none
 
-   -R[EGION]=region-list | -R[EGION] region-list
+   [-]-R[EGION]=region-list | [-]-R[EGION] region-list
 
 The regions in the region-list are case-insensitive. The specified region-list is converted into upper case before processing.
 
 .. _size-subscript:
 
-~~~~~~~~~~~~
--SUBSCRIPT
-~~~~~~~~~~~~
+~~~~~~~~~~~~~
+[-]-SUBSCRIPT
+~~~~~~~~~~~~~
 
 Specifies the subscripted/non-subscripted global variables on which MUPIP SIZE runs. SUBSCRIPT is incompatible with SELECT.
 
@@ -2166,7 +2165,7 @@ The format of the SUBSCRIPT qualifier is:
 
 .. code-block:: none
 
-   -SU[BSCRIPT]=global-list
+   [-]-SU[BSCRIPT]=global-list
 
 *global-list* can be:
 
@@ -2241,8 +2240,8 @@ Examines or loads trigger definitions. The format of the MUPIP TRIGGER command i
 
 .. code-block:: none
 
-   TRIGGER {-STDIN|-TRIG[GERFILE]=<trigger_definitions_file>
-   [-NOPR[OMPT]]|[-SELE[CT][=name-list|*][-STDOUT|<select-output-file>]|-UPGRADE}
+   TRIGGER {[-]-STDIN|[-]-TRIG[GERFILE]=<trigger_definitions_file>
+   [[-]-NOPR[OMPT]]|[[-]-SELE[CT][=name-list|*][[-]-STDOUT|<select-output-file>]|[-]-UPGRADE}
 
 Before you run the MUPIP TRIGGER command:
 
@@ -2252,15 +2251,15 @@ Before you run the MUPIP TRIGGER command:
 
 The qualifiers of the MUPIP TRIGGER command are as follows:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--TRIGGERFILE=<trigger_definitions_file>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-TRIGGERFILE=<trigger_definitions_file>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Loads a trigger definition file to the database. The format of the TRIGGERFILE qualifier is:
 
 .. code-block:: none
 
-   -TRIG[GERFILE]=<trigger_definitions_file> [-NOPR[OMPT]]
+   [-]-TRIG[GERFILE]=<trigger_definitions_file> [-NOPR[OMPT]]
 
 * For information on the syntax and usage of a trigger definition file, refer to the `Triggers <../ProgrammersGuide/triggers.html>`_ chapter and the `$ZTRIGGER() section in the Functions chapter of the Programmer's Guide <../ProgrammersGuide/functions.html#ztrigger-function>`_.
 
@@ -2285,15 +2284,15 @@ Loads a trigger definition file to the database. The format of the TRIGGERFILE q
 .. note::
    The trigger update summary reports count not only names and option changes as "modified" but also cases where a COMMANDS list changed, even though those are functionally additions or deletions of separate trigger definitions.
 
-~~~~~~~~~~~~~~~~~~
--SELECT=name-list
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
+[-]-SELECT=name-list
+~~~~~~~~~~~~~~~~~~~~
 
 Provides a facility to examine the current trigger definition. SELECT produces a list of the current triggers for a comma-separate list of global variables or trigger names. The format of the SELECT qualifier is:
 
 .. code-block:: none
 
-   -SELE[CT][=name-list*][ <select-output-file>]
+   [-]-SELE[CT][=name-list*][ <select-output-file>]
 
 * Name-list can include global names, delimited with a leading caret (^), and/or trigger names (user-defined or auto-generated) with no leading caret. You can specify a trailing asterisk(*) with either.
 
@@ -2312,9 +2311,9 @@ Provides a facility to examine the current trigger definition. SELECT produces a
 
 .. _trigger-upgrade:
 
-~~~~~~~~~
--UPGRADE
-~~~~~~~~~
+~~~~~~~~~~~
+[-]-UPGRADE
+~~~~~~~~~~~
 
 Upgrades older trigger definitions into current format.
 
@@ -2322,15 +2321,15 @@ The format of the UPGRADE qualifier is:
 
 .. code-block:: none
 
-   -UPGRADE
+   [-]-UPGRADE
 
 If YottaDB encounters an old trigger definition it produces a NEEDTRIGUPGRD message. To preserve the possibility of a straightforward downgrade to an earlier version, perform a select "*" action with MUPIP TRIGGER (or $ZTRIGGER() and save the result. Note that TRIGGER UPGRADE assumes that the existing trigger definitions are properly defined; if the prior release has produced defective triggers, delete them with a wild-card ("*"), and redefine the triggers in the new release. In the event of a downgrade, delete "*" all triggers before the downgrade and insert the saved version from before the upgrade. Attempting to perform a MUPIP TRIGGER UPGRADE on a database without write authorization to the database produces a TRIGMODREGNOTRW error. The UPGRADE qualifier is not compatible with any other MUPIP TRIGGER qualifier. Trigger upgrades from older versions may produce journal records based on the prior format that a MUPIP JOURNAL RECOVER cannot process correctly, therefore, YottaDB recommends you do them with journaling off, and start with a backup and fresh journal files after the trigger upgrade.
 
 .. _trigger-stdin:
 
-~~~~~~~~
--STDIN
-~~~~~~~~
+~~~~~~~~~
+[-]-STDIN
+~~~~~~~~~
 
 Reads input triggers to be set from stdin.
 
@@ -2338,7 +2337,7 @@ The format of the STDIN qualifier is:
 
 .. code-block:: none
 
-   -STDIN
+   [-]-STDIN
 
 STDIN is incompatible with any other option.
 
@@ -2346,9 +2345,9 @@ STDIN qualifier was added to YottaDB effective release `r1.32 <https://gitlab.co
 
 .. _trigger-stdout:
 
-~~~~~~~~~
--STDOUT
-~~~~~~~~~
+~~~~~~~~~~
+[-]-STDOUT
+~~~~~~~~~~
 
 Reports on triggers from the database to stdout.
 
@@ -2356,7 +2355,7 @@ The format of the STDOUT qualifier is:
 
 .. code-block:: none
 
-   -STDOUT
+   [-]-STDOUT
 
 STDOUT is only valid for SELECT and therefore is incompatible with the STDIN, TRIGGERFILE, and UPGRADE options.
 
@@ -2545,7 +2544,7 @@ The format of the MUPIP UPGRADE command is:
 
 .. code-block:: bash
 
-   UP[GRADE] [-FILE file-name | [-REGION] region-list]
+   UP[GRADE] [[-]-FILE file-name | [[-]-REGION] region-list]
 
   * Relocates blocks to make space for an expanded master bit map
   * Removes global names without any data, so called "dead" globals

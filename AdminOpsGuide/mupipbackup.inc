@@ -17,21 +17,21 @@ The format of the MUPIP BACKUP command is:
 
    B[ACKUP]
    [
-    -BK[UPDBJNL]={DISABLE|OFF}]
-    -BY[TESTREAM] [-NET[TIMEOUT]]
-    -DA[TABASE]
-    -DBG
-    -[NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]]
-    -[NO]O[NLINE]
-    -REC[ORD]
-    -REPLA[CE]
-    -REPLIC[ATION]=ON
-    -REPLIN[STANCE]=target_location
-    -RET[RY]=count
-    -SH[OWPROGRESS]
-    -S[INCE]={DATABASE|BYTESTREAM|RECORD}
-    -T[RANSACTION]=hexadecimal_transaction_number
-    -VERBOSE
+    [-]-BK[UPDBJNL]={DISABLE|OFF}]
+    [-]-BY[TESTREAM] [[-]-NET[TIMEOUT]]
+    [-]-DA[TABASE]
+    [-]-DBG
+    [-]-[NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]]
+    [-]-[NO]O[NLINE]
+    [-]-REC[ORD]
+    [-]-REPLA[CE]
+    [-]-REPLIC[ATION]=ON
+    [-]-REPLIN[STANCE]=target_location
+    [-]-RET[RY]=count
+    [-]-SH[OWPROGRESS]
+    [-]-S[INCE]={DATABASE|BYTESTREAM|RECORD}
+    [-]-T[RANSACTION]=hexadecimal_transaction_number
+    [-]-VERBOSE
    ] region-list[,...] destination-list
 
 .. note::
@@ -108,9 +108,9 @@ BACKUP Qualifiers
 
 .. _mupip-backup-bkupdbjnl:
 
-^^^^^^^^^^
--BKupdbjnl
-^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-BKUPDBJNL
+^^^^^^^^^^^^^
 
 A backup database shares the same journaling characteristics of the source database. However, with BKUPDBJNL you can disable or turn off journaling in the backup database. Be sure to use BKUPDBJNL=DISABLE if you intend to open your backup database on the same system as the source database to ensure that two database files do not inadvertently point to the same journal file.
 
@@ -118,7 +118,7 @@ The format of the BKUPDBJNL qualifier is:
 
 .. code-block:: none
 
-   -BK[UPDBJNL]={DISABLE|OFF}
+   [-]-BK[UPDBJNL]={DISABLE|OFF}
 
 * Specify DISABLE to disable journaling in the backup database.
 
@@ -126,9 +126,9 @@ The format of the BKUPDBJNL qualifier is:
 
 * Only one of the qualifiers DISABLE or OFF can be specified at any given point.
 
-^^^^^^^^^^^
--BYtestream
-^^^^^^^^^^^
+^^^^^^^^^^^^^^
+[-]-BYTESTREAM
+^^^^^^^^^^^^^^
 
 Transfers MUPIP BACKUP output to a TCP connection, file (or a backup directory), or a pipe. If there are multiple .dat files, BYTESTREAM transfers output to a comma separated list of TCP connections, incremental backup files and/or directories, or pipes. When used with SINCE or TRANSACTION, MUPIP BACKUP allows incremental backup, that is, includes database blocks that have changed since a prior point specified by the SINCE or TRANSACTION.
 
@@ -141,15 +141,15 @@ The format of the BYTESTREAM qualifier is:
 
 .. code-block:: none
 
-   -BY[TESTREAM]
+   [-]-BY[TESTREAM]
 
 * BYTESTREAM is compatible with SINCE and TRANSACTION.
 
 * INCREMENTAL is deprecated in favor of BYTESTREAM. For upward compatibility, MUPIP temporarily continues to support the deprecated INCREMENTAL.
 
-^^^^^^^^^^
--Database
-^^^^^^^^^^
+^^^^^^^^^^^^
+[-]-DATABASE
+^^^^^^^^^^^^
 
 Creates a disk-to-disk backup copy of the files of all selected regions. DATABASE backup copy is a ready-to-use YottaDB database unlike BYTESREAM backups which must be restored.
 
@@ -157,7 +157,7 @@ The format of the DATABASE qualifier is:
 
 .. code-block:: none
 
-   -D[ATABASE]
+   [-]-D[ATABASE]
 
 * By default, MUPIP BACKUP uses DATABASE.
 
@@ -165,21 +165,21 @@ The format of the DATABASE qualifier is:
 
 * COMPREHENSIVE is deprecated in favor of DATABASE. For upward compatibility, MUPIP temporarily continues to support the deprecated COMPREHENSIVE.
 
-^^^^
--DBG
-^^^^
+^^^^^^^
+[-]-DBG
+^^^^^^^
 
 Produces verbose output to help with debugging. We recommend using :ref:`VERBOSE <backup-verbose>` instead.
 
-^^^^^^^^^^^^
--NETtimeout
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^
+[-]-NETTIMEOUT
+^^^^^^^^^^^^^^
 
 Specifies the timeout period when a bytestream BACKUP data is sent over a TCP/IP connection. The format of the NETTIMEOUT qualifier is:
 
 .. code-block:: none
 
-   NET[TIMEOUT]=seconds
+   [-]-NET[TIMEOUT]=seconds
 
 * The default value is 30 seconds.
 
@@ -187,9 +187,9 @@ Specifies the timeout period when a bytestream BACKUP data is sent over a TCP/IP
 
 .. _mupip-backup-newjnlfiles:
 
-^^^^^^^^^^^^^
--NEWJNLFILES
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+[-]-NEWJNLFILES
+^^^^^^^^^^^^^^^
 
 Determines the journaling characteristics of the database files as part of the backp. This qualifier is effective only for an ONLINE backup (the default), for database regions that have journaling enabled. When new journal files are created, journal records for all updates up to and including the last update in the backed up database files are in the prior journal files, and journal records for updates not in the backed up database files are in the new journal files.
 
@@ -197,7 +197,7 @@ The format of the NEWJNLFILES qualifier is:
 
 .. code-block:: none
 
-   -[NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]]
+   [-]-[NO]NEWJNLFILES[=[NO]PREVLINK],[NO]S[YNC_IO]]
 
 * NEWJNLFILES can take the following three values:
 
@@ -212,15 +212,15 @@ The format of the NEWJNLFILES qualifier is:
 
 .. _mupip-backup-online:
 
-^^^^^^^^
--Online
-^^^^^^^^
+^^^^^^^^^^
+[-]-ONLINE
+^^^^^^^^^^
 
 Specifies that while the MUPIP BACKUP operation is active, processes can continue to update the database without affecting the result of the backup. The format of the ONLINE qualifier is:
 
 .. code-block:: none
 
-   -[NO]O[NLINE]
+   [-]-[NO]O[NLINE]
 
 * MUPIP BACKUP ONLINE creates a backup of the database as of the moment the backup starts. If running processes subsequently update the database, the backup does not reflect those updates.
 
@@ -228,9 +228,9 @@ Specifies that while the MUPIP BACKUP operation is active, processes can continu
 
 * By default, MUPIP BACKUP is ONLINE.
 
-^^^^^^^^
--Record
-^^^^^^^^
+^^^^^^^^^^
+[-]-RECORD
+^^^^^^^^^^
 
 Timestamps (in the form of a transaction number) a database file to mark a reference point for subsequent bytestream, database, or custom backup protocols. Even though DATABASE and BYTESTREAM both mark their own relative timestamps, RECORD provides an additional timestamp option. MUPIP FREEZE also provides the RECORD qualifier because a FREEZE may be used to set the database up for a SAN or disk-mirror based backup mechanism.
 
@@ -238,15 +238,15 @@ The format of the RECORD qualifier is:
 
 .. code-block:: none
 
-   -R[ECORD]
+   [-]-R[ECORD]
 
 * Use RECORD (with the hyphen) to timestamp a reference point and use RECORD as a keyword (as in SINCE=RECORD) to specify the starting point for a MUPIP BACKUP operation.
 
 * RECORD replaces the previously RECORDed transaction identifier for the database file.
 
-^^^^^^^^^
--REPLAce
-^^^^^^^^^
+^^^^^^^^^^^
+[-]-REPLACE
+^^^^^^^^^^^
 
 Overwrites the existing destination files.
 
@@ -254,7 +254,7 @@ The format of the REPLACE qualifier is:
 
 .. code-block:: none
 
-   -[REPLA]CE
+   [-]-REPLA[CE]
 
 * By default, MUPIP BACKUP protects against overwriting the destination files. REPLACE disables this default behavior.
 
@@ -262,15 +262,15 @@ The format of the REPLACE qualifier is:
 
 .. _backup-replication:
 
-^^^^^^^^^^^^^
--REPLICation
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+[-]-REPLICATION
+^^^^^^^^^^^^^^^
 
 `Recovering from the replication WAS_ON state <./dbrepl.html#recovering-from-the-replication-was-on-state>`_ involves taking a backup with new journal files and turning replication back on. The REPLICATION qualifier allows this to be performed as part of the backup.
 
 .. code-block:: none
 
-   -[REPLIC]ation=ON
+   [-]-REPLIC[ATION]=ON
 
 * REPLICATION is compatible only with DATABASE.
 
@@ -278,9 +278,9 @@ The format of the REPLACE qualifier is:
 
 * If replication in the database file being backed up is in the WAS_ON state, and NEWJNLFILES is specified or defaulted, REPLICATION=ON changes the replication state in the database file header to ON. NOPREVLINK is automatic in this case, because there is no prior generation journal file to which the new file can link. Note that even with new journal files, the system should not be considered in a safe state till the MUPIP BACKUP completes.
 
-^^^^^^^^^^^^^^
--REPLINstance
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+[-]-REPLINSTANCE
+^^^^^^^^^^^^^^^^
 
 Specifies the target location, a directory or a file, for the backup of the replication instance file. If a directory is specified, the file has the same name as replication instance file being backed up.
 
@@ -291,11 +291,11 @@ The format of the REPLINSTANCE qualifier is:
 
 .. code-block:: none
 
-   -REPLIN[STANCE]=<target_location>
+   [-]-REPLIN[STANCE]=<target_location>
 
-^^^^^
-RETry
-^^^^^
+^^^^^^^^^
+[-]-RETRY
+^^^^^^^^^
 
 Specifies the number of times that MUPIP BACKUP should retry the backup if it fails. If RETRY is not specified, MUPIP BACKUP retries the file copy operation once if the first attempt fails on a retriable reason. In case of an error, retry attempts are always based on ``cp`` or ``pax`` even when another copy mechanism is available. If ``--retry=0`` is specified, MUPIP BACKUP makes no attempt to retry when it encounters a failure.
 
@@ -303,11 +303,11 @@ The format of the RETRY qualifier is:
 
 .. code-block:: none
 
-   --ret[ry]=<count>
+   [-]-RET[RY]=<count>
 
-^^^^^^^^^^^^^
-SHowprogress
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+[-]-SHOWPROGRESS
+^^^^^^^^^^^^^^^^
 
 When the backup copy mechanism supports monitoring, SHOWPROGRESS periodically displays the transfer progress, estimated time left, speed, and the number of transaction applied to the database during backup.
 
@@ -315,19 +315,19 @@ The format of the SHOWPROGRESS qualifier is:
 
 .. code-block:: none
 
-   -sh[owprogress]
+   [-]-SH[OWPROGRESS]
 
 Incompatible with BYTESTREAM.
 
-^^^^^^^
--Since
-^^^^^^^
+^^^^^^^^^
+[-]-SINCE
+^^^^^^^^^
 
 Includes blocks changed since the last specified backup. The format of the SINCE qualifier is:
 
 .. code-block:: none
 
-   -S[ince]={Database|Bytestream|Record}
+   [-]-S[ince]={Database|Bytestream|Record}
 
 * D[atabase] - Backup all changes since the last MUPIP BACKUP DATABASE.
 
@@ -339,15 +339,15 @@ By default, MUPIP BACKUP BYTESTREAM operates as :code:`-since=database`.
 
 Incompatible with: TRANSACTION.
 
-^^^^^^^^^^^^
--Transaction
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+[-]-TRANSACTION
+^^^^^^^^^^^^^^^
 
 Specifies the transaction number of a starting transaction that causes BACKUP BYTESTREAM to copy all blocks that have been changed by that transaction and all subsequent transactions. The format of the TRANSACTION qualifier is:
 
 .. code-block:: none
 
-   -T[RANSACTION]=transaction-number
+   [-]-T[RANSACTION]=transaction-number
 
 * A Transaction number is always a 16 digit hexadecimal number. It appears in a DSE DUMP FILEHEADER with the label "Current transaction".
 
@@ -362,9 +362,9 @@ Specifies the transaction number of a starting transaction that causes BACKUP BY
 
 .. _backup-verbose:
 
-^^^^^^^^^
--VERBOSE
-^^^^^^^^^
+^^^^^^^^^^^
+[-]-VERBOSE
+^^^^^^^^^^^
 
 Produces verbose output to help with debugging.
 

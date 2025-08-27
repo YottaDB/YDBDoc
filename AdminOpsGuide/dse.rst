@@ -80,7 +80,7 @@ The list of Change commands is as follows:
    SH[IFT]
    W[CINIT]
    OV[ERWRITE]
-   M[APS] -BU[SY] -F[REE] -M[ASTER] -R[ESTORE_ALL]
+   M[APS] [-]-BU[SY] [-]-F[REE] [-]-M[ASTER] [-]-R[ESTORE_ALL]
 
 The list of Inquiry commands is as follows:
 
@@ -123,7 +123,7 @@ The general format of DSE commands is:
 
 .. code-block:: none
 
-   command [-qualifier[...]] [object[,...]]
+   command [[-]-qualifier[...]] [object[,...]]
 
 DSE interprets all numeric input as hexadecimal, except for time values, the values for the following qualifiers when used with CHANGE -FILEHEADER: -BLK_SIZE=, DECLOCATION=, -KEY_MAX_SIZE=, -RECORD_MAX_SIZE, -REFERENCE_COUNT=, -TIMERS_PENDING and -WRITES_PER_FLUSH, and the value for -VERSION= when used with the REMOVE and RESTORE commands. These conventions correspond to the displays provided by DSE and by MUPIP INTEG.
 
@@ -137,19 +137,19 @@ Adds a record to a block. The format of the ADD command for blocks with a level 
 
 .. code-block:: none
 
-   ADD [-B[LOCK]=[block] {-OFFSET=offset|-RECORD=record} -STAR -POINTER=block
+   ADD [[-]-B[LOCK]=[block] {[-]-OFFSET=offset|[-]-RECORD=record} [-]-STAR [-]-POINTER=block
 
 or
 
 .. code-block:: none
 
-   ADD [-B[LOCK]=[block] {-OFFSET=offset|-RECORD=record} -KEY=key -POINTER=pointer
+   ADD [[-]-B[LOCK]=[block] {[-]-OFFSET=offset|[-]-RECORD=record} [-]-KEY=key [-]-POINTER=pointer
 
 The format of the ADD command for level 0 blocks is:
 
 .. code-block:: none
 
-   ADD [-B[LOCK]=[block] {-OFFSET=offset|-RECORD=record} -KEY=key -DATA=string
+   ADD [[-]-B[LOCK]=[block] {[-]-OFFSET=offset|[-]-RECORD=record} [-]-KEY=key [-]-DATA=string
 
 The ADD command requires either the -OFFSET or -RECORD qualifier to position the record in the block, and either the -KEY or the -STAR qualifier to define the key for the block.
 
@@ -159,57 +159,57 @@ The -STAR qualifier is invalid at level 0 (a data block). The ADD command requir
 Qualifiers of ADD
 ~~~~~~~~~~~~~~~~~
 
-^^^^^^^^^^^^^^^^^^^^^
--B[LOCK]=block-number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-B[LOCK]=block-number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block to receive the new record.
 
 On commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, that is, on the first block-oriented command, DSE uses block one (1).
 
-^^^^^^^^^^^^^^
--D[ATA]=string
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
+[-]-D[ATA]=string
+^^^^^^^^^^^^^^^^^
 
 Specifies the data field for records added to a data block. Use quotation marks around the string and escape codes of the form \\ab, where "a" and "b" are hexadecimal digits representing non-printing characters. \\\\ translates to a single backslash. \\\"\" translates to a NULL value.
 
 Incompatible with: -STAR,-POINTER
 
-^^^^^^^^^^
--K[EY]=key
-^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-K[EY]=key
+^^^^^^^^^^^^^
 
 Specifies the key of the new record. Enclose M-style global references, including the leading caret symbol (^), in quotation marks (" ").
 
 Incompatible with: -STAR
 
-^^^^^^^^^^^^^^^^
--O[FFSET]=offset
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
+[-]-O[FFSET]=offset
+^^^^^^^^^^^^^^^^^^^
 
 Adds the new record at the next record boundary after the specified offset.
 
 Incompatible with: -RECORD, -STAR
 
-^^^^^^^^^^^^^^^^^^
--P[OINTER]=pointer
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+[-]-P[OINTER]=pointer
+^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block pointer field for records added to an index block. The -POINTER qualifier cannot be used at level 0. Note that this means that to add pointers at level 0 of the Directory Tree, you must specify a string of bytes or temporarily change the block level.
 
 Incompatible with: -DATA
 
-^^^^^^^^^^^^^^^^^^^^^^^
--R[ECORD]=record-number
-^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-R[ECORD]=record-number
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies a record number of the new record.
 
 Incompatible with: -OFFSET,-STAR
 
-^^^^^^^
--S[TAR]
-^^^^^^^
+^^^^^^^^^^
+[-]-S[TAR]
+^^^^^^^^^^
 
 Adds a star record (that is, a record that identifies the last record in an indexed block) at the end of the specified block. The -STAR qualifier cannot be used at level 0.
 
@@ -295,16 +295,16 @@ The format of the ALL command is:
 
    AL[L]
    [
-   -B[UFFER_FLUSH]
-   -C[RITINIT]
-   -D[UMP] -A[LL]
-   -[NO]F[REEZE]
-   -O[VERRIDE]]
-   -REF[ERENCE]
-   -REL[EASE]
-   -REN[EW]
-   -S[EIZE]
-   -W[CINIT]
+   [-]-B[UFFER_FLUSH]
+   [-]-C[RITINIT]
+   [-]-D[UMP] [-]-A[LL]
+   [-]-[NO]F[REEZE]
+   [-]-O[VERRIDE]]
+   [-]-REF[ERENCE]
+   [-]-REL[EASE]
+   [-]-REN[EW]
+   [-]-S[EIZE]
+   [-]-W[CINIT]
    ]
 
 
@@ -320,25 +320,25 @@ Qualifiers
 
 .. _qual-all:
 
-^^^^
--ALL
-^^^^
+^^^^^^^
+[-]-ALL
+^^^^^^^
 
 Displays additional information on the database most of which is useful for YottaDB in diagnosing issues.
 
 Meaningful only with: -D[UMP]
 
-^^^^^^^^^^^^^
--BUFFER_FLUSH
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+[-]-BUFFER_FLUSH
+^^^^^^^^^^^^^^^^
 
 Flushes to disk the file header and all pooled buffers for all regions of the current global directory.
 
 Incompatible with: -RENEW
 
-^^^^^^^^^^^
--C[RITINIT]
-^^^^^^^^^^^
+^^^^^^^^^^^^^^
+[-]-C[RITINIT]
+^^^^^^^^^^^^^^
 
 Initializes critical sections for all regions of the current directory.
 
@@ -347,17 +347,17 @@ Incompatible with: -RENEW, -RELEASE, -SIEZE
 .. note::
    Never use CRITINIT while concurrent updates are in progress as doing so may damage the database.
 
-^^^^^^^
--D[UMP]
-^^^^^^^
+^^^^^^^^^^
+[-]-D[UMP]
+^^^^^^^^^^
 
 Displays fileheader information.
 
 Compatible with: -A[LL]
 
-^^^^^^^^^^^^^
--[NO]F[REEZE]
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+[-]-[NO]F[REEZE]
+^^^^^^^^^^^^^^^^
 
 Freezes or prevents updates on all regions of the current global directory.
 
@@ -368,9 +368,9 @@ Freezes or prevents updates on all regions of the current global directory.
 
 Incompatible with: -RENEW
 
-^^^^^^^^^^^
--O[VERRIDE]
-^^^^^^^^^^^
+^^^^^^^^^^^^^^
+[-]-O[VERRIDE]
+^^^^^^^^^^^^^^
 
 Overrides the ALL -FREEZE or ALL -NOFREEZE operation.
 
@@ -380,9 +380,9 @@ When used with -FREEZE, -OVERRIDE freezes all GDS regions, including those froze
 
 Meaningful only with: [NO]FREEZE
 
-^^^^^^^^^^^^
--REF[ERENCE]
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+[-]-REF[ERENCE]
+^^^^^^^^^^^^^^^
 
 Resets the reference count field to 1 for all regions of the current global directory.
 
@@ -391,17 +391,17 @@ Resets the reference count field to 1 for all regions of the current global dire
 
 Incompatible with: -RENEW
 
-^^^^^^^^^^
--REL[EASE]
-^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-REL[EASE]
+^^^^^^^^^^^^^
 
 Releases critical sections for all regions of the current global directory.
 
 Incompatible with: -CRITINIT, -RENEW, -SEIZE
 
-^^^^^^^^
--REN[EW]
-^^^^^^^^
+^^^^^^^^^^^
+[-]-REN[EW]
+^^^^^^^^^^^
 
 Reinitializes the critical sections (-CRITICAL) and buffers (-WCINIT), resets reference counts (-REFERENCE_COUNT) to 1, and clears freeze (-NOFREEZE) for all regions of the current global directory .
 
@@ -409,17 +409,17 @@ Reinitializes the critical sections (-CRITICAL) and buffers (-WCINIT), resets re
 * The RENEW action will cause all current accessors of the affected database regions to receive a fatal error on their next access attempt.
 * This operation is dangerous, drastic, and is a last resort if multiple databases have hangs that have not yielded to other resolution attempts; there is almost never a good reason to use this option.
 
-^^^^^^^^
--S[EIZE]
-^^^^^^^^
+^^^^^^^^^^^
+[-]-S[EIZE]
+^^^^^^^^^^^
 
 Seizes the critical section for all regions of the current global directory. The -SEIZE qualifier is useful when you encounter a DSEBLKRDFAIL error, generated when DSE is unable to read a block from the database.
 
 Incompatible with: -RENEW, -RELEASE, -CRITINIT
 
-^^^^^^^^^
--W[CINIT]
-^^^^^^^^^
+^^^^^^^^^^^^
+[-]-W[CINIT]
+^^^^^^^^^^^^
 
 Reinitializes the buffers for all regions of the current global directory.
 
@@ -535,34 +535,34 @@ Operates on the cache of a database having BG access method. The format of the C
 
    CA[CHE]
    [
-   -ALL
-   -RE[COVER]
-   -SH[OW]
-   -VE[RIFY]
+   [-]-ALL
+   [-]-RE[COVER]
+   [-]-SH[OW]
+   [-]-VE[RIFY]
    ]
 
 ~~~~~~~~~~~~~~~~~~~
 Qualifiers of CACHE
 ~~~~~~~~~~~~~~~~~~~
 
-^^^^^^^^^^^^^^^^^
--RE[COVER] [-ALL]
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
+[-]-RE[COVER] [-ALL]
+^^^^^^^^^^^^^^^^^^^^
 
 Resets the cache of a database having BG access method to a "clean" state.
 
 * With -ALL specified, DSE includes all region of the current global directory for cache recovery.
 * Attempt DSE CACHE -RECOVER only if a DSE CACHE -VERIFY commands reports the cache is "NOT clean".
 
-^^^^^^^
--SH[OW]
-^^^^^^^
+^^^^^^^^^^
+[-]-SH[OW]
+^^^^^^^^^^
 
 Displays the cache data structure information. All values are in 8-byte hexadecimal form. If the database has encryption turned on, SHOW additionally displays an element that gives information about the encrypted global buffer section in shared memory.
 
-^^^^^^^^^^^^^^^^
--VE[RIFY] [-ALL]
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
+[-]-VE[RIFY] [[-]-ALL]
+^^^^^^^^^^^^^^^^^^^^^^
 
 Verifies the integrity of the cache data structures as well as the internal consistency of any GDS blocks in the global buffers of the current region.
 
@@ -642,13 +642,13 @@ The CHANGE command either has a -FILEHEADER qualifier or an implicit or explicit
 
 .. code-block:: none
 
-   -BS[IZ]=block-size
-   -L[EVEL]=level
-   -TN[=transaction-number]
-   -OF[FSET]=offset
-   -RE[CORD]=record-number
-   -CM[PC]=compression-count
-   -RS[IZ]=record-size
+   [-]-BS[IZ]=block-size
+   [-]-L[EVEL]=level
+   [-]-TN[=transaction-number]
+   [-]-OF[FSET]=offset
+   [-]-RE[CORD]=record-number
+   [-]-CM[PC]=compression-count
+   [-]-RS[IZ]=record-size
 
 or
 
@@ -656,55 +656,55 @@ or
 
 .. code-block:: none
 
-   -AB[ANDONED_KILLS]=value
-   -AVG_BLKS_READ=Average-blocks-read
-   -B_B[YTESTREAM]=transaction-number
-   -B_C[OMPREHENSIVE]=transaction-number
-   -B_D[ATABASE]=transaction-number
-   -B_I[NCREMENTAL]=transaction-number
-   -B_R[ECORD]=transaction-number
-   -BLK_SIZE=block-size
-   -BLO[CKS_FREE]=free-blocks
-   -CU[RRENT_TN]=transaction-number
-   -COM[MITWAIT_SPIN_COUNT]=boolean
-   -DATA[_RESERVED_BYTES]=reserved-bytes
-   -DEC[LOCATION]=value
-   -DEF[_COLLATION]=value
-   -ENCRYPTION_HASH
-   -FL[USH_TIME][=delta-time]
-   -FR[EEZE]=value
-   -FU[LLY_UPGRADED]=boolean
-   -GV[STATSRESET]
-   -HARD_SPIN_COUNT=Mutex-hard-spin-count
-   -HE[XLOCATION]=value
-   -INDEX[_RESERVED_BYTES]=reserved-bytes
-   -INT[ERRUPTED_RECOV]=boolean
-   -JNL_YIELD_LIMIT=journal-yeild-limit
-   -KE[Y_MAX_SIZE]=key-max-size
-   -KI[LL_IN_PROG]=value
-   -M[ACHINE_NAM]=value
-   -N[ULL_SUBSCRIPTS]=value
-   -NO[CRIT]
-   -OV[ERRIDE]
-   -Q[DBRUNDOWN]
-   -RC_SRV_COUNT
-   -RE_READ_TRIGGER=read-trigger
-   -REC[ORD_MAX_SIZE]=record-max-size
-   -REF[ERENCE_COUNT]=reference-count
-   -REG[_SEQNO]=sequence-number
-   -RESERVED_BYTES=reserved-bytes
-   -SLEE[P_SPIN_COUNT]=mutex-sleep-spin-count
-   -SPIN[_SLEEP_MASK]=mutex-spin-sleep-mask
-   -STRM_NUM=stream-number STRM_REG_SEQNO=hexa
-   -TIM[ERS_PENDING]=integer
-   -TO[TAL_BLKS]=total-blocks
-   -TR[IGGER_FLUSH]=trigger-flus
-   -UPD_RESERVED_AREA=reserved-area
-   -UPD_WRITER_TRIGGER_FACTOR=trigger-factor
-   -W[RITES_PER_FLUSH]=writes-per-flush
-   -WAIT_DISK=wait-disk
-   -Zqgblmod_S[EQNO]=sequence-number
-   -Zqgblmod_TN=database-transaction-number
+   [-]-AB[ANDONED_KILLS]=value
+   [-]-AVG_BLKS_READ=Average-blocks-read
+   [-]-B_B[YTESTREAM]=transaction-number
+   [-]-B_C[OMPREHENSIVE]=transaction-number
+   [-]-B_D[ATABASE]=transaction-number
+   [-]-B_I[NCREMENTAL]=transaction-number
+   [-]-B_R[ECORD]=transaction-number
+   [-]-BLK_SIZE=block-size
+   [-]-BLO[CKS_FREE]=free-blocks
+   [-]-CU[RRENT_TN]=transaction-number
+   [-]-COM[MITWAIT_SPIN_COUNT]=boolean
+   [-]-DATA[_RESERVED_BYTES]=reserved-bytes
+   [-]-DEC[LOCATION]=value
+   [-]-DEF[_COLLATION]=value
+   [-]-ENCRYPTION_HASH
+   [-]-FL[USH_TIME][=delta-time]
+   [-]-FR[EEZE]=value
+   [-]-FU[LLY_UPGRADED]=boolean
+   [-]-GV[STATSRESET]
+   [-]-HARD_SPIN_COUNT=Mutex-hard-spin-count
+   [-]-HE[XLOCATION]=value
+   [-]-INDEX[_RESERVED_BYTES]=reserved-bytes
+   [-]-INT[ERRUPTED_RECOV]=boolean
+   [-]-JNL_YIELD_LIMIT=journal-yeild-limit
+   [-]-KE[Y_MAX_SIZE]=key-max-size
+   [-]-KI[LL_IN_PROG]=value
+   [-]-M[ACHINE_NAM]=value
+   [-]-N[ULL_SUBSCRIPTS]=value
+   [-]-NO[CRIT]
+   [-]-OV[ERRIDE]
+   [-]-Q[DBRUNDOWN]
+   [-]-RC_SRV_COUNT
+   [-]-RE_READ_TRIGGER=read-trigger
+   [-]-REC[ORD_MAX_SIZE]=record-max-size
+   [-]-REF[ERENCE_COUNT]=reference-count
+   [-]-REG[_SEQNO]=sequence-number
+   [-]-RESERVED_BYTES=reserved-bytes
+   [-]-SLEE[P_SPIN_COUNT]=mutex-sleep-spin-count
+   [-]-SPIN[_SLEEP_MASK]=mutex-spin-sleep-mask
+   [-]-STRM_NUM=stream-number [-]-STRM_REG_SEQNO=hexa
+   [-]-TIM[ERS_PENDING]=integer
+   [-]-TO[TAL_BLKS]=total-blocks
+   [-]-TR[IGGER_FLUSH]=trigger-flus
+   [-]-UPD_RESERVED_AREA=reserved-area
+   [-]-UPD_WRITER_TRIGGER_FACTOR=trigger-factor
+   [-]-W[RITES_PER_FLUSH]=writes-per-flush
+   [-]-WAIT_DISK=wait-disk
+   [-]-Zqgblmod_S[EQNO]=sequence-number
+   [-]-Zqgblmod_TN=database-transaction-number
 
 ~~~~~~~~~~~~~~~~~~~~~~~~
 CHANGE -BLOCK Qualifiers
@@ -712,9 +712,9 @@ CHANGE -BLOCK Qualifiers
 
 This section describes -BLOCK and all of its qualifiers.
 
-^^^^^^^^^^^^^^^^^^^^^
--BL[OCK]=block_number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-BL[OCK]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block to modify. The -BLOCK qualifier is incompatible with the -FILEHEADER qualifier and all qualifiers related to -FILEHEADER.
 
@@ -724,9 +724,9 @@ Incompatible with: -FILEHEADER and qualifiers used with -FILEHEADER
 
 The following qualifiers operate on a block header.
 
-^^^^^^^^^^^^^^^^^^
--BS[IZ]=block_size
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+[-]-BS[IZ]=block_size
+^^^^^^^^^^^^^^^^^^^^^
 
 Changes the block size field of the specified block.
 
@@ -738,9 +738,9 @@ Changes the block size field of the specified block.
 
 Use only with: -BLOCK, -LEVEL, -TN
 
-^^^^^^^^^^^^^^
--L[EVEL]=level
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
+[-]-L[EVEL]=level
+^^^^^^^^^^^^^^^^^
 
 Changes the level field for the specified block.
 
@@ -755,9 +755,9 @@ Example:
 
    DSE> change -level=FF
 
-^^^^^^^^^^^^^^^^^^^^^^^^
--TN[=transaction_number]
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-TN[=transaction_number]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the transaction number for the current block.
 
@@ -766,25 +766,25 @@ Changes the transaction number for the current block.
 
 Use only with: -BLOCK, -BSIZ, -LEVEL
 
-^^^^^^^^^^^^^^^^
--OF[FSET]=offset
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
+[-]-OF[FSET]=offset
+^^^^^^^^^^^^^^^^^^^
 
 Specifies the offset, in bytes, of the target record within the block. If the offset does not point to the beginning of a record, DSE rounds down to the last valid record start (for example, CHANGE -OFFSET=10 starts at -OFFSET=A, if that was the last record).
 
 Use only with: -BLOCK, -CMPC, and -RSIZ.
 
-^^^^^^^^^^^^^^^^^^^^^^^
--RE[CORD]=record_number
-^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-RE[CORD]=record_number
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the record number of the target record.
 
 Use only with: -BLOCK, -CMPC, and -RSIZ.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^
--CM[PC]=compression_count
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-CM[PC]=compression_count
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Change the compression count field of the specified record.
 
@@ -793,9 +793,9 @@ Change the compression count field of the specified record.
 
 Use only with: -BLOCK, -RECORD, -OFFSET, -RSIZE
 
-^^^^^^^^^^^^^^^^^^^
--RS[IZ]=record_size
-^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
+[-]-RS[IZ]=record_size
+^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the record size field of the specified record.
 
@@ -818,25 +818,25 @@ CHANGE -FILEHEADER Qualifiers
 
 This section describes the -FILEHEADER qualifier and the other qualifiers that operate on a file header.
 
-^^^^^^^^^^^^^
--FI[LEHEADER]
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+[-]-FI[LEHEADER]
+^^^^^^^^^^^^^^^^
 
 Modifies a file header element that you specify with an associated qualifier.
 
 Incompatible with: -BSIZ, -CMPC, -TN, -LEVEL, -OFFSET, -RECORD, -RSIZ
 
-^^^^^^^^^^^^^^^^^^^^^^^^
--AB[ANDONED_KILLS]=value
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-AB[ANDONED_KILLS]=value
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the value of the Abandoned Kills field. The value can be "NONE" or a decimal positive integer.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^
--BLK[_SIZE]=block_size
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-BLK[_SIZE]=block_size
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the decimal block size field of the current file.
 
@@ -845,9 +845,9 @@ Changes the decimal block size field of the current file.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^
--BLO[CKS_FREE]=free blocks
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-BLO[CKS_FREE]=free blocks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the hexadecimal free blocks field of the current file.
 
@@ -855,29 +855,29 @@ Use this to correct a value that MUPIP INTEG reports as needing a correction, bu
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--B[YTESTREAM]=transaction_number
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-B[YTESTREAM]=transaction_number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the transaction number in the file header of the last incremental backup to the value specified. Use this qualifier only in conjunction with the -FILEHEADER qualifier. For compatibility issues with prior versions, this can still be specified as -B_INCREMENTAL.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--D[ATABASE]=transaction_number
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-D[ATABASE]=transaction_number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the hexadecimal transaction number in the file header of the last comprehensive backup to the value specified. Use this qualifier only in conjunction with the -FILEHEADER qualifier. For compatibility issues with prior versions, this can still be specified as -B_COMPREHENSIVE.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--B_R[ECORD]=transaction_number
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-B_R[ECORD]=transaction_number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the hexadecimal transaction number in the file header field that maintains this information about the last -RECORD backup.
 
 .. _dse-change-corrupt-file:
 
-^^^^^^^^^^^^^^^^^^^^^^^
--CO[RRUPT_FILE]=boolean
-^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-CO[RRUPT_FILE]=boolean
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Indicates whether or not a region completed a successful recovery with the MUPIP JOURNAL -RECOVER command. Possible values are: T[RUE] or F[ALSE].
 
@@ -892,9 +892,9 @@ Changing this flag does not correct or cause database damage. When CORRUPT_FILE 
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--COM[MITWAIT_SPIN_COUNT]=value
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-COM[MITWAIT_SPIN_COUNT]=value
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the decimal number of times a YottaDB process waiting for control of a block to complete a block update should spin before yielding the CPU when YottaDB runs on SMP machines. When run on a uniprocessor system, YottaDB ignores this parameter. On SMP systems, when a process needs a critical section that another process has, and critical sections are short (as they are by design in YottaDB), spinning a little with the expectation that the process with the critical section will release it shortly provides a way to enhance performance at the cost of increased CPU usage. Eventually, a process awaiting a critical section yields the CPU if a little spinning does not get it the needed critical section. Note that on heavily loaded systems, increasing COMMITWAIT_SPIN_COUNT may not trade off CPU for throughput, but may instead degrade both. If you set the COMMITWAIT_SPIN_COUNT to 0, the waiting process performs a sequence of small sleeps instead of the spins or yields.
 
@@ -902,9 +902,9 @@ The default value is 16.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--CU[RRENT_TN]=transaction_number
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-CU[RRENT_TN]=transaction_number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the hexadecimal current transaction number for the current region.
 
@@ -914,25 +914,25 @@ Changes the hexadecimal current transaction number for the current region.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--DATA[_RESERVED_BYTES]=data_reserved_bytes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-DATA[_RESERVED_BYTES]=data_reserved_bytes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sets data reserved bytes. YottaDB will not utilize whatever space is reserved in performing updates on data blocks in the database. The default value is zero.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^
--DECLOCATION
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+[-]-DECLOCATION
+^^^^^^^^^^^^^^^
 
 Specifies an offset with the file header. If -VALUE is specified (in decimal), YottaDB puts it at that location.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^
--E[NCRYPTION_HASH]
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+[-]-E[NCRYPTION_HASH]
+^^^^^^^^^^^^^^^^^^^^^
 
 Changes the hash of the password stored in the database file header if and when you change the hash library. For more information on key management and reference implementation, refer to `Chapter 12: "Database Encryption" <./encryption.html>`_.
 
@@ -941,17 +941,17 @@ Changes the hash of the password stored in the database file header if and when 
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^
--[NO]EPOCHTAPER
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
+[-]-[NO]EPOCHTAPER
+^^^^^^^^^^^^^^^^^^
 
 Sets a flag that indicates whether or not epoch tapering should be done. The default value is -EPOCHTAPER.
 
 For more information, refer to "Region Qualifiers".
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^
--FL[USH_TIME][=delta_time]
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-FL[USH_TIME][=delta_time]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the flush_time default interval (in delta_time).
 
@@ -961,9 +961,9 @@ Changes the flush_time default interval (in delta_time).
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^
--FR[EEZE]=value
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
+[-]-FR[EEZE]=value
+^^^^^^^^^^^^^^^^^^
 
 Sets the availability of the region for updates. Possible values are: T[RUE] or F[ALSE]. Use to "freeze" (disable database writes) or "unfreeze" the database.
 
@@ -973,49 +973,49 @@ For information about a preferred method of manipulating FREEZE, refer to :ref:`
 
 DSE releases -FREEZE when it EXITs. To hold the database(s), CHANGE -FILEHEADER -FREEZE=TRUE and then SPAWN to perform other operations.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^
--FU[LLY_UPGRADED]=boolean
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-FU[LLY_UPGRADED]=boolean
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sets a flag that indicates whether or not the database was fully upgraded from a prior database format to the current format. The value is either T[RUE] or F[ALSE].
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^
--GV[STATSRESET]
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
+[-]-GV[STATSRESET]
+^^^^^^^^^^^^^^^^^^
 
 Resets all the database file header global access statistics to 0. Note that this erases all statistics previously accumulated in the database file header.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^
--HEXLOCATION
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+[-]-HEXLOCATION
+^^^^^^^^^^^^^^^
 
 Specifies a hexadecimal offset with the file header. If -VALUE is specified, YottaDB puts it at that location.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--INDEX[_RESERVED_BYTES]=index_reserved_bytes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-INDEX[_RESERVED_BYTES]=index_reserved_bytes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sets index reserved bytes. YottaDB will not utilize whatever space is reserved in performing updates on index blocks in the database. The default value is zero.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--INT[ERRUPTED_RECOV]=boolean
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-INT[ERRUPTED_RECOV]=boolean
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sets a flag that indicates whether or not a recovery with the MUPIP JOURNAL -RECOVER command was interrupted. The value is either T[RUE] or F[ALSE].
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--K[EY_MAX_SIZE]=key_max_size
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-K[EY_MAX_SIZE]=key_max_size
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the decimal value for the maximum allowable key size. Reducing KEY_MAX_SIZE can restrict access to existing data and cause YottaDB to report errors. Do not create incompatible key and record sizes.
 
@@ -1023,17 +1023,17 @@ Before permanently changing the key size using DSE, use GDE to check that the ap
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^
--KI[LL_IN_PROG]=value
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-KI[LL_IN_PROG]=value
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the value of the KILLs in progress field. The value can be "NONE" or a positive decimal integer.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^
--N[ULL_SUBSCRIPTS]=value
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-N[ULL_SUBSCRIPTS]=value
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Controls whether YottaDB accepts null subscripts in database keys.
 
@@ -1044,95 +1044,95 @@ Controls whether YottaDB accepts null subscripts in database keys.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^
--OV[ERRIDE]
-^^^^^^^^^^^
+^^^^^^^^^^^^^^
+[-]-OV[ERRIDE]
+^^^^^^^^^^^^^^
 
 Releases or "steals" a FREEZE owned by another process.
 
 Use only with: -FREEZE
 
-^^^^^^^^^^^^^^^^^
--[NO]Q[DBRUNDOWN]
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
+[-]-[NO]Q[DBRUNDOWN]
+^^^^^^^^^^^^^^^^^^^^
 
 Sets a flag that indicates whether or not the database is enabled for quick rundown. The default value is -NOQDBRUNDOWN.
 
 For more information, refer to :ref:`region-qualifiers`.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--REC[ORD_MAX_SIZE]=record_max_size
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-REC[ORD_MAX_SIZE]=record_max_size
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the decimal value for the maximum allowable record size. Use the -RECORD_MAX_SIZE qualifier only in conjunction with the -FILEHEADER qualifier. Reducing RECORD_MAX_SIZE can restrict access to existing data and cause YottaDB to report errors. Do not create incompatible key and record sizes.
 
 Before making a permanent change to the records size using DSE, use GDE to check that the appropriate Global Directory contains the same record size for the region. This prepares for future MUPIP CREATEs and performs a consistency check on the key and record size values. For more information on key and record sizes, refer to `Chapter 4: "Global Directory Editor (GDE)" <gde.html>`__.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--REF[ERENCE_COUNT]=reference_count
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-REF[ERENCE_COUNT]=reference_count
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sets a field that tracks how many processes are accessing the database with read/write permissions. MUPIP INTEG and DSE use decimal numbers for -REFERENCE_COUNT. To accurately determine the proper reference count, restrict CHANGE -FILEHEADER -REFERENCE_COUNT to the case where the process running DSE has exclusive (standalone) access to the database file. When DSE has sole access to a database file the -REFERENCE_COUNT should be one (1). This is an informational field and does not have any effect on processing.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--REG[_SEQNO]=sequence-number
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-REG[_SEQNO]=sequence-number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In an LMS environment, this sets the "Region Seqno" field. For more information, refer to `Chapter 7: "Database Replication" <./dbrepl.html>`_.
 
 ^^^^^^^^^^^^^^^^^^^^
--RESET_MAX_PROCS
+[-]-RESET_MAX_PROCS
 ^^^^^^^^^^^^^^^^^^^^
 
 Sets the maximum number of concurrent processes to zero, and the time to the time that the DSE CHANGE FILEHEADER command was run.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--RESYNC_S[EQNO]=sequence-number
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-RESYNC_S[EQNO]=sequence-number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In an LMS environment, this sets the hexadecimal value of the "Resync Seqno" field. For more information, refer to `Chapter 7: "Database Replication" <./dbrepl.html>`_.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--RESYNC_T[N]=sequence-number
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-RESYNC_T[N]=sequence-number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In an LMS environment, this sets the hexadecimal value ofthe "Resync transaction" field. For more information, refer to `Chapter 7: "Database Replication" <./dbrepl.html>`_.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--S[PIN_SLEEP_MASK]=hexadecimal-mask
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-S[PIN_SLEEP_MASK]=hexadecimal-mask
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the hexadecimal Spin sleep time mask that controls the maximum time (in nanoseconds) the process sleeps on a sleep spin; zero (0), the default causes the process to just yield to the OS scheduler.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
--SLEE[P_SPIN_COUNT]=integer
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-SLEE[P_SPIN_COUNT]=integer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the hexadecimal Mutex Sleep Spin Count that controls the number of times a process waiting for a shared resource (usually a database) suspends its activity after exhausting its Mutex Hard Spin Count and before enqeueing itself to be awakened by a process releasing the resource.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^
--[NO]STD[NULLCOL]
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
+[-]-[NO]STD[NULLCOL]
+^^^^^^^^^^^^^^^^^^^^
 
 Changes the collation of empty string ("NULL") subscripts for the database file. Although it is not the default, STDNULLCOLL is required with certain other characteristics, and highly recommended in any case. If you change this when there are existing "NULL" subscripts the results may be problematic. YottaDB recommends you establish this characteristic with GDE and load data with a consistent setting.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--STRM_NUM=stream-number -STRM_R[EG_SEQNO]=str_num's_region_sequence_number
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-STRM_NUM=stream-number [-]-STRM_R[EG_SEQNO]=str_num's_region_sequence_number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the hexadecimal values of Stream and its Reg Seqno. Use -STRM_NUM and -STRM_REG_SEQNO together as part of the same CHANGE -FILEHEADER command.
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--TI[MERS_PENDING]=timers_pending
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-TI[MERS_PENDING]=timers_pending
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sets a field that tracks the decimal number of processes considering a timed flush. Proper values are 0, 1, and 2.
 
@@ -1140,26 +1140,26 @@ Use the CHANGE -TIMERS_PENDING qualifier only upon receiving instructions from Y
 
 Use only with: -FILEHEADER
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^
--TO[TAL_BLKS]=total_blocks
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-TO[TAL_BLKS]=total_blocks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes the hexadecimal total blocks field of the current file. Use only with: -FILEHEADER
 
 .. note::
    The total blocks field should always reflect the actual size of the  database. Change this field only if it no longer reflects the database size.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--TR[IGGER_FLUSH]=trigger_flush
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-TR[IGGER_FLUSH]=trigger_flush
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sets the decimal value for the triggering threshold, in buffers, for flushing the cache-modified queue.
 
 Use the CHANGE -TRIGGER_FLUSH qualifier only upon receiving instructions from YottaDB, and only in conjunction with the -FILEHEADER qualifier.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--WR[ITES_PER_FLUSH]=writes_per_flush
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-WR[ITES_PER_FLUSH]=writes_per_flush
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sets the decimal number of block to write in each flush. The default value is 7.
 
@@ -1369,13 +1369,13 @@ Displays and/or modifies the status and contents of the critical section for the
 
    CR[ITICAL]
    [
-   -A[LL]
-   -I[NIT]
-   -O[WNER]
-   -REL[EASE]
-   -REM[OVE]
-   -RES[ET]
-   -S[EIZE]
+   [-]-A[LL]
+   [-]-I[NIT]
+   [-]-O[WNER]
+   [-]-REL[EASE]
+   [-]-REM[OVE]
+   [-]-RES[ET]
+   [-]-S[EIZE]
    ]
 
 * The critical section field identifies, by its process identification number (PID), the process presently managing updates to database.
@@ -1386,15 +1386,15 @@ Displays and/or modifies the status and contents of the critical section for the
 Qualifiers of CRITICAL
 ~~~~~~~~~~~~~~~~~~~~~~
 
-^^^^^^
--A[LL]
-^^^^^^
+^^^^^^^^^
+[-]-A[LL]
+^^^^^^^^^
 
 Display all ids of processes owning critical section from all regions. If there are no processes owning critical section in a region, ALL displays "the CRIT is currently unowned" message for each region.
 
-^^^^^^^
--I[NIT]
-^^^^^^^
+^^^^^^^^^^
+[-]-I[NIT]
+^^^^^^^^^^
 
 Reinitializes the critical section.
 
@@ -1403,9 +1403,9 @@ Reinitializes the critical section.
 
 Use only with: -RESET
 
-^^^^^^^^
--O[WNER]
-^^^^^^^^
+^^^^^^^^^^^
+[-]-O[WNER]
+^^^^^^^^^^^
 
 Displays the ID of the process at the head of the critical section. DSE displays a warning message when the current process owns the critical section.
 
@@ -1420,17 +1420,17 @@ Example:
 
 .. _crit-release:
 
-^^^^^^^^^^
--REL[EASE]
-^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-REL[EASE]
+^^^^^^^^^^^^^
 
 Releases the critical section if the process running DSE owns the section.
 
 Use alone.
 
-^^^^^^^^^
--REM[OVE]
-^^^^^^^^^
+^^^^^^^^^^^^
+[-]-REM[OVE]
+^^^^^^^^^^^^
 
 Terminates any write ownership of the critical section. Use this when the critical section is owned by a process that is nonexistent or is known to no longer be running a YottaDB image.
 
@@ -1439,9 +1439,9 @@ Use alone.
 .. note::
    Using CRITICAL -REMOVE when the write owner of a critical section is an active YottaDB process may cause structural database damage.
 
-^^^^^^^^
--RES[ET]
-^^^^^^^^
+^^^^^^^^^^^
+[-]-RES[ET]
+^^^^^^^^^^^
 
 Displays the number of times the critical section has been through an online reinitialization.
 
@@ -1451,9 +1451,9 @@ Use only with: -INIT
 
 .. _crit-seize:
 
-^^^^^^^^
--S[EIZE]
-^^^^^^^^
+^^^^^^^^^^^
+[-]-S[EIZE]
+^^^^^^^^^^^
 
 Seizes the critical section (if available).
 
@@ -1486,18 +1486,18 @@ The format of the DUMP command is:
 
    D[UMP]
    [
-   -A[LL]
-   -B[LOCK]=block_number
-   -C[OUNT]=count
-   -F[ILEHEADER]
-   -G[LO]
-   -G[VSTATS]
-   -[NO]C[RIT]
-   -[NO]H[EADER]
-   -O[FFSET]=offset
-   -R[ECORD]=record-number
-   -U[PDPROC]
-   -Z[WR]
+   [-]-A[LL]
+   [-]-B[LOCK]=block_number
+   [-]-C[OUNT]=count
+   [-]-F[ILEHEADER]
+   [-]-G[LO]
+   [-]-G[VSTATS]
+   [-]-[NO]C[RIT]
+   [-]-[NO]H[EADER]
+   [-]-O[FFSET]=offset
+   [-]-R[ECORD]=record-number
+   [-]-U[PDPROC]
+   [-]-Z[WR]
    ]
 
 Use the error messages reported by MUPIP INTEG to determine what to DUMP and examine in the database. DUMP also can transfer records to a sequential file for future study and/or for input to MUPIP LOAD (see the section on OPEN). The DUMP command requires specification of an object using either -BLOCK, -HEADER, -RECORD, or -FILEHEADER.
@@ -1508,9 +1508,9 @@ Qualifiers of DUMP
 
 .. _dump-all:
 
-^^^^^^
--A[LL]
-^^^^^^
+^^^^^^^^^
+[-]-A[LL]
+^^^^^^^^^
 
 When used with -FILEHEADER, the -A[LL] qualifier displays additional information on the database most of which is useful to YottaDB in diagnosing issues. A complete description of all the elements that show up with the DSE DUMP -FILEHEADER -ALL command are beyond the scope of this book.
 
@@ -1518,17 +1518,17 @@ Meaningful only with: -FILEHEADER
 
 .. _dump-block:
 
-^^^^^^^^^^^^^^^^^^^^^
--B[LOCK]=block-number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-B[LOCK]=block-number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the starting block of the dump. For commands without an object qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, (that is, on the first block-oriented command), DSE uses block one (1).
 
 Incompatible with: -ALL, -FILEHEADER and -UPDPROC.
 
-^^^^^^^^^^^^^^
--C[OUNT]=count
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
+[-]-C[OUNT]=count
+^^^^^^^^^^^^^^^^^
 
 Specifies the number of blocks, block headers, or records to DUMP.
 
@@ -1536,37 +1536,37 @@ Incompatible with: -ALL, -FILEHEADER and -UPDPROC.
 
 .. _dse-dump-fileheader:
 
-^^^^^^^^^^^^^
--F[ILEHEADER]
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+[-]-F[ILEHEADER]
+^^^^^^^^^^^^^^^^
 
 Dumps file header information. A DSE dump of a database file header prints a 0x prefix for all fields printed in hexadecimal format.
 
 Use only with -ALL or -UPDPROC
 
-^^^^^^
--G[LO]
-^^^^^^
+^^^^^^^^^
+[-]-G[LO]
+^^^^^^^^^
 
 Dumps the specified record or blocks into the current output file in Global Output (GO) format. YottaDB strongly suggests using -ZWR rather than -GLO as the ZWR format handles all possible content values, including some that are problematic with -GLO (The GLO format is not supported for UTF-8 mode - use the ZWR format with UTF-8 mode.).
 
 Incompatible with: -ALL, -FILEHEADER, -UPDPROC and -ZWR.
 
-^^^^^^^^^^
--G[VSTATS]
-^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-G[VSTATS]
+^^^^^^^^^^^^^
 
 Displays the access statistics for global variables and database file(s).
 
-^^^^^^^^^
--NO[CRIT]
-^^^^^^^^^
+^^^^^^^^^^^^
+[-]-NO[CRIT]
+^^^^^^^^^^^^
 
 Allows DSE DUMP to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally.
 
-^^^^^^^^^^^^^
--[NO]H[EADER]
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+[-]-[NO]H[EADER]
+^^^^^^^^^^^^^^^^
 
 Specifies whether the dump of the specified blocks or records is restricted to, or excludes, headers. -HEADER displays only the header, -NOHEADER displays the block or record with the header suppressed. DUMP without the -[NO]HEADER qualifier dumps both the block/record and the header.
 
@@ -1576,9 +1576,9 @@ Incompatible with: -ALL, -FILEHEADER, -GLO, -UPDPROC and -ZWR.
 
 .. _dump-offset:
 
-^^^^^^^^^^^^^^^^
--O[FFSET]=offset
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
+[-]-O[FFSET]=offset
+^^^^^^^^^^^^^^^^^^^
 
 Specifies the offset, in bytes, of the starting record for the dump. If the offset does not point to the beginning of a record, DSE rounds down to the last valid record start (e.g., DUMP -OFF=10 starts at -OFF=A if that was the beginning of the record containing offset 10).
 
@@ -1586,25 +1586,25 @@ Incompatible with: -ALL, -FILEHEADER, and -RECORD.
 
 .. _dump-record:
 
-^^^^^^^^^^^^^^^^^^^^^^^
--R[ECORD]=record_number
-^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-R[ECORD]=record_number
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the record number of the starting record of the dump. If you try to dump a record number that is larger than the last actual record in the block, a DSE error message provides the number of the last record in the block.
 
 Incompatible with: -ALL, -FILEHEADER, and -OFFSET.
 
-^^^^^^^^^^
--U[PDPROC]
-^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-U[PDPROC]
+^^^^^^^^^^^^^
 
 Displays the helper process parameters with the fileheader elements.
 
 Use only with -FILEHEADER.
 
-^^^^^^
--Z[WR]
-^^^^^^
+^^^^^^^^^
+[-]-Z[WR]
+^^^^^^^^^
 
 Dumps the specified record or blocks into the current output file in ZWRITE (ZWR) format.
 
@@ -1700,9 +1700,9 @@ The format of the EVALUATE command is:
 
    EV[ALUATE]
    [
-   -D[ECIMAL]
-   -H[EXADECIMAL]
-   -N[UMBER]=number
+   [-]-D[ECIMAL]
+   [-]-H[EXADECIMAL]
+   [-]-N[UMBER]=number
    ]
 
 The -DECIMAL and -HEXADECIMAL qualifiers specify the input base for the number. The -NUMBER qualifier is mandatory. By default, EVALUATE treats the number as having a hexadecimal base.
@@ -1711,25 +1711,25 @@ The -DECIMAL and -HEXADECIMAL qualifiers specify the input base for the number. 
 Qualifiers of EVALUATE
 ~~~~~~~~~~~~~~~~~~~~~~
 
-^^^^^^^^^^
--D[ECIMAL]
-^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-D[ECIMAL]
+^^^^^^^^^^^^^
 
 Specifies that the input number has a decimal base.
 
 Incompatible with: -HEXADECIMAL .
 
-^^^^^^^^^^^^^^
--H[EXADECIMAL]
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
+[-]-H[EXADECIMAL]
+^^^^^^^^^^^^^^^^^
 
 Specifies that the input number has a hexadecimal base.
 
 Incompatible with: -DECIMAL
 
-^^^^^^^^^^^^^^^^
--N[UMBER]=number
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
+[-]-N[UMBER]=number
+^^^^^^^^^^^^^^^^^^^
 
 Specifies the number to evaluate. Required.
 
@@ -1792,14 +1792,14 @@ Locates a given block or region. The format of the FIND command is:
 
    F[IND]
    [
-   -B[LOCK]=block-number
-   -E[XHAUSTIVE]
-   -F[REEBLOCK] -H[INT]
-   -K[EY]=key
-   -[NO]C[RIT]
-   -R[EGION][=region] | -R[EGION] region-name
-   -SI[BLINGS]
-   -ST[ATS]
+   [-]-B[LOCK]=block-number
+   [-]-E[XHAUSTIVE]
+   [-]-F[REEBLOCK] [-]-H[INT]
+   [-]-K[EY]=key
+   [-]-[NO]C[RIT]
+   [-]-R[EGION][=region] | [-]-R[EGION] region-name
+   [-]-SI[BLINGS]
+   [-]-ST[ATS]
    ]
 
 * At the beginning of a DSE session, use the FIND -REGION command to select the target region.
@@ -1811,9 +1811,9 @@ Qualifiers of FIND
 
 .. _find-block:
 
-^^^^^^^^^^^^^^^^^^^^^
--B[LOCK]=block_number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-B[LOCK]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block to find.
 
@@ -1821,9 +1821,9 @@ On commands without the -BLOCK= qualifier, DSE uses the last block handled by a 
 
 Incompatible with: -KEY, -REGION
 
-^^^^^^^^^^^^^
--E[XHAUSTIVE]
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+[-]-E[XHAUSTIVE]
+^^^^^^^^^^^^^^^^
 
 Searches the entire index structure for the desired path or siblings.
 
@@ -1835,9 +1835,9 @@ Searches the entire index structure for the desired path or siblings.
 
 Incompatible with: -KEY, -REGION, -FREEBLOCK
 
-^^^^^^^^^^^^
--F[REEBLOCK]
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+[-]-F[REEBLOCK]
+^^^^^^^^^^^^^^^
 
 Finds the nearest free block to the block specified by -HINT. FREEBLOCK accepts bit maps as starting or ending points.
 
@@ -1847,9 +1847,9 @@ Finds the nearest free block to the block specified by -HINT. FREEBLOCK accepts 
 
 Required with -HINT; compatible with -BLOCK and [NO]CRIT.
 
-^^^^^^^^^^^^^^^^^^^^
--H[INT]=block_number
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+[-]-H[INT]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Designates the starting point of a -FREEBLOCK search.
 
@@ -1859,9 +1859,9 @@ Required with: -FREEBLOCK; compatible with -BLOCK and [NO]CRIT.
 
 .. _find-key:
 
-^^^^^^^^^^
--K[EY]=key
-^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-K[EY]=key
+^^^^^^^^^^^^^
 
 Searches the database for the block containing the specified key or if the key does not exist, the block that would contain it, if it existed.
 
@@ -1871,17 +1871,17 @@ Searches the database for the block containing the specified key or if the key d
 
 Compatible only with [NO]CRIT.
 
-^^^^^^^^^^^
--[NO]C[RIT]
-^^^^^^^^^^^
+^^^^^^^^^^^^^^
+[-]-[NO]C[RIT]
+^^^^^^^^^^^^^^
 
 Allows FIND to work even if another process is holding a critical section.
 
 As results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--R[EGION][=region] | -R[EGION][ region]
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-R[EGION][=region] | [-]-R[EGION][ region]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Switches to the named Global Directory region.
 
@@ -1891,9 +1891,9 @@ The region name is case-insensitive.
 
 Use Alone.
 
-^^^^^^^^^^^
--SI[BLINGS]
-^^^^^^^^^^^
+^^^^^^^^^^^^^^
+[-]-SI[BLINGS]
+^^^^^^^^^^^^^^
 
 Displays the block number of the specified block and its logical siblings in hexadecimal format.
 
@@ -1901,13 +1901,13 @@ The logical siblings are the blocks, if any, that logically exist to the right a
 
 Incompatible with: -FREEBLOCK, -HINT, -KEY, -REGION
 
-^^^^^^^^
-ST[ATS]
-^^^^^^^^
+^^^^^^^^^^^
+[-]-ST[ATS]
+^^^^^^^^^^^
 
 Switches to the name Global Directory shadow for the region's shared gvstats.
 
-Compatible only with R[EGION].
+Compatible only with -REGION.
 
 ~~~~~~~~~~~~~~~~~
 Examples for FIND
@@ -1985,7 +1985,7 @@ The HELP command explains DSE commands. The format of the HELP command is:
 
 .. code-block:: none
 
-   -H[ELP] [help topic]
+   [-]-H[ELP] [help topic]
 
 .. _dse-integrit:
 
@@ -1999,7 +1999,7 @@ The format of the INTEGRIT command is:
 
 .. code-block:: none
 
-   I[NTEGRIT] -B[LOCK]=block-number
+   I[NTEGRIT] [-]-B[LOCK]=block-number
 
 .. note::
    Unlike MUPIP INTEG, this command only detects errors internal to a block and cannot detect errors such as indices incorrectly pointing to another block. For information on the utility that checks multiple blocks, refer to the :ref:`mupip-integ` section of the MUPIP chapter.
@@ -2010,17 +2010,17 @@ Qualifiers of INTEGRIT
 
 .. _integ-block:
 
-^^^^^^^^^^^^^^^^^^^^^
--B[LOCK]=block_number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-B[LOCK]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block for DSE to check. On commands with no -BLOCK qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, that is, on the first block-oriented command, DSE uses block one (1).
 
 .. _integ-nocrit:
 
-^^^^^^^^^
--NO[CRIT]
-^^^^^^^^^
+^^^^^^^^^^^^
+[-]-NO[CRIT]
+^^^^^^^^^^^^
 
 Allows DSE INTEG to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally.
 
@@ -2036,11 +2036,11 @@ Examines or updates bitmaps. The format of the MAPS command is:
 
    M[APS]
    [
-   -BL[OCK]=block-number
-   -BU[SY]
-   -F[REE]
-   -M[ASTER]
-   -R[ESTORE_ALL]
+   [-]-BL[OCK]=block-number
+   [-]-BU[SY]
+   [-]-F[REE]
+   [-]-M[ASTER]
+   [-]-R[ESTORE_ALL]
    ]
 
 MAPS can flag blocks as being either -BUSY or -FREE. The -MASTER qualifier reflects the current status of a local bitmap back into the master map. The -RESTORE_ALL qualifier rebuilds all maps and should be used with caution since it can destroy important information.
@@ -2053,9 +2053,9 @@ Qualifiers for MAP
 
 .. _map-block:
 
-^^^^^^^^^^^^^^^^^^^^^
--BL[OCK]=block_number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-BL[OCK]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the target block for MAPS. The -BLOCK qualifier is incompatible with the -RESTORE_ALL qualifier.
 
@@ -2063,33 +2063,33 @@ On commands with no -BLOCK= or -RESTORE_ALL qualifier, DSE uses the last block h
 
 Incompatible with: -RESTORE_ALL
 
-^^^^^^^
--BU[SY]
-^^^^^^^
+^^^^^^^^^^
+[-]-BU[SY]
+^^^^^^^^^^
 
 Marks the current block as busy in the block's local map and appropriately updates the master bitmap. BUSY accepts bit map blocks.
 
 Compatible only with: -BLOCK
 
-^^^^^^^
--F[REE]
-^^^^^^^
+^^^^^^^^^^
+[-]-F[REE]
+^^^^^^^^^^
 
 Marks the current block as free in the block's local map and appropriately updates the master bitmap.
 
 Compatible only with: -BLOCK
 
-^^^^^^^^^
--M[ASTER]
-^^^^^^^^^
+^^^^^^^^^^^^
+[-]-M[ASTER]
+^^^^^^^^^^^^
 
 Sets the bit in the master bitmap associated with the current block's local map according to whether or not that local map is full. MASTER accepts bit map blocks.
 
 Use only with: -BLOCK.
 
-^^^^^^^^^^^^^^
--R[ESTORE_ALL]
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
+[-]-R[ESTORE_ALL]
+^^^^^^^^^^^^^^^^^
 
 Sets all local bitmaps and the master bitmap to reflect the blocks used in the database file.
 
@@ -2187,9 +2187,9 @@ Use the OPEN command to open a file for sequential output of global variable dat
 Qualifiers for OPEN
 ~~~~~~~~~~~~~~~~~~~
 
-^^^^^^^^^^^^^^^^^
--F[ILE]=file-name
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
+[-]-F[ILE]=file-name
+^^^^^^^^^^^^^^^^^^^^
 
 Specifies the file to open.
 
@@ -2228,8 +2228,8 @@ The format of the OVERWRITE command is:
 
    OV[ERWRITE]
    [
-   -D[ATA]=string
-   -O[FFSET]=offset
+   [-]-D[ATA]=string
+   [-]-O[FFSET]=offset
    ]
 
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2238,25 +2238,25 @@ Qualifiers for OVERWRITE
 
 .. _overwrite-block:
 
-^^^^^^^^^^^^^^^^^^^^^
--B[LOCK]=block number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-B[LOCK]=block number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Directs DSE to OVERWRITE a specific block. If no block number is specified, the default is the current block.
 
 .. _overwrite-data:
 
-^^^^^^^^^^^^^^
--D[ATA]=string
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
+[-]-D[ATA]=string
+^^^^^^^^^^^^^^^^^
 
 Specifies the data to be written. Use quotation marks around the string and escape codes of the form \\a or \\ab, where "a" and "b" are hexadecimal digits representing non-printing characters. \\\\ translates to a single backslash.
 
 .. _overwrite-offset:
 
-^^^^^^^^^^^^^^^^
--O[FFSET]=offset
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
+[-]-O[FFSET]=offset
+^^^^^^^^^^^^^^^^^^^
 
 Specifies the offset in the current block where the overwrite should begin.
 
@@ -2302,78 +2302,78 @@ The format of the RANGE command is:
 
    RA[NGE]
    [
-   -F[ROM]=block-number
-   -T[O]=block-number
-   -I[NDEX]
-   -LOS[T]
-   -[NO]C[RIT]
-   -[NO]BU[SY]
-   -S[TAR]
-   -LOW[ER]=key
-   -U[PPER]=key
+   [-]-F[ROM]=block-number
+   [-]-T[O]=block-number
+   [-]-I[NDEX]
+   [-]-LOS[T]
+   [-]-[NO]C[RIT]
+   [-]-[NO]BU[SY]
+   [-]-S[TAR]
+   [-]-LOW[ER]=key
+   [-]-U[PPER]=key
    ]
 
 ~~~~~~~~~~~~~~~~~~~
 Qualifiers of RANGE
 ~~~~~~~~~~~~~~~~~~~
 
-^^^^^^^^^^^^^^^^^^^^
--F[ROM]=block_number
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+[-]-F[ROM]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies a starting block number for the range search. DSE RANGE accepts bit maps as starting or ending points.
 
 By default, RANGE starts processing at the beginning of the file.
 
-^^^^^^^^^^^^^^^^^^
--T[O]=block-number
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+[-]-T[O]=block-number
+^^^^^^^^^^^^^^^^^^^^^
 
 Specifies an ending block number for the range search. DSE RANGE accepts bit maps as starting or ending points. By default, RANGE stops processing at the end of the file.
 
-^^^^^^^^
--I[NDEX]
-^^^^^^^^
+^^^^^^^^^^^
+[-]-I[NDEX]
+^^^^^^^^^^^
 
 Restricts a search to index blocks.
 
-^^^^^^^^^^^^^^^^^^^^
--LOS[T]=block_number
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+[-]-LOS[T]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Restricts a search to blocks not found by a FIND -BLOCK.
 
-^^^^^^^^^^^^
--LOW[ER]=key
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+[-]-LOW[ER]=key
+^^^^^^^^^^^^^^^
 
 Specifies the lower bound for the key range.
 
-^^^^^^^^^^^^^^^^^^^^^
--[NO]BU[SY]=busy/free
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-[NO]BU[SY]=busy/free
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Restricts a search to either BUSY or FREE blocks.
 
 .. _range-nocrit:
 
-^^^^^^^^^^^
--[NO]C[RIT]
-^^^^^^^^^^^
+^^^^^^^^^^^^^^
+[-]-[NO]C[RIT]
+^^^^^^^^^^^^^^
 
 Allows DSE RANGE to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally.
 
 .. _range-star:
 
-^^^^^^^
--S[TAR]
-^^^^^^^
+^^^^^^^^^^
+[-]-S[TAR]
+^^^^^^^^^^
 
 Includes index blocks that contain a single star key.
 
-^^^^^^^^^^^^
--U[PPER]=key
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+[-]-U[PPER]=key
+^^^^^^^^^^^^^^^
 
 Specifies the upper bound for the key range.
 
@@ -2443,11 +2443,11 @@ The format of the REMOVE command is:
 
    REM[OVE]
    [
-   -B[LOCK]=block-number
-   -C[OUNT]=count
-   -O[FFSET]=offset
-   -R[ECORD]=record-number
-   -V[ERSION]=version-number
+   [-]-B[LOCK]=block-number
+   [-]-C[OUNT]=count
+   [-]-O[FFSET]=offset
+   [-]-R[ECORD]=record-number
+   [-]-V[ERSION]=version-number
    ]
 
 The version number is specified in decimal.
@@ -2458,9 +2458,9 @@ Qualifiers of REMOVE
 
 .. _remove-block:
 
-^^^^^^^^^^^^^^^^^^^^^
--B[LOCK]=block_number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-B[LOCK]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block associated with the record or buffer being deleted.
 
@@ -2470,9 +2470,9 @@ BLOCK accepts blocks higher than the current database size because they deal wit
 
 .. _remove-count:
 
-^^^^^^^^^^^^^^
--C[OUNT]=count
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
+[-]-C[OUNT]=count
+^^^^^^^^^^^^^^^^^
 
 Specifies the number of records to remove.
 
@@ -2482,9 +2482,9 @@ Incompatible with: -VERSION
 
 .. _remove-offset:
 
-^^^^^^^^^^^^^^^^
--O[FFSET]=offset
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
+[-]-O[FFSET]=offset
+^^^^^^^^^^^^^^^^^^^
 
 Specifies the offset (in bytes) of the record to be removed. If the offset does not point to the beginning of a record, DSE rounds down to the beginning of the record containing the offset (for example, REMOVE -OFF=10 starts at OFF=A if that was the last prior record boundary).
 
@@ -2492,17 +2492,17 @@ Incompatible with: -VERSION, -RECORD
 
 .. _remove-record:
 
-^^^^^^^^^^^^^^^^^^^^^^^
--R[ECORD]=record_number
-^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-R[ECORD]=record_number
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the number that identifies the record to be removed. The -RECORD qualifier is incompatible with the -OFFSET and -VERSION qualifiers.
 
 Incompatible with: -VERSION, -OFFSET
 
-^^^^^^^^^^^^^^^^^^^^^^^^^
--V[ERSION]=version_number
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-V[ERSION]=version_number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the version number, in decimal, of the save buffer to be removed. If there is more than one version of a block, -VERSION is required; otherwise REMOVE works on that sole version. -VERSION is incompatible with all qualifiers except -BLOCK.
 
@@ -2522,10 +2522,10 @@ The RESTORE command restores saved versions of blocks.
 
    RES[TORE]
    [
-   -B[LOCK]=block-number
-   -F[ROM]=from
-   -R[EGION]=region | -R[EGION] region
-   -V[ERSION]=version-number
+   [-]-B[LOCK]=block-number
+   [-]-F[ROM]=from
+   [-]-R[EGION]=region | [-]-R[EGION] region
+   [-]-V[ERSION]=version-number
    ]
 
 The version number is specified in decimal.
@@ -2536,9 +2536,9 @@ Qualifiers of RESTORE
 
 .. _restore-block:
 
-^^^^^^^^^^^^^^^^^^^^^
--B[LOCK]=block_number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-B[LOCK]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block to restore.
 
@@ -2548,9 +2548,9 @@ BLOCK accepts blocks higher than the current database size because it deals with
 
 .. _restore-from:
 
-^^^^^^^^^^^^^^^^^^^^
--F[ROM]=block_number
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+[-]-F[ROM]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block number of the SAVE buffer to restore.
 
@@ -2560,9 +2560,9 @@ By default, RESTORE uses the target block number as the -FROM block number.
 
 .. _restore-region:
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--R[EGION]=region | -R[EGION] region
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-R[EGION]=region | [-]-R[EGION] region
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the region of the saved buffer to restore.
 
@@ -2570,9 +2570,9 @@ By default, RESTORE uses SAVE buffers from the current region.
 
 .. _restore-version:
 
-^^^^^^^^^^^^^^^^^^^^^^^^^
--V[ERSION]=version_number
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-V[ERSION]=version_number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the decimal version number of the block to restore. The version number is required.
 
@@ -2592,10 +2592,10 @@ The format of the SAVE command is:
 
    SA[VE]
    [
-   -B[LOCK]=block-number
-   -C[OMMENT]=string
-   -L[IST]
-   -[NO]C[RIT]
+   [-]-B[LOCK]=block-number
+   [-]-C[OMMENT]=string
+   [-]-L[IST]
+   [-]-[NO]C[RIT]
    ]
 
 ~~~~~~~~~~~~~~~~~~
@@ -2604,25 +2604,25 @@ Qualifiers of SAVE
 
 .. _save-block:
 
-^^^^^^^^^^^^^^^^^^^^^
--B[LOCK]=block_number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-B[LOCK]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block to restore.
 
 On commands with no -BLOCK= qualifier, DSE uses the last block handled by a DSE operation. When no block has been accessed, that is, on the first block-oriented command, DSE uses block one (1).
 
-^^^^^^^^^^^^^^^^^
--C[OMMENT]=string
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
+[-]-C[OMMENT]=string
+^^^^^^^^^^^^^^^^^^^^
 
 Specifies a comment to save with the block. Enclose the comment in quotation marks (" ").
 
 Incompatible with: -LIST
 
-^^^^^^^
--L[IST]
-^^^^^^^
+^^^^^^^^^^
+[-]-L[IST]
+^^^^^^^^^^
 
 Lists saved versions of specified blocks. The -LIST qualifier is incompatible with the -COMMENT qualifier.
 
@@ -2634,9 +2634,9 @@ Incompatible with: -COMMENT
 
 .. _save-nocrit:
 
-^^^^^^^^^^^
--[NO]C[RIT]
-^^^^^^^^^^^
+^^^^^^^^^^^^^^
+[-]-[NO]C[RIT]
+^^^^^^^^^^^^^^
 
 Allows DSE SAVE to work even if another process is holding a critical section. Since results in this mode may be inconsistent, it should only be used if the critical section mechanism is not operating normally.
 
@@ -2652,10 +2652,10 @@ Use the SHIFT command to shift data in a block, filling the block with zeros, or
 
    SH[IFT]
    [
-   -B[ACKWARD]=b_shift
-   -BL[OCK]=block_number
-   -F[ORWARD]=f_shift
-   -O[FFSET]=offset
+   [-]-B[ACKWARD]=b_shift
+   [-]-BL[OCK]=block_number
+   [-]-F[ORWARD]=f_shift
+   [-]-O[FFSET]=offset
    ]
 
 b_shift must always be less than or equal to offset. This means that DSE SHIFT in the backward direction is restricted to a maximum of OFFSET number of bytes. This ensures that the shift does not cross block boundaries, either intentionally or unintentionally.
@@ -2664,9 +2664,9 @@ b_shift must always be less than or equal to offset. This means that DSE SHIFT i
 Qualifiers of SHIFT
 ~~~~~~~~~~~~~~~~~~~
 
-^^^^^^^^^^^^^^^^^
--B[ACKWARD]=shift
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
+[-]-B[ACKWARD]=shift
+^^^^^^^^^^^^^^^^^^^^
 
 Specifies the number of bytes to shift data in the direction of the block header.
 
@@ -2674,15 +2674,15 @@ Incompatible with: -FORWARD
 
 .. _shift-block:
 
-^^^^^^^^^^^^^^^^^^^^^
--BL[OCK]=block_number
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+[-]-BL[OCK]=block_number
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Specifies the block number to perform the DSE SHIFT.
 
-^^^^^^^^^^^^^^^^
--F[ORWARD]=shift
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
+[-]-F[ORWARD]=shift
+^^^^^^^^^^^^^^^^^^^
 
 Specifies the number of bytes to shift data toward the end of the block.
 
@@ -2690,9 +2690,9 @@ Incompatible with: -BACKWARD
 
 .. _shift-offset:
 
-^^^^^^^^^^^^^^^^
--O[FFSET]=offset
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
+[-]-O[FFSET]=offset
+^^^^^^^^^^^^^^^^^^^
 
 Specifies the starting offset, in bytes, of the portion of the block to shift.
 
@@ -2761,293 +2761,293 @@ If you do not confirm the WCINIT, DSE issues the message:
 DSE Command Summary
 ---------------------------
 
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| Commands                                 | Qualifiers                                   | Comments                                                                   |
-+==========================================+==============================================+============================================================================+
-| :ref:`dse-add`                           | -B[LOCK]=block number                        | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -D[ATA]=string                               | Incompatible with -POINTER, -STAR                                          |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -K[EY]=key                                   | Incompatible with -STAR                                                    |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -O[FFSET]=offset                             | Incompatible with -RECORD, -STAR                                           |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -P[OINTER]=pointer                           | Incompatible with -DATA                                                    |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -R[ECORD]=record-number                      | Incompatible with -OFFSET, -STAR                                           |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -S[TAR]                                      | Incompatible with -DATA,-KEY, -OFFSET, -RECORD                             |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-all`                           | -A[LL]                                       | Meaningful only with -DUMP                                                 |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -B[UFFER_FLUSH]                              | Incompatible with -RENEW                                                   |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -C[RITINIT]                                  | Incompatible with -RENEW, -RELEASE, -SEIZE                                 |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -D[UMP]                                      | Use with: -ALL                                                             |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -[NO]F[REEZE]                                | Incompatible with -RENEW                                                   |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -O[VERRIDE]                                  | Meaningful only with -[NO]FREEZE                                           |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -REF[ERENCE]                                 | Incompatible with -RENEW                                                   |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -REL[EASE]                                   | Incompatible with -CRITINIT, -RENEW,-SEIZE                                 |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -REN[EW]                                     | Use alone                                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -S[EIZE]                                     | Incompatible with -RENEW, -RELEASE, -CRITINIT                              |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -W[CINIT]                                    | Incompatible with -RENEW                                                   |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-buffer-flush`                  | \-                                           | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-cache`                         | -ALL                                         | Used with -RECOVER, -SHOW, and -VERIFY                                     |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -RE[COVER]                                   | Use only with -ALL.                                                        |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -SH[OW]                                      | Use only with -ALL.                                                        |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -VE[RIFY]                                    | Use only with -ALL.                                                        |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-change`                        | -BL[OCK]=block number                        | Incompatible with -FILEHEADER and qualifiers used with -FILEHEADER         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -BS[IZ]=block-size                           | Use only with -BLOCK, -LEVEL, -TN                                          |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -L[EVEL]=level                               | Use only with -BLOCK, -BSIZ, -TN                                           |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -TN [=transaction number]                    | Use only with -BLOCK, -BSIZ, -LEVEL                                        |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -OF[FSET]=offset                             | Use only with -BLOCK, -CMPC, -RSIZ                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -RE[CORD]=record number                      | Use only with -BLOCK, -CMPC, -RSIZ                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -CM[PC]= compression count                   | Use only with -BLOCK, -RECORD, -OFFSET, -RSIZ                              |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -RS[IZ]=record size                          | Use only with -CMPC -OFFSET, -RECORD, -BLOCK                               |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -F[ILEHEADER]                                | Incompatible with -BSIZ, -CMPC, -TN, -LEVEL, -OFFSET, -RECORD, -RSIZ       |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | AVG_BLKS_READ=Average blocks read            | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | B_B[YTESTREAM]=transaction number            | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -B_C[OMPREHENSIVE]=transaction number        | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | B_D[ATABASE] = transaction number            | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -B_I[NCREMENTAL] = transaction number        | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -BLK[_SIZE]=block size                       | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -BLO[CKS_FREE]=free blocks                   | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -B_R[ECORD]=transaction number               | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -CO[RRUPT_FILE]=value                        | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -CU[RRENT_TN]=transaction number             | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -DATA[_RESERVED_BYTES]=data_reserved_bytes   | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | DECL[OCATION]=value                          | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | DEF[_COLLATION]=value                        | Use only with -FILEHEADER;                                                 |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -ENCRYPTION_HASH                             | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -FL[USH_TIME][=delta time]                   | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -FR[EEZE]=value                              | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -FU[LLY_UPGRADED]=boolean                    | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -GV[STATSRESET]                              | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -HARD_SPIN_COUNT=Mutex hard spin count       | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -HEXL[OCATION]=value                         | Use only with -FILEHEADER;hexa                                             |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -INDEX[_RESERVED_BYTES]=index_reserved_bytes | Use only with FILEHEADER; decimal                                          |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -INT[ERRUPTED_RECOV]=boolean                 | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -JNL_YIELD_LIMIT=journal yield limit         | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -K[EY_MAX_SIZE]=key_max_size                 | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -M[ACHINE_NAM]=value                         | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -N[ULL_SUBSCRIPTS]=value                     | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -NO[CRIT]                                    | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -OV[ERRIDE]                                  | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -RC_SRV_COUNT                                | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -RE_READ_TRIGGER=read trigger                | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -Q[UANTUM_INTERVAL] [=delta time]            | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -REC[ORD_MAX_SIZE]=maximum record size       | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -REF[ERENCE_COUNT]=reference count           | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -REG[_SEQNO]=sequence number                 | Use only with -FILEHEADER; hexa                                            |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -RESERVED_BYTES=reserved bytes               | Use only with -FILEHEADER;decimal                                          |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -[NO] RES[PONSE_INTERVAL] [=delta time]      | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -SLEEP_SPIN_COUNT=mutex sleep spin count     | Use only with -FILEHEADER;                                                 |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -SPIN_SLEEP_TIME=mutex sleep time            | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -[NO]S[TALENESS_TIMER] [=delta time]         | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -TIC[K_INTERVAL] [=delta time]               | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -TIM[ERS_PENDING]=timers pending             | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -TO[TAL_BLKS]=total_blocks                   | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -TR[IGGER_FLUSH]=trigger flush               | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -W[RITES_PER_FLUSH]=writes per flush         | Use only with -FILEHEADER; decimal                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -WAIT_DISK=wait disk                         | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -Zqgblmod_S[EQNO]=sequence number            | Use only with -FILEHEADER;hexa                                             |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -Zqgblmod_TN=database-transaction_number     | Use only with -FILEHEADER;hexa                                             |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-close`                         | \-                                           | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-critical`                      | -I[NIT]                                      | Use only with -RESET                                                       |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -O[WNER]                                     | Use alone                                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -REL[EASE]                                   | Use alone                                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -REM[OVE]                                    | Use alone                                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -RES[ET]                                     | Use only with -INIT                                                        |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -S[EIZE]                                     | Use alone                                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-dump`                          | -B[LOCK]=block_number                        | Incompatible with -FILEHEADER                                              |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -C[OUNT]=count                               | Incompatible with -FILEHEADER                                              |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -F[ILEHEADER]                                | Use alone                                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -G[LO]                                       | Incompatible with -FILEHEADER, -HEADER                                     |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -G[VSTATS]                                   | Use only with -FILEHEADER                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -[NO]H[EADER]                                | Incompatible with -FILEHEADER, -GLO                                        |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -O[FFSET]=offset                             | Incompatible with -FILEHEADER, -RECORD                                     |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -R[ECORD]=record_number                      | Incompatible with -FILEHEADER, -OFFSET                                     |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-evaluate`                      | -D[ECIMAL]                                   | Incompatible with -HEXADECIMAL                                             |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -H[EXADECIMAL]                               | Incompatible with -DECIMAL                                                 |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -N[UMBER]=number                             | Required                                                                   |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-exit`                          | \-                                           | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-find`                          | -B[LOCK]=block_number                        | Incompatible with -KEY, -REGION                                            |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -E[XHAUSTIVE]                                | Incompatible with -KEY, -REGION, -FREEBLOCK                                |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -F[REEBLOCK]                                 | Required with -HINT; compatible with -BLOCK                                |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -H[INT]=block_number                         | Required with -FREEBLOCK                                                   |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -K[EY]=key                                   | Use alone                                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -R[EGION][=region] \| -R[EGION] region       | Use alone                                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -SI[BLINGS]                                  | Incompatible with -FREEBLOCK, -HINT, -KEY, -REGION                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-help`                          | [help topic]                                 | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-integrit`                      | -B[LOCK]=block_number                        | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-maps`                          | -BL[OCK]=block_number                        | Incompatible with -RESTORE_ALL                                             |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -BU[SY]                                      | Compatible only with -BLOCK                                                |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -F[REE]                                      | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -M[ASTER]                                    | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -R[ESTORE_ALL]                               | Use alone                                                                  |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-open`                          | -F[ILE]=file                                 | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-overwrite`                     | -B[LOCK]=block_number                        | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -D[ATA]=string                               | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -O[FFSET]=offset                             | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-page`                          | \-                                           | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-range`                         | -F[ROM]=block_number                         | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -T[O]=block_number                           | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -I[NDEX]=block_number                        | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -L[OST]=block_number                         | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -[NOT]BUSY=busy/free                         | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -S[TAR]=block_number                         | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -L[OWER]=key                                 | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -U[PPER]=key                                 | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-remove`                        | -B[LOCK]=block-number                        | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -C[OUNT]=count                               | Incompatible with -VERSION                                                 |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -O[FFSET]=offset                             | Incompatible with -VERSION, -RECORD                                        |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -R[ECORD]=record-number                      | Incompatible with -VERSION, -OFFSET                                        |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -V[ERSION]=version-number                    | Use only with -BLOCK; decimal                                              |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-restore`                       | -B[LOCK]=block-number                        | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -F[ROM]=block-number                         | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -R[EGION]=region \| -R[EGION] region         | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -V[ERSION]=version-number                    | Required; decimal                                                          |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-save`                          | -B[LOCK]=block-number                        | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -C[OMMENT]=string                            | Incompatible with -LIST                                                    |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -L[IST]                                      | Incompatible with -COMMENT                                                 |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-shift`                         | -B[ACKWARD]=shift                            | Incompatible with -FORWARD                                                 |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -F[ORWARD]=shift                             | Incompatible with -BACKWARD                                                |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| \-                                       | -O[FFSET]=offset                             | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-spawn`                         | [CLI command]                                | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
-| :ref:`dse-wcinit`                        | \-                                           | \-                                                                         |
-+------------------------------------------+----------------------------------------------+----------------------------------------------------------------------------+
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| Commands                                 | Qualifiers                                      | Comments                                                                   |
++==========================================+=================================================+============================================================================+
+| :ref:`dse-add`                           | [-]-B[LOCK]=block number                        | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-D[ATA]=string                               | Incompatible with -POINTER, -STAR                                          |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-K[EY]=key                                   | Incompatible with -STAR                                                    |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-O[FFSET]=offset                             | Incompatible with -RECORD, -STAR                                           |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-P[OINTER]=pointer                           | Incompatible with -DATA                                                    |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-R[ECORD]=record-number                      | Incompatible with -OFFSET, -STAR                                           |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-S[TAR]                                      | Incompatible with -DATA,-KEY, -OFFSET, -RECORD                             |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-all`                           | [-]-A[LL]                                       | Meaningful only with -DUMP                                                 |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-B[UFFER_FLUSH]                              | Incompatible with -RENEW                                                   |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-C[RITINIT]                                  | Incompatible with -RENEW, -RELEASE, -SEIZE                                 |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-D[UMP]                                      | Use with: -ALL                                                             |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-[NO]F[REEZE]                                | Incompatible with -RENEW                                                   |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-O[VERRIDE]                                  | Meaningful only with -[NO]FREEZE                                           |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-REF[ERENCE]                                 | Incompatible with -RENEW                                                   |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-REL[EASE]                                   | Incompatible with -CRITINIT, -RENEW,-SEIZE                                 |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-REN[EW]                                     | Use alone                                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-S[EIZE]                                     | Incompatible with -RENEW, -RELEASE, -CRITINIT                              |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-W[CINIT]                                    | Incompatible with -RENEW                                                   |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-buffer-flush`                  | \-                                              | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-cache`                         | [-]-ALL                                         | Used with -RECOVER, -SHOW, and -VERIFY                                     |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-RE[COVER]                                   | Use only with -ALL.                                                        |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-SH[OW]                                      | Use only with -ALL.                                                        |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-VE[RIFY]                                    | Use only with -ALL.                                                        |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-change`                        | [-]-BL[OCK]=block number                        | Incompatible with -FILEHEADER and qualifiers used with -FILEHEADER         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-BS[IZ]=block-size                           | Use only with -BLOCK, -LEVEL, -TN                                          |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-L[EVEL]=level                               | Use only with -BLOCK, -BSIZ, -TN                                           |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-TN [=transaction number]                    | Use only with -BLOCK, -BSIZ, -LEVEL                                        |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-OF[FSET]=offset                             | Use only with -BLOCK, -CMPC, -RSIZ                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-RE[CORD]=record number                      | Use only with -BLOCK, -CMPC, -RSIZ                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-CM[PC]= compression count                   | Use only with -BLOCK, -RECORD, -OFFSET, -RSIZ                              |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-RS[IZ]=record size                          | Use only with -CMPC -OFFSET, -RECORD, -BLOCK                               |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-F[ILEHEADER]                                | Incompatible with -BSIZ, -CMPC, -TN, -LEVEL, -OFFSET, -RECORD, -RSIZ       |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]AVG_BLKS_READ=Average blocks read            | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-B_B[YTESTREAM]=transaction number           | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-B_C[OMPREHENSIVE]=transaction number        | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-B_D[ATABASE] = transaction number           | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-B_I[NCREMENTAL] = transaction number        | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-BLK[_SIZE]=block size                       | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-BLO[CKS_FREE]=free blocks                   | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-B_R[ECORD]=transaction number               | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-CO[RRUPT_FILE]=value                        | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-CU[RRENT_TN]=transaction number             | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-DATA[_RESERVED_BYTES]=data_reserved_bytes   | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-DECL[OCATION]=value                         | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-DEF[_COLLATION]=value                       | Use only with -FILEHEADER;                                                 |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-ENCRYPTION_HASH                             | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-FL[USH_TIME][=delta time]                   | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-FR[EEZE]=value                              | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-FU[LLY_UPGRADED]=boolean                    | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-GV[STATSRESET]                              | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-HARD_SPIN_COUNT=Mutex hard spin count       | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-HEXL[OCATION]=value                         | Use only with -FILEHEADER;hexa                                             |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-INDEX[_RESERVED_BYTES]=index_reserved_bytes | Use only with FILEHEADER; decimal                                          |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-INT[ERRUPTED_RECOV]=boolean                 | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-JNL_YIELD_LIMIT=journal yield limit         | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-K[EY_MAX_SIZE]=key_max_size                 | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-M[ACHINE_NAM]=value                         | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-N[ULL_SUBSCRIPTS]=value                     | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-NO[CRIT]                                    | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-OV[ERRIDE]                                  | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-RC_SRV_COUNT                                | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-RE_READ_TRIGGER=read trigger                | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-Q[UANTUM_INTERVAL] [=delta time]            | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-REC[ORD_MAX_SIZE]=maximum record size       | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-REF[ERENCE_COUNT]=reference count           | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-REG[_SEQNO]=sequence number                 | Use only with -FILEHEADER; hexa                                            |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-RESERVED_BYTES=reserved bytes               | Use only with -FILEHEADER;decimal                                          |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-[NO] RES[PONSE_INTERVAL] [=delta time]      | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-SLEEP_SPIN_COUNT=mutex sleep spin count     | Use only with -FILEHEADER;                                                 |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-SPIN_SLEEP_TIME=mutex sleep time            | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-[NO]S[TALENESS_TIMER] [=delta time]         | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-TIC[K_INTERVAL] [=delta time]               | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-TIM[ERS_PENDING]=timers pending             | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-TO[TAL_BLKS]=total_blocks                   | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-TR[IGGER_FLUSH]=trigger flush               | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-W[RITES_PER_FLUSH]=writes per flush         | Use only with -FILEHEADER; decimal                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-WAIT_DISK=wait disk                         | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-Zqgblmod_S[EQNO]=sequence number            | Use only with -FILEHEADER;hexa                                             |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-Zqgblmod_TN=database-transaction_number     | Use only with -FILEHEADER;hexa                                             |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-close`                         | \-                                              | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-critical`                      | [-]-I[NIT]                                      | Use only with -RESET                                                       |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-O[WNER]                                     | Use alone                                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-REL[EASE]                                   | Use alone                                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-REM[OVE]                                    | Use alone                                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-RES[ET]                                     | Use only with -INIT                                                        |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-S[EIZE]                                     | Use alone                                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-dump`                          | [-]-B[LOCK]=block_number                        | Incompatible with -FILEHEADER                                              |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-C[OUNT]=count                               | Incompatible with -FILEHEADER                                              |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-F[ILEHEADER]                                | Use alone                                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-G[LO]                                       | Incompatible with -FILEHEADER, -HEADER                                     |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-G[VSTATS]                                   | Use only with -FILEHEADER                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-[NO]H[EADER]                                | Incompatible with -FILEHEADER, -GLO                                        |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-O[FFSET]=offset                             | Incompatible with -FILEHEADER, -RECORD                                     |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-R[ECORD]=record_number                      | Incompatible with -FILEHEADER, -OFFSET                                     |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-evaluate`                      | [-]-D[ECIMAL]                                   | Incompatible with -HEXADECIMAL                                             |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-H[EXADECIMAL]                               | Incompatible with -DECIMAL                                                 |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-N[UMBER]=number                             | Required                                                                   |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-exit`                          | \-                                              | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-find`                          | [-]-B[LOCK]=block_number                        | Incompatible with -KEY, -REGION                                            |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-E[XHAUSTIVE]                                | Incompatible with -KEY, -REGION, -FREEBLOCK                                |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-F[REEBLOCK]                                 | Required with -HINT; compatible with -BLOCK                                |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-H[INT]=block_number                         | Required with -FREEBLOCK                                                   |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-K[EY]=key                                   | Use alone                                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-R[EGION][=region] \| [-]-R[EGION] region    | Use alone                                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-SI[BLINGS]                                  | Incompatible with -FREEBLOCK, -HINT, -KEY, -REGION                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-help`                          | [help topic]                                    | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-integrit`                      | [-]-B[LOCK]=block_number                        | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-maps`                          | [-]-BL[OCK]=block_number                        | Incompatible with -RESTORE_ALL                                             |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-BU[SY]                                      | Compatible only with -BLOCK                                                |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-F[REE]                                      | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-M[ASTER]                                    | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-R[ESTORE_ALL]                               | Use alone                                                                  |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-open`                          | [-]-F[ILE]=file                                 | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-overwrite`                     | [-]-B[LOCK]=block_number                        | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-D[ATA]=string                               | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-O[FFSET]=offset                             | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-page`                          | \-                                              | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-range`                         | [-]-F[ROM]=block_number                         | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-T[O]=block_number                           | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-I[NDEX]=block_number                        | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-L[OST]=block_number                         | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-[NOT]BUSY=busy/free                         | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-S[TAR]=block_number                         | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-L[OWER]=key                                 | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-U[PPER]=key                                 | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-remove`                        | [-]-B[LOCK]=block-number                        | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-C[OUNT]=count                               | Incompatible with -VERSION                                                 |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-O[FFSET]=offset                             | Incompatible with -VERSION, -RECORD                                        |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-R[ECORD]=record-number                      | Incompatible with -VERSION, -OFFSET                                        |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-V[ERSION]=version-number                    | Use only with -BLOCK; decimal                                              |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-restore`                       | [-]-B[LOCK]=block-number                        | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-F[ROM]=block-number                         | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-R[EGION]=region \| [-]-R[EGION] region      | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-V[ERSION]=version-number                    | Required; decimal                                                          |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-save`                          | [-]-B[LOCK]=block-number                        | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-C[OMMENT]=string                            | Incompatible with -LIST                                                    |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-L[IST]                                      | Incompatible with -COMMENT                                                 |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-shift`                         | [-]-B[ACKWARD]=shift                            | Incompatible with -FORWARD                                                 |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-F[ORWARD]=shift                             | Incompatible with -BACKWARD                                                |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| \-                                       | [-]-O[FFSET]=offset                             | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-spawn`                         | [CLI command]                                   | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
+| :ref:`dse-wcinit`                        | \-                                              | \-                                                                         |
++------------------------------------------+-------------------------------------------------+----------------------------------------------------------------------------+
 
 \* Use these qualifiers only with instructions from YottaDB.
 

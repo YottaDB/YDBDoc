@@ -31,24 +31,24 @@ The format of the MUPIP INTEG command is:
 
    I[NTEG]
    [
-    -A[DJACENCY]=integer
-    -BL[OCK]=hexa;block-number
-    -BR[IEF]
-    -DBG
-    -DMAX[BLOCKSIZE][=integer]
-    -FA[ST]
-    -FU[LL]
-    -IMAX[BLOCKSIZE][=integer]
-    -[NO]K[EYRANGES]
-    -[NO]MAP[=integer]
-    -[NO]MAXK[EYSIZE][=integer]
-    -[NO]O[NLINE]
-    -S[UBSCRIPT]=subscript]
-    -TN[_RESET]
-    -[NO]TR[ANSACTION][=integer]
-    -VERBOSE
+    [-]-A[DJACENCY]=integer
+    [-]-BL[OCK]=hexa;block-number
+    [-]-BR[IEF]
+    [-]-DBG
+    [-]-DMAX[BLOCKSIZE][=integer]
+    [-]-FA[ST]
+    [-]-FU[LL]
+    [-]-IMAX[BLOCKSIZE][=integer]
+    [-]-[NO]K[EYRANGES]
+    [-]-[NO]MAP[=integer]
+    [-]-[NO]MAXK[EYSIZE][=integer]
+    [-]-[NO]O[NLINE]
+    [-]-S[UBSCRIPT]=subscript]
+    [-]-TN[_RESET]
+    [-]-[NO]TR[ANSACTION][=integer]
+    [-]-VERBOSE
    ]
-   {[-FILE] file-name|-REG[ION] region-list}
+   {[[-]-FILE] file-name | [-]-REG[ION] region-list}
 
 
 
@@ -77,9 +77,9 @@ INTEG Qualifiers
 
 The following sections describe the qualifiers of the INTEG command.
 
-^^^^^^^^^^^^
--ADJACENCY
-^^^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-ADJACENCY
+^^^^^^^^^^^^^
 
 Specifies the logical adjacency of data blocks that MUPIP INTEG should assume while diagnosing the database. By default, MUPIP INTEG operates with ADJACENCY=10 and reports the logical adjacency in the "Adjacent" column of the MUPIP INTEG report.
 
@@ -91,11 +91,11 @@ The format of the ADJACENCY qualifier is:
 
 .. code-block:: none
 
-   -AD[JACENCY]=integer
+   [-]-AD[JACENCY]=integer
 
-^^^^^^^^
--BLOCK
-^^^^^^^^
+^^^^^^^^^
+[-]-BLOCK
+^^^^^^^^^
 
 Specifies the block for MUPIP INTEG command to start checking a sub-tree of the database. MUPIP INTEG BLOCK cannot detect "incorrectly marked busy errors".
 
@@ -103,21 +103,21 @@ The format of the BLOCK qualifier is:
 
 .. code-block:: none
 
-   -BL[OCK]=block-number
+   [-]-BL[OCK]=block-number
 
 * Block numbers are displayed in an INTEG error report or by using DSE.
 
 * Incompatible with: SUBSCRIPT and TN_RESET
 
-^^^^^^^
--BRIEF
-^^^^^^^
+^^^^^^^^^
+[-]-BRIEF
+^^^^^^^^^
 
 Displays a single summary report by database file of the total number of directory, index and data blocks. The format of the BRIEF qualifier is:
 
 .. code-block:: none
 
-   -BR[IEF]
+   [-]-BR[IEF]
 
 * By default, MUPIP INTEG uses the BRIEF qualifier.
 
@@ -125,27 +125,27 @@ Displays a single summary report by database file of the total number of directo
 
 .. _integ-dbg:
 
-^^^^
--DBG
-^^^^
+^^^^^^^
+[-]-DBG
+^^^^^^^
 
 Produces verbose output to help with debugging. We recommend using :ref:`VERBOSE <integ-verbose>` instead.
 
-^^^^^^^^^^^^^^
-DMAXBLOCKSIZE
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+[-]DMAXBLOCKSIZE
+^^^^^^^^^^^^^^^^
 
 Specifies the maximum actual size of a data-level block in the database; any data block which contains data in excess of this size causes INTEG to report the block number, its path, and an error. The format of the DMAXBLOCKSIZE qualifier is:
 
 .. code-block:: none
 
-   -DMAX[BLOCKSIZE]=integer
+   [-]-DMAX[BLOCKSIZE]=integer
 
 .. _integ-fast:
 
-^^^^^^
--FAST
-^^^^^^
+^^^^^^^^
+[-]-FAST
+^^^^^^^^
 
 Checks only index blocks. FAST does not check data blocks.
 
@@ -153,7 +153,7 @@ The format of the FAST qualifier is:
 
 .. code-block:: none
 
-   -FA[ST]
+   [-]-FA[ST]
 
 
 * FAST produces results significantly faster than a full INTEG because the majority of blocks in a typical database are data blocks.
@@ -166,15 +166,15 @@ The format of the FAST qualifier is:
 
 * Incompatible with: TN_RESET.
 
-^^^^^^
--FILE
-^^^^^^
+^^^^^^^^
+[-]-FILE
+^^^^^^^^
 
 Specifies the name of the database file for the MUPIP INTEG operation. FILE requires exclusive (stand-alone) access to a database file and does not require a Global Directory. The format of the FILE qualifier is:
 
 .. code-block:: none
 
-   -FI[LE]
+   [-]-FI[LE]
 
 * With stand-alone access to the file, MUPIP INTEG FILE is able to check whether the reference count is zero. A non-zero reference count indicates prior abnormal termination of the database.
 
@@ -184,15 +184,15 @@ Specifies the name of the database file for the MUPIP INTEG operation. FILE requ
 
 .. _mupip-integ-full:
 
-^^^^^^
--FULL
-^^^^^^
+^^^^^^^^
+[-]-FULL
+^^^^^^^^
 
 Displays an expanded report for a MUPIP INTEG operation. With FULL specified, MUPIP INTEG displays the number of index and data blocks in the directory tree and in each global variable tree as well as the total number of directory, index and data blocks. The format of the FULL qualifier is:
 
 .. code-block:: none
 
-   -FU[LL]
+   [-]-FU[LL]
 
 
 * The FULL qualifier is incompatible with the BRIEF qualifier.
@@ -201,37 +201,37 @@ Displays an expanded report for a MUPIP INTEG operation. With FULL specified, MU
 
 * Use FULL to have INTEG report all global names in a region or list of regions.
 
-^^^^^^^^^^^^^^
-IMAXBLOCKSIZE
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
+[-]-IMAXBLOCKSIZE
+^^^^^^^^^^^^^^^^^
 
 Specifies the maximum actual size of an index-level block in the database; any index block which contains data in excess of this size causes integ to report the block number, its path, and an error. The format of the IMAXBLOCKSIZE qualifier is:
 
 .. code-block:: none
 
-   -IMAX[BLOCKSIZE]=integer
+   [-]-IMAX[BLOCKSIZE]=integer
 
-^^^^^^^^^^^
--KEYRANGES
-^^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-KEYRANGES
+^^^^^^^^^^^^^
 
 Specify whether the MUPIP INTEG report includes key ranges that it detects which identify the data suspected of problems. The format of the KEYRANGES qualifier is:
 
 .. code-block:: none
 
-   -[NO]K[EYRANGES]
+   [-]-[NO]K[EYRANGES]
 
 By default, INTEG displays KEYRANGES.
 
-^^^^^
--MAP
-^^^^^
+^^^^^^^
+[-]-MAP
+^^^^^^^
 
 Specifies the maximum number of "incorrectly marked busy errors" that MUPIP INTEG reports. The format of the MAP qualifier is:
 
 .. code-block:: none
 
-   -[NO]MAP[=max_imb_errors]
+   [-]-[NO]MAP[=max_imb_errors]
 
 
 * <max_imb_errors> specifies the threshold limit for the number of incorrectly marked busy errors.
@@ -248,15 +248,15 @@ An error in an index block prevents INTEG from processing potentially large area
 .. note::
    After a database recovery with RECOVER (for example, using BEFORE_TIME) or ROLLBACK (for example, using FETCHRESYNC), the database may contain incorrectly marked busy errors. Although these errors are benign, they consume available space. Schedule repairs on the next opportunity.
 
-^^^^^^^^^^^^^
--MAXKEYSIZE
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^
+[-]-MAXKEYSIZE
+^^^^^^^^^^^^^^
 
 Specifies the maximum number of "key size too large" errors that a MUPIP INTEG operation reports. The format of the MAXKEYSIZE qualifier is:
 
 .. code-block:: none
 
-   -[NO]MAX[KEYSIZE][=integer]
+   [-]-[NO]MAX[KEYSIZE][=integer]
 
 * By default, INTEG reports a maximum of 10 key size errors (MAXKEYSIZE=10).
 
@@ -268,15 +268,15 @@ Specifies the maximum number of "key size too large" errors that a MUPIP INTEG o
 
 .. _integ-online:
 
-^^^^^^^^
--ONLINE
-^^^^^^^^
+^^^^^^^^^^
+[-]-ONLINE
+^^^^^^^^^^
 
 Specifies that while a MUPIP INTEG operation is active, other processes can update the database without affecting the result of the operation. Allows checking database structural integrity to run concurrently with database updates. The format of the ONLINE qualifier is:
 
 .. code-block:: none
 
-   -[NO]O[NLINE]
+   [-]-[NO]O[NLINE]
 
 * NOONLINE specifies that the database should be frozen during MUPIP INTEG.
 
@@ -303,15 +303,15 @@ Specifies that while a MUPIP INTEG operation is active, other processes can upda
 
 .. _integ-region:
 
-^^^^^^^^
--REGION
-^^^^^^^^
+^^^^^^^^^^
+[-]-REGION
+^^^^^^^^^^
 
 Specifies that the INTEG parameter identifies one or more regions rather than a database file. The format of the REGION qualifier is:
 
 .. code-block:: none
 
-   -R[EGION]=region-list | -R[EGION] region-list
+   [-]-R[EGION]=region-list | -R[EGION] region-list
 
 * The region-list identifies the target of INTEG. region-list may specify more than one region of the current global directory in a list. Region names in the list are case-insensitive, separated by commas, and wildcards can be used to specify them. Any region-name may include the wildcard characters * and ? (remember to escape them to protect them from inappropriate expansion by the shell). Any region name expansion occurs in M (ASCII) collation order. INTEG processes regions based on the order specified in the list after wild-card expansion.
 
@@ -323,9 +323,9 @@ Specifies that the INTEG parameter identifies one or more regions rather than a 
 
 * Incompatible with: FILE, TN_RESET
 
-^^^^^^^^^^^
--SUBSCRIPT
-^^^^^^^^^^^
+^^^^^^^^^^^^^
+[-]-SUBSCRIPT
+^^^^^^^^^^^^^
 
 Specifies a key (an unsubscripted or subscripted global name) or a range of keys to INTEG.
 
@@ -337,29 +337,29 @@ SUBSCRIPT cannot detect incorrectly marked busy errors. The format of the SUBSCR
 
 .. code-block:: none
 
-   -SU[BSCRIPT]=subscript
+   [-]-SU[BSCRIPT]=subscript
 
 Specify SUBSCRIPT only if the path to the keys in the subscript is not damaged. If the path is questionable or known to be damaged, use DSE to find the block(s) and INTEG BLOCK.
 
 Incompatible with: BLOCK, TN_RESET
 
-^^^^^^^
--STATS
-^^^^^^^
+^^^^^^^^^
+[-]-STATS
+^^^^^^^^^
 
 Specifies INTEG to check any active statistics database associated with the region(s) specified for the command. The format of the STATS qualifier is:
 
 .. code-block:: none
 
-   -[NO]ST[ATS]
+   [-]-[NO]ST[ATS]
 
 Specify STATS only if you have reason to understand that statistics reporting is failing with database errors or reporting incorrect results. Because FILE requires standalone access and statistic databases are automatically created and removed it is incompatible with STATS. The default is NOSTATS.
 
 Incompatible with: BLOCK, FILE, TN_RESET
 
-^^^^^^^^^^
--TN_RESET
-^^^^^^^^^^
+^^^^^^^^^^^^
+[-]-TN_RESET
+^^^^^^^^^^^^
 
 Resets block transaction numbers and backup event recorded transaction numbers to one (1), and the current transaction number to two (2) which makes the backup event recorded transaction numbers more meaningful and useful. It also issues an advisory message to perform a backup.
 
@@ -367,7 +367,7 @@ The format of the TN_RESET qualifier is:
 
 .. code-block:: none
 
-   -TN[_RESET]
+   [-]-TN[_RESET]
 
 * Transaction numbers can go up to 18,446,744,073,709,551,615. This means that a transaction processing application that runs flat out at a non-stop rate of 1,000,000 updates per second would need a TN reset approximately every 584,554 years.
 
@@ -387,15 +387,15 @@ The format of the TN_RESET qualifier is:
 
 .. _integ-transaction:
 
-^^^^^^^^^^^^^^
--TRANSACTION
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
+[-]-TRANSACTION
+^^^^^^^^^^^^^^^
 
 Specifies the maximum number of block transaction-number-too-large errors that MUPIP INTEG reports. The format of the TRANSACTION qualifier is:
 
 .. code-block:: none
 
-   -[NO]TR[ANSACTION][=integer]
+   [-]-[NO]TR[ANSACTION][=integer]
 
 * NOTRANSACTION removes limits on transaction reporting so MUPIP INTEG reports all transaction number errors.
 
@@ -407,9 +407,9 @@ Specifies the maximum number of block transaction-number-too-large errors that M
 
 .. _integ-verbose:
 
-~~~~~~~~~
--VERBOSE
-~~~~~~~~~
+~~~~~~~~~~~
+[-]-VERBOSE
+~~~~~~~~~~~
 
 Produces verbose output to help with debugging.
 
