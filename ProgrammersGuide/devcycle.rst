@@ -588,9 +588,9 @@ Qualifiers for the yottadb command
 
 The yottadb command allows qualifiers that customize the type and form of the compiler output to meet specific programming needs. Yottadb command qualifiers may also appear as a modifier to the argument to the :ref:`zlink` and :ref:`zcompile-command` commands and the :ref:`zcompile-isv` intrinsic special variable. The following section describes the ``yottadb`` command qualifiers. Make sure the arguments are specified ahead of file name and after the command itself.
 
-~~~~~~~~~~~~~~~
--di[rect_mode]
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+[-]-di[rect_mode]
+~~~~~~~~~~~~~~~~~
 
 Invokes a small YottaDB image that immediately initiates Direct Mode.
 
@@ -598,9 +598,9 @@ Invokes a small YottaDB image that immediately initiates Direct Mode.
 
 The -direct_mode qualifier is incompatible with a file specification and with all other qualifiers. The rest of the shell command is available to the process in the :ref:`zcmdline-isv` intrinsic special variable.
 
-~~~~~~~~~~~~~~~~~~~~
--dy[namic_literals]
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+[-]-dy[namic_literals]
+~~~~~~~~~~~~~~~~~~~~~~
 
 Compiles certain data structures associated with literals used in the source code in a way that they are dynamically loaded and unloaded from the object code. The dynamic loading and unloading of these data structures:
 
@@ -613,15 +613,21 @@ With no -DYNAMIC_LITERALS specified, these data structures continue to be genera
 
 .. _no-embed-src:
 
-~~~~~~~~~~~~~~~~~~
--[no]embed_source
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
+[-]-[no]embed_source
+~~~~~~~~~~~~~~~~~~~~
 
 Instructs YottaDB to embeds routine source code in the object code. The default is NOEMBED_SOURCE. Like other YottaDB compilation qualifiers, this qualifier can be specified through the $ZCOMPILE intrinsic special variable and ydb_compile environment variable. EMBED_SOURCE provides $TEXT and ZPRINT access to the correct source code, even if the original M source file has been edited or removed. Where the source code is not embedded in the object code, YottaDB attempts to locate the source code file. If it cannot find source code matching the object code, $TEXT() returns a null string. ZPRINT prints whatever source code found and also prints a TXTSRCMAT message in direct mode; if it cannot find a source file, ZPRINT issues a FILENOTFND error.
 
-~~~~~~~~~~~~~
--[no]i[gnore]
-~~~~~~~~~~~~~
+~~~~~~~~~~
+[-]-h[elp]
+~~~~~~~~~~
+
+Displays a help message that describes YottaDB command usage and qualifiers.
+
+~~~~~~~~~~~~~~~~
+[-]-[no]i[gnore]
+~~~~~~~~~~~~~~~~
 
 Instructs the compiler to produce an object file even when the compiler detects errors in the source code (-ignore), or not to produce an object file when the compiler encounters an error (-noignore).
 
@@ -633,17 +639,26 @@ This compile-as-written mode facilitates a flexible approach to debugging and ex
 
 By default, the compiler operates in -ignore mode and produces an object module even when the source routine contains errors.
 
-~~~~~~~~~~~~~~~~
--le[ngth]=lines
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+[-]-le[ngth]=lines
+~~~~~~~~~~~~~~~~~~
 
 This qualifier has no effect. It is accepted only for backwards compatibility.
 
 .. _nolist-filename:
 
 ~~~~~~~~~~~~~~~~~~~~~~~
--[no]li[st][=filename]
+[-]-noin[line_literals]
 ~~~~~~~~~~~~~~~~~~~~~~~
+
+Compiles routines to use library code in order to load literals instead of generating in-line code thereby reducing the routine size. At the cost of a small increase in CPU, the use of -NOINLINE_LITERAL may help counteract growth in object size due to -DYNAMIC_LITERALS.
+
+.. note::
+   Both -DYNAMIC_LITERALS and -NOINLINE_LITERALS help optimize performance and virtual memory usage for applications whose source code includes literals. As the scalability and performance from reduced per-process memory usage may or may not compensate for the incremental cost of dynamically loading and unloading the data structures, and as the performance of routines vs. inline code can be affected by the availability of routines in cache, YottaDB suggests benchmarking to determine the combination of qualifiers best suited to each workload. Note that applications can freely mix routines compiled with different combinations of qualifiers.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-[no]li[st][=filename]
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Instructs the compiler to produce a source program listing file, and optionally specifies a name for the listing file. The listing file contains numbered source program text lines. When the routine has errors, the listing file also includes an error count, information about the location, and the cause of the errors.
 
@@ -653,31 +668,16 @@ The -space qualifier modifies the format and content of the listing file. The M 
 
 By default, the compiler operates -nolist and does not produce listings.
 
-~~~~~~~~~~~~~~~~~~~~~
--machine
-~~~~~~~~~~~~~~~~~~~~~
-
-Instructs the compiler to include the generated assembly code for each line of source code in the source program listing. If the :ref:`-list <nolist-filename>` option is not explictly specified, ``-machine`` automatically turns it on.
-
-~~~~~~~~~~~~~~~~~~~~~
--noin[line_literals]
-~~~~~~~~~~~~~~~~~~~~~
-
-Compiles routines to use library code in order to load literals instead of generating in-line code thereby reducing the routine size. At the cost of a small increase in CPU, the use of -NOINLINE_LITERAL may help counteract growth in object size due to -DYNAMIC_LITERALS.
-
-.. note::
-   Both -DYNAMIC_LITERALS and -NOINLINE_LITERALS help optimize performance and virtual memory usage for applications whose source code includes literals. As the scalability and performance from reduced per-process memory usage may or may not compensate for the incremental cost of dynamically loading and unloading the data structures, and as the performance of routines vs. inline code can be affected by the availability of routines in cache, YottaDB suggests benchmarking to determine the combination of qualifiers best suited to each workload. Note that applications can freely mix routines compiled with different combinations of qualifiers.
-
-~~~~~~~~~~~~~~~~~~~~
--noline_entry
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+[-]-nolin[e_entry]
+~~~~~~~~~~~~~~~~~~
 
 As M allows calls and control transfers to label±offset^routine targets, YottaDB object code for each line starts with code to ensure that all local variables used in that line are accessible within that line. For application code that uses only label^routine targets, i.e., eschews ±offset forms, with the :code:`-noline_entry` option, instead of this additional code generated for each line, the YottaDB object code generated for each label includes code to ensure that all local variables in the block of code starting with the label are accessible within that block. This option makes the generated object code more compact. Whether this option makes application code execute faster depends on whether typical execution paths through the code block access many or all of the variables whose accessibility is ensured: if typical execution paths bypass accessing many of those local variables (e.g., because of conditional execution or premature exits), then code compiled with the :code:`-noline_entry` can execute slower. If your application does not use offsets for targets, we suggest benchmarking applications using real or simulated workloads to determine whether the option is beneficial.
 
 Any attempt to use a label±offset^routine entryref in code compiled with -noline_entry raises the `LABELONLY error <../MessageRecovery/errors.html#labelonly-error>`_.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
--m[achine]
+[-]-m[achine]
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Instructs the compiler to produce a source program listing file that contains the generated bytecode and machine code for the program.
@@ -689,9 +689,15 @@ This qualifier implies `-list`. To control the output filename, pass the name to
 
 By default, the compiler does not produce machine code listings.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~
--[no]o[bject][=filename]
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-[n]ameofrtn=filename
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Instructs the compiler to produce an output object file with the specified routine name, overriding the default, i.e. M program name minus extension. You can use -NAMEOFRTN and -OBJECT to create two object files with different names from the same .m source file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-[no]o[bject][=filename]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Instructs the compiler to produce an output object file and optionally specifies a name for the object file using the optional filename argument.
 
@@ -705,15 +711,27 @@ Compilation with -object without -nameofrtn implicitly names the first routine t
 
 By default, the compiler produces object modules.
 
-~~~~~~~~~~~~~~~~~~~~~~~
--[n]ameofrtn=filename
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+[-]-r[un]
+~~~~~~~~~
 
-Instructs the compiler to produce an output object file with the specified name. You can use -NAMEOFRTN and -OBJECT to create two object files with different names from the same .m source file.
+Invokes YottaDB in Autostart Mode.
 
-~~~~~~~~~~~~~~~
--[no]w[arning]
-~~~~~~~~~~~~~~~
+The next argument is taken to be an M entryref. That routine is immediately executed, bypassing Direct Mode. Depending on the shell, you may need to put the entryref in quotation marks (""). This qualifier does not invoke the M compiler and is not compatible with any other qualifier.
+
+~~~~~~~~~~~~~~~~~
+[-]-s[pace]=lines
+~~~~~~~~~~~~~~~~~
+
+Controls the spacing of the output in the listing file. -space=n specifies n-1 blank lines separating every source line in the listing file. If n<1, the M command uses single spacing in the listing.
+
+If this qualifier appears without the -list qualifier, the M compiler ignores the -space qualifier.
+
+By default, listings use single spaced output (-space=1).
+
+~~~~~~~~~~~~~~~~~
+[-]-[no]w[arning]
+~~~~~~~~~~~~~~~~~
 
 Instructs the compiler to suppress error output; the default is -warning.
 
@@ -722,24 +740,6 @@ When used with the -list qualifier, the -nowarning qualifier does not affect err
 .. note::
    When used with the -noobject qualifier, the -nowarning qualifier instructs the compiler to produce no object with no indication of the fact or the cause of any errors.
 
-~~~~~~~~
--r[un]
-~~~~~~~~
-
-Invokes YottaDB in Autostart Mode.
-
-The next argument is taken to be an M entryref. That routine is immediately executed, bypassing Direct Mode. Depending on the shell, you may need to put the entryref in quotation marks (""). This qualifier does not invoke the M compiler and is not compatible with any other qualifier.
-
-~~~~~~~~~~~~~~~~
--s[pace]=lines
-~~~~~~~~~~~~~~~~
-
-Controls the spacing of the output in the listing file. -space=n specifies n-1 blank lines separating every source line in the listing file. If n<1, the M command uses single spacing in the listing.
-
-If this qualifier appears without the -list qualifier, the M compiler ignores the -space qualifier.
-
-By default, listings use single spaced output (-space=1).
-
 ++++++++++++++++++++++++++++++++++++
 Yottadb Command Qualifiers Summary
 ++++++++++++++++++++++++++++++++++++
@@ -747,29 +747,35 @@ Yottadb Command Qualifiers Summary
 +----------------------------------------------+--------------------------------------------+
 | Qualifier                                    | Default                                    |
 +==============================================+============================================+
-| "-di[rect_mode]"                             | N/A                                        |
+| "[-]-di[rect_mode]"                          | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| "-dy[namic_literals]"                        | N/A                                        |
+| "[-]-dy[namic_literals]"                     | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| "-[no]embed_source"                          | -noembedsource                             |
+| "[-]-[no]e[mbed_source]"                     | --noembedsource                            |
 +----------------------------------------------+--------------------------------------------+
-| "-[no]i[gnore]"                              | -ignore                                    |
+| "[-]-h[elp]"                                 | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| "-[no]li[st][=filename]"                     | -nolist                                    |
+| "[-]-[no]i[gnore]"                           | --ignore                                   |
 +----------------------------------------------+--------------------------------------------+
-| "-noin[line_literals]"                       | N/A                                        |
+| "[-]-[no]li[st][=filename]"                  | --nolist                                   |
 +----------------------------------------------+--------------------------------------------+
-| "-nolineentry"                               | N/A                                        |
+| "[-]-noin[line_literals]"                    | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| "-machine"                                   | N/A                                        |
+| "[-]-nolin[e_entry]"                         | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| "-[n]ameofrtn=filename"                      | N/A                                        |
+| "[-]-m[achine]"                              | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| "-[no]o[bject][=filename]"                   | -object                                    |
+| "[-]-n[ameofrtn]=filename"                   | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
-| "-r[un]"                                     | N/A                                        |
+| "[-]-[no]o[bject][=filename]"                | --object                                   |
 +----------------------------------------------+--------------------------------------------+
-| "-s[pace]=lines"                             | -space=1                                   |
+| "[-]-r[un]"                                  | N/A                                        |
++----------------------------------------------+--------------------------------------------+
+| "[-]-s[pace]=lines"                          | --space=1                                  |
++----------------------------------------------+--------------------------------------------+
+| "[-]-v[ersion]"                              | N/A                                        |
++----------------------------------------------+--------------------------------------------+
+| "[-]-[no]w[arnings]"                         | N/A                                        |
 +----------------------------------------------+--------------------------------------------+
 
 .. _execute-src-prog:

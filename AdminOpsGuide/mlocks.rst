@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -113,7 +113,7 @@ The general format of LKE commands is:
 
 .. code-block:: none
 
-   command [-qualifier[=qualifier-value]]
+   command [[-]-qualifier[=qualifier-value]]
 
 LKE accepts command and qualifier abbreviations. The section describing each command provides the minimal abbreviation that can be used for that command, and the command qualifiers, if any. YottaDB recommends the use of a minimum of four characters for key words in scripts to ensure new keywords do not conflict with older scripts.
 
@@ -133,42 +133,42 @@ The format of the CLEAR command is:
 
 .. code-block:: none
 
-   CLE[AR] [-qualifier...]
+   CLE[AR] [[-]-qualifier...]
 
 The optional qualifiers are:
 
 .. code-block:: none
 
-   -A[LL]
-   -L[OCK]
-  -[NO]C[RIT]
-   -[NO]EXACT
-   -[NO]I[NTERACTIVE]
-   -O[UTPUT]="file-name"
-   -P[ID]=pid
-   -R[EGION]=region-name | -R[EGION] region name
+   [-]-A[LL]
+   [-]-L[OCK]
+   [-]-[NO]C[RIT]
+   [-]-[NO]EXACT
+   [-]-[NO]I[NTERACTIVE]
+   [-]-O[UTPUT]="file-name"
+   [-]-P[ID]=pid
+   [-]-R[EGION]=region-name | [-]-R[EGION] region name
 
-By default, CLEAR operates interactively (-INTERACTIVE).
+By default, CLEAR operates interactively ([-]-INTERACTIVE).
 
 Qualifiers for CLEAR:
 
-~~~~~~~
--A[LL]
-~~~~~~~
+~~~~~~~~~
+[-]-A[LL]
+~~~~~~~~~
 
 Specifies all current LOCKs.
 
-* -ALL removes all current LOCKs.
+* [-]-ALL removes all current LOCKs.
 
-* If used, CLEAR and -REGION qualifier, -ALL removes all LOCKs in that region.
+* If used, CLEAR and -REGION qualifier, [-]-ALL removes all LOCKs in that region.
 
 * Issue a CLEAR - ALL only when there are no active YottaDB processes using LOCKs, or when you can predict the effect on the application.
 
-* By default, CLEAR -ALL operates interactively (-INTERACTIVE).
+* By default, CLEAR [-]-ALL operates interactively ([-]-INTERACTIVE).
 
 .. code-block:: none
 
-   -[NO]C[RIT]
+   [-]-[NO]C[RIT]
 
 Allows LKE CLEAR to work even if another process is holding a critical section.
 
@@ -179,13 +179,13 @@ By default, LKE operates in CRIT[ICAL] mode and ensures a consistent view of LOC
 
 .. code-block:: none
 
-   -[NO]EXACT
+   [-]-[NO]EXACT
 
-Limits the CLEAR command to the exact resource name specified with -LOCK=resource_name. NOEXACT (the default) treats the specified resource name as a prefix and works not only on it, but also on any of its descendants, since their existence effectively LOCKs their parent tree.
+Limits the CLEAR command to the exact resource name specified with [-]-LOCK=resource_name. NOEXACT (the default) treats the specified resource name as a prefix and works not only on it, but also on any of its descendants, since their existence effectively LOCKs their parent tree.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~
--L[OCK]=""resource_name""
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-L[OCK]=""resource_name""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Unless used with -EXACT, specifies the leading prefix for an implicit wild card search of all locks that start with the resource_name.
 
@@ -213,9 +213,9 @@ Unless used with -EXACT, specifies the leading prefix for an implicit wild card 
       Lock removed : ^x(",")
       LKE>
 
-~~~~~~~~~~~~~~~~~~~
--[NO]I[NTERACTIVE]
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+[-]-[NO]I[NTERACTIVE]
+~~~~~~~~~~~~~~~~~~~~~
 
 Interactively clears one LOCK at a time. LKE displays each current LOCK with the PID of the owner process and prompts for verification that the LOCK should be cleared. LKE retains the LOCK for any response other than Y[ES].
 
@@ -223,11 +223,11 @@ Interactively clears one LOCK at a time. LKE displays each current LOCK with the
 
 * To avoid holding a lock resource too long, LKE skips to the next matching LOCK if there is no operator response for several seconds.
 
-* -NOINTERACTIVE forces the action to take place without user confirmation of each change. Using -NOINTERACTIVE prevents the LKE operator from controlling the LOCK subsystem for potentially long periods of time when many locks are held. To do this, it limits the amount of time it waits for each response.
+* [-]-NOINTERACTIVE forces the action to take place without user confirmation of each change. Using -NOINTERACTIVE prevents the LKE operator from controlling the LOCK subsystem for potentially long periods of time when many locks are held. To do this, it limits the amount of time it waits for each response.
 
-~~~~~~~~~~~~~~~~~~~~~~~
--O[UTPUT]="file-name"
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-O[UTPUT]="file-name"
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Directs the reporting of all specified LOCKs to a file.
 
@@ -235,13 +235,13 @@ Directs the reporting of all specified LOCKs to a file.
 
 * If file-name has permission issues, OUTPUT reports the cause of the error.
 
-* The -OUTPUT qualifier is compatible with all other qualifiers.
+* The [-]-OUTPUT qualifier is compatible with all other qualifiers.
 
 * By default, CLEAR sends output messages to stderr.
 
-~~~~~~~~~~~
--P[ID]=pid
-~~~~~~~~~~~
+~~~~~~~~~~~~~
+[-]-P[ID]=pid
+~~~~~~~~~~~~~
 
 Specifies the process identification number that holds a LOCK on a resource name.
 
@@ -253,9 +253,9 @@ Specifies the process identification number that holds a LOCK on a resource name
 
 * The -PID qualifier is compatible with all other qualifiers.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--R[EGION]=region-name | -R[EGION] region-name
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-R[EGION]=region-name | [-]-R[EGION] region-name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 region-name specifies the region that holds the locked resource names. The region-name is case-insensitive.
 
@@ -369,36 +369,36 @@ The format of the CLNUP command is:
 
 .. code-block:: none
 
-   CLN[UP] [-qualifier...]
+   CLN[UP] [[-]-qualifier...]
 
 The optional qualifiers are:
 
 .. code-block:: none
 
-   -A[LL]
-   -I[NTEG]
-   -P[ERIODIC]=n
-   -R[EGION]=region-name | -R[EGION] region-name
+   [-]-A[LL]
+   [-]-I[NTEG]
+   [-]-P[ERIODIC]=n
+   [-]-R[EGION]=region-name | [-]-R[EGION] region-name
 
 By default, CLNUP operates on all regions (-ALL).
 
 .. _clnup-all:
 
-~~~~~~~~~~~
--A[LL]
-~~~~~~~~~~~
+~~~~~~~~~
+[-]-A[LL]
+~~~~~~~~~
 
 Specifies all regions
 
 ~~~~~~~~~~~
--I[NTEG]
+[-]-I[NTEG]
 ~~~~~~~~~~~
 
 Specifies that LKE should validate the integrity of the lock space and report any issues.
 
-~~~~~~~~~~~~~~
--P[ERIODIC]=n
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+[-]-P[ERIODIC]=n
+~~~~~~~~~~~~~~~~
 
 Specifies that LKE perform a CLNUP every n seconds, which, if you desire active cleanup, is much lighter weight than repeated invocations of LKE from a shell script.
 
@@ -406,9 +406,9 @@ You can stop LKE CLNUP -PERIODIC with MUPIP STOP <pid>.
 
 YottaDB recommends running LKE CLNUP -PERIODIC=n with a value of n that appears to prevent growth in the elements in the lock space as reported by LKE SHOW over substantial periods of time.
 
-~~~~~~~~~~~
--R[EGION]
-~~~~~~~~~~~
+~~~~~~~~~~~~
+[-]-R[EGION]
+~~~~~~~~~~~~
 
 Specifies that LKE restricts CLNUP operations to a region.
 
@@ -420,19 +420,19 @@ Use the SHOW command to get status of the LOCK mechanism and the LOCK database. 
 
 .. code-block:: none
 
-   SH[OW] [-qualifier...]
+   SH[OW] [[-]-qualifier...]
 
 The optional qualifiers are:
 
 .. code-block:: none
 
-   -A[LL]
-   -L[OCK]
-   -[NO]C[[RIT]ICAL]
-   -O[UTPUT]="file-name"
-   -P[ID]=pid
-   -R[EGION]=region-name | -R[EGION] region-name
-   -W[AIT]
+   [-]-A[LL]
+   [-]-L[OCK]
+   [-]-[NO]C[[RIT]ICAL]
+   [-]-O[UTPUT]="file-name"
+   [-]-P[ID]=pid
+   [-]-R[EGION]=region-name | [-]-R[EGION] region-name
+   [-]-W[AIT]
 
 * By default, SHOW displays -A[LL].
 
@@ -451,9 +451,9 @@ The optional qualifiers are:
 .. note::
    GT.CM is an RPC-like way of remotely accessing a YottaDB database.
 
-~~~~~
--ALL
-~~~~~
+~~~~~~~
+[-]-ALL
+~~~~~~~
 
 Specifies all current LOCKs.
 
@@ -467,9 +467,9 @@ Specifies all current LOCKs.
 
 .. _show-lock:
 
-~~~~~~~~~~~~~~~~~~~~~~
--L[OCK]=resource_name
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-L[OCK]=resource_name
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 resource_name specifies a single lock.
 
@@ -481,7 +481,7 @@ resource_name specifies a single lock.
 
 .. code-block:: none
 
-   -[NO]C[[RIT]ICAL]
+   [-]-[NO]C[[RIT]ICAL]
 
 Allows the SHOW command to work even if another process is holding a critical section.
 
@@ -491,9 +491,9 @@ Allows the SHOW command to work even if another process is holding a critical se
 
 .. _show-output:
 
-~~~~~~~~~~~~~~~~~~~~~~
--O[UTPUT]="file-name"
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-O[UTPUT]="file-name"
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Directs the reporting of all specified LOCKs to a file.
 
@@ -505,9 +505,9 @@ Directs the reporting of all specified LOCKs to a file.
 
 .. _show-pid:
 
-~~~~~~~~~~~
--P[ID]=pid
-~~~~~~~~~~~
+~~~~~~~~~~~~~
+[-]-P[ID]=pid
+~~~~~~~~~~~~~
 
 Specifies the process identification number that holds a LOCK on a resource name.
 
@@ -521,9 +521,9 @@ Specifies the process identification number that holds a LOCK on a resource name
 
 .. _show-region:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--R[EGION]=region-name | -R[EGION] region-name
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[-]-R[EGION]=region-name | [-]-R[EGION] region-name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the region that holds the locked resource names. The region-name is case-insensitive.
 
@@ -533,9 +533,9 @@ Specifies the region that holds the locked resource names. The region-name is ca
 
 * By default, SHOW displays the LOCKs for all regions.
 
-~~~~~~~~
--W[AIT]
-~~~~~~~~
+~~~~~~~~~~
+[-]-W[AIT]
+~~~~~~~~~~
 
 Displays the LOCK resource name and the process state information of all processes waiting for the LOCK to be granted.
 
@@ -685,24 +685,24 @@ This command creates a sub-process for access to the current shell without termi
 Summary
 --------------------
 
-+------------------------------+----------------------------------------------------------+---------------------------------------------------------+
-| Command                      | Qualifier                                                | Comments                                                |
-+==============================+==========================================================+=========================================================+
-| C[LEAR]                      | -ALL, -L[OCK], -[NO]EXACT, -[NO]I[NTERACTIVE],           | Use CLEAR with care and planning.                       |
-|                              | -O[UTPUT]=file-name, -P[ID]=pid,                         |                                                         |
-|                              | -R[EGION]=name \| -R[EGION] name                         |                                                         |
-|                              |                                                          |                                                         |
-+------------------------------+----------------------------------------------------------+---------------------------------------------------------+
-| E[XIT]                       | None                                                     | \-                                                      |
-+------------------------------+----------------------------------------------------------+---------------------------------------------------------+
-| H[ELP]                       | [option]                                                 | \-                                                      |
-+------------------------------+----------------------------------------------------------+---------------------------------------------------------+
-| SH[OW]                       | -ALL, -L[OCK], -[NO]CRIT[ICAL], -N[OINTERACTIVE],        | \-                                                      |
-|                              | -O[UTPUT]=file-name, -P[ID]=pid,                         |                                                         |
-|                              | -R[EGION]=name \| -R[EGION] name, -W[AIT]                |                                                         |
-+------------------------------+----------------------------------------------------------+---------------------------------------------------------+
-| SP[AWN]                      | none                                                     | shellcommand                                            |
-+------------------------------+----------------------------------------------------------+---------------------------------------------------------+
++------------------------------+---------------------------------------------------------------+---------------------------------------------------------+
+| Command                      | Qualifier                                                     | Comments                                                |
++==============================+===============================================================+=========================================================+
+| C[LEAR]                      | [-]-ALL, [-]-L[OCK], [-]-[NO]EXACT, [-]-[NO]I[NTERACTIVE],    | Use CLEAR with care and planning.                       |
+|                              | [-]-O[UTPUT]=file-name, [-]-P[ID]=pid,                        |                                                         |
+|                              | [-]-R[EGION]=name \| [-]-R[EGION] name                        |                                                         |
+|                              |                                                               |                                                         |
++------------------------------+---------------------------------------------------------------+---------------------------------------------------------+
+| E[XIT]                       | None                                                          | \-                                                      |
++------------------------------+---------------------------------------------------------------+---------------------------------------------------------+
+| H[ELP]                       | [option]                                                      | \-                                                      |
++------------------------------+---------------------------------------------------------------+---------------------------------------------------------+
+| SH[OW]                       | [-]-ALL, [-]-L[OCK], [-]-[NO]CRIT[ICAL], [-]-N[OINTERACTIVE], | \-                                                      |
+|                              | [-]-O[UTPUT]=file-name, [-]-P[ID]=pid,                        |                                                         |
+|                              | [-]-R[EGION]=name \| [-]-R[EGION] name, [-]-W[AIT]            |                                                         |
++------------------------------+---------------------------------------------------------------+---------------------------------------------------------+
+| SP[AWN]                      | none                                                          | shellcommand                                            |
++------------------------------+---------------------------------------------------------------+---------------------------------------------------------+
 
 -------------------------------
 LKE Exercises
