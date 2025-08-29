@@ -1017,44 +1017,42 @@ $ZMAXTPTIME takes its value from the environment variable ydb_maxtptime. If ydb_
 When a $ZMAXTPTIME expires, YottaDB executes the $ETRAP/$ZTRAP exception handler currently in effect.
 
 .. note::
-   Negative values of $ZMAXTPTIME are also treated as "no timeout". Timeouts apply only to the outermost transaction, that is, $ZMAXTPTIME has no effect when TSTART is nested within another transaction.
+   Negative values of $ZMAXTPTIME are also treated as "no timeout". Timeouts apply to the outermost transaction, that is, when transactions are nested and a timeout specified by $ZMAXTPTIME occurs, nested transactions are all rolled back to the outermost transaction.
 
 Example:
 
 .. code-block:: none
 
    Test;testing TP timeouts
-     set $ZMAXTPTIME=6,^X=0,^Y=0,^Z=0
-     write "Start with $ZMAXTPTIME=",$ZMAXTPTIME,":",!
-     for sleep=3:2:9 do
-     . set retlvl=$zlevel
-     . do longtran;ztrap on longtran
-     ;continues execution
-     ;on next line
-     . write "(^X,^Y)=(",^X,",",^Y,")",!
-     write !,"Done TP Timeout test.",!
-     quit
+    set $ZMAXTPTIME=6,^X=0,^Y=0,^Z=0
+    write "Start with $ZMAXTPTIME=",$ZMAXTPTIME,":"
+    for sleep=3:2:9 do
+    . set retlvl=$zlevel
+    . do longtran;ztrap on longtran
+    . ;continues execution
+    . ;on next line
+    write !,"Done TP Timeout test.",!
+    quit
    longtran ;I/O in TP doesn't get rolled back
-     set $etrap=" goto err"
-     tstart ():serial
-     set ^X=1+^X
-     write !,"^X=",^X,",will set ^Y to ",sleep
-     write " in ",sleep," seconds..."
-     hang sleep
-     set ^Y=sleep
-     write "^Y=",^Y
-     tcommit
-     write "...committed.",!
-     quit
+    set $etrap=" goto err"
+    tstart
+    set ^X=1+^X
+    write !,"^X=",^X,",will set ^Y to ",sleep
+    write " in ",sleep," seconds..."
+    hang sleep
+    set ^Y=sleep
+    write "^Y=",^Y
+    tcommit
+    write "...committed."
+    quit
    err;
-     write !,"In $ETRAP handler. Error was: "
-     write !," ",$zstatus
-     if $TLEVEL do ;test allows handler use outside of TP
-     . trollback
-     . write "Rolled back transaction."
-     write !
-     set $ecode=""
-     zgoto retlvl
+    write !,"In $ETRAP handler. Error was:"
+    write !," ",$zstatus
+    if $TLEVEL do ;test allows handler use outside of TP
+    . trollback
+    . write "Rolled back transaction."
+    set $ecode=""
+    zgoto retlvl
 
 Results:
 
@@ -1065,10 +1063,10 @@ Results:
    ^X=2,will set ^Y to 5 in 5 seconds...^Y=5...committed.
    ^X=3,will set ^Y to 7 in 7 seconds...
    In $ETRAP handler. Error was:
-   150377322,longtran+7^tptime,%YDB-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
+    150377322,longtran+6^tptime,%YDB-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
    ^X=3,will set ^Y to 9 in 9 seconds...
    In $ETRAP handler. Error was:
-   150377322,longtran+7^tptime,%YDB-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
+    150377322,longtran+6^tptime,%YDB-E-TPTIMEOUT, Transaction timeoutRolled back transaction.
    Done TP Timeout test.
 
 --------------
