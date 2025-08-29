@@ -1625,6 +1625,8 @@ The format of the TROLLBACK command is:
 
 For an example of the use of the TROLLBACK command, see `Chapter 5: "General Language Features of M" <./langfeat.html>`_.
 
+While the most common use of TROLLBACK is to terminate transactions in case of errors, it is useful for testing and "what-if" scenarios, since it can be used to exercise application code that updates global variables. The global variable updates are visible to code within the process, but not to other processes. This is accomplished by invoking or driving application code from within a TSTART executed by the code driving the test or evaluating the "what-if" scenario. Once the test or "what-if" scenario is complete, the outer driver code executes a TROLLBACK, leaving the database unmodified by the code.
+
 ------------------
 TStart
 ------------------

@@ -91,6 +91,8 @@ YDB_TP_ROLLBACK
 
 Return code to YottaDB from an application function that implements a transaction, and in turn returned to the caller indicating that the transaction was not committed.
 
+While the most common use of YDB_TP_TROLLBACK is to terminate transactions in case of errors, it is useful for testing and "what-if" scenarios, since it can be used to exercise application code that updates global variables. The global variable updates are visible to code within the process, but not to other processes. This is accomplished by invoking or driving application code from within a transaction initiated by the code driving the test or evaluating the "what-if" scenario. Once the test or "what-if" scenario is complete, the outer driver code returns with a YDB_TP_ROLLBACK, leaving the database unmodified by the code.
+
 .. _err-ret-codes:
 
 ~~~~~~~~~~~~~~~~~~
