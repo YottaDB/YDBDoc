@@ -402,6 +402,12 @@ To leave GDE:
 
      GDE> QUIT
 
+* Use CTRL+C, which acts similarly to QUIT. 
+
+  .. code-block:: bash
+
+      GDE> ^C
+
 .. _guidelines-for-mapping:
 
 +++++++++++++++++++++++
