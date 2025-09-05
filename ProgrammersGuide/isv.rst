@@ -775,7 +775,7 @@ To facilitate application migration to YottaDB from other M implementations (for
 $ZHOROLOG
 -----------------
 
-$ZH[OROLOG] returns 4 comma-separated pieces (for example, "63638,39194,258602,14400"). The first two pieces are identical to the two pieces of $HOROLOG. $ZHOROLOG is a drop-in replacement for $HOROLOG in all application code of the form $PIECE($HOROLOG,",",...). For example, $ZHOROLOG can be used as the first argument of $ZDATE(). The third piece is the number of microseconds in the current second. The accuracy of the third piece is subject to the precision of the system clock. The fourth piece is an offset in seconds to UTC. For any valid UTC time offset, the fourth piece is a number between -43200 (for UTC-12:00) and +50400 (for UTC+14:00). The value of the fourth piece remains constant all through the year except for those places that observe daylight saving time. To obtain the $HOROLOG representation of UTC, add the fourth piece to the second piece of $ZHOROLOG and proceed as follows:
+$ZH[OROLOG] returns 4 comma-separated pieces (for example, "63638,39194,258602,14400"). The first two pieces are identical to the two pieces of $HOROLOG. $ZHOROLOG is a drop-in replacement for $HOROLOG in all application code of the form $PIECE($HOROLOG,",",...). For example, $ZHOROLOG can be used as the first argument of $ZDATE(). The third piece is the number of microseconds in the current second. The accuracy of the third piece is subject to the precision of the system clock. The fourth piece is an offset in seconds to UTC, with positive values for time zones west of the `prime meridian <https://en.wikipedia.org/wiki/Prime_meridian>`_ and negative values for time zones east of the prime meridian. For any valid UTC time offset, the fourth piece is a number between 43200 (for TZ="Etc/GMT+12") and -50400 (for TZ="Pacific/Kiritimati"). The value of the fourth piece remains constant all through the year except for those places that observe daylight saving time. To obtain the $HOROLOG representation of UTC, subtract the fourth piece from the second piece of $ZHOROLOG and proceed as follows:
 
 * If the result is a negative number, subtract one from the first piece and add 86400 (number of seconds in a day) to the second piece.
 * If the result is a positive number greater than 86400, add one to the first piece and subtract 86400 from the second piece.
@@ -817,6 +817,8 @@ Example:
    Time in UTC APR 10,2018 04:20:29 PM
    YDB>
 
+.. note::
+   The offset from UTC may be counterintuitive. For example Phoenix is seven hours behind UTC, but $ZHOROLOG shows its offset as 25200, whereas Bangkok is seven hours ahead of UTC, but $ZHOROLOG shows its offset as -25200.
 
 --------------------
 $ZININTERRUPT

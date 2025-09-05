@@ -744,8 +744,8 @@ Create a directory with a name like :code:`jnlex` (for journaling exercises) or 
 .. code-block:: bash
 
    ydbuser@ydbdev:~/jnlex$ cat jnlex_env
-   export ydb_dist=/usr/local/etc/
-   export ydb_routines=". $ydb_dist/libyottadbutil.so"
+   export ydb_dist=$(dirname $(realpath /usr/local/bin/ydb))
+   export ydb_routines=". $ydb_dist/utf8/libyottadbutil.so"
    alias yottadb=$ydb_dist/yottadb
    alias mupip=$ydb_dist/mupip
    export ydb_dir=$HOME/jnlex
