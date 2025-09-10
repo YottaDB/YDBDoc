@@ -1177,7 +1177,7 @@ The format for the $RANDOM function is:
 $RANDOM() returns an integer between zero (0) and one less than the argument. $RANDOM() provides a tool for generating pseudo-random patterns useful in testing or statistical calculations. You should ensure that the statistical properties of $RANDOM() are adequate for your application needs.
 
 .. note::
-   $RANDOM() should never be used when cryptographic quality random numbers are needed.
+   $RANDOM() uses the xoshiro256++ algorithm (see `Scrambled Linear Pseudorandom Number Generators <https://vigna.di.unimi.it/ftp/papers/ScrambledLinear.pdf>`_ for details). $RANDOM() should never be used when cryptographic quality random numbers are needed.
 
 ++++++++++++++++++++++++++++
 Examples of $RANDOM()
