@@ -1839,7 +1839,7 @@ For SET of $ZTIMEOUT:
 
 Interrupts are only XECUTEd at safe points, such as the beginning of a line, when waiting for a command with a timeout, or when starting a FOR iteration. When an interrupt occurs, if the vector is not valid M code (an empty string vector is not valid M code), YottaDB invokes the current $ETRAP or $ZTRAP. YottaDB rejects an attempted KILL of $ZTIMeout with the `VAREXPECTED <../MessageRecovery/errors.html#varexpected>`_ error and an attempted NEW of $ZTIMeout with the `SVNONEW <../MessageRecovery/errors.html#svnonew>`_ error.
 
-When accessed, the timeout in $ZTIMEOUT is the remaining time of any pending interrupt, and zero otherwise.
+When accessed, the timeout in $ZTIMEOUT is the remaining time of any pending interrupt, and zero otherwise. Since $ZTIMEOUT is a string intrinsic variable, ``+$ZPIECE($ZTIMEOUT,":",1)`` returns the remaining timeout as a canonic number.
 
 Example:
 
