@@ -824,7 +824,7 @@ Example:
 .. note::
    The offset from UTC may be counterintuitive. For example Phoenix is seven hours behind UTC, but $ZHOROLOG shows its offset as 25200, whereas Bangkok is seven hours ahead of UTC, but $ZHOROLOG shows its offset as -25200.
 
-=======
+
 --------------------
 $ZICUVER
 --------------------
