@@ -592,8 +592,6 @@ The journal-option-list contains keywords separated with commas (,) enclosed in 
 
 * JOURNAL enables journaling for a database file. JOURNAL takes one or more arguments in a journal-option-list. As long as journaling is ENABLED and turned ON at the end of the command, SET JOURNAL always creates a new version of the specified journal file(s).
 
-* NOJOURNAL specifies that the database does not allow journaling, or that it disables journaling for a database where journaling is active.
-
 * Enable BEFORE_IMAGE or NOBEFORE_IMAGE journaling for a database file.
 
 * As long as journaling is ENABLED and turned ON at the end of the command, SET JOURNAL always creates a new version of the specified journal file(s).
