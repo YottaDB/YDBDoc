@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -17,6 +17,8 @@
 ================================
 Programming in Go
 ================================
+
+Refer to `YDBGo v2 <https://pkg.go.dev/lang.yottadb.com/go/yottadb/v2>`_ for official v2 package documentation. The following is for YDBGo v1.
 
 .. contents::
    :depth: 5
@@ -46,7 +48,9 @@ As Go implementations are inherently multi-threaded, where the :ref:`C Simple AP
 Go Quick Start
 ---------------
 
-The YottaDB Go wrapper requires a minimum YottaDB release of r1.30 and is tested with a minimum Go version of 1.18. If the Golang packages on your operating system are older, and the Go wrapper does not work, please obtain and install a newer Golang implementation.
+Refer to `YDBGo v2 <https://pkg.go.dev/lang.yottadb.com/go/yottadb/v2>`_ for official v2 package documentation. The following is for YDBGo v1.
+
+The YottaDB Go wrapper v1 requires a minimum YottaDB release of r1.30 and is tested with a minimum Go version of 1.18. If the Golang packages on your operating system are older, and the Go wrapper does not work, please obtain and install a newer Golang implementation.
 
 The :ref:`go-quick-start` assumes that YottaDB has already been installed as described in the :ref:`mlpg-quick-start` section. After completing step 1 (*Installing YottaDB*), you can immediately start using YottaDB with a Go application that uses YottaDB. To create a Go application that uses YottaDB, see below.
 
