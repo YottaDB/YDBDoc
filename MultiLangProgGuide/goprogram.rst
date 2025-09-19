@@ -786,7 +786,7 @@ This method wraps :ref:`ydb-zwr2str-s-st-fn` and is the inverse of `Go BufferT S
 
 - If the underlying structures have not yet been allocated, return the :ref:`structunallocd` error.
 - If :code:`len_alloc` is not large enough, set :code:`len_used` to the required length, and return an INVSTRLEN error. In this case, :code:`len_used` will be greater than :code:`len_alloc` until corrected by application code.
-- If :code:`str` has errors and is not in valid :ref:`zwrite-format`, set :code:`len_used` to zero, and return the error code returned by :ref:`ydb-zwr2str-s-st-fn` e.g., INVZWRITECHAR.
+- If :code:`str` is not in valid :ref:`zwrite-format`, set :code:`len_used` to zero, and return :code:`YDB_OK`.
 - Otherwise, set the buffer referenced by :code:`buf_addr` to the unencoded string, set :code:`len_used` to the length.
 
 +++++++++++++++++++++++++
@@ -1382,4 +1382,4 @@ The above works well in application processes that terminate normally through th
 
 .. note::
 
-   Fatal error handlers in the YottaDB runtime system use a :code:`panic()` call to unwind the process through the main program, which calls :code:`yottadb.Exit()`. While this does not guarantee that :code:`yottadb.Exit()` is called in the highly concurrent Go runtime environment, it makes that call likely.
+   Fatal error handlers in the YottaDB runtime system use a :code:`panic()` call to unwind the process through the main program, which allows it to run a :code:`yottadb.Exit()` function that the programmer has deferred. However, spawned goroutines that panic will still exit the program immediately without going through the main routine's exit function. For this reason all goroutines should specifically recover from panics and run yottadb.Exit() before reissuing any panic; otherwise MUPIP RUNDOWN will need to be invoked whenever a goroutine panics.
