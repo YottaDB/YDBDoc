@@ -875,7 +875,7 @@ Example:
 .. code-block:: none
 
    set acct="",cntt=""
-   for  fet acct=$order(^acct(acct)) quit:acct=""  do
+   for  set acct=$order(^acct(acct)) quit:acct=""  do
    . for  set cntt=$order(^acct(acct,cntt)) do WORK
    quit
 
@@ -1611,8 +1611,9 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 | "GVNEXT"         | region           | Name of the next database region after the given one in alphabetical order (or M collation sequence); "" for region starts with the first region. A return value of |
 |                  |                  | "" means that the global directory defines no additional regions.                                                                                                   |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| "GVSTAT"         | region           | A read-only process cannot update the database including the database file header where GVSTATS are stored. Another process with write access to a database, such as|
-|                  |                  | MUPIP RUNDOWN, can flush its read statistics from the associated shared memory to GVSTATS.                                                                          |
+| "GVSTAT"         | region           | Database statistics for all processes as stored in the database file header. A read-only process cannot update the database including the database file header      |
+|                  |                  | where GVSTATS are stored. Another process with write access to a database, such as MUPIP RUNDOWN, can flush its read statistics from the associated shared memory   |
+|                  |                  | to GVSTATS.                                                                                                                                                         |
 +------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "ICHITS"         | none             | Number of indirection cache hits since YottaDB process startup. Indirection cache is a pool of compiled expressions that YottaDB maintains for indirection          |
 |                  |                  | and XECUTE.                                                                                                                                                         |
