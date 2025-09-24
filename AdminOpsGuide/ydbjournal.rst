@@ -685,7 +685,7 @@ Specifies the amount of memory used to buffer journal file output.
 
 MUPIP requires standalone access to the database to modify BUFFER_SIZE. Therefore, YottaDB restricts the use of the BUFFER_SIZE option to change the current journal-buffer-size as part of an online switch of the journal files.
 
-The default value is 2312 blocks. The minimum BUFFER_SIZE is 2307 blocks. The maximum BUFFER_SIZE is 1Mi 512-byte blocks which means that the maximum buffer you can set for your journal file output is 16GiB.
+The default value is 2312 blocks. The minimum BUFFER_SIZE is 2307 blocks. The maximum BUFFER_SIZE is 1Mi 512-byte blocks which means that the maximum buffer you can set for your journal file output is 512MiB.
 
 ^^^^^^^
 DISABLE
