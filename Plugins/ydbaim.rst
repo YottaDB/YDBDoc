@@ -282,6 +282,14 @@ For example, with the ^USPresidents global variable mentioned earlier, the node 
 
 A value of 2 for :code:`type`, informs AIM that the schema for the global nodes is an ordinary schema; a value of 3, informs AIM that the global nodes have a Fileman schema.
 
+.. _comment:
+
+------------
+Comments
+------------
+
+Since an application can have many cross-references, to facilitate connecting a cross reference with the motivation for that cross reference, the :ref:`xrefdata` and :ref:`xrefsub` functions have an optional ``comment`` parameter. Any value passed to the function is stored in the metadata about the cross reference.
+
 ------------
 Functions
 ------------
@@ -298,7 +306,7 @@ The format for XREFDATA() is as follows:
 
 .. code:: none
 
-  $$XREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force)
+  $$XREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force,comment)
 
 where,
 
@@ -327,6 +335,8 @@ where,
 * **type**, defaulting to the empty string, specifies the application schema for which AIM is being asked to compute and maintain metadata.
 
 * **force**, defaults to the empty string. A value of 1 specifies that AIM cross references should prepend a hash (:code:`#`) to the data being cross referenced. If **type** is 1 or 3, **force** specifies either string collation or a transformation function for an application global using the Fileman schema; if **type** is 2, **force** specifies a transformation function. See :ref:`forcing`.
+
+* **comment**, if any value is passed by the caller, results in that value stored in the metadata of the cross reference.
 
 The relationship between **type** and **force** is shown below. Combinations of values other than those shown are reserved.
 
@@ -362,7 +372,7 @@ Metadata about the cross reference itself is stored in nodes of the cross-refere
   *  \(8) ZKILL trigger for this cross reference.
   *  \(9) 1 means that omitting fixed subscripts was requested, whether or not any subscripts were actually omitted.
   *  \(10) if 1 or 2 means that statistics are maintained, as specified by the ``stat`` parameter.
-  *  \(11) unused, but reserved.
+  *  \(11) stores any value that is passed in the ``comment`` parameter.
   *  \(12) & up - triggers for KILLs of higher level nodes.
 
 Applications can read and use the above metadata, but should not attempt to alter it. Changes can result in unpredictable and/or undesirable behavior.
@@ -379,7 +389,7 @@ The format for XREFDATA() is as follows:
 
 .. code:: none
 
-   XREFSUB(gbl,xsub,snum,nmonly,omitfix,stat,type,force)
+   XREFSUB(gbl,xsub,snum,nmonly,omitfix,stat,type,force,comment)
 
 where
 
@@ -387,10 +397,11 @@ where
 
 * **snum** uses the same syntax as **pnum** for XREFDATA() to specify subscripts that should be cross-referenced. Unlike **pnum**, it is not optional. Any subscript that is specified by **snum** must be part of **xsub**, e.g., if **snum** specifies cross referencing of the third subscript, **xsub** must specify a global variable with at least 3 subscripts.
 
-**type** defaults to the empty string, which is also equivalent to 0. A value of 2 indicates that **force** is a transformation function. Unlike XREFDATA(), XREFSUB() does not implement special logic for Fileman subscripts.
+* **type** defaults to the empty string, which is also equivalent to 0. A value of 2 indicates that **force** is a transformation function. Unlike XREFDATA(), XREFSUB() does not implement special logic for Fileman subscripts.
 
-**force** defaults to the empty string, which is equivalent to 0. A value of 1 when **type** is defaulted or zero indicates that AIM cross references should prepend a hash (``#``) to the cross reference, which forces string collation even for numbers (e.g., US zip codes). If **type** is 2, **force** should be a string specifying a transformation function for cross references (see :ref:`forcing`).
+* **force** defaults to the empty string, which is equivalent to 0. A value of 1 when **type** is defaulted or zero indicates that AIM cross references should prepend a hash (``#``) to the cross reference, which forces string collation even for numbers (e.g., US zip codes). If **type** is 2, **force** should be a string specifying a transformation function for cross references (see :ref:`forcing`).
 
+* **comment**, if any value is passed by the caller, results in that value stored in the metadata of the cross reference.
 
 The relationship between **type** and **force** is shown below. Combinations of values other than those shown are reserved.
 
@@ -426,7 +437,7 @@ Metadata about the cross reference itself is stored in nodes of the cross-refere
   *  \(8) ZKILL trigger for this cross reference.
   *  \(9) 1 means that omitting fixed subscripts was requested, whether or not any subscripts were actually omitted.
   *  \(10) if 1 or 2 means that statistics are maintained, as specified by the ``stat`` parameter.
-  *  \(11) unused, but reserved.
+  *  \(11) stores any value that is passed in the ``comment`` parameter.
   *  \(12) & up - triggers for KILLs of higher level nodes.
 
 Applications can read and use the above metadata, but should not attempt to alter it. Changes can result in unpredictable and/or undesirable behavior.
