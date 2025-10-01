@@ -7441,16 +7441,6 @@ Run Time Error: This indicates that a JOB command did not complete successfully.
 Action: Review the accompanying message(s) for additional information. If a STARTUP jobparameter is specified, make sure that the file is accessible and has the desired content.
 
 
--------------------
-JOBLABOFF
--------------------
-
-JOBLABOFF, Label and offset not found in created process
-
-Run Time Error: This indicates that a JOB command specified an entry reference that could not be located in the image used by the new job.
-
-Action: Verify that the image being JOBbed is properly linked. If the image has been changed since it was last LINKed, determine whether the new job has access to the files necessary to ZLINK the changes. You can also LINK the image to include the changes.
-
 ---------------------
 JOBLVN2LONG
 ---------------------
@@ -12738,6 +12728,16 @@ RSYNCSTRMVAL, RSYNC_STRM qualifier can only take on a value from 0 to 15
 MUPIP Error: Issued by a MUPIP JOURNAL -ROLLBACK -RESYNC command which also specifies -RSYNC_STRM with a stream number outside of the range of 0 through 15.
 
 Action: Specify a stream number within the allowed range.
+
+-------------------
+RTNLABOFF
+-------------------
+
+RTNLABOFF, Label xxxx and/or offset yyyy not found in routine rrrr
+
+Run Time Error: This indicates that a :code:`mumps -run` or a call-in (e.g. :code:`ydb_ci()`) or a :code:`job` command specified a label and/or offset at least one of which could not be located in the routine rrrr.
+
+Action: Specify a valid label and/or offset for the routine.
 
 --------------------
 RTNNAME

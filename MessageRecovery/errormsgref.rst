@@ -49,7 +49,7 @@ Standard Error Codes
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
 | M12, Invalid _lineref_ (negative offset)                   | GVNAKED, Illegal naked global reference                                            |
 +------------------------------------------------------------+------------------------------------------------------------------------------------+
-| M13, Invalid _lineref_ (label not found)                   | * JOBLABOFF, Label and offset not found in created process                         |
+| M13, Invalid _lineref_ (label not found)                   | * RTNLABOFF, Label xxxx and/or offset yyyy not found in routine rrrr               |
 |                                                            | * LABELMISSING, Label referenced but not defined : xxxx                            |
 |                                                            | * LABELNOTFND, GOTO referenced a label that does not exist                         |
 |                                                            | * LABELUNKNOWN, Label referenced but not defined                                   |
@@ -1771,8 +1771,6 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373114 | JOBFAIL, JOB command failure                                                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 150373122 | JOBLABOFF, Label and offset not found in created process                                                                                                               |
-+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383642 | JOBLVN2LONG, The zwrite representation of a local variable transferred to a JOB'd process is too long. The zwrite representation cannot exceed MMMM. Encountered size: |
 |           | LLLL                                                                                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2815,6 +2813,8 @@ Some messages can have more than one number,, depending on where they are issued
 | 150382562 | RSYNCSTRMSUPPLONLY, RSYNC_STRM qualifier only supported for Supplementary Instances                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382322 | RSYNCSTRMVAL, RSYNC_STRM qualifier can only take on a value from 0 to 15                                                                                               |
++-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 150373122 | RTNLABOFF, Label xxxx and/or offset yyyy not found in routine rrrr                                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150373650 | RTNNAME, Routine name expected here                                                                                                                                    |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
