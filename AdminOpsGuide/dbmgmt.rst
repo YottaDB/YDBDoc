@@ -2227,6 +2227,8 @@ The format of the STOP command is:
 
 * To STOP a process belonging to its own account, a process requires no privileges. To STOP a process belonging to another account, MUPIP STOP must execute as root.
 
+* The process that received a MUPIP STOP signal terminates with exit code 241.
+
 .. note::
    On receipt of a MUPIP STOP signal, a YottaDB process cleans up its participation in managing the database before shutting down. On receipt of three MUPIP STOP signals in a row, a YottaDB process shuts down forthwith without cleaning up - the equivalent of a :code:`kill -9` signal. This can result in structural database damage, because YottaDB does not have sufficient control of what happens in response to an immediate process termination to protect against database damage under all circumstances. In all cases, on receipt of a MUPIP STOP, a process will eventually terminate once it gets the resources needed to clean up. Use three MUPIP STOPs in a row only as a last resort, and when you do, perform a MUPIP INTEG at your earliest opportunity thereafter to check for database structural damage, and repair any damage following the procedures in `Chapter 11 (Maintaining Database Integrity) <./integrity.html>`_.You may never have to perform a MUPIP STOP if your application is designed in a way that it reduces or eliminates the probability of a process getting in the final try of a transaction. For more information, refer to the `Programmers Guide <../ProgrammersGuide/index.html>`_.
 
