@@ -27,6 +27,7 @@ Multi-Language Programmer's Guide
    goprogram
    jsprogram
    luaprogram
+   nimprogram
    perlprogram
    phpprogram
    pythonprogram
