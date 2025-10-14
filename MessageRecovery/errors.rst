@@ -8936,16 +8936,6 @@ MUPIP Error: This indicates that MUPIP encountered an error, which prevented the
 Action: Review the accompanying message(s) for additional information to identify the cause.
 
 ----------------
-MUNOSTRMBKUP
-----------------
-
-MUNOSTRMBKUP, Database xxxx has a block size larger than yyyy and thus cannot use stream (incremental) backup
-
-MUPIP Warning: YottaDB does not support bytestream (a.k.a incremental) backup of a database file that is created with a GDS block size larger than xxxx. MUPIP CREATE issues MUNOSTRMBKUP warning when creating a database file with a block size that exceeds the limit. MUPIP BACKUP -BYTESTREAM issues MUNOSTRMBKUP error and skips backing up a file that has block size that exceeds the limit. NOTE: Comprehensive BACKUP does not impose any limit on the GDS block size of the database file being backed up.
-
-Action: Create the database file with a block size that does not exceed the limit.
-
-----------------
 MUNOTALLINTEG
 ----------------
 
