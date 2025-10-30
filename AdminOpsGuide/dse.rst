@@ -1667,7 +1667,7 @@ This command displays an output like the following:
      StatsDB Allocation                           2050
      Data Reserved Bytes                             0  Index Reserved Bytes                     0
      Max conc proc time                     1745872764  Max Concurrent processes                 2
-     Reorg Sleep Nanoseconds                         0
+     Reorg Sleep Nanoseconds                         0  Mutex Manager Type          ADAPTIVE (YDB)
 
 Note that certain fileheader elements appear depending on the current state of database. For example, if Journaling is not enabled in the database, DSE does not display Journal data element fields.
 
