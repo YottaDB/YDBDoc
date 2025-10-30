@@ -3785,19 +3785,21 @@ If G occurs in the list, the statistics are displayed in the following order in 
 |  CFE           | Critical section Failed (blocked) acquisition total caused by Epochs. It is incremented a single time for each observed              |
 |                | instance of contention.                                                                                                              |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  CFS           | Square of CFT.                                                                                                                       |
+|  CFS           | This mnemonic is not maintained and contains zeros.                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  CFT           | Critical section Failed (blocked) acquisition Total. It is incremented a single time for each observed instance of contention.       |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  CQS           | This mnemonic is not maintained and contains zeros.                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  CQT           | This mnemonic is not maintained and contains zeros.                                                                                  |
+|  CQT           | This is maintained only if MUTEX_TYPE is YDB or ADAPTIVE. It is not maintained and contains zeros if MUTEX_TYPE is PTHREAD.          |
+|                | When maintained, this is the number of times a process did a queued sleep while waiting for the database critical section.           |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  CTN           | Current Transaction Number of the database for the last committed read-write transaction (TP and non-TP)                             |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  CYS           | This mnemonic is not maintained and contains zeros.                                                                                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
-|  CYT           | This mnemonic is not maintained and contains zeros.                                                                                  |
+|  CYT           | This is maintained only if MUTEX_TYPE is YDB or ADAPTIVE. It is not maintained and contains zeros if MUTEX_TYPE is PTHREAD.          |
+|                | When maintained, this is the number of times a process did a yield while waiting for the database critical section.                  |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 |  DEX           | # of Database file EXtentions                                                                                                        |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+

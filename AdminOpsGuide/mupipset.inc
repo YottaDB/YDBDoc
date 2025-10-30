@@ -30,7 +30,8 @@ The format of the SET command is:
     [-]-[NO]INST[_FREEZE_ON_ERROR]
     [-]-K[EY_SIZE]=bytes
     [-]-L[OCK_SPACE]=integer
-    [-]-M[UTEX_SLOTS]=integer
+    [-]-MUTEX_S[LOTS]=integer
+    [-]-MUTEX_T[YPE]={ADAPTIVE|YDB|PTHREAD}
     [-]-N[ULL_SUBSCRIPTS]=value
     [-]-[NO]LCK_SHARES_DB_CRIT
     [-]-PA[RTIAL_RECOV_BYPASS]
@@ -272,6 +273,8 @@ On many Linux systems, default kernel parameters may be inadequate for YottaDB g
 
 The mutex hard spin count specifies the number of attempts to grab the mutex lock before initiating a less CPU-intensive wait period. The format of HARD_SPIN_COUNT is:
 
+Note that this qualifier takes effect only if :ref:`mutex_type` is ADAPTIVE or YDB. It has no effect if set to PTHREAD.
+
 .. code-block:: none
 
    [-]-HARD_SPIN_COUNT=integer
@@ -365,11 +368,35 @@ Specifies the number of pages allocated to the management of M locks associated 
 
 Sets the size of a structure that YottaDB uses to manage contention for the principal critical section for a database. Performance issues may occur when there are many processes contending for database access and if this structure cannot accommodate all waiting processes. Therefore, YottaDB recommends setting this value to a minimum of slightly more than the maximum number of concurrent processes you expect to access the database.
 
+Note that this qualifier takes effect only if :ref:`mutex_type` is set to ADAPTIVE or YDB. It has no effect if set to PTHREAD.
+
 The minimum value is 64 and the maximum value is 32768. The default value is 1024. The format of the MUTEX_SLOTS qualifier is:
 
 .. code-block:: none
 
-   [-]-M[UTEX_SLOTS]=integer
+   [-]-MUTEX_S[LOTS]=integer
+
+.. _mutex_type:
+
+^^^^^^^^^^^^^^^
+[-]-MUTEX_TYPE
+^^^^^^^^^^^^^^^
+
+Sets the mutex manager type for the database file/region. This controls how database critical section acquire and release is managed. There are 3 possible values. PTHREAD, YDB and ADAPTIVE. PTHREAD implies the use of `pthread mutex calls <https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html>`_) for locking and unlocking (provided by glibc). YDB implies the use of YottaDB's internal mutex manager (which does a mix of hard spins, yields and sleeps while waiting for the database critical section lock). YDB has been seen to perform better than PTHREAD for a variety of workloads but there are some cases where PTHREAD performs better than YDB. ADAPTIVE tries to get the best of both worlds by switching to YDB or PTHREAD mutex type as appropriate based on the current workload. See `critical-section-performance blog post <https://yottadb.com/critical-section-performance-in-r2-04>`_) for more details.
+
+Changing the mutex manager type does not require standalone access to the database. This means one can switch to different mutex types as appropriate for the current workload.
+
+The database file mutex manager type setting is displayed by DSE DUMP FILEHEADER. In case of YDB or PTHREAD, those are displayed as is by DSE as the current mutex manager type can only be the database file mutex manager setting. But in case of ADAPTIVE, the database starts out with YDB mutex and later switches as needed between YDB and PTHREAD. And so, in the ADAPTIVE case, the user specified setting of ADAPTIVE along with the current mutex manager type in effect (YDB or PTHREAD) is displayed by DSE. So it would display one of :code:`ADAPTIVE (YDB)` or :code:`ADAPTIVE (PTHREAD)` depending on whether YDB or PTHREAD are currently in effect.
+
+While we believe that ADAPTIVE is well suited to typical workloads, you should ascertain for yourself what is best for your workloads. Also note that ADAPTIVE relies on :ref:`set-stats` being turned on (which is the default) to help with deciding when to switch between YDB or PTHREAD mutex types.  If :ref:`set-stats` is turned off (using `-NOSTATS`) or if statistics sharing is turned off for all processes accessing the region (through `VIEW "[NO]STATSHARE" <../ProgrammersGuide/commands.html#view-nostatshare>`_) the setting will remain at its initial value when the database file is first opened (which is :code:`ADAPTIVE (YDB)`). Otherwise switching between :code:`ADAPTIVE (YDB)` and :code:`ADAPTIVE (PTHREAD)` will occur based on those processes which are sharing statistics.
+
+One can also obtain the current mutex manager type for a database file using `PEEKBYNAME <../ProgrammersGuide/utility.html#peekbyname-util>`_). For example, :code:`$$^%PEEKBYNAME("mutex_struct.curr_mutex_type","DEFAULT")` would return the current mutex manager type in effect for the DEFAULT region. It would be one of the following values: 0 if ADAPTIVE(YDB), 1 if ADAPTIVE(PTHREAD), 2 if YDB and 3 if PTHREAD.
+
+The format of the MUTEX_TYPE qualifier is:
+
+.. code-block:: none
+
+   [-]-MUTEX_T[YPE]={ADAPTIVE|YDB|PTHREAD}
 
 ^^^^^^^^^^^^^^^^^^^
 [-]-NULL_SUBSCRIPTS
@@ -498,6 +525,8 @@ Specifies the size to be reserved in each database block. RESERVED_BYTES is gene
 
 Specifies the number of times a process suspends its activity while waiting to obtain critical sections for shared resources, principally those involving databases. The format of the SLEEP_SPIN_COUNT qualifier is:
 
+Note that this qualifier takes effect only if :ref:`mutex_type` is ADAPTIVE or YDB. It has no effect if set to PTHREAD.
+
 .. code-block:: none
 
    [-]-SLEEP_SPIN_COUNT=integer
@@ -523,6 +552,8 @@ Specifies the maximum number of nanoseconds for processes to sleep while waiting
 * The default is zero (0) which causes the process to return control to the OS kernel to be rescheduled with no explicit delay. When the value is non-zero, the process waits for a random value between zero (0) and the maximum value permitted by the mask.
 
 * Except on the advice of your YottaDB support channel, YottaDB recommends leaving the default values unchanged in production environments, until and unless you have data from testing and benchmarking that demonstrates a benefit from a change.
+
+* This qualifier takes effect only if :ref:`mutex_type` is ADAPTIVE or YDB. It has no effect if set to PTHREAD.
 
 .. _set-stats:
 
