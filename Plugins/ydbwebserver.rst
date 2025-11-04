@@ -162,7 +162,7 @@ The following API endpoints are always accessible via the YottaDB Web Server, re
 
 + ``/api/ping``: Returns a JSON object containing the worker process PID ("self") and the server process PID ("server").
 + ``/api/version``: Returns a JSON object containing the YottaDB Web Server version number.
-+ ``/api/auth-mode``: Returns a JSON object containing a Boolean value of ``true`` if the server was started with a user configuration via the ``--auth-stdin`` or ``--auth-file`` options.
++ ``/api/auth-mode``: Returns a JSON object containing two boolean keys `auth` and `env-mode` corresponding to the usage of ``--auth-stdin``/``--auth-file`` and ``--allow-env-mod`` options.
 + ``/api/login``: See the :ref:`authorization` section below.
 + ``/api/logout``: See the :ref:`authorization` section below.
 
@@ -269,6 +269,9 @@ HEAD, DELETE, OPTIONS
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Configuring the YottaDB Web Server environment via HTTP headers
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. note::
+        This functionality is not available by default. It can be enabled by specifying `--allow-env-mod` flag. If you enable this functionality, users can potentially navigate to all files on your machine to which the Web Server has access. The functionality is intended for use in development environements. If you deploy this on production, you should ensure security measures appropriate to your use case.
 
 Some aspects of the YottaDB Web Server environment can be configured using HTTP headers. Specifically:
 
@@ -789,7 +792,7 @@ Testing
 Automated Testing
 +++++++++++++++++
 
-``%ydbwebtest`` is the main testing routine. Note that it requires the `libcurl plugin <https://github.com/shabiel/fis-gtm-plugins/tree/master/libcurl>`_.
+``%ydbwebtest`` is the main testing routine.
 
 The testing system requires some set-up; it's easiest to do it via the Dockerfile like this:
 
