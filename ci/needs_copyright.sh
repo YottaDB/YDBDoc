@@ -38,7 +38,7 @@ fi
 
 # Below is a list of specific files that do not have a copyright or are from an
 # external project with a specific copyright so ignore them
-skiplist="COPYING README.md AcculturationGuide/sayhello* AcculturationGuide/xyz*"
+skiplist="COPYING README.md AcculturationGuide/sayhello* AcculturationGuide/xyz* .gitlab/merge_request_templates/Default.md"
 for skipfile in $skiplist; do
 	if [ "$file" = "$skipfile" ]; then
 		exit 1
