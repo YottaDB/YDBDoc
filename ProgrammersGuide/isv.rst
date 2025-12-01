@@ -2097,7 +2097,7 @@ These trigger definitions show different values of $ZTLEVEL when two triggers ar
    +^Acct("ID") -commands=set -xecute="set ^Acct(1)=$ztvalue+1"
    +^Acct(sub=:) -command=set -xecute="set ^X($ztvalue)=sub"
 
-SET ^Acct("ID")=10 invokes both the above triggers in some order and $ZTLEVEL will have the same value in both because these triggers are chained rather than nested.
+SET ^Acct("ID")=10 invokes both the above triggers in some order and $ZTLEVEL will have the same value in both because these triggers are chained rather than nested. However, the first trigger will *also* invoke the second as a nested transaction within which $ZTLEVEL will be incremented by one.
 
 .. _ztname-isv:
 
