@@ -3857,6 +3857,16 @@ All YottaDB Components Error: While checking if there was available space to cre
 Action: Address the reason for the failure and retry.
 
 ----------------------
+DUPLICATENEW
+----------------------
+
+DUPLICATENEW, Variable xxxx appears twice in the same NEW command
+
+Compile Time Warning: This message indicates that a variable was repeated multiple times in a single NEW command.
+
+Action: Check if the duplicate is a misspelling of another variable. If it is, fix the spelling. If not, delete the duplicate as it has no effect on the code.
+
+----------------------
 DUPTN
 ----------------------
 
