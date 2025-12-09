@@ -809,7 +809,7 @@ Return values are:
 
 - :code:`YDB_OK` for a normal return;
 - :code:`YDB_ERR_GVUNDEF` or :code:`YDB_ERR_LVUNDEF` as appropriate if no such (sub)tree exists;
-- :code:`YDB_ERR_INVSTRLEN` if :code:`ret-value->len_alloc` is insufficient for the encoded (sub)tree;
+- :code:`YDB_ERR_JANSSONINVSTRLEN` if :code:`ret-value->len_alloc` is insufficient for the encoded (sub)tree, or the string returned by the Jansson library is larger than UINT_MAX (4294967295 bytes);
 - :code:`YDB_ERR_PARAMINVALID` when ret_value is NULL; or :code:`ret_value->buf_addr` is NULL; or :code:`len_alloc < len_used` for at least 1 subscript in :code:`subsarray`; or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL for at least one subscript in :code:`subsarray`;
 - :code:`ERR_MINNRSUBSCRIPTS` or :code:`ERR_MAXNRSUBSCRIPTS` if subscript counts are less than zero or greater than :code:`YDB_MAX_SUBS`;
 - :code:`ERR_JANSSONDLERROR` if a function from the Jansson library fails to dynamically load;

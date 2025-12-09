@@ -615,6 +615,16 @@ Run Time Error: Some combination of base address, offset, length and/or alignmen
 
 Action: Review the invocation and correct the defective parameter.
 
+---------------
+BADZYENZYDENEST
+---------------
+
+BADZYENZYDENEST, Unsupported nesting of ZYENCODE or ZYDECODE command
+
+Run Time Error: This indicates that an attempt to run either ZYENCODE or ZYDECODE occurred while another ZYENCODE or ZYDECODE was already running within the same process, which is not supported. This can occur when a database trigger (SET or KILL), containing logic that includes ZYENCODE or ZYDECODE, is triggered by a ZYENCODE or ZYDECODE that has done a SET or KILL on a node in a global covered by the trigger.
+
+Action: Examine the database triggers currently in effect, and modify them so that no ZYENCODE or ZYDECODE commands end up being nested at run time.
+
 ------------
 BCKUPBUFLUSH
 ------------
@@ -6489,6 +6499,16 @@ Run Time Error: An error occurred while trying to decode data from JSON, in to a
 
 Action: Refer to the associated details in xxxx for more information.
 
+--------------------
+JANSSONINVSTRLEN
+--------------------
+
+JANSSONINVSTRLEN, Invalid string length xxxx: max yyyy
+
+Run Time Error: This indicates that the SimpleAPI ydb_encode_s() function (possibly called by the ZYENCODE command) encountered a string with a length of xxxx that exceeds the maximum acceptable length yyyy in this context. A ydb_buffer_t struct provided by the caller to ydb_encode_s() is not long enough for the JSON string returned by Jansson, or the length of the string returned from the Jansson JSON library exceeds UINT_MAX (4294967295 bytes).
+
+Action: Modify the ydb_buffer_t to an acceptable length or encode a smaller M array in to a JSON string
+
 ---------------------
 JIUNHNDINT
 ---------------------
@@ -8449,9 +8469,9 @@ Action: Report the entire incident context to your YottaDB support channel.
 MERGEDESC
 ----------------------
 
-MERGEDESC, Merge operation not possible.  xxxx is descendent of yyyy.
+MERGEDESC, MERGE operation not possible. xxxx is a descendant of yyyy.
 
-Run Time Error: This indicates that YottaDB was not able to MERGE xxxx into yyyy or vice versa, because xxxx is a descendent of yyyy. When merging global variables, specifications included extended references - the MERGE command issues a MERGDESC error if any part of the source or target tree, as mapped, is a descendant of the other. In MERGE ^\|"x.gld"\|a(1)=^\|"yottadb.gld"\|a there is no error if yottadb.gld maps ^a to different database files than those to which x.gld maps ^a(1). A MERGDESC error occurs if any part of ^a as mapped by yottadb.gld overlaps any part of ^a(1) as mapped by x.gld.
+Run Time Error: This indicates that YottaDB was not able to MERGE xxxx into yyyy or vice versa, because xxxx is a descendant of yyyy. When merging global variables, specifications included extended references - the MERGE command issues a MERGDESC error if any part of the source or target tree, as mapped, is a descendant of the other. In MERGE ^\|"x.gld"\|a(1)=^\|"yottadb.gld"\|a there is no error if yottadb.gld maps ^a to different database files than those to which x.gld maps ^a(1). A MERGDESC error occurs if any part of ^a as mapped by yottadb.gld overlaps any part of ^a(1) as mapped by x.gld.
 
 Action: Modify the routine to avoid MERGE operation between two variables where one is the descendant of the other.
 
@@ -16297,6 +16317,66 @@ ZWRSPONE, Subscript patterns in ZWRITE are atomic; Invalid delimiter
 Compile Time Error: This indicates that ZWRITE specification contained a pattern match that held or terminated with a punctuation character that was not within a string literal.
 
 Action: Look for missing quotes or typographical errors and make any corrections that are necessary.
+
+------------
+ZYDECODEDESC
+------------
+
+ZYDECODEDESC, ZYDECODE operation not possible: xxxx is a descendant of yyyy
+
+Run Time Error: This indicates that an attempt was made to decode a source M array in to a destination M array that is either an ancestor or a descendant of the source array.
+
+Action: Make sure that the source and destination variables are not a descendant of the other.
+
+---------------
+ZYDECODEINCOMPL
+---------------
+
+ZYDECODEINCOMPL, Error encountered during ZYDECODE; operation may be incomplete
+
+Run Time Information: This indicates that YottaDB was not able to complete the ZYDECODE operation. While executing the ZYDECODE operation, there was an error in the underlying ydb_decode_s() function, or one of the functions that it calls.
+
+Action: Review the accompanying message(s) for additional information.
+
+----------------
+ZYDECODEWRONGCNT
+----------------
+
+ZYDECODEWRONGCNT, Error encountered during ZYDECODE; JSON chunk count in root of source variable must be a positive integer
+
+Run Time Error: This indicates that the source variable containing the JSON string to decode, was not in the proper format; it did not contain a positive integer in its root node.
+
+Action: Make sure the source variable is in the proper format and contains a count of the nodes containing the JSON string in its root node.
+
+------------
+ZYENCODEDESC
+------------
+
+ZYENCODEDESC, ZYENCODE operation not possible: xxxx is a descendant of yyyy
+
+Run Time Error: This indicates that an attempt was made to encode a source M array in to a destination M array that is either an ancestor or a descendant of the source array.
+
+Action: Make sure that the source and destination variables are not a descendant of the other.
+
+---------------
+ZYENCODEINCOMPL
+---------------
+
+ZYENCODEINCOMPL, Error encountered during ZYENCODE; operation may be incomplete
+
+Run Time Information: This indicates that YottaDB was not able to complete the ZYENCODE operation. While executing the ZYENCODE operation, there was an error in the underlying ydb_encode_s() function, or one of the functions that it calls.
+
+Action: Review the accompanying message(s) for additional information.
+
+----------------
+ZYENCODESRCUNDEF
+----------------
+
+ZYENCODESRCUNDEF, Error encountered during ZYENCODE; source variable must not be undefined
+
+Run Time Error: This indicates that the source variable is undefined.
+
+Action: Make sure that the source variable is defined.
 
 -------------------
 ZYSQLNULLNOTVALID
