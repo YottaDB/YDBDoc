@@ -599,6 +599,8 @@ libyottadb.h defines the following types that can be used in Call-Ins.
 .. note::
    Not all of these types are available to developers of third-party wrappers. See note on using `ydb_call_variadic_plist_func() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-call-variadic-plist-func>`_ to invoking ydb_ci() or ydb_cip().
 
+.. _ydb_string_t_def:
+
 .. code-block:: C
 
    typedef struct {
@@ -856,6 +858,8 @@ The variable argument function ydb_cip() is the interface that invokes the speci
 
 ci_name_descriptor has the following structure:
 
+.. _ci_name_descriptor_def:
+
 .. code-block:: C
 
    typedef struct
@@ -867,6 +871,8 @@ ci_name_descriptor has the following structure:
 rtn_name is a C character string indicating the corresponding <lab-ref> entry in the Call-In table.
 
 The :code:`handle` is YottaDB private information that YottaDB expects to be initialized to NULL before the first :code:`ydb_cip()` call using this :code:`ci_name_descriptor` structure. YottaDB initializes this field in the first call-in and uses this cached information on future :code:`ydb_cip()` calls to avoid a lookup of the routine name (compared to a :code:`ydb_ci()` call where routine name lookup happens on all calls). This :code:`handle` must be provided unmodified to YottaDB on subsequent calls. If application code modifies it, it will corrupt the address space of the process, and potentially cause just about any bad behavior that it is possible for the process to cause, including but not limited to process death, database damage and security violations.
+
+The :code:`rtn_name` contains the name of the M routine you want to execute. It is a :ref:`ydb_string_t<ydb_string_t_def>`. Its address field must point to a null-terminated character array representing the name of the M routine. Its length field is ignored by ydb_cip.
 
 The ydb_cip() call must follow the following format:
 
@@ -904,7 +910,7 @@ First argument: tptoken, a unique transaction processing token that refers to th
 
 Second argument: errstr as as `ydb_buffer_t <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-buffer-t>`_ structure.
 
-Third argument: ci_rtn_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
+Third argument: ci_info, a :ref:`ci_name_descriptor<ci_name_descriptor_def>` pointer containing the alias name for the corresponding <lab-ref> entry in the Call-In table. As in ydb_cip, its :code:`handle` should be initialized to NULL before the first ydb_cip_t call and must be provided unmodified to YottaDB on subsequent calls. Its :ref:`ydb_string_t<ydb_string_t_def>` must have a null-terminated C character string in the address field. The length field of the :ref:`ydb_string_t<ydb_string_t_def>` is ignored.
 
 ydb_cip_t() works in the same way and returns the same values as ydb_cip().
 
