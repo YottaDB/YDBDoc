@@ -621,7 +621,7 @@ BADZYENZYDENEST
 
 BADZYENZYDENEST, Unsupported nesting of ZYENCODE or ZYDECODE command
 
-Run Time Error: This indicates that an attempt to run either ZYENCODE or ZYDECODE occurred while another ZYENCODE or ZYDECODE was already running within the same process, which is not supported. This can occur when a database trigger (SET or KILL), containing logic that includes ZYENCODE or ZYDECODE, is triggered by a ZYENCODE or ZYDECODE that has done a SET or KILL on a node in a global covered by the trigger.
+Run Time Error: This indicates that an attempt to run either ZYENCODE or ZYDECODE occurred while another ZYENCODE or ZYDECODE was already running within the same process, which is not supported. This can occur when a database trigger (SET), containing logic that includes ZYENCODE or ZYDECODE, is triggered by a ZYENCODE or ZYDECODE that has done a SET on a node in a global covered by the trigger.
 
 Action: Examine the database triggers currently in effect, and modify them so that no ZYENCODE or ZYDECODE commands end up being nested at run time.
 
