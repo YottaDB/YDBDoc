@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -1053,7 +1053,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384082 | DSKSPCCHK, Error while checking for available disk space to create file DDDD                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028192 | DUPLICATENEW, Variable xxxx appears twice in the same NEW command                                                                                                      |
+| 151028256 | DUPLICATENEW, Variable xxxx appears twice in the same NEW command                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377040 | DUPTN, Duplicate transaction found [TN = xxxx] at offset aaaa in journal file yyyy                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
