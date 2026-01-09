@@ -1,7 +1,7 @@
 <!---
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2024-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2024-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -140,16 +140,17 @@ If you wish to use a database file created or used by r2.04 on a prior release o
 
 YottaDB r2.04 includes the following enhancements and fixes beyond YottaDB [r2.02](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.02).
 
-| ID               | Category  | Summary                                                                                           |
-|------------------|-----------|---------------------------------------------------------------------------------------------------|
-| ([873](#x873))   | Languages | ZSHOW "V" able to display variables at a specific stack levels                                    |
-| ([1056](#x1056)) | Languages | Pre-allocation for call-out (IO, not just O) string parameters                                    |
-| ([1112](#x1112)) | Other     | No GTMSECSHRSRVF and CRITSEMFAIL errors from ydb\_env\_set in certain rare cases                  |
-| ([1128](#x1128)) | Languages | MUPIP STOP terminates DSE/LKE/MUPIP even if they hold a critical section when ydb_readline=1      |
-| ([1129](#x1129)) | Languages | UTF-8 mode $TRANSLATE() works correctly with long search string with multi-byte characters        |
-| ([1133](#x1133)) | Languages | `-machine` compilation option                                                                     |
-| ([1136](#x1136)) | Languages | WRITE /TLS does not set $TEST if no TIMEOUT was specified                                         |
-| ([1138](#x1138)) | Languages | $ZYCOMPILE() intrinsic function checks whether a string is a syntactically correct line of M code |
+| ID               | Category              | Summary                                                                                           |
+|------------------|-----------------------|---------------------------------------------------------------------------------------------------|
+| ([873](#x873))   | Languages             | ZSHOW "V" able to display variables at a specific stack levels                                    |
+| ([1056](#x1056)) | Languages             | Pre-allocation for call-out (IO, not just O) string parameters                                    |
+| ([1112](#x1112)) | Other                 | No GTMSECSHRSRVF and CRITSEMFAIL errors from ydb\_env\_set in certain rare cases                  |
+| ([1128](#x1128)) | Languages             | MUPIP STOP terminates DSE/LKE/MUPIP even if they hold a critical section when ydb_readline=1      |
+| ([1129](#x1129)) | Languages             | UTF-8 mode $TRANSLATE() works correctly with long search string with multi-byte characters        |
+| ([1133](#x1133)) | Languages             | `-machine` compilation option                                                                     |
+| ([1136](#x1136)) | Languages             | WRITE /TLS does not set $TEST if no TIMEOUT was specified                                         |
+| ([1138](#x1138)) | Languages             | $ZYCOMPILE() intrinsic function checks whether a string is a syntactically correct line of M code |
+| ([1202](#x1202)) | System Administration | MUPIP BACKUP ONLINE produces valid backup file if backup and database are on separate filesystems |
 
 <a name="gtmv71000"></a>
 ### GT.M V7.1-000
@@ -400,9 +401,9 @@ YottaDB r2.04 incorporates enhancements and fixes from [GT.M V7.0-002](http://ti
 
 ### System Administration
 
-* <a name="GTM-DE408789"></a>[MUPIP BACKUP DATABASE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#database) attempts to use a faster copy mechanism depending on the support by the kernel, and by source and destination filesystems. If the source and destination filesystems are different or the faster copy mechanisms are not available in the kernel, MUPIP BACKUP DATABASE uses the default copy mechanism (`/bin/cp`). Previously, YottaDB used faster copy mechanisms only on Linux Kernel 5.3 or above, and changes due to backporting in Linux kernels could cause MUPIP BACKUP to report an EXDEV error on filesystems where backups had earlier been supported.
+* <a name="x1202"></a>[MUPIP BACKUP ONLINE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#online) produces valid backup files when the database and backup destination are on different filesystems, and there are concurrent updates. In r2.02, it was possible for the backup database files to have database errors ([DBTNTOOLG](https://docs.yottadb.com/MessageRecovery/errors.html#dbtntoolg), [DBMRKBUSY](https://docs.yottadb.com/MessageRecovery/errors.html#dbmrkbusy), etc.) in such circumstances. This was a regression introduced in [GT.M V7.0-004](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.0-004_Release_Notes.html#GTM-F166755), which was merged into r2.02, and fixed in [GT.M V7.1-000](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE408789), which was merged into r2.04. The bug and fix were not mentioned in any GT.M release note. [#1202](https://gitlab.com/YottaDB/DB/YDB/-/issues/1202#note_2991971090)
 
-  [MUPIP BACKUP ONLINE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip-backup-online) does not retry backup when it detects a concurrent rollback or on certain errors during the copy phase of BACKUP. Previously, MUPIP BACKUP ONLINE incorrectly retried backup when it encountered a concurrent rollback or an error in the first backup attempt; the workaround was to specify RETRY=0. [GTM-DE408789](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE408789)
+* <a name="GTM-DE408789"></a>[MUPIP BACKUP DATABASE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#database) attempts to use a faster copy mechanism depending on the support by the kernel, and by source and destination filesystems. If the source and destination filesystems are different or the faster copy mechanisms are not available in the kernel, MUPIP BACKUP DATABASE uses the default copy mechanism (`/bin/cp`). Previously, YottaDB used faster copy mechanisms only on Linux Kernel 5.3 or above, and changes due to backporting in Linux kernels could cause MUPIP BACKUP to report an EXDEV error on filesystems where backups had earlier been supported. [MUPIP BACKUP ONLINE](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#mupip-backup-online) does not retry backup when it detects a concurrent rollback or on certain errors during the copy phase of BACKUP. Previously, MUPIP BACKUP ONLINE incorrectly retried backup when it encountered a concurrent rollback or an error in the first backup attempt; the workaround was to specify RETRY=0. [GTM-DE408789](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE408789)
 
 * <a name="GTM-DE421008"></a>[MUPIP STOP](https://docs.yottadb.com/AdminOpsGuide/dbmgmt.html#stop) three times within a minute acts like a kill -9 by stopping a process even if it might not be safe to do so, except that it may produce a core file. Three MUPIP STOPs issued over a period of more than one minute terminate the process when it is safe to do so. Previously any three MUPIP STOPs over the life of a process acted like a kill -9, whether or not the three MUPIP STOPs were sent within 1 minute, and whether or not the process was at a safe point to be terminated. [GTM-DE421008](http://tinco.pair.com/bhaskar/gtm/doc/articles/GTM_V7.1-000_Release_Notes.html#GTM-DE421008)
 
