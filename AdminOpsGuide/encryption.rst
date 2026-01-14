@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -806,12 +806,6 @@ Set up the encryption keys using the gen_keypair.sh script. This script creates 
 When pinetry-gtm.sh finds the environment variable $ydb_passwd defined and an executable YottaDB, it runs the pinentry.m program which provides GnuPG with the keyring password from the obfuscated password. Otherwise, it calls /usr/bin/pinentry.
 
 The custom pinentry program uses a YottaDB external call. Each YottaDB application that uses encryption must define the environment variable ydb_xc_gpgagent to point to the location of gpgagent.tab. By default, the reference implementation places gpgagent.tab in the $ydb_dist/plugin/directory. gpgagent.tab is an external call table that pinentry.m uses to unmask the obfuscated password stored in ydb_passwd.
-
-Direct the gpg-agent to use its standard Unix domain socket file, $GNUPGHOME/S.agent, when listening for password requests. Enabling the standard socket simplifies the gpg-agent configuration. Enable the standard socket by adding the following configuration option to $GNUPGHOME/gpg-agent.conf.
-
-.. code-block:: bash
-
-   echo "use-standard-socket" >> $GNUPGHOME/gpg-agent.conf
 
 When using GPG 2.1.12 and up, enable loopback pinentry mode by adding the following configuration option to $GNUPGHOME/gpg-agent.conf. With this option in place, the agent can call back to YottaDB directly for the passphrase if GPG directs it to do so.
 
