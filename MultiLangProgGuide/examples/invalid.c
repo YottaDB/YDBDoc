@@ -1,6 +1,6 @@
 /****************************************************************
  *								*
- * Copyright (c) 2025 YottaDB LLC and/or its subsidiaries.	*
+ * Copyright (c) 2025-2026 YottaDB LLC and/or its subsidiaries.	*
  * All rights reserved.						*
  *								*
  *	This source code contains the intellectual property	*
@@ -19,10 +19,11 @@
 int main() {
 	int		status, done;
 	ydb_buffer_t	variable;
+	ydb_string_t	json_input;
 	char		ydb_error[YDB_MAX_ERRORMSG];
 	const char	*format = "JSON";
 	const char	*vn = "^invalidJSON";
-	const char	*JSON = "{\n"
+	char		*JSON = "{\n"
 					"\t\"1\": \"true\"\n"
 					"\t\"2\": \"false\",\n"
 					"\t\"\": 9,\n"
@@ -41,7 +42,9 @@ int main() {
 	printf("# Decode JSON into YottaDB variable (%s)...\n", vn);
 	YDB_COPY_STRING_TO_BUFFER(vn, &variable, done);
 	YDB_ASSERT(done);
-	status = ydb_decode_s(&variable, 0, NULL, format, JSON);
+	json_input.address = JSON;
+	json_input.length = strlen(json_input.address);
+	status = ydb_decode_s(&variable, 0, NULL, format, &json_input);
 	if (YDB_OK != status) {
 		ydb_zstatus(ydb_error, YDB_MAX_ERRORMSG);
 		printf("--> Error: ydb_decode_s() [%s:%d] : %s\n", __FILE__, __LINE__, ydb_error);

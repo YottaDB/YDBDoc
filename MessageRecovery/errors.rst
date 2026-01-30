@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -6508,16 +6508,6 @@ JANSSONINVALIDJSON, Invalid JSON: xxxx - in yyyy call
 Run Time Error: An error occurred while trying to decode data from JSON, in to an M local or global array, during a call to function yyyy.
 
 Action: Refer to the associated details in xxxx for more information.
-
---------------------
-JANSSONINVSTRLEN
---------------------
-
-JANSSONINVSTRLEN, Invalid string length xxxx: max yyyy
-
-Run Time Error: This indicates that the SimpleAPI ydb_encode_s() function (possibly called by the ZYENCODE command) encountered a string with a length of xxxx that exceeds the maximum acceptable length yyyy in this context. A ydb_buffer_t struct provided by the caller to ydb_encode_s() is not long enough for the JSON string returned by Jansson, or the length of the string returned from the Jansson JSON library exceeds UINT_MAX (4294967295 bytes).
-
-Action: Modify the ydb_buffer_t to an acceptable length or encode a smaller M array in to a JSON string
 
 ---------------------
 JIUNHNDINT

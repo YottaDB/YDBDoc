@@ -411,7 +411,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150383042 | BADZPEEKRANGE, Access exception raised in memory range given to $ZPEEK()                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028250 | BADZYENZYDENEST, Unsupported nesting of ZYENCODE or ZYDECODE command                                                                                                   |
+| 151028242 | BADZYENZYDENEST, Unsupported nesting of ZYENCODE or ZYDECODE command                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377154 | BCKUPBUFLUSH, Unable to flush buffer for online backup                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1053,7 +1053,7 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150384082 | DSKSPCCHK, Error while checking for available disk space to create file DDDD                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028256 | DUPLICATENEW, Variable xxxx appears twice in the same NEW command                                                                                                      |
+| 151028248 | DUPLICATENEW, Variable xxxx appears twice in the same NEW command                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150377040 | DUPTN, Duplicate transaction found [TN = xxxx] at offset aaaa in journal file yyyy                                                                                     |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1578,8 +1578,6 @@ Some messages can have more than one number,, depending on where they are issued
 | 151028186 | JANSSONENCODEERROR, JSON encoding error: xxxx - in yyyy call                                                                                                           |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151028178 | JANSSONINVALIDJSON, Invalid JSON: xxxx - in yyyy call                                                                                                                  |
-+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028194 | JANSSONINVSTRLEN, Invalid string length xxxx: max yyyy                                                                                                                 |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150382154 | JIUNHNDINT, An error during $ZINTERRUPT processing was not handled: eeee                                                                                               |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -3512,17 +3510,17 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150375546 | ZWRSPONE, Subscript patterns in ZWRITE are atomic; Invalid delimiter                                                                                                   |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028202 | ZYDECODEDESC, ZYDECODE operation not possible: xxxx is a descendant of yyyy                                                                                            |
+| 151028194 | ZYDECODEDESC, ZYDECODE operation not possible: xxxx is a descendant of yyyy                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028208 | ZYDECODEINCOMPL, Error encountered during ZYDECODE; operation may be incomplete                                                                                        |
+| 151028200 | ZYDECODEINCOMPL, Error encountered during ZYDECODE; operation may be incomplete                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028218 | ZYDECODEWRONGCNT, Error encountered during ZYDECODE; JSON chunk count in root of source variable must be a positive integer                                            |
+| 151028210 | ZYDECODEWRONGCNT, Error encountered during ZYDECODE; JSON chunk count in root of source variable must be a positive integer                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028226 | ZYENCODEDESC, ZYENCODE operation not possible: xxxx is a descendant of yyyy                                                                                            |
+| 151028218 | ZYENCODEDESC, ZYENCODE operation not possible: xxxx is a descendant of yyyy                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028232 | ZYENCODEINCOMPL, Error encountered during ZYENCODE; operation may be incomplete                                                                                        |
+| 151028224 | ZYENCODEINCOMPL, Error encountered during ZYENCODE; operation may be incomplete                                                                                        |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 151028242 | ZYENCODESRCUNDEF, Error encountered during ZYENCODE; source variable must not be undefined                                                                             |
+| 151028234 | ZYENCODESRCUNDEF, Error encountered during ZYENCODE; source variable must not be undefined                                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 151027986 | ZYSQLNULLNOTVALID, $ZYSQLNULL cannot be used as an integer, numeric, gvn subscript/value or lock subscript                                                             |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

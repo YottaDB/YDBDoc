@@ -1,6 +1,6 @@
 /****************************************************************
  *								*
- * Copyright (c) 2025 YottaDB LLC and/or its subsidiaries.	*
+ * Copyright (c) 2025-2026 YottaDB LLC and/or its subsidiaries.	*
  * All rights reserved.						*
  *								*
  *	This source code contains the intellectual property	*
@@ -71,7 +71,8 @@ static CURLcode get_url(const char *url, ydb_buffer_t *response, char *curl_erro
 
 int main() {
 	int		status, done;
-	ydb_buffer_t	response, variable, data;
+	ydb_buffer_t	response, variable;
+	ydb_string_t	json_input, json_output;
 	CURLcode	result;
 	char		curl_error[CURL_ERROR_SIZE], ydb_error[YDB_MAX_ERRORMSG];
 	const char	*format = "JSON";
@@ -105,7 +106,9 @@ int main() {
 	printf("# Decode JSON response into YottaDB  variable (%s)...\n", vn);
 	YDB_COPY_STRING_TO_BUFFER(vn, &variable, done);
 	YDB_ASSERT(done);
-	status = ydb_decode_s(&variable, 0, NULL, format, response.buf_addr);
+	json_input.address = response.buf_addr;
+	json_input.length = strlen(json_input.address);
+	status = ydb_decode_s(&variable, 0, NULL, format, &json_input);
 	YDB_FREE_BUFFER(&response);
 	if (YDB_OK != status) {
 		ydb_zstatus(ydb_error, YDB_MAX_ERRORMSG);
@@ -115,20 +118,17 @@ int main() {
 	}
 
 	printf("# Encode data from YottaDB variable (%s) into JSON...\n", vn);
-	YDB_MALLOC_BUFFER(&data, YDB_MAX_STR + 1);
-	data.len_alloc -= 1; // reserve null terminator
-	status = ydb_encode_s(&variable, 0, NULL, format, &data);
+	status = ydb_encode_s(&variable, 0, NULL, format, &json_output);
 	YDB_FREE_BUFFER(&variable);
 	if (YDB_OK != status) {
 		ydb_zstatus(ydb_error, YDB_MAX_ERRORMSG);
 		printf("--> Error: ydb_encode_s() [%s:%d] : %s\n", __FILE__, __LINE__, ydb_error);
-		YDB_FREE_BUFFER(&data);
 		return 1;
 	}
 	printf("# Print the encoded JSON:\n");
-	fwrite(data.buf_addr, 1, data.len_used, stdout);
+	fwrite(json_output.address, 1, json_output.length, stdout);
 	printf("\n\n");
-	YDB_FREE_BUFFER(&data);
+	free(json_output.address);
 
 	return YDB_OK;
 }

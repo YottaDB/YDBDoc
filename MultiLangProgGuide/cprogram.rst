@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2019-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2019-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -613,7 +613,7 @@ ydb_decode_s() / ydb_decode_st()
                 int subs_used,
                 const ydb_buffer_t *subsarray,
                 const char *format,
-                const char *value);
+                const ydb_string_t *value);
 
         int ydb_decode_st(uint64_t tptoken,
                 ydb_buffer_t *errstr,
@@ -621,17 +621,23 @@ ydb_decode_s() / ydb_decode_st()
                 int subs_used,
                 const ydb_buffer_t *subsarray,
                 const char *format,
-                const char *value);
+                const ydb_string_t *value);
 
-The :code:`ydb_decode_s()` and :code:`ydb_decode_st()` functions parse a null-terminated JSON string in :code:`value`, then load :code:`value` into the specified local or global variable (sub)tree. :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the destination array. Existing nodes in the (sub)tree whose subscripts are matched by a node in the input data are overwritten; other nodes remain unaltered. While :code:`format` points to a null-terminated string which has the case-independent value "JSON". A NULL :code:`value` parameter makes each function into a no-op.
+The :code:`ydb_decode_s()` and :code:`ydb_decode_st()` functions parse a JSON string in :code:`value`, then load :code:`value` into the specified YottaDB local or global variable (sub)tree. The :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the destination array. Existing nodes in the (sub)tree whose subscripts are matched by a node in the input data are overwritten; other nodes remain unaltered. The :code:`format` points to a null-terminated string which has the case-independent value "JSON".
+
+Note that :code:`value` must be initialized with an :code:`address` member that is not NULL and a :code:`length` member that is not 0, before calling :code:`ydb_decode_s()` or :code:`ydb_decode_st()`. Also note that the :code:`length` member of the :code:`value` parameter, containing the length of the JSON string in the :code:`address` member, should be set to the byte length not including the terminating NULL byte.
 
 Return values are:
 
 - :code:`YDB_OK` for a normal return;
-- :code:`YDB_ERR_PARAMINVALID` when :code:`len_alloc < len_used` for at least 1 subscript in :code:`subsarray`; or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL for at least one subscript in :code:`subsarray`; or :code:`buf_addr` is too small for at least one key in JSON input; or length of at least 1 array in JSON input is greater than :code:`YDB_MAX_SUBS`; or size for string value in JSON input is greater than :code:`YDB_MAX_STR`;
+- :code:`YDB_ERR_PARAMINVALID` when :code:`value` is NULL; or :code:`value->address` is NULL; or :code:`value->length` is zero; or when :code:`len_alloc < len_used` for at least 1 subscript in :code:`subsarray`; or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL for at least one subscript in :code:`subsarray`; or :code:`buf_addr` is too small for at least one key in JSON input; or byte length of the decoded string at a particular node is greater than:
+
+  - 1 MiB in case the target is an :code`lvn`; or
+  - the maximum record size of the region that the node maps to in case the target is a :code:`gvn`;
+
 - :code:`ERR_MINNRSUBSCRIPTS` or :code:`ERR_MAXNRSUBSCRIPTS` if subscript counts are less than zero or greater than :code:`YDB_MAX_SUBS`;
 - :code:`ERR_JANSSONDLERROR` if a function from the Jansson library fails to dynamically load;
-- :code:`ERR_JANSSONINVALIDJSON` if there is a syntax error in the value string;
+- :code:`ERR_JANSSONINVALIDJSON` if there is a syntax error in the :code:`value` string;
 - another applicable :ref:`error return code <err-ret-codes>`.
 
 Please see the :ref:`Simple API introduction <c-simple-api>` for details about parameter allocation.
@@ -715,7 +721,7 @@ To run the above example programs:
 #. Set :code:`ydb_dist` by sourcing :code:`ydb_env_set` from a YottaDB installation.
 #. Set :code:`ydb_gbldir` to a new global directory, e.g. :code:`export ydb_gbldir="mumps.gld"`.
 #. Create a new global directory file with limited key size and record size: :code:`$ydb_dist/mumps -r GDE change -region DEFAULT -key_size=32 -record_size=64`.
-#. Create a new database file with :code:`ydb_dist/mupip create`.
+#. Create a new database file with :code:`$ydb_dist/mupip create`.
 #. Build and run the programs, e.g.:
 
         - :code:`make invalid && ./invalid`
@@ -793,7 +799,7 @@ ydb_encode_s() / ydb_encode_st()
                 int subs_used,
                 const ydb_buffer_t *subsarray,
                 const char *format,
-                ydb_buffer_t *ret_value);
+                ydb_string_t *ret_value);
 
         int ydb_encode_st(uint64_t tptoken,
                 ydb_buffer_t *errstr,
@@ -801,19 +807,20 @@ ydb_encode_s() / ydb_encode_st()
                 int subs_used,
                 const ydb_buffer_t *subsarray,
                 const char *format,
-                ydb_buffer_t *ret_value);
+                ydb_string_t *ret_value);
 
-The :code:`ydb_encode_s()` and :code:`ydb_encode_st()` functions serialize a YottaDB local or global variable tree into a JSON string. :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the source array. While :code:`format` points to a null-terminated string which has the case-independent value "JSON", and :code:`ret_value` contains the JSON output string.
+The :code:`ydb_encode_s()` and :code:`ydb_encode_st()` functions serialize a YottaDB local or global variable (sub)tree into a JSON string. The :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the source array. The :code:`format` points to a null-terminated string which has the case-independent value "JSON", and :code:`ret_value` contains the JSON output string.
+
+Note that :code:`ret_value` is an output-only parameter. Also note that you must :code:`free()` the memory at the :code:`address` member of :code:`ret_value` after use to avoid memory leaks.
 
 Return values are:
 
 - :code:`YDB_OK` for a normal return;
 - :code:`YDB_ERR_GVUNDEF` or :code:`YDB_ERR_LVUNDEF` as appropriate if no such (sub)tree exists;
-- :code:`YDB_ERR_JANSSONINVSTRLEN` if :code:`ret-value->len_alloc` is insufficient for the encoded (sub)tree, or the string returned by the Jansson library is larger than UINT_MAX (4294967295 bytes);
-- :code:`YDB_ERR_PARAMINVALID` when ret_value is NULL; or :code:`ret_value->buf_addr` is NULL; or :code:`len_alloc < len_used` for at least 1 subscript in :code:`subsarray`; or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL for at least one subscript in :code:`subsarray`;
+- :code:`YDB_ERR_PARAMINVALID` when :code:`ret_value` is NULL; or :code:`len_alloc < len_used` for at least 1 subscript in :code:`subsarray`; or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL for at least one subscript in :code:`subsarray`;
 - :code:`ERR_MINNRSUBSCRIPTS` or :code:`ERR_MAXNRSUBSCRIPTS` if subscript counts are less than zero or greater than :code:`YDB_MAX_SUBS`;
 - :code:`ERR_JANSSONDLERROR` if a function from the Jansson library fails to dynamically load;
-- :code:`ERR_JANSSONINVALIDJSON` if :code:`ret_value->buf_addr` is empty after the encoder finishes;
+- :code:`ERR_JANSSONINVALIDJSON` if :code:`ret_value->address` is NULL after the encoder finishes;
 - :code:`ERR_JANSSONENCODEERROR` if an error occurs when calling one of the Jansson encoding functions;
 - another applicable :ref:`error return code <err-ret-codes>`.
 

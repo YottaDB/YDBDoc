@@ -1,6 +1,6 @@
 /****************************************************************
  *								*
- * Copyright (c) 2025 YottaDB LLC and/or its subsidiaries.	*
+ * Copyright (c) 2025-2026 YottaDB LLC and/or its subsidiaries.	*
  * All rights reserved.						*
  *								*
  *	This source code contains the intellectual property	*
@@ -20,12 +20,13 @@
 
 int main() {
 	int		i, status, done;
-	ydb_buffer_t	variable, subscripts[NUM_SUBS], data;
+	ydb_buffer_t	variable, subscripts[NUM_SUBS];
+	ydb_string_t	json_input, json_output;
 	char		ydb_error[YDB_MAX_ERRORMSG];
 	char		*sub_names[] = {"sub1", "sub2"};
 	const char	*format = "JSON";
 	const char	*vn = "^simpleJSON";
-	const char	*JSON = "{\n"
+	char		*JSON = "{\n"
 					"\t\"1\": \"true\",\n"
 					"\t\"2\": \"false\",\n"
 					"\t\"\": 9,\n"
@@ -65,7 +66,9 @@ int main() {
 	printf("# Decode JSON into YottaDB variable (%s)...\n", vn);
 	YDB_COPY_STRING_TO_BUFFER(vn, &variable, done);
 	YDB_ASSERT(done);
-	status = ydb_decode_s(&variable, NUM_SUBS, subscripts, format, JSON);
+	json_input.address = JSON;
+	json_input.length = strlen(json_input.address);
+	status = ydb_decode_s(&variable, NUM_SUBS, subscripts, format, &json_input);
 	if (YDB_OK != status) {
 		ydb_zstatus(ydb_error, YDB_MAX_ERRORMSG);
 		printf("--> Error: ydb_decode_s() [%s:%d] : %s\n", __FILE__, __LINE__, ydb_error);
@@ -92,9 +95,7 @@ int main() {
 	// ^simpleJSON("sub1","sub2","three")="null"
 
 	printf("# Encode data from YottaDB variable (%s) into JSON...\n", vn);
-	YDB_MALLOC_BUFFER(&data, YDB_MAX_STR + 1);
-	data.len_alloc -= 1; // reserve null terminator
-	status = ydb_encode_s(&variable, NUM_SUBS, subscripts, format, &data);
+	status = ydb_encode_s(&variable, NUM_SUBS, subscripts, format, &json_output);
 	YDB_FREE_BUFFER(&variable);
 	for (i = 0; i < NUM_SUBS; i++) {
 		YDB_FREE_BUFFER(&subscripts[i]);
@@ -102,16 +103,14 @@ int main() {
 	if (YDB_OK != status) {
 		ydb_zstatus(ydb_error, YDB_MAX_ERRORMSG);
 		printf("--> Error: ydb_encode_s() [%s:%d] : %s\n", __FILE__, __LINE__, ydb_error);
-		YDB_FREE_BUFFER(&data);
 		return 1;
 	}
 	printf("# Print the encoded JSON:\n");
 	// Expect the following JSON output:
 	// {"": 9, "1": "true", "2": "false", "food": {"kind": {"0": 3, "1": "oranges", "2": "bananas", "3": "apples", "4": null}, "plate": false, "type": {"": 2, "color": "red", "size": "large"}, "water": true}, "three": "null"}
-	fwrite(data.buf_addr, 1, data.len_used, stdout);
+	fwrite(json_output.address, 1, json_output.length, stdout);
 	printf("\n\n");
-	YDB_FREE_BUFFER(&data);
-
+	free(json_output.address);
 
 	return YDB_OK;
 }
