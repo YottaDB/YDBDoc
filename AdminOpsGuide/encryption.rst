@@ -817,7 +817,7 @@ When using GPG 2.1.12 and up with prior versions of YottaDB, you can bypass the 
 
 .. code-block:: bash
 
-   echo "pinentry-mode=loopback" >> $GNUPGHOME/gpg.conf
+   echo "pinentry-mode loopback" >> $GNUPGHOME/gpg.conf
 
 When using GPG 2.2.24 and up, use the following option to auto-increase secure memory usage in gpg-agent (https://dev.gnupg.org/T3530). Not doing so has been seen to cause hard-to-debug random CRYPTKEYFETCHFAILED errors (with a `Cannot allocate memory` secondary error detail) when lots of processes try to talk to the gpg-agent at the same time (for example, by opening different encrypted database files).
 
