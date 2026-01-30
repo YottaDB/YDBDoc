@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -684,8 +684,8 @@ Instructs the compiler to produce a source program listing file that contains th
 
 This is intended as a debugging tool, and the output is not stable between releases of YDB.
 
-This qualifier implies `-list`. To control the output filename, pass the name to `-list`. To control the formatting, pass `-space`.
-`-machine -nolist` is equivalent to `-nolist`.
+This qualifier implies ``-list``. To control the output filename, pass the name to ``-list``. To control the formatting, pass ``-space``.
+``-machine -nolist`` is equivalent to ``-nolist``.
 
 By default, the compiler does not produce machine code listings.
 
@@ -728,6 +728,26 @@ Controls the spacing of the output in the listing file. -space=n specifies n-1 b
 If this qualifier appears without the -list qualifier, the M compiler ignores the -space qualifier.
 
 By default, listings use single spaced output (-space=1).
+
+
+~~~~~~~~~~~
+[-]-version
+~~~~~~~~~~~
+
+Prints information about the YottaDB release and the latest merged GT.M version in the code base. For example:
+
+.. code-block:: bash
+
+   $ yottadb --version
+   YottaDB release:         r2.03
+   Upstream base version:   GT.M V7.1-002
+   Platform:                Linux x86_64
+   Build date/time:         2026-03-17 15:26
+   Build commit SHA:        b6e7cf6233dfa86e7126ed82f016820d77e292b4
+   Compiler:                Clang
+   Compiler Version:        22.1.1
+   Build Type:              Production
+   $
 
 ~~~~~~~~~~~~~~~~~
 [-]-[no]w[arning]

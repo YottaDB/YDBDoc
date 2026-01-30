@@ -623,7 +623,7 @@ ydb_decode_s() / ydb_decode_st()
                 const char *format,
                 const ydb_string_t *value);
 
-The :code:`ydb_decode_s()` and :code:`ydb_decode_st()` functions parse a JSON string (a serialized object or array) in :code:`value`, then load :code:`value` into the specified YottaDB local or global variable (sub)tree. The :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the destination array. Existing nodes in the (sub)tree whose subscripts are matched by a node in the input data are overwritten; other nodes remain unaltered. The :code:`format` points to a null-terminated string which has the case-independent value "JSON".
+The :code:`ydb_decode_s()` and :code:`ydb_decode_st()` functions parse a JSON string (a serialized object or array) in :code:`value`, then load :code:`value` into the specified YottaDB local or global variable (sub)tree. The :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the destination array. Existing nodes in the (sub)tree whose subscripts are matched by a node in the input data are overwritten; other nodes remain unaltered. The :code:`format` points to a null-terminated string which has the case-independent value ``JSON``.
 
 Note that :code:`value` must be initialized with an :code:`address` member that is not NULL and a :code:`length` member that is not 0, before calling :code:`ydb_decode_s()` or :code:`ydb_decode_st()`. Also note that the :code:`length` member of the :code:`value` parameter, containing the length of the JSON string in the :code:`address` member, should be set to the byte length not including the terminating NULL byte.
 
@@ -632,7 +632,7 @@ Return values are:
 - :code:`YDB_OK` for a normal return;
 - :code:`YDB_ERR_PARAMINVALID` when :code:`value` is NULL; or :code:`value->address` is NULL; or :code:`value->length` is zero; or when :code:`len_alloc < len_used` for at least 1 subscript in :code:`subsarray`; or the :code:`len_used` is non-zero and :code:`buf_addr` is NULL for at least one subscript in :code:`subsarray`; or :code:`buf_addr` is too small for at least one key in JSON input; or byte length of the decoded string at a particular node is greater than:
 
-  - 1 MiB in case the target is an :code`lvn`; or
+  - 1 MiB in case the target is an ``lvn``; or
   - the maximum record size of the region that the node maps to in case the target is a :code:`gvn`;
 
 - :code:`ERR_MINNRSUBSCRIPTS` or :code:`ERR_MAXNRSUBSCRIPTS` if subscript counts are less than zero or greater than :code:`YDB_MAX_SUBS`;
@@ -647,8 +647,9 @@ Please see the :ref:`Simple API introduction <c-simple-api>` for details about p
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For an example of how to use :code:`ydb_decode_s()`/:code:`ydb_decode_st()`, see:
-* :code:`simple.c` sample C program available on GitLab at `simple.c <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/simple.c>`_.
-* :code:`Makefile` for building :code:`simple.c` available on GitLab at `Makefile <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/Makefile>`_.
+
+- :code:`simple.c` sample C program available on GitLab at `simple.c <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/simple.c>`_.
+- :code:`Makefile` for building :code:`simple.c` available on GitLab at `Makefile <https://gitlab.com/YottaDB/DB/YDBDoc/raw/master/MultiLangProgGuide/examples/Makefile>`_.
 
 To run the example :code:`simple.c` program:
 
@@ -658,11 +659,11 @@ To run the example :code:`simple.c` program:
 
 If the program was built and ran correctly, it will output dummy JSON data hardcorded into :code:`simple.c`, followed by the same data after having been decoded into a YottaDB variable and encoded back out of that variable.
 
-To verify that the JSON was persisted, run :code:`zwrite ^simpleJSON` in YottaDB, e.g. in a direct mode session: :code:`$ydb_dist/mumps -dir`. For example:
+To verify that the JSON was persisted, run :code:`zwrite ^simpleJSON` in YottaDB, e.g. in a direct mode session: :code:`yottadb -dir`. For example:
 
 .. code-block::
 
-        $ $ydb_dist/mumps -dir
+        $ yottadb -dir
 
         YDB>zwrite ^simpleJSON
         ^simpleJSON("sub1","sub2")=9
@@ -698,9 +699,9 @@ To run the example :code:`users.c` program:
 #. Set :code:`ydb_dist` by sourcing :code:`ydb_env_set` from a YottaDB installation.
 #. Build and run the program: :code:`make users && ./users`
 
-If the program was built and ran correctly, it will output JSON user data pulled from :code:`https://randomuser.me`, followed by the same data after having been decoded into a YottaDB variable and encoded back out of that variable.
+If the program was built and ran correctly, it will output JSON user data pulled from the `Random User Generator <https://randomuser.me>`_, followed by the same data after having been decoded into a YottaDB variable and encoded back out of that variable.
 
-To verify that the JSON was persisted, run :code:`zwrite ^usersJSON` in YottaDB, e.g. in a direct mode session: :code:`$ydb_dist/mumps -dir`.
+To verify that the JSON was persisted, run :code:`zwrite ^usersJSON` in YottaDB, e.g. in a direct mode session: :code:`yottadb -dir`.
 
 To use this program to load different JSON, change the URL in the :code:`url` C variable in :code:`main()` to point to a different URL. Similarly, change the :code:`vn` C variable in :code:`main()` to change which YottaDB local or global variable node will store the decoded JSON.
 
@@ -719,8 +720,8 @@ To run the above example programs:
 
 #. Download the above files.
 #. Set :code:`ydb_dist` by sourcing :code:`ydb_env_set` from a YottaDB installation.
-#. Set :code:`ydb_gbldir` to a new global directory, e.g. :code:`export ydb_gbldir="mumps.gld"`.
-#. Create a new global directory file with limited key size and record size: :code:`$ydb_dist/mumps -r GDE change -region DEFAULT -key_size=32 -record_size=64`.
+#. Set :code:`ydb_gbldir` to a new global directory, e.g. :code:`export ydb_gbldir="yottadb.gld"`.
+#. Create a new global directory file with limited key size and record size: :code:`yottadb -r GDE change -region DEFAULT -key_size=32 -record_size=64`.
 #. Create a new database file with :code:`$ydb_dist/mupip create`.
 #. Build and run the programs, e.g.:
 
@@ -809,7 +810,7 @@ ydb_encode_s() / ydb_encode_st()
                 const char *format,
                 ydb_string_t *ret_value);
 
-The :code:`ydb_encode_s()` and :code:`ydb_encode_st()` functions serialize a YottaDB local or global variable (sub)tree into a JSON string (a serialized object or array). The :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the source array. The :code:`format` points to a null-terminated string which has the case-independent value "JSON", and :code:`ret_value` contains the JSON output string.
+The :code:`ydb_encode_s()` and :code:`ydb_encode_st()` functions serialize a YottaDB local or global variable (sub)tree into a JSON string (a serialized object or array). The :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the source array. The :code:`format` points to a null-terminated string which has the case-independent value ``JSON``, and :code:`ret_value` contains the JSON output string.
 
 Note that :code:`ret_value` is an output-only parameter. Also note that you must :code:`free()` the memory at the :code:`address` member of :code:`ret_value` after use to avoid memory leaks.
 
@@ -839,7 +840,7 @@ Before running the example program, set the following nodes in the database for 
 
 .. code-block::
 
-        $ $ydb_dist/mumps -dir
+        $ yottadb -dir
         YDB>set ^encodeJSON("sub1","sub2")="blank"
         YDB>set ^encodeJSON("sub1","sub2","container")="basket"
         YDB>set ^encodeJSON("sub1","sub2","fruit","name")="oranges"

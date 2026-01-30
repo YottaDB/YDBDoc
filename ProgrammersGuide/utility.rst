@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -2556,7 +2556,7 @@ This example instructs ^%RSE to write all lines where the text string occurs to 
 %RSEL
 ++++++++++
 
-The %RSEL utility selects M routines. %RSEL selects routines using directories and shared libraries specified by the YottaDB special variable $ZROUTINES. $ZROUTINES contains an ordered list of directories that certain YottaDB functions use to locate source and object files. If $ZROUTINES is not defined, YottaDB sets it in the environment to :code:`$ydb_dist/libyottadbutil.so` in M mode or to :code:`$ydb_dist/utf8/libyottadbutil.so` in UTF-8 mode, if it exists, and to :code:`$ydb_dist` if it does not, and then uses that value. Other YottaDB utilities call %RSEL.
+The %RSEL utility selects M routines. %RSEL selects routines using directories and shared libraries specified by the YottaDB special variable $ZROUTINES. $ZROUTINES contains an ordered list of directories that certain YottaDB functions use to locate source and object files. If $ZROUTINES is not defined, YottaDB sets it in the environment to :code:`$ydb_dist/plugin/o/*.so $ydb_dist/libyottadbutil.so` in M mode or to :code:`$ydb_dist/plugin/o/utf8/*.so $ydb_dist/utf8/libyottadbutil.so` in UTF-8 mode. Other YottaDB utilities call %RSEL.
 
 %RSEL prompts for the name of a routine(s).
 
@@ -2564,7 +2564,7 @@ The %RSEL utility selects M routines. %RSEL selects routines using directories a
 
 A colon (:) between two routines specifies a range.
 
-%RSEL creates a read-write variable %ZR, which is a local array of selected routines. After each selection, %RSEL reports the number of routines in %ZR. A minus sign (-) or an apostrophe (') character preceding a routine name removes that routine from the %ZR array. A question mark (?) provides online help, and "?D" displays M routines currently in the array.
+%RSEL creates a read-write variable %ZR, which is a local array of selected routines. YottaDB follows symbolic links to report the actual filenames of routines. After each selection, %RSEL reports the number of routines in %ZR. A minus sign (-) or an apostrophe (') character preceding a routine name removes that routine from the %ZR array. A question mark (?) provides online help, and "?D" displays M routines currently in the array.
 
 .. note::
    If a local variable %ZRSET is defined, %RSEL places the output information into a global variable (^%RSET) instead of the local variable %ZR.
@@ -2804,6 +2804,9 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
 * The optional third expression specifies the output format in one character as defined in the "format" argument in :ref:`zpeek-function`. This argument overrides the automatic format detection by the %PEEKBYNAME utility.
 * The optional fourth argument is a global directory referencing the :code:`ydbhelp.gld` for accesssing the :code:`ydbhelp.dat` file.
 
+.. note::
+   Except for the optional third parameter (output format) all other parameters of %PEEKBYNAME() are **case-sensitive**.
+
 Example:
 
 .. code-block:: none
@@ -2908,6 +2911,11 @@ When using the following, remember to write code that allows for values other th
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Mutex sleep spin count       | "sgmnt_data.mutex_spin_parms.mutex_sleep_spi  | Integer count                                                                                                               |
 |                              | n_count"                                      |                                                                                                                             |
++------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Mutex type                   | "mutex_struct.curr_mutex_type"                | * 0 for ADAPTIVE(YDB)                                                                                                       |
+|                              |                                               | * 1 for ADAPTIVE (PTHREAD)                                                                                                  |
+|                              |                                               | * 2 for YDB                                                                                                                 |
+|                              |                                               | * 3 for PTHREAD                                                                                                             |
 +------------------------------+-----------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Null subscripts              | "sgmnt_data.null_subs"                        | Integer - 0 means disabled, 1 means enabled, 2 means existing null subscripts are respected but new ones cannot be created  |
 |                              |                                               |                                                                                                                             |

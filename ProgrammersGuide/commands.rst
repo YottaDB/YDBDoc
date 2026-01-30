@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -3954,13 +3954,11 @@ If G occurs in the list, the statistics are displayed in the following order in 
 |  ZTR           | # of ZTRigger command operations                                                                                                     |
 +----------------+--------------------------------------------------------------------------------------------------------------------------------------+
 
-[NT]B[WR] mnemonics are satisfied by either disk access or, for databases that use the BG (buffered global) access method, global buffers in shared memory.
-
-If an operation is performed inside a TP transaction, and not committed as a consequence of a rollback, or an explicit or implicit restart, YottaDB still counts it.
-
-KILL/GET/DATA/QUERY/ORDER/ZPREVIOUS operations on globals that never existed are not counted, while the same operations on globals that once existed but have since been killed are counted.
-
-Name-level ORDER/ZPREVIOUS operations (for example, $ORDER(^a) with no subscripts) increment the count for each transition into a region as they process the global directory map up to the point they find a global with data .
+* [NT]B[WR] mnemonics are satisfied by either disk access or, for databases that use the BG (buffered global) access method, global buffers in shared memory.
+* If an operation is performed inside a TP transaction, and not committed as a consequence of a rollback, or an explicit or implicit restart, YottaDB still counts it.
+* KILL/GET/DATA/QUERY/ORDER/ZPREVIOUS operations on globals that never existed are not counted, while the same operations on globals that once existed but have since been killed are counted.
+* Name-level ORDER/ZPREVIOUS operations (for example, $ORDER(^a) with no subscripts) increment the count for each transition into a region as they process the global directory map up to the point they find a global with data .
+* The critical section wait statistics DEXA, GLB, JNL, MLK, PRC, TRX, ZAD, JOPA, AFRA, BREA, MLBA & TRGA are incremented only if a process does not get a critical section on its first attempt.
 
 .. note::
    The use of comma-separated pieces for ZSHOW "G" allows for future releases of YottaDB to provide additional data while facilitating upward compatibility of application code. Since YottaDB reserves the right to change the order in which statistics are reported in future versions of YottaDB, application programs should use the names (mnemonics) when picking pieces from the string instead of relying on field position or ordering.
@@ -4717,9 +4715,132 @@ Example:
 
 The above example displays all nodes of :code:`x` containing exactly 3 subscripts, not 1 or 2 subscripts.
 
+-------------------
+ZYDECODE
+-------------------
+
+The ZYDECODE command decodes (deserializes) a JSON string (a serialized object or array), stored in a variable (in a specific chunking format) into another variable, and its descendants. ZYDECODE deletes neither the destination variable, nor any of its descendants.
+
+The format of ZYDECODE command is:
+
+.. code-block:: bash
+
+   ZYDE[CODE][:tvexpr] glvn1=glvn2[,...]
+
+* The optional truth-valued expression immediately following the command is a command post conditional that controls whether or not YottaDB executes the command.
+* When both glvn1 and glvn2 are local variables, the naked indicator does not change.
+* If glvn2 is a global variable and glvn1 is a local variable, the naked indicator references glvn2.
+* When both are global variables, the state of the naked indicator is unchanged if glvn2 is undefined ($DATA(glvn2)=0).
+* In all other cases including $DATA(glvn2)=10, the naked indicator takes the same value that it would have if the SET command replaced the ZYDECODE command and glvn2 had a value.
+* If glvn1 is a descendant of glvn2, or if glvn2 is a descendant of glvn1; YottaDB generates a `ZYDECODEDESC <../MessageRecovery/errors.html#zydecodedesc>`_ error.
+* If $DATA(glvn2) is 0 then YottaDB issues a `ZYDECODEWRONGCNT <../MessageRecovery/errors.html#zydecodewrongcnt>`_ error.
+* If the root node of glvn2 is not a positive integer then YottaDB issues a  `ZYDECODEWRONGCNT <../MessageRecovery/errors.html#zydecodewrongcnt>`_ error.
+* If any subscript in the sequence of positive integers, represented by the number at the root node is missing then YottaDB issues a `GVUNDEF <../MessageRecovery/errors.html#gvundef>`_ or `LVUNDEF <../MessageRecovery/errors.html#lvundef>`_ error.
+* An indirection operator and an expression atom evaluating to a list of one or more ZYDECODE arguments form a legal argument for a ZYDECODE.
+* JSON arrays are decoded into M variables starting with subscript 0.
+
+.. note::
+
+   The chunking format that ZYDECODE takes as input is as follows. If the JSON-formatted string is shorter than or equal to the maximum string length for the current variable (1 MiB for local variables or the maximum record size of the global's region for global variables), store it in the variable's ``(1)`` subscript. If it is longer than the maximum string length, break it up into sub-strings that are shorter than or equal to the maximum string length, and store them in order in successive integer subscripts matching the pattern (1), (2), (3) and so on until the entire string has been stored. In all cases, store the number of subscripts that contain the JSON-formatted string, in the variable's root node.
+
+ZYDECODE provides the ability to deserialize arbitrarily long JSON strings into decoded M arrays using a single command, offering a faster and simpler alternative to implementing a complex set of functions in M using other commands.
+
+.. important::
+
+   ZYDECODE only supports the UTF-8 character set encoding. Use special care not to use characters which are illegal in UTF-8 when using it with a $ZCHSET of M. Real numbers in JSON use the IEEE 754 double-precision floating point standard, which uses a larger range, but with less precision within that range, than YottaDB's packed binary-coded decimal format; this may result in rounding errors when decoding certain real numbers from the JSON string.
+
+++++++++++++++++++++
+Example of ZYDECODE
+++++++++++++++++++++
+
+.. code-block:: bash
+
+   YDB>Set json(1)="[""array"", [""zero"", ""one"", {""key"": [""val1"", ""val2""]}], 3, ""1.5"", null, ""null"", true, ""true"", false, ""false""]"
+   YDB>Set json=1
+   YDB>ZYDEcode ^array("json")=json
+   YDB>Write $Reference
+   ^array("json")
+   YDB>ZWRite ^array
+   ^array("json",0)="array"
+   ^array("json",1,0)="zero"
+   ^array("json",1,1)="one"
+   ^array("json",1,2,"key",0)="val1"
+   ^array("json",1,2,"key",1)="val2"
+   ^array("json",2)=3
+   ^array("json",3)=$C(0)_"1.5"
+   ^array("json",4)=$C(0)_"null"
+   ^array("json",5)="null"
+   ^array("json",6)=$C(0)_"true"
+   ^array("json",7)="true"
+   ^array("json",8)=$C(0)_"false"
+   ^array("json",9)="false"
+   YDB>
+
+This example illustrates how ZYDECODE decodes a JSON string into a global sub-tree. It shows how ZYDECODE encodes the JSON values of null, true, and false, which are not data types in M, as well as a string ("1.5") that would otherwise be coerced in to a number when stored in M, per M's canonical number rules.
+
+-------------------
+ZYENCODE
+-------------------
+
+The ZYENCODE command encodes (serializes) a variable, in a typical M tree format, into another variable (in a specific chunking format), formatted as a JSON string (a serialized object or array). ZYENCODE does not delete the destination variable, nor any of its descendants.
+
+The format of ZYENCODE command is:
+
+.. code-block:: bash
+
+   ZYEN[CODE][:tvexpr] glvn1=glvn2[,...]
+
+* The optional truth-valued expression immediately following the command is a command post conditional that controls whether or not YottaDB executes the command.
+* When both glvn1 and glvn2 are local variables, the naked indicator does not change.
+* If glvn2 is a global variable and glvn1 is a local variable, the naked indicator references glvn2.
+* When both are global variables, the state of the naked indicator is unchanged if glvn2 is undefined ($DATA(glvn2)=0).
+* In all other cases including $DATA(glvn2)=10, the naked indicator takes the same value that it would have if the SET command replaced the ZYENCODE command and glvn2 had a value.
+* If glvn1 is a descendant of glvn2, or if glvn2 is a descendant of glvn1; YottaDB generates a `ZYENCODEDESC <../MessageRecovery/errors.html#zyencodedesc>`_ error.
+* If $DATA(glvn2) is 0 then YottaDB issues a `ZYENCODESRCUNDEF <..//MessageRecovery/errors.html#zyencodesrcundef>`_ error.
+* An indirection operator and an expression atom evaluating to a list of one or more ZYENCODE arguments form a legal argument for a ZYENCODE.
+* M variables starting a subscript level with 0, with successive integer subscripts at the same level, with no other subscripts not matching that series, are encoded as JSON arrays, otherwise they are encoded as JSON objects.
+
+.. note::
+
+   The chunking format that ZYENCODE returns as output is as follows. If the JSON-formatted string is shorter than or equal to the maximum string length for the current variable (1 MiB for local variables or the maximum record size of the global's region for global variables), it is stored in the variable's ``(1)`` subscript. If it is longer than the maximum string length, it is broken up into sub-strings that are equal to the maximum string length, and stores them in order in successive integer subscripts matching the pattern (1), (2), (3) and so on until the entire string has been stored. In all cases, the number of subscripts that contain the JSON-formatted string, is stored in the variable's root node.
+
+ZYENCODE provides the ability to serialize arbitrarily large, and complex, M arrays into a JSON-encoded string using a single command, offering a faster and simpler alternative to implementing a complex set of functions in M using other commands.
+
+.. important::
+
+   ZYENCODE only supports the UTF-8 character set encoding. Use special care not to use characters which are illegal in UTF-8 when using it with a $ZCHSET of M. Real numbers in JSON use the IEEE 754 double-precision floating point standard, which uses a larger range, but with less precision within that range, than YottaDB's packed binary-coded decimal format; this may result in rounding errors when encoding certain real numbers into the JSON string.
+
+++++++++++++++++++++
+Example of ZYENCODE
+++++++++++++++++++++
+
+.. code-block:: bash
+
+   YDB>Set array("json")="JSON test document"
+   YDB>Set array("json",0)="array"
+   YDB>Set array("json",1,0)="zero"
+   YDB>Set array("json",1,1)="one"
+   YDB>Set array("json",1,2,"key",0)="val1"
+   YDB>Set array("json",1,2,"key",1)="val2"
+   YDB>Set array("json",1,2,"key","string")="object"
+   YDB>Set array("json",2)=3
+   YDB>Set array("json",3)=$C(0)_"1.5"
+   YDB>Set array("json",4)=$C(0)_"null"
+   YDB>Set array("json",5)="null"
+   YDB>Set array("json",6)=$C(0)_"true"
+   YDB>Set array("json",7)="true"
+   YDB>Set array("json",8)=$C(0)_"false"
+   YDB>Set array("json",9)="false"
+   YDB>ZYEncode ^json=array("json")
+   YDB>Write $Reference
+   ^json
+   YDB>ZWRite ^json
+   ^json=1
+   ^json(1)="{"""": ""JSON test document"", ""0"": ""array"", ""1"": [""zero"", ""one"" {""key"": {""0"": ""val1"", ""1"": ""val2"", ""string"": ""object""}}], ""2"": 3, ""3"": ""1.5"", ""4"": null, ""5"": ""null"", ""6"": true, ""7"": ""true"", ""8"": false, ""9"": ""false""}"
+   YDB>
+
+This example illustrates how ZYENCODE encodes a global sub-tree into a JSON string. It shows how ZYENCODE encodes an M variable sub-tree with a subscript starting at 0, with successive positive integers at the same level, and no other subscripts not matching that pattern in the same level, as a JSON array. It also shows that when that pattern is broken (the series contains a string subscript), it encodes it as a JSON object. It also shows a node with a $DATA of 11, where the child sub-tree would otherwise have been encoded as a JSON array, but instead it was encoded as a JSON object, which then stored the data at the parent node in the empty string key.
+
 .. raw:: html
 
     <img referrerpolicy="no-referrer-when-downgrade" src="https://download.yottadb.com/MProgGuide.png" />
-
-
-

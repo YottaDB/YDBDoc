@@ -675,9 +675,13 @@ ydb_int64_t and ydb_uint64_t are supported on 64-bit platforms effective release
 Call-In table
 ~~~~~~~~~~~~~~~
 
-The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, either the environment variable ydb_ci must be defined to point to the Call-In table file path, or you can use the functions :code:`ydb_ci_tab_open()`/:code:`ydb_ci_tab_open_t()` with :code:`ydb_ci_tab_switch()`/:code:`ydb_ci_tab_switch_t()` to open and switch call-in tables. Usage for the functions to open and switch the tables is described below.
+The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, one of the following conditions must be met:
 
-Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
+* The environment variable ydb_ci is defined and points to the Call-In table file path.
+* One of the functions :code:`ydb_ci_tab_open()`/:code:`ydb_ci_tab_open_t()` with :code:`ydb_ci_tab_switch()`/:code:`ydb_ci_tab_switch_t()`  is used as described below to open or switch the call-in table.
+* The function being called has previously been called with ``ydb_ci()`` or ``ydb_cip()``.
+
+In a call-in table, each signature is specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
 
 .. code-block:: none
 
@@ -810,6 +814,9 @@ YottaDB provides 4 interfaces for calling a M routine from C. These are:
 ydb_cip and ydb_cip_t offer better performance on calls after the first one.
 
 While ydb_ci() and ydb_cip() are for single threaded applications, ydb_ci_t() and ydb_cip_t() are for multi-threaded applications that call M routines. See the `Threads <../MultiLangProgGuide/programmingnotes.html#threads>`_ section in the Multi-Language Programmer's Guide for details.
+
+.. note::
+   The functions for calling an M routine from C clear :ref:`ecode-isv` before calling M code, and again before returning to the C caller.
 
 .. _ydb-ci-intf:
 

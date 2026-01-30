@@ -1553,16 +1553,20 @@ The $ZROUTINES ISV allows individual UNIX shared library file names to be specif
 
 $ZROUTINES syntax contains a file-specification indicating shared library file path. YottaDB does not require any designated extension for the shared library component of $ZROUTINES. Any file specification that does not name a directory is treated as a shared library. However, it is recommended that the extension commonly used on a given platform for shared library files be given to any YottaDB shared libraries. See "Linking YottaDB Shared Images". A shared library component cannot specify source directories. YottaDB reports an error at an attempt to associate any source directory with a shared library in $ZROUTINES.
 
-You may search for all shared libraries that match a `glob <https://man7.org/linux/man-pages/man7/glob.7.html>`_ pattern. Files other than shared libraries are ignored. Unlike giving the exact filepath, when matching a file with a glob pattern, the pattern must end in .so. You can only match shared object files that end in .so. A glob pattern can match 0 files and this is not considered a warning or error. If a glob pattern matches a literal file or directory, it will not be treated as a glob pattern and will match that file or directory.
+You can specify shared libraries using a `glob <https://man7.org/linux/man-pages/man7/glob.7.html>`_ pattern. When matching a file with a glob pattern, the pattern must end in ``.so``. A glob pattern can match zero files and this is not considered a warning or error. In the event a glob pattern happens to match a literal file or directory name, it will not be treated as a glob pattern and will match that file or directory.
 
-The following traits of $ZROUTINES help support shared libraries:
+$ZROUTINES works as follows shared libraries:
 
-* The $ZROUTINES search continues to find objects in the first place, processing from left to right, that holds a copy; it ignores any copies in subsequent locations. However, now for auto-ZLINK, shared libraries are accepted as object repositories with the same ability to supply objects as directories.
+* The $ZROUTINES searches to find object code for a routine, processing from left to right, till it finds the code it seeks; it ignores any copies in subsequent locations. For auto-ZLINK, shared libraries are object repositories with the same ability to supply objects as directories.
 * Explicit ZLINK, never searches Shared Libraries. This is because explicit ZLINK is used to link a newly created routine or to re-link a modified routine and there is no mechanism to load new objects into an active shared library.
-* ZPRINT and $TEXT() of the routines in a shared library, read source file path from the header of the loaded routine. If the image does not contain the routine, an auto-ZLINK is initiated. If the source file path recorded in the routine header when the module was compiled cannot be located, ZPRINT and $TEXT() initiate a search from the beginning of $ZROUTINES, skipping over the shared library file specifications. If the located source does not match the code in image (checked via checksum), ZPRINT generates an object-source mismatch status and $TEXT() returns a null string.
-* ZEDIT, when searching $ZROUTINES, skips shared libraries like explicit ZLINK for the same reasons. $ZSOURCE ISV is implicitly set to the appropriate source file.
+* ZPRINT and $TEXT() of the routines in a shared library, work much as they do for routines in object files in directories:
+  * If the routine is not already linked, they initiate an Auto-ZLINK to find the object code of the routine.
+  * If the header of the routine includes the source code, they use it.
+  * If the header of the routine does not include the source code, they look for the location of the source file recorded in the header. If the file exists, amd its checksum matches that recorded in the header, they use it.
+  * Otherwise, ZPRINT raises a `FILENOTFND <../MessageRecovery/errors.html#filenotfnd>`_ error and $TEXT() returns an emptystring.
+* ZEDIT, when searching $ZROUTINES, skips shared libraries for the same reasons that an explicit ZLINK does. The :ref:`$ZSOURCE <zsource-isv>` ISV is implicitly set to the appropriate source file.
 
-For example, if libshare.so is built with foo.o compiled from ./shrsrc/foo.m, the following commands specify that YottaDB should search the library ./libshare.so for symbol foo when do ^foo is encountered.
+For example, if ``libshare.so`` is built with ``foo.o`` compiled from ``./shrsrc/foo.m``, the following commands specify that YottaDB should search the library ``./libshare.so`` for symbol ``foo`` when ``do ^foo`` is encountered.
 
 .. code-block:: bash
 
@@ -1575,9 +1579,9 @@ For example, if libshare.so is built with foo.o compiled from ./shrsrc/foo.m, th
    YDB>W $TEXT(+0^foo);prints foo
 
 
-Note that ZPRINT reports an error, as foo.m does not match the routine already linked into image. Also note that, to recompile and re-link the ZEDITed foo.m, its source directory needs to be attached to the object directory [./obj] in $ZROUTINES. The example assumes the shared library (libshare.so) has been built using shell commands. For the procedure to build a shared library from a list of YottaDB generated object (.o) files, see "Linking YottaDB Shared Images" below.
+Note that ZPRINT reports an error, as ``foo.m`` does not match the routine already linked into image. Also note that, to recompile and re-link the ZEDITed ``foo.m``, its source directory needs to be attached to the object directory (``./obj``) in $ZROUTINES. The example assumes the shared library (``libshare.so``) has been built using shell commands. For the procedure to build a shared library from a list of YottaDB generated object (``.o``) files, see "Linking YottaDB Shared Images" below.
 
-Here is an example of using glob patterns to match filenames. This will only search the current directory. In this example, the pattern will match all shared object files with the .so file extension in the current working directory.
+Here is an example of using glob patterns to match filenames. This will only search the current directory. In this example, the pattern will match all shared object files with the ``.so`` file extension in the current working directory.
 
 .. code-block:: bash
 
@@ -2023,7 +2027,7 @@ $ZYINTRSIG was added to YottaDB effective release `r1.32 <https://gitlab.com/Yot
 $ZYJOBPARENT
 ---------------
 
-$ZYJO[BPARENT] is a read only ISV that contains the PID of the process that invoked the current process with the JOB command. If the current process was not invoked with the JOB command, $ZYJOBPARENT will be 0.
+$ZYJO[BPARENT] is a read only ISV that contains the PID of the process that invoked the current process with the JOB command. If the current process was not invoked with the JOB command, $ZYJOBPARENT is 0.
 
 $ZYJOBPARENT was added to YottaDB effective release `r2.04 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r2.04>`_.
 
@@ -2044,7 +2048,7 @@ Example:
     ZYJOBPARENT from parent:0
     $ cat jobPID.mjo
     ZYJOBPARENT in child:26772
-    $ 
+    $
 
 
 

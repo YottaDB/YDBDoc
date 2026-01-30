@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -4004,7 +4004,7 @@ The string argument is the string whose syntax is to be checked. If the string i
 * YDB_ERROR - a YottaDB standard error code mnemonic.
 * Error - text description of the error.
 
-While $ZYCOMPILE() is functionally similar to the utility function :ref:`zmvalid-util`, the former was intrinsically found to be thousands of times faster, and also does not generate any ``.m`` or ``.o`` files.
+While $ZYCOMPILE() is functionally similar to the utility function :ref:`zmvalid-util`, the former was found in informal testing to be thousands of times faster, and also does not generate any ``.m`` or ``.o`` files.
 
 ++++++++++++++++++++++++
 Examples of $ZYCOMPILE()
