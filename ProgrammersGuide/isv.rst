@@ -1426,14 +1426,6 @@ Example:
 
 .. code-block:: bash
 
-   YDB>SET $ZRO=". /usr/smith"
-
-This example sets $zroutines to a list containing two directories.
-
-Example:
-
-.. code-block:: bash
-
    YDB>set $zro="/usr/smith(/usr/smith/tax /usr/smith/fica)"
 
 This example specifies that YottaDB should search the directory /usr/smith for object files, and the directories /usr/smith/tax and /usr/smith/fica for source files. Note that in this example. YottaDB does not search /usr/smith for source files.
@@ -1551,6 +1543,8 @@ The $ZROUTINES ISV allows individual UNIX shared library file names to be specif
 
 $ZROUTINES syntax contains a file-specification indicating shared library file path. YottaDB does not require any designated extension for the shared library component of $ZROUTINES. Any file specification that does not name a directory is treated as a shared library. However, it is recommended that the extension commonly used on a given platform for shared library files be given to any YottaDB shared libraries. See "Linking YottaDB Shared Images". A shared library component cannot specify source directories. YottaDB reports an error at an attempt to associate any source directory with a shared library in $ZROUTINES.
 
+You may search for all shared libraries that match a `glob <https://man7.org/linux/man-pages/man7/glob.7.html>`_ pattern. Files other than shared libraries are ignored. Unlike giving the exact filepath, when matching a file with a glob pattern, the pattern must end in .so. You can only match shared object files that end in .so. A glob pattern can match 0 files and this is not considered a warning or error. If a glob pattern matches a literal file or directory, it will not be treated as a glob pattern and will match that file or directory.
+
 The following traits of $ZROUTINES help support shared libraries:
 
 * The $ZROUTINES search continues to find objects in the first place, processing from left to right, that holds a copy; it ignores any copies in subsequent locations. However, now for auto-ZLINK, shared libraries are accepted as object repositories with the same ability to supply objects as directories.
@@ -1570,8 +1564,14 @@ For example, if libshare.so is built with foo.o compiled from ./shrsrc/foo.m, th
    YDB>ZLINK "foo";re-compile ./shrsrc/foo.m to generate ./obj/foo.o.
    YDB>W $TEXT(+0^foo);prints foo
 
+
 Note that ZPRINT reports an error, as foo.m does not match the routine already linked into image. Also note that, to recompile and re-link the ZEDITed foo.m, its source directory needs to be attached to the object directory [./obj] in $ZROUTINES. The example assumes the shared library (libshare.so) has been built using shell commands. For the procedure to build a shared library from a list of YottaDB generated object (.o) files, see "Linking YottaDB Shared Images" below.
 
+Here is an example of using glob patterns to match filenames. This will only search the current directory. In this example, the pattern will match all shared object files with the .so file extension in the current working directory.
+
+.. code-block:: bash
+
+   YDB>SET $ZROUTINES="./*.so ./obj(./shrsrc)"
 
 **Linking YottaDB Shared Images**
 
