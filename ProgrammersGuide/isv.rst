@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2018-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2018-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -2006,6 +2006,37 @@ $ZYINTRSIG is a read only ISV that holds the value :code:`"SIGUSR1"` or :code:`"
 :code:`$ZYINTRSIG` allows M code inside :code:`$ZINTERRUPT` differentiate whether it was a :code:`SIGUSR1` or :code:`SIGUSR2` that invoked the :code:`$ZINTERRUPT` mechanism and take different actions if necessary.
 
 $ZYINTRSIG was added to YottaDB effective release `r1.32 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.32>`_.
+
+.. _zyjobparent-isv:
+
+---------------
+$ZYJOBPARENT
+---------------
+
+$ZYJO[BPARENT] is a read only ISV that contains the PID of the process that invoked the current process with the JOB command. If the current process was not invoked with the JOB command, $ZYJOBPARENT will be 0.
+
+$ZYJOBPARENT was added to YottaDB effective release `r2.04 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r2.04>`_.
+
+Example:
+
+.. code-block:: bash
+
+    $ cat jobPID.m
+    	w "JOB from parent:",$JOB,!
+    	w "ZYJOBPARENT from parent:",$ZYJOBPARENT,!
+    	job NEXT
+    	quit
+    NEXT
+    	w "ZYJOBPARENT in child:",$ZYJOBPARENT,!
+    	quit
+    $ $ydb_dist/yottadb -run jobPID
+    JOB from parent:26772
+    ZYJOBPARENT from parent:0
+    $ cat jobPID.mjo
+    ZYJOBPARENT in child:26772
+    $ 
+
+
 
 .. _zyrelease-isv:
 
