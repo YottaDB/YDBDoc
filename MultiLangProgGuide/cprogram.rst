@@ -623,7 +623,7 @@ ydb_decode_s() / ydb_decode_st()
                 const char *format,
                 const ydb_string_t *value);
 
-The :code:`ydb_decode_s()` and :code:`ydb_decode_st()` functions parse a JSON string in :code:`value`, then load :code:`value` into the specified YottaDB local or global variable (sub)tree. The :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the destination array. Existing nodes in the (sub)tree whose subscripts are matched by a node in the input data are overwritten; other nodes remain unaltered. The :code:`format` points to a null-terminated string which has the case-independent value "JSON".
+The :code:`ydb_decode_s()` and :code:`ydb_decode_st()` functions parse a JSON string (a serialized object or array) in :code:`value`, then load :code:`value` into the specified YottaDB local or global variable (sub)tree. The :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the destination array. Existing nodes in the (sub)tree whose subscripts are matched by a node in the input data are overwritten; other nodes remain unaltered. The :code:`format` points to a null-terminated string which has the case-independent value "JSON".
 
 Note that :code:`value` must be initialized with an :code:`address` member that is not NULL and a :code:`length` member that is not 0, before calling :code:`ydb_decode_s()` or :code:`ydb_decode_st()`. Also note that the :code:`length` member of the :code:`value` parameter, containing the length of the JSON string in the :code:`address` member, should be set to the byte length not including the terminating NULL byte.
 
@@ -809,7 +809,7 @@ ydb_encode_s() / ydb_encode_st()
                 const char *format,
                 ydb_string_t *ret_value);
 
-The :code:`ydb_encode_s()` and :code:`ydb_encode_st()` functions serialize a YottaDB local or global variable (sub)tree into a JSON string. The :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the source array. The :code:`format` points to a null-terminated string which has the case-independent value "JSON", and :code:`ret_value` contains the JSON output string.
+The :code:`ydb_encode_s()` and :code:`ydb_encode_st()` functions serialize a YottaDB local or global variable (sub)tree into a JSON string (a serialized object or array). The :code:`varname` is the name of the local or global variable, :code:`subs_used` is the count of subscripts already set up in :code:`subsarray`, the subscripts used with :code:`varname` to define the source array. The :code:`format` points to a null-terminated string which has the case-independent value "JSON", and :code:`ret_value` contains the JSON output string.
 
 Note that :code:`ret_value` is an output-only parameter. Also note that you must :code:`free()` the memory at the :code:`address` member of :code:`ret_value` after use to avoid memory leaks.
 
