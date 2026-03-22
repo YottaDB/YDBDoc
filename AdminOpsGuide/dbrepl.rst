@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -3303,6 +3303,54 @@ On P:
 
 In this case, the Receiver Server uses the current journal sequence number in the </path/to/bkup-orig-repl-inst-file> as the point where A starts sending journal records. YottaDB updates the stream sequence number of Stream # 1 in the instance file on P to reflect this value. From this point, YottaDB maps the journal sequence number on A to a stream journal sequence number (for example, stream # 1) on P.
 
+-----------------------------------------
+Converting a BC replica to an SI replica
+-----------------------------------------
+
+Assuming that the originating instance is A and the BC replica is B, on B shut down the Receiver Server (including Update Process, and the passive Source Server).
+
+.. code-block:: bash
+
+   mupip replicate -receiver -shutdown -timeout=0
+   mupip replicate -source -shutdown -timeout=0
+
+On A, take a backup of the replication instance file.
+
+.. code-block:: bash
+
+   mupip backup -replinstance=src_backup.repl
+
+Copy the backed up replication instance file from A to B. On B, update the journal sequence number of the backed up replication instance file (copied over from A) to match the current journal sequence number of B.
+
+.. code-block:: bash
+
+   mupip replicate -editinstance -show $ydb_repl_instance > rcvr_show.out 2>&1
+   rcvr_jnl_seqno=$(grep '^HDR Journal Sequence Number' rcvr_show.out | awk '{print $NF}' | sed 's/\[//;s/\]//;')
+   mupip replicate -editinstance -change -offset=0x0090 -size=0x0008 -value=$rcvr_jnl_seqno src_backup.repl
+
+On B, create a new replication instance file.
+
+.. code-block:: bash
+
+   mupip replicate -instance_create -supplementary -name=B
+
+Notice that the above preserves the BC replica instance name B. If you wish to change the instance name to something else, like P, use that instead, i.e., ``-name=P``. In that case, on A, you would need to stop the Source Server replicating to B and start a Source Server replicating to P.
+
+On B, switch the journal files, without links to the prior generation journal files, as it will not be possible to roll the SI database back to a BC state. If only some regions are replicated and journaled, list them instead of ``'*'`` for the ``-region`` option, e.g., ``-region ACCOUNTS,DEFAULT,HISTORY``. If you use NOBEFORE_IMAGE journaling, set the ``-journal`` qualifier accordingly.
+
+.. code-block:: bash
+
+   mupip set -replication=on -region "*" -journal=enable,on,before -noprevjnlfile
+
+On B, start the passive Source Server with ``-updok`` to indicate updates are allowed. Include other qualifiers you normally specify for the instance (``-buffsize``, ``-log``, etc.). Then start the Receiver Server with the ``-updateresync`` and ``-initialize`` parameters, along with other parameters normally specified for the instance (``-listenport`` would be required; others include ``-buffsize``, ``-log``, etc.).
+
+.. code-block:: bash
+
+   mupip replicate -source -start -passive -instsecondary=dummy -updok
+   mupip replicate -receive -start -updateresync=src_backup.repl -initialize
+
+At this point B should start catching up with A, but operating as an SI instance rather than a BC instance. Note that on subsequent starts of the Receiver Server, the ``-updateresync`` and ``-initialize`` parameters should be omitted.
+
 --------------------------------------------------------------------------------------------------
 Setting up an A→P for the first time if P is an existing instance (having its own set of updates)
 --------------------------------------------------------------------------------------------------
@@ -3979,6 +4027,8 @@ Specifies the approximate time in minutes to wait before attempting to perform a
 Shutting Down the Source Server
 ++++++++++++++++++++++++++++++++++++++++++++++
 
+This discusses shutting down all Source Servers. See :ref:`stop-source-server` to shut down specific Source Servers.
+
 Command Syntax:
 
 .. code-block:: bash
@@ -4257,6 +4307,8 @@ Enables or disables detailed logging. When ON, the system logs current-state inf
 Specifies the number of transactions for which the Source Server should wait before writing to the log file. The default logging interval is 10000 transactions.
 
 -log_interval=0 reverts the logging interval to the default value.
+
+.. _stop-source-server:
 
 +++++++++++++++++++++++++++++++++++++++++
 Stopping a Source Server
