@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -271,7 +271,7 @@ The MUPIP DUMPFHEAD command displays information about one or more database file
 
 .. code-block:: none
 
-   DU[MPFHEAD] {-F[ILE] file-name | -R[EGION]=region-list | -R[EGION] region-list}
+   DU[MPFHEAD] {-FI[LE] file-name | -R[EGION]=region-list | -R[EGION] region-list}
 
 
 ~~~~~~~~~~~~~~~~
@@ -282,7 +282,7 @@ Specifies the name of the database file for the MUPIP DUMPFHEAD operation. FILE 
 
 .. code-block:: none
 
-   -F[ILE] file-name
+   -FI[LE] file-name
 
 * The database filename must include the absolute or relative path.
 

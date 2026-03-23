@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This source code contains the intellectual property     #
@@ -72,7 +72,7 @@ Specifies that the argument is a file-name for a single database file. The forma
 
 .. code-block:: none
 
-   -F[ILE]
+   -FI[LE]
 
 Incompatible with: JNLFILE, REGION and REPLICATION
 
