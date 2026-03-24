@@ -273,7 +273,6 @@ The MUPIP DUMPFHEAD command displays information about one or more database file
 
    DU[MPFHEAD] {-FI[LE] file-name | -R[EGION]=region-list | -R[EGION] region-list}
 
-
 ~~~~~~~~~~~~~~~~
 -FILE file-name
 ~~~~~~~~~~~~~~~~
@@ -287,6 +286,16 @@ Specifies the name of the database file for the MUPIP DUMPFHEAD operation. FILE 
 * The database filename must include the absolute or relative path.
 
 * The FILE qualifier is incompatible with the REGION qualifier.
+
+~~~~~~~~~~~~~~~~
+FLUSH
+~~~~~~~~~~~~~~~~
+
+Flushes the database file header before displaying the database file header fields. While this qualifier ensures the information is recent, under most production circumstances the output is sufficiently accurate without FLUSH. Use of FLUSH makes the operation significanly more heavyweight. If the database file header flush fails, MUPIP DUMPFHEAD FLUSH produces a `BUFFLUFAILED <../MessageRecovery/errors.html#bufflufailed>`_ warning, but still produces output. The format of the FLUSH qualifier is:
+
+.. code-block:: none
+
+   -FL[USH]
 
 ~~~~~~~~~~~~~~~~~~~~
 -REGION region-list
