@@ -19,15 +19,21 @@
 
 ## Binary Distributions
 
-| sha256sum | file |
-|-----------|------|
-|           |      |
+| sha256sum                                                          | file                                                                                                                         |
+|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| `02f88b3c597814b55a4917c09468e34d3d802a9ad3413b000450fbbb5a2744a8` | [yottadb_r204_aarch64_debian13_pro.tgz](/uploads/31c96f97ffa570e8f6b8c75adb02703c/yottadb_r204_aarch64_debian13_pro.tgz)     |
+| `fde534d40d81b0c1fc9a0ab9b11eddbc44c6b7a41183c713b647b3d2a20984ec` | [yottadb_r204_aarch64_ubuntu2404_pro.tgz](/uploads/15f7f6a0a9cf957b2610656699facb2e/yottadb_r204_aarch64_ubuntu2404_pro.tgz) |
+| `2965b73057ddfc51cf5e23041e736add31bec8b4032e09a9d8f03a2e0ebe1dc1` | [yottadb_r204_x8664_debian13_pro.tgz](/uploads/4b815d135110a72c8d3d878d1eaedb5f/yottadb_r204_x8664_debian13_pro.tgz)         |
+| `31756508cb94c7ac709db35e403fbc5777a25a9e7ea05fedbfe852e639db1c78` | [yottadb_r204_x8664_rhel10_pro.tgz](/uploads/a4f226ee4cd69a996b122c4779a4ee1e/yottadb_r204_x8664_rhel10_pro.tgz)             |
+| `d5a530ae30565dbbed8ec2c0512ef153722d56948a71e367d678650f066aa8c6` | [yottadb_r204_x8664_rhel9_pro.tgz](/uploads/3c571f57e204aa6b5833bf8ccb446139/yottadb_r204_x8664_rhel9_pro.tgz)               |
+| `0863bb582470b679996bd94972677285aa166a7449a5039295a0ea4ae1915b61` | [yottadb_r204_x8664_sle15_pro.tgz](/uploads/7e6fc88697048b6657e0db37e5b33738/yottadb_r204_x8664_sle15_pro.tgz)               |
+| `f2e71ee10d10f694d577e3bd355deaf00a040b8578db836637e5ea011755c9bc` | [yottadb_r204_x8664_ubuntu2404_pro.tgz](/uploads/d7b335d5a362055fa7cab764a78f8a97/yottadb_r204_x8664_ubuntu2404_pro.tgz)     |
 
 ## Release Note Revision History
 
-| Revision | Date | Summary               |
-|----------|------|-----------------------|
-| 1.0      |      | Initial Release Notes |
+| Revision | Date           | Summary               |
+|----------|----------------|-----------------------|
+| 1.0      | March 30, 2026 | Initial Release Notes |
 
 ## Contact Information
 
