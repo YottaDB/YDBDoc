@@ -480,7 +480,7 @@ Generally, YottaDB performs the same maintenance on $ZB for a READ X#maxlen as f
 Terminal Deviceparameter Summary
 +++++++++++++++++++++++++++++++++
 
-The following tables provide a brief summary of deviceparameters for terminals, grouped into related areas. For detailed information, refer to `OPEN`_, :ref:`USE <io-commands-use>`, and `CLOSE`_.
+The following tables provide a brief summary of deviceparameters for terminals, grouped into related areas. For detailed information, refer to `OPEN`_, :ref:`USE <io-command-use>`, and `CLOSE`_.
 
 **Error Processing Deviceparameters**
 
@@ -877,7 +877,7 @@ Example:
 Sequential File Deviceparameter Summary
 ++++++++++++++++++++++++++++++++++++++++
 
-The following tables provide a brief summary of deviceparameters for sequential files grouped into related areas. For more detailed information, refer to `OPEN`_, :ref:`USE <io-commands-use>`, and `CLOSE`_.
+The following tables provide a brief summary of deviceparameters for sequential files grouped into related areas. For more detailed information, refer to `OPEN`_, :ref:`USE <io-command-use>`, and `CLOSE`_.
 
 **Error Processing Deviceparameters**
 
@@ -1189,7 +1189,7 @@ A null device discards all output. YottaDB maintains a virtual cursor position f
 NULL Deviceparameter Summary
 ++++++++++++++++++++++++++++
 
-The following table provides a brief summary of deviceparameters for null devices. For more detailed information, refer to `OPEN`_, :ref:`USE <io-commands-use>`, and `CLOSE`_.
+The following table provides a brief summary of deviceparameters for null devices. For more detailed information, refer to `OPEN`_, :ref:`USE <io-command-use>`, and `CLOSE`_.
 
 +----------------------------+------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
 | Deviceparameter            | Command                      | Comment                                                                                                                                     |
