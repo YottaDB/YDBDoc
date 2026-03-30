@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -22,7 +22,7 @@ Acculturation Workshop
 
 Welcome to the YottaDB Acculturation Workshop!
 
-Copyright © 2017-2024 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
+Copyright © 2017-2026 YottaDB LLC and/or its subsidiaries. All Rights Reserved.
 
 Copyright © 2014 Fidelity National Information Services, Inc. and/or its subsidiaries. All Rights Reserved.
 
@@ -216,7 +216,7 @@ The Acculturation Workshop is distributed as a `vmdk format <https://en.wikipedi
 Virtual Machine Download
 ++++++++++++++++++++++++
 
-Download `Debian-12_yottadbworkshop.zip <https://docs.yottadb.com/AcculturationGuide/Debian-12_yottadbworkshop.zip>`_ and unzip it to access the disk image file Debian-12_yottadbworkshop.vmdk.
+Download `Debian-13_yottadbworkshop.zip <https://docs.yottadb.com/AcculturationGuide/Debian-13_yottadbworkshop.zip>`_ and unzip it to access the disk image file Debian-13_yottadbworkshop.vmdk.
 
 .. _vm-config:
 
@@ -228,17 +228,17 @@ Virtualization software configures virtual machines either with their own IP add
 
 You will need to configure your virtual machine for outbound and inbound network access. While outbound access should require no configuration to work with either type of virtual machine network connection, inbound network access in a NAT'd environment will require a TCP port on the host to be forwarded to the virtual machine for each port at which a service on the virtual machine needs to respond. For example, each virtual machine has a secure shell (ssh) server listening at port 22 for incoming connections, and you might choose to forward port 2222 on the host to port 22 on your virtual machine.
 
-Refer to the user documentation for your virtualization software to set up virtual machine networking so that :code:`Debian-12_yottadbworkshop.vmdk` is the disk image of the virtual machine, and port 2222 on the host is forwarded to port 22 on the guest. For example, using qemu-system-x86_64 on a Linux host, one of the following commands should work:
+Refer to the user documentation for your virtualization software to set up virtual machine networking so that :code:`Debian-13_yottadbworkshop.vmdk` is the disk image of the virtual machine, and port 2222 on the host is forwarded to port 22 on the guest. For example, using qemu-system-x86_64 on a Linux host, one of the following commands should work:
 
 .. code-block:: bash
 
-   qemu-system-x86_64 -enable-kvm -cpu host -m 256 -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::9080-:9080,hostfwd=tcp::1337-:1337 -hda Debian-12_yottadbworkshop.vmdk
+   qemu-system-x86_64 -enable-kvm -cpu host -m 256 -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::9080-:9080,hostfwd=tcp::1337-:1337 -hda Debian-13_yottadbworkshop.vmdk
 
 Using kvm on a Linux host, the following command boots the vmdk image with port 2222 on the host forwarded to port 22 on the guest for ssh sessions:
 
 .. code-block:: bash
 
-    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::9080-:9080,hostfwd=tcp::1337-:1337 -hda Debian-12_yottadbworkshop.vmdk
+    kvm -enable-kvm -cpu host -m 256 -display none -net nic -net user,hostfwd=tcp::2222-:22,hostfwd=tcp::9080-:9080,hostfwd=tcp::1337-:1337 -hda Debian-13_yottadbworkshop.vmdk
 
 +++++++++++++++++++++++++++++++
 Control of the Keyboard & Mouse
@@ -1532,20 +1532,20 @@ Delete the prior generation journal files, to keep the directory clean, and make
    ydbuser@ydbdev:~/jnlex$
 
 
-Shut down the Acculturation Workshop virtual machine cleanly and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original Debian-12_yottadbworkshop.vmdk file.
+Shut down the Acculturation Workshop virtual machine cleanly and make three copies of the Acculturation Workshop called Paris.vmdk, Melbourne.vmdk and Santiago.vmdk. Alternatively, if your host system is short of disk space, make two copies and rename the original Debian-13_yottadbworkshop.vmdk file.
 
 If you are using qcow2 or vmdk disk images with QEMU/kvm on Linux, you can use a feature that allows a disk image to be created off a base image so that the base image does not change and all changes go to the new disk image. Check with your virtualization software to determine whether it supports this feature. Execute commands such as the following on the host (with the guest shut down) - depending on the version of QEMU/kvm on your PC, the exact command may vary.
 
 .. code-block:: bash
 
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-12_yottadbworkshop.vmdk Melbourne.vmdk
-   Formatting 'Melbourne.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-12_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-12_yottadbworkshop.vmdk Paris.vmdk
-   Formatting 'Paris.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-12_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
-   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-12_yottadbworkshop.vmdk Santiago.vmdk
-   Formatting 'Santiago.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-12_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
+   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-13_yottadbworkshop.vmdk Melbourne.vmdk
+   Formatting 'Melbourne.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-13_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
+   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-13_yottadbworkshop.vmdk Paris.vmdk
+   Formatting 'Paris.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-13_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
+   $ qemu-img create -f vmdk -o zeroed_grain,backing_file=Debian-13_yottadbworkshop.vmdk Santiago.vmdk
+   Formatting 'Santiago.vmdk', fmt=vmdk size=107374182400 backing_file=Debian-13_yottadbworkshop.vmdk compat6=off hwversion=undefined zeroed_grain=on
    $ ls -l *.vmdk
-   -rw-r--r-- 1 bhaskar gtc 9320071268 Apr 12 17:22 Debian-12_yottadbworkshop.vmdk
+   -rw-r--r-- 1 bhaskar gtc 9320071268 Apr 12 17:22 Debian-13_yottadbworkshop.vmdk
    -rw-r--r-- 1 bhaskar gtc   13172736 Apr 12 17:24 Melbourne.vmdk
    -rw-r--r-- 1 bhaskar gtc   13172736 Apr 12 17:24 Paris.vmdk
    -rw-r--r-- 1 bhaskar gtc   13172736 Apr 12 17:24 Santiago.vmdk
