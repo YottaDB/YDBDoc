@@ -1,6 +1,6 @@
  .. ###############################################################
  .. #                                                             #
- .. # Copyright (c) 2025 YottaDB LLC and/or its subsidiaries.#
+ .. # Copyright (c) 2025-2026 YottaDB LLC and/or its subsidiaries.#
  .. # All rights reserved.                                        #
  .. #                                                             #
  .. #     This source code contains the intellectual property     #
@@ -35,7 +35,8 @@ YottaDB Documentation
 Releases
 ========
 
-* `Latest <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.02>`_
+* `Latest <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.04>`_
+* `r2.04 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.04>`_
 * `r2.02 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.02>`_
 * `r2.00 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.00>`_
 * `r1.38 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r1.38>`_
