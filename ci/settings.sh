@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 ###############################################################
 #                                                             #
-# Copyright (c) 2025 YottaDB LLC and/or its subsidiaries.#
+# Copyright (c) 2025-2026 YottaDB LLC and/or its subsidiaries.#
 # All rights reserved.                                        #
 #                                                             #
 #     This source code contains the intellectual property     #
@@ -11,6 +11,6 @@
 #                                                             #
 ###############################################################
 # The YDBDoc branch name with documentation for the upcoming/next YDB release
-YDBDOC_DEV_BRANCH=r2.04
+YDBDOC_DEV_BRANCH=r2.06
 # Hardcode the YDB project tag corresponding to the latest production release
-YDB_CURPRO_TAG=r2.02
+YDB_CURPRO_TAG=r2.04
