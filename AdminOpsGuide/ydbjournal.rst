@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -203,9 +203,6 @@ Because tbck is less than tfwd, tsys+tbck is less than tsys+tfwd. In very round 
    * Extract the unreplicated transactions from the crashed environment
 
    * Connect the backup as a replicating instance to B and allow it to catch up.
-
-.. note::
-   Applications that can take advantage of the forthcoming LMX capability will essentially make tswch zero when used with a suitable front-end network.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Comparison other than recovery
