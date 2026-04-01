@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -1566,6 +1566,72 @@ Examples:
    dist=/usr/local/lib/yottadb/r202; src=2; uid=998877665; euid=998877665; pid=123456; tty=/dev/pts/1; command=7
 
 This example demonstrates the audit logging with APD_ENABLE:RD facility. Logging activity shows that PID 987654 and PID 123456 ran two Direct Mode commands - write "Hello world",! and read num. The response from PID 123456 for read num was 7.
+
+.. _configuring-database-statistics:
+
+-------------------------------
+Configuring Database Statistics
+-------------------------------
+
+YottaDB can be optionally configured to provide and share database access statistics across one or more processes accessing database files.
+
+When database statistics are enabled, YottaDB creates a temporary database called a **statsdb**, or statistics database. This database is stored in a :code:`.gst` file until all processes engaged in statistics sharing exit. The :code:`.gst` file will be stored in the directory specified by the `ydb_statsdir <./basicops.html#ydb-statsdir>`_ environment variable. If :code:`ydb_statsdir` is not defined, the :code:`.gst` file will be placed in `ydb_tmp <./basicops.html#ydb-tmp>`_. If :code:`ydb_tmp` is not defined, the :code:`.gst` file will be placed in :code:`/tmp`.
+
+Under normal conditions, the last process using the statsdb will close it and remove the :code:`.gst` file. If the last process using the statsdb abnormally terminates, the statsdb :code:`.gst` file may be orphaned on the file system. Any such orphaned :code:`.gst` file can be safely deleted.
+
+For more information on database statistics sharing in YottaDB, see `the M Programmer's Guide <../ProgrammersGuide/commands.html#no-statshare-region-list>`_.
+
++++++++++++++++++++++++++++++++++++++++++++++
+How to configure statistics sharing (statsdb)
++++++++++++++++++++++++++++++++++++++++++++++
+
+To configure statistics sharing :
+
+#. Enable or disable statistics sharing at the database level. This can be done by configuring the global directory (:code:`.gld`) or the database file (:code:`.dat`). Statistics are turned ON by default on both the global directory and the database file.
+
+   - *Option 1:* Enable or disable statistics on the global directory (:code:`.gld` file) at the region level
+
+     - To enable, pass -STATS in a GDE CHANGE -REGION command, e.g.: :code:`gde change -region DEFAULT -stats`
+
+     - To disable, pass -NOSTATS in a GDE CHANGE -REGION command, e.g.: :code:`gde change -region DEFAULT -nostats`
+
+     - See `GDE -[NO]STATS <./gde.html#no-sta-ts>`_ for additional details.
+
+   - *Option 2:* Enable or disable statistics on the database file (:code:`.dat` file)
+
+     - To enable, pass -STATS to a MUPIP SET -REGION command, e.g.: :code:`mupip set -stats -reg "*"`
+
+     - To disable, pass -NOSTATS to a MUPIP SET -REGION command, e.g.: :code:`mupip set -nostats -reg "*"`
+
+     - See `MUPIP SET -STATS <./dbmgmt.html#set-stats>`_ for additional details.
+
+#. Enable or disable statistics sharing at the process level. This can be done for a single process, or for all processes in the environment. Statistics are turned OFF for all processes by default.
+
+   - *Option 1:* Enable or disable statistics for a single process
+
+     - To enable, run :code:`VIEW "STATSHARE"` in a YottaDB process
+
+     - To disable, run :code:`VIEW "NOSTATSHARE"` in a YottaDB process
+
+     - See `VIEW "STATSHARE" <../ProgrammersGuide/commands.html#no-statshare-region-list>`_ for additional details.
+
+   - *Option 2:* Enable or disable statistics for all YottaDB processes in the environment
+
+     - To enable, set the :code:`ydb_statshare` environment variable to 1, e.g.: :code:`export ydb_statshare 1`
+
+     - To disable, set the :code:`ydb_statshare` environment variable to 0, e.g.: :code:`export ydb_statshare 0`
+
+     - See `ydb_statshare <./basicops.html#ydb-statshare>`_ for additional details.
+
+#. View live, cumulative statistics by running the %YGBLSTAT routine.
+
+   - Examples:
+
+     - To view transaction statistics run: :code:`$ydb_dist/yottadb -run %YGBLSTAT --stat TRX --pid "*"`
+
+     - To view CFT, CQT, CYT statistics of all processes every 2 seconds run: :code:`$ydb_dist/yottadb -run %YGBLSTAT --stat CFT,CQT,CYT --pid "*"`
+
+   - See `%YDBGBLSTAT <../ProgrammersGuide/utility.html#ygblstat>`_ for additional details.
 
 .. raw:: html
 
