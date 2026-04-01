@@ -1,11 +1,12 @@
 package main
 
-import (
-	"lang.yottadb.com/go/yottadb"
-)
+import "lang.yottadb.com/go/yottadb/v2"
 
 func main() {
+	defer yottadb.Shutdown(yottadb.MustInit())
+	conn := yottadb.NewConn()
 
-	defer yottadb.Exit()
-	_ = yottadb.SetValE(yottadb.NOTTP, nil, "สวัสดีชาวโลก", "^hello", []string{"Go"})
+	// Store unicode greeting into node ^hello("Go")
+	greeting := conn.Node("^hello", "Go")
+	greeting.Set("สวัสดีชาวโลก") // Hello world in Thai
 }
