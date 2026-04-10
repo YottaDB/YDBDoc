@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2021-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2021-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -442,6 +442,8 @@ Metadata about the cross reference itself is stored in nodes of the cross-refere
 
 Applications can read and use the above metadata, but should not attempt to alter it. Changes can result in unpredictable and/or undesirable behavior.
 
+.. _lsxref:
+
 +++++++++++++++++++++++++++
 LSXREFDATA() / LSXREFSUB()
 +++++++++++++++++++++++++++
@@ -469,6 +471,8 @@ where,
     * It is an application global variable name, e.g., :code:`^USPresidents`. In ``lvn`` as described above, the function returns all data or subscript cross references for that global variable, depending on whether the function is LSXREFDATA() or LSXREFSUB().
     * It starts with :code:`^%ydbAIMD` or ``^%ydbAIMS``. In ``lvn``, the function returns information about the specified cross reference.
     * It is omitted or the empty string (""). In ``lvn``, the function returns information about all data or subscript cross references, depending on whether the function called is LSXREFDATA() or LSXREFSUB().
+
+.. _unxref:
 
 +++++++++++++++++++++++++++
 UNXREFDATA() / UNXREFSUB()
@@ -524,6 +528,17 @@ For example:
    YDB>write $$VERSION^%YDBAIM
    3.1
    YDB>
+
+----------------------------
+Extended References
+----------------------------
+
+If **gbl** is an extended reference, the cross reference variable returned by :ref:`xrefdata` and :ref:`xrefsub` is an extended reference using the same global directory as **gbl**. The triggers that maintain the cross references also use the extended reference, since it is not known at the time that the functions are called whether a future update to the global variable will use an extended reference or set `$ZGBLDIR <../ProgrammersGuide/isv.html#zgbldir>`_. Using an extended reference in the trigger ensures that the application global variable and cross reference use the same global directory.
+
+:ref:`lsxref`, and :ref:`unxref` all accept extended references. The cross references reported by the first two functions do not include the global directory name, i.e., they are reported as normal global variables and not as extended references.
+
+.. note::
+   As using extended references has a small incremental performance cost on global variable accesses, define the cross reference using an extended reference only if the application global variable will normally be accessed by the application using an extended reference.
 
 ----------------------------
 Operational Considerations
