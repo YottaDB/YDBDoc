@@ -2066,16 +2066,22 @@ The $ZYRE[LEASE] intrinsic special variable contains a string value that applica
 
 <product> is always "YottaDB".
 
-<release> always begins with an "r" and is a number structured as follows:
+<release> always begins with an "r" and is followed by a number structured as follows:
 
-* The number before the decimal point (".") is the major release number.
+* A number before the decimal point (".") which identifies the database format.
 * A decimal point.
-* The first digit after the decimal point is a minor release number.
-* The second (and last) digit after the decimal point is a bug fix level (so "r3.21" would the first bug fix level of the "r3.20" release).
+* Two digits after the decimal point, which together identify a release number using that database format.
 
-<os> is the operating system, e.g., "Linux"
+The second digit after the decimal point:
 
-<architecture> is the underlying CPU architecture, e.g., "x86_64"
+* if even, indicates a production release; and
+* if odd, indicates code under development between production releases.
+
+Thus, r2.04 indicates a production release, and r2.03 indicates code under development between r2.02 and r2.04.
+
+<os> is the operating system, e.g., "Linux".
+
+<architecture> is the underlying CPU architecture, e.g., "x86_64".
 
 .. note::
    $zyrelease is a read-only intrinsic special variable. As the code generator treats $zyrelease as a string constant known at compile time, and optimizes accordingly, ensure that you run object code only on the same YottaDB release on which you compiled it.
