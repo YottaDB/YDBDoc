@@ -11,6 +11,6 @@
 #								#
 #################################################################
 # The YDBDoc branch name with documentation for the upcoming/next YDB release
-YDBDOC_DEV_BRANCH=r2.06
+YDBDOC_DEV_BRANCH=r2.08
 # Hardcode the YDB project tag corresponding to the latest production release
-YDB_CURPRO_TAG=r2.04
+YDB_CURPRO_TAG=r2.06

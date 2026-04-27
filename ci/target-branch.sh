@@ -36,7 +36,7 @@ fi
 git fetch upstream
 
 if ! git merge-base --is-ancestor upstream/$YDBDOC_DEV_BRANCH HEAD; then
-	# If we reach here, it means HEAD is NOT based off the YDBDoc r2.06 branch.
+	# If we reach here, it means HEAD is NOT based off the YDBDoc r2.08 branch.
 	if ! git merge-base --is-ancestor upstream/master HEAD; then
 		# If we reach here, it means HEAD is NOT based off the YDBDoc master branch either.
 		echo "ERROR: HEAD should be based off [$YDBDOC_DEV_BRANCH] or [master] branch."
@@ -59,9 +59,9 @@ fi
 if [ "$ydb" = 1 ]; then
 	# This code path is reached if the YDBDoc pipeline "pages" job is being run.
 	# Caller script ci/error-check.sh wants to know which YDB commit to compare error messages of YDBDoc HEAD against.
-	# Check if current commit YDBDoc HEAD is based off the YDBDoc r2.06 branch.
+	# Check if current commit YDBDoc HEAD is based off the YDBDoc r2.08 branch.
 	if git merge-base --is-ancestor upstream/$YDBDOC_DEV_BRANCH HEAD; then
-		# HEAD is based off the YDBDoc r2.06 branch. In that case, we need to compare error messages against
+		# HEAD is based off the YDBDoc r2.08 branch. In that case, we need to compare error messages against
 		# YDB master. Therefore, return "master" for this case, unless the current branch corresponds to an
 		# open upstream YDB merge request.
 		target_branch=master
@@ -86,10 +86,10 @@ else
 	# This code path is reached if the YDBDoc pipeline "commit-verify" job is being run.
 	# Caller script ci/commit-verify.sh wants to know what is the YDBDoc target branch to use as the base of the MR
 	# and do copyright checks on all commits since that base commit.
-	# Check if current commit YDBDoc HEAD is based off the YDBDoc r2.06 branch.
+	# Check if current commit YDBDoc HEAD is based off the YDBDoc r2.08 branch.
 	if git merge-base --is-ancestor upstream/$YDBDOC_DEV_BRANCH HEAD; then
-		# HEAD is based off the YDBDoc r2.06 branch. In that case, we need to do copyright checks on all commits
-		# since the YDBDoc r2.06 branch. So return r2.06 in this case.
+		# HEAD is based off the YDBDoc r2.08 branch. In that case, we need to do copyright checks on all commits
+		# since the YDBDoc r2.08 branch. So return r2.08 in this case.
 		echo $YDBDOC_DEV_BRANCH
 	else
 		# HEAD is based off the YDBDoc master branch. In that case, we need to do copyright checks on all commits
