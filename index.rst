@@ -35,7 +35,8 @@ YottaDB Documentation
 Releases
 ========
 
-* `Latest <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.04>`_
+* `Latest <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.06>`_
+* `r2.06 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.06>`_
 * `r2.04 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.04>`_
 * `r2.02 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.02>`_
 * `r2.00 <https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.00>`_
