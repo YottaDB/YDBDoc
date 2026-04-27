@@ -19,9 +19,15 @@
 
 ## Binary Distributions
 
-| sha256sum | file |
-|-----------|------|
-|           |      |
+| sha256sum                                                          | file                                                                                                                         |
+|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| `eb9aa7bcc58e6541abceee0dbc8e5db8d4ed699dec79630da2b779e6a0b789a7` | [yottadb_r206_aarch64_debian13_pro.tgz](/uploads/20b5fe44b591ce11afc1bb908f182a7c/yottadb_r206_aarch64_debian13_pro.tgz)     |
+| `2936c78d593ccf16d8752327fca152600e6c4fce87488920011f6fcc7cb24ca6` | [yottadb_r206_aarch64_ubuntu2404_pro.tgz](/uploads/6812d02d24c6740723cffb5b735f303b/yottadb_r206_aarch64_ubuntu2404_pro.tgz) |
+| `b83ed355b339c513c84094bc3371c31ad6b9a5f9d6dcedae5ba332ddc6d1c013` | [yottadb_r206_x8664_debian13_pro.tgz](/uploads/08178bbb45354f4c869b856b4dc2e4ee/yottadb_r206_x8664_debian13_pro.tgz)         |
+| `af27e11587267607d63cd3a9f432bf14addddd58610bb54088885f0d23ca59ef` | [yottadb_r206_x8664_rhel10_pro.tgz](/uploads/ec6b3488ef0979d8e1b664436c6f89f1/yottadb_r206_x8664_rhel10_pro.tgz)             |
+| `1c01f9346c339059fb596737e7ed9fe8272c801ac4175435a5ad27ea52d14610` | [yottadb_r206_x8664_rhel9_pro.tgz](/uploads/7ab571651bc4774a577fbaf42ca8aac0/yottadb_r206_x8664_rhel9_pro.tgz)               |
+| `e2184ad3713370adbdc1408dbb66a023b9fa78e6fcce54a13a969af03ee60710` | [yottadb_r206_x8664_sle15_pro.tgz](/uploads/1b6d76bb83b34f9ecf864c9dd3c351c4/yottadb_r206_x8664_sle15_pro.tgz)               |
+| `9414a0e3e0f9cf60b4464307fcbd07681229444572f246ef93de8b0ff78d4575` | [yottadb_r206_x8664_ubuntu2404_pro.tgz](/uploads/6a8d1302a8759b88d13efb15accb82a9/yottadb_r206_x8664_ubuntu2404_pro.tgz)     |
 
 ## Release Note Revision History
 
