@@ -662,10 +662,11 @@ ydb_local_collate
 ++++++++++
 ydb_log
 ++++++++++
-**ydb_log (gtm_log)** specifies a directory where the gtm_secshr_log file is stored. The gtm_secshr_log file stores information gathered in the gtmsecshr process. YottaDB recommends that a system-wide default be established for ydb_log so that gtmsecshr always logs its information in the same directory, regardless of which user's YottaDB process invokes gtmsecshr. In conformance with the Filesystem Hierarchy Standard, YottaDB recommends /var/log/yottadb/$ydb_rel as the value for $ydb_log unless you are installing the same version of YottaDB in multiple directories. Note that $ydb_rel can be in the form of the current YottaDB release and platform. If you do not set $ydb_log, YottaDB creates log files in a directory in /tmp. However, this is not recommended because it makes YottaDB log files vulnerable to the retention policy of a temporary directory.
 
-.. note::
-   In current versions, gtmsecshr logs its messages in the system log and the environment variable ydb_log is ignored.
+**ydb_log (gtm_log)** has two uses:
+
+* If ``-log`` is not provide as part of the ``gtcm_gnp_server`` startup, the `GT.CM GNP Server <gtcm.html>`_ uses \$ydb_log / \$gtm_log (in that order) to log messages in a file called ``gtcm_gnp_server.log``. Any pre-existing file of that name is renamed with a timestamp suffix.
+* `%YDBPROCSTUCKEXEC <../ProgrammersGuide/utility.html#ydbprocstuckexec>`_ uses it to log captured diagnostics.
 
 +++++++++++++++++
 ydb_lvnullsubs
