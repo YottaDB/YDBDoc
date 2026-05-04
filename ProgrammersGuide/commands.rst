@@ -2085,11 +2085,13 @@ Starts a string-pool garbage collection, which normally happens automatically at
 STP_GCOL_NOSORT:value
 ~~~~~~~~~~~~~~~~~~~~~~
 
-VIEW "STP_GCOL_NOSORT":1 signals future garbage collections to happen without sorting the strings in the stringpool. VIEW "STP_GCOL_NOSORT":0 signals future garbage collections to happen with sorting.
+VIEW "STP_GCOL_NOSORT":1 instructs subsequent garbage collections to not sort the locations of strings in the stringpool. VIEW "STP_GCOL_NOSORT":0 instructs subsequent garbage collections to sort strings. Sorting maintains the relative order of string locations in the string pool.
 
-Sorted garbage collections are the default. Avoiding sorting could improve garbage collection runtimes but could also result in increased memory needs depending on the application. Note that avoiding sorting could not only increase the steady-state stringpool memory usage, but could spike the stringpool memory usage to double the steady-state for a short period of time during the garbage collection.
+Sorted garbage collections are the default. Not sorting aims to speed up applications by reducing the time spent on garbage collection, potentially at the cost of a significant increase in memory use, not just steady-state stringpool memory usage, but also stringpool usage during garbage collection. You should determine empirically whether or not sorting gives your application better performance. Note that since the setting is done at the level of an individual process, if your application has processes with different workloads, the setting may differ for each workload.
 
-The env var `ydb_stp_gcol_nosort <../AdminOpsGuide/basicops.html#ydb-stp-gcol-nosort-env-var>`_ provides an alternative way to choose sorted or unsorted garbage collections.
+Since not sorting does not maintain the order of strings in the stringpool, building a long string one byte at a time is a pathological case where not sorting can result in worse performance. As discussed at `Strong performance slowdown when using VIEW "STP_GCOL_NOSORT":1 <https://gitlab.com/YottaDB/DB/YDB/-/work_items/1226#note_3301046929>`_, when not sorting, it is better to build a long string by concatenating longer sub-strings instead of appending one byte at a time. If an application needs to build a long string one byte at a time, consider turning sorting on during the build, and turning it off afterwards.
+
+The env var `ydb_stp_gcol_nosort <../AdminOpsGuide/basicops.html#ydb-stp-gcol-nosort-env-var>`_ provides a way to choose sorted or unsorted garbage collections at process startup.
 
 ~~~~~~~~~~~~~~~~~~~~~~
 TRACE:value:<expr>
