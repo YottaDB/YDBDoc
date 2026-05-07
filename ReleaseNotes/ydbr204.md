@@ -31,9 +31,10 @@
 
 ## Release Note Revision History
 
-| Revision | Date           | Summary               |
-|----------|----------------|-----------------------|
-| 1.0      | March 30, 2026 | Initial Release Notes |
+| Revision | Date           | Summary                             |
+|----------|----------------|-------------------------------------|
+| 1.0      | March 30, 2026 | Initial Release Notes               |
+| 1.1      | May 7, 2026    | Recommendation to use r2.06 instead |
 
 ## Contact Information
 
@@ -61,6 +62,9 @@ For free (to you) support from members of communities who run widely available a
 ## r2.04
 
 ### Overview
+
+> [!note}
+> Instead of r2.04, please consider using the newer [r2.06](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.06) whose Supported platforms are identical. It is completely upward compatible with r2.04.
 
 r2.04 is YottaDB's biggest release to date with significant ehancements to both performance and functionality. Highlights include:
 

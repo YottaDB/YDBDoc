@@ -31,9 +31,10 @@
 
 ## Release Note Revision History
 
-| Revision | Date           | Summary               |
-|----------|----------------|-----------------------|
-| 1.0      | April 27, 2026 | Initial Release Notes |
+| Revision | Date           | Summary                                   |
+|----------|----------------|-------------------------------------------|
+| 1.0      | April 27, 2026 | Initial Release Notes                     |
+| 1.1      | May 7, 2026    | Admonition against use of rust-coreutils. |
 
 ## Contact Information
 
@@ -79,7 +80,10 @@ A platform is a combination of a CPU architecture and an operating system. A pla
 | 64-bit x86            | * Ubuntu 24.04 LTS<br>* Red Hat Enterprise Linux 9.x & 10.x<br>* SUSE Linux Enterprise 15.x<br>* Debian GNU/Linux 13 (Trixie) | There are separate binary distributions for each OS version, owing to differences in the library versions of the distributions. |
 | AARCH64 (64-bit ARM   | * Ubuntu 24.04 LTS<br>* Debian GNU Linux 13 (Trixie) | See below. |
 
- Recent releases of major 64-bit GNU/Linux distributions with contemporary kernels, glibc and ncurses are Supportable; however you may have to build YottaDB from source using the `--from-source` option of `ydbinstall.sh`. Specific notes:
+> [!note]
+> The [use of rust-coreutils by Ubuntu](https://discourse.ubuntu.com/t/an-update-on-rust-coreutils/80773) prevents YottaDB from operating correctly on Ubuntu 26.04 LTS. Any platform that would otherwise be Supportable, as Ubuntu 26.04 LTS would be, but which uses [rust-coreutils](https://deepwiki.com/uutils/coreutils) is considered Unsupported unless the rust-coreutils are replaced with [GNU Coreutils](https://www.gnu.org/software/coreutils/), e.g., [gnu-coreutils for Ubuntu 26.04 LTS](https://packages.ubuntu.com/resolute/gnu-coreutils).
+
+Recent releases of major 64-bit GNU/Linux distributions with contemporary kernels, glibc and ncurses are Supportable; however you may have to build YottaDB from source using the `--from-source` option of `ydbinstall.sh`. Specific notes:
 
 - Supported filesystems are ext4 and xfs. f2fs is Supportable. btrfs, zfs, and NFS are Unsupported, and known to have issues.
 - [ydbinstall.sh](https://gitlab.com/YottaDB/DB/YDB/-/blob/master/sr_unix/ydbinstall.sh) recognizes [Rocky Linux](https://rockylinux.org/) as equivalent to RHEL, and [OpenSUSE Leap](https://www.opensuse.org/#Leap) as equivalent to SUSE Linux Enterprise, installing the releases for the corresponding Supported distributions. Note that Rocky Linux and OpenSUSE Leap are Supportable, not Supported.
