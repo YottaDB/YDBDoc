@@ -63,7 +63,7 @@ For free (to you) support from members of communities who run widely available a
 
 ### Overview
 
-> [!note}
+> [!note]
 > Instead of r2.04, please consider using the newer [r2.06](https://gitlab.com/YottaDB/DB/YDB/-/releases/r2.06) whose Supported platforms are identical. It is completely upward compatible with r2.04.
 
 r2.04 is YottaDB's biggest release to date with significant ehancements to both performance and functionality. Highlights include:
