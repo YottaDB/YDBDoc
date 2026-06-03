@@ -1601,7 +1601,7 @@ To create a shared library, use the following syntax:
 
 .. code-block:: none
 
-   ld -shared -o libshr.so file1.o file2.o
+   ld -shared -z noexecstack -o libshr.so file1.o file2.o
 
 Where libshr.so is replaced with name of the shared library one wishes to create. The file1.o and file2.o are replaced with one or more object files created by the YottaDB compiler that the user wishes to put into the shared library. Refer to the ld man page on specific platform for details.
 
