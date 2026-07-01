@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -622,197 +622,222 @@ For more information on Global Directories, refer to the `"Global Directory Edit
 Optional YottaDB Environment Translation Facility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To facilitate application migration to YottaDB from other M implementations (for example to convert UCI and VOL specifications to global directories) in the environment specification, YottaDB provides an interface to translate strings to global directory filenames.
+To facilitate migration of applications to YottaDB from other M implementations, YottaDB can translate an extended reference in ``["namespace"]`` or ``["UCI,VOL"]`` format into a YottaDB global directory (a ``.gld`` file) at runtime. For example, ``^["VAH,ROU"]ABC`` accesses the global ``^ABC`` through whichever global directory the facility maps ``VAH,ROU`` to:
+
+.. graphviz::
+
+   digraph env_xlate {
+     rankdir=LR;
+     node [shape=box, style=filled, color="#f3f3f3", fontname="FiraGO,Tahoma,sans-serif"];
+     edge [fontname="FiraGO,Tahoma,sans-serif", fontsize=10];
+
+     ref [label="^[\"VAH,ROU\"]ABC"];
+     gld [label="/prod/vah.gld", color="#f77825"];
+     gvn [label="^ABC"];
+
+     ref -> gld [label="translated to"];
+     gld -> gvn [label="accesses"];
+   }
 
 .. note::
-   Using this facility impacts the performance of every global access that uses environment specification. Make sure you use it only when static determination of the global directory is not feasible. When used, maximize the efficiency of the translation routines.
+   Using this facility impacts the performance of every global access that uses an environment specification. Use it only when the global directory cannot be determined statically, and make the translation routine as efficient as possible: typically it loads one or more lookup tables once (at the first call), then performs a fast lookup - by length and a distinguishing set of characters, or by a hash with collision handling. Be prepared for the edge cases: one or both inputs may have zero length; the first input may itself be a comma-delimited string that has to be split into the two logical inputs; and either input (most often the first) may already be a valid global directory specification that should be passed through unchanged.
 
-The use of this facility is enabled by the definition of the environment variable ydb_env_translate, which contains the path of a shared library with the following entry point:
+You supply the translation as a shared library and locate it with the :code:`ydb_env_translate` environment variable; YottaDB then calls the library's :code:`ydb_env_xlate()` entry point for every extended reference and uses the global directory it returns. If the shared library or the entry point is not accessible, YottaDB reports an error.
+
+For each extended reference, YottaDB passes the parsed environment specification to :code:`ydb_env_xlate()` as :code:`in1`, :code:`in2`, and :code:`in3`, and acts on the routine's return code:
+
+.. graphviz::
+
+   digraph ydb_env_xlate_flow {
+     rankdir=LR;
+     node [shape=box, style=filled, color="#f3f3f3", fontname="FiraGO,Tahoma,sans-serif"];
+     edge [fontname="FiraGO,Tahoma,sans-serif", fontsize=10];
+
+     ref [label="^[\"VAH,ROU\"]ABC"];
+     rt  [label="YottaDB\nruntime"];
+     fn  [label="ydb_env_xlate()", color="#f77825"];
+     ok  [label="Use out as the\nglobal directory"];
+     err [label="Report error\n(YDB-I-TEXT from out)"];
+
+     ref -> rt  [label="extended reference"];
+     rt  -> fn  [label="in1, in2, in3"];
+     fn  -> ok  [label="return 0\nout = .gld"];
+     fn  -> err [label="return != 0"];
+   }
 
 ^^^^^^^^^^^^^^
 ydb_env_xlate
 ^^^^^^^^^^^^^^
 
-If the shared object is not accessible or the entry point is not accessible, YottaDB reports an error.
-
-The ydb_env_xlate() routine has the following C prototype:
+:code:`ydb_env_xlate()` has the following C prototype:
 
 .. code-block:: C
 
-   int ydb_env_xlate(ydb_string_t *in1, ydb_st
-      ring_t *in2, ydb_string *in3, ydb_string_t *out)
+   int ydb_env_xlate(ydb_string_t *in1, ydb_string_t *in2,
+                     ydb_string_t *in3, ydb_string_t *out)
 
-where ydb_string_t is a structure defined in libyottadb.h as follows:
+where :code:`ydb_string_t` is defined in :code:`libyottadb.h` as a counted string (i.e., it is **not** NUL-terminated, so always use its :code:`length`):
 
 .. code-block:: C
 
    typedef struct
    {
-	unsigned long	length;
-	char		*address;
+       unsigned long  length;
+       char           *address;
    } ydb_string_t;
 
-The purpose of the function is to use its three input arguments to derive and return an output argument that can be used as an environment specification by YottaDB. Note that the input values passed (in1, in2 and in3) are the result of M evaluation and must not be modified. The first two arguments are the expressions passed within the up-bars "| \|" or the square-brackets "[ ]", and the third argument is the current working directory as described by $ZDIRECTORY.
+The routine derives :code:`out` from its three input arguments. The inputs are the result of M evaluation and **must not be modified**:
 
-A return value other than zero (0) indicates an error in translation, and is reported by a YottaDB error.
+.. list-table::
+   :header-rows: 1
+   :widths: 10 90
 
-If the length of the output argument is non-zero, YottaDB appends a secondary message of YDB-I-TEXT, containing the text found at the address of the output structure.
+   * - Argument
+     - Meaning
+   * - :code:`in1`
+     - The first expression inside the vertical bars ``| |`` or the square-brackets ``[ ]`` of the extended reference.
+   * - :code:`in2`
+     - The second expression of the two-argument ``^["a","b"]gvn`` form; a zero-length string when the reference supplies only one expression.
+   * - :code:`in3`
+     - The current working directory, as reported by $ZDIRECTORY.
+   * - :code:`out`
+     - Output - where the routine returns the global directory file specification, or message text on error (see below).
 
-YottaDB does not do any memory management related to the output argument - space for the output should be allocated by the external routine. The routine must place the returned environment specification at the address it has allocated and adjust the length accordingly. On a successful return, the return value should be zero. If the translation routine must communicate an error to YottaDB, it must return a non-zero value, and if it is to communicate additional error information, place the error text at the address where the environment would normally go and adjust the length to match the length of the error text.
+On return:
 
-Length of the return value may range from 0-32767, otherwise YottaDB reports an error.
+* Return **0** for success, or **non-zero** to signal a translation error (YottaDB then raises an error which can be trapped by an application error handler).
+* The routine owns the storage for :code:`out`; YottaDB performs no memory management on it. Place the result at an address the routine allocates (for example with :code:`ydb_malloc()`) or at static storage, and set :code:`out->length` to its length, excluding any ``<NUL>`` terminator. If :code:`out->address` is NULL, YottaDB issues an error.
+* :code:`out->length` may range from **0 to 32767**; any other length is an error.
+* A **zero-length** :code:`out` selects the current value of $ZGBLDIR (that is, "no change").
+* The returned file specification may be absolute or relative and may contain an environment variable. If it is not accessible, or is not a valid global directory, YottaDB reports the same errors it does for any invalid global directory.
+* On a **non-zero** (error) return, if :code:`out->length` is non-zero YottaDB appends the text at :code:`out->address` as a secondary :code:`YDB-I-TEXT` message.
 
-A zero-length (empty) string specifies the current value of $ZGBLDIR. Non-zero lengths must represent the actual length of the file specification pointed to by the address, excluding any <NUL> terminator. If the address field of the output argument is NULL, YottaDB issues an error.
-
-The file specification may be absolute or relative and may contain an environment variable. If the file specified is not accessible, or is not a valid global directory, YottaDB reports errors in the same way it does for any invalid global directory.
-
-It is possible to write this routine in M (as a call-in), however, global variables in such a routine would change the naked indicator, which environment references normally do not. Depending on the conventions of the application, there might be difficult name-space management issues such as protecting the local variables used by the M routine.
-
-While it is possible for this routine to take any form that the application designer finds appropriate within the given interface definition, the following paragraphs make some recommendations based on the expectation that a routine invoked for any more than a handful of global references should be efficient.
-
-It is expected that the routine loads one or more tables, either at compilation or the first time it is invoked. The logic of the routine performs a look up on the entry in the set of tables. The lookup might be based on the length of the strings and some unique set of characters in the names, or a hash, with collision provisions as appropriate.
-
-The routine may have to deal with a case where one or both of the inputs have zero length. A subset of these cases may have the first string holding a comma limited string that needs to be re-interpreted as being equivalent to two input strings (note that the input strings must never be modified). The routine may also have to handle cases where a value (most likely the first) is accidentally or intentionally, already a global directory specification.
-
-Example:
+Build a translation routine as a shared library (see `Chapter 11: "Integrating External Routines" <./extrout.html>`_ for details), for example:
 
 .. code-block:: bash
 
-   $ cat ydb_env_xlate.c
-   #include <stdio.h>
+   gcc -shared -fPIC -Wall -Wextra -I"$ydb_dist" -o ydb_env_xlate.so ydb_env_xlate.c
+
+The following simple, example routine handles a single fixed translation. Because it always returns the same global directory, it can keep it in a static (BSS) buffer and needs no dynamic memory management:
+
+.. code-block:: C
 
    #include <string.h>
-
    #include "libyottadb.h"
 
-   static int init = 0;
+   /* Map any extended reference to one fixed global directory. */
+   int ydb_env_xlate(ydb_string_t *in1, ydb_string_t *in2,
+                     ydb_string_t *in3, ydb_string_t *out) {
+       static char gld[256];        /* BSS: zero-initialized, lives for the process */
+
+       /* A zero-length input means "use the current $ZGBLDIR". */
+       if (in1->length == 0) {
+           out->length = 0;
+           return 0;
+       }
+
+       if (gld[0] == '\0')          /* fill the buffer once, on the first call */
+           strcpy(gld, "/prod/vah.gld");
+
+       out->address = gld;
+       out->length  = strlen(gld);  /* excludes the terminating NUL */
+       return 0;
+   }
+
+The following, fuller routine instead translates a handle (:code:`in1`) to a global directory, using a table loaded once from :code:`table.dat`. It handles a zero-length input, manages memory with :code:`ydb_malloc()`, and reports an error for an unknown handle. (For brevity it uses :code:`in1` only; extend the comparison to :code:`in2` for the two-argument form.)
+
+.. code-block:: C
+
+   #include <stdio.h>
+   #include <stdlib.h>
+   #include <string.h>
+   #include "libyottadb.h"
+
+   /* One table entry: the handle to match (key) and the global directory
+    * (gld) to return for it. Both are counted strings. */
    typedef struct {
-       ydb_string_t field1, field2, ret;
+       ydb_string_t key;
+       ydb_string_t gld;
+   } xlate_entry;
+
+   #define MAX_ENTRIES 64
+   static xlate_entry table[MAX_ENTRIES];
+   static int         n_entries  = 0;
+   static int         initialized = 0;
+
+   /* Copy len bytes into YottaDB-managed memory (no NUL needed: we keep length). */
+   static char *dup_str(const char *s, unsigned long len) {
+       char *p = ydb_malloc(len);
+       memcpy(p, s, len);
+       return p;
    }
-   line_entry;
-   static line_entry table[5], * line, linetmp;
-   /* Since these errors may occur before setup is complete, they are statics */
-   static char * errorstring1 = "Error in function initialization, environment variable GTM_CALLIN_START not defined. Environment translation failed.";
-   static char * errorstring2 = "Error in function initialization, function pointers could not be determined. Environment translation failed.";
-   #define ENV_VAR "GTM_CALLIN_START"
-   typedef int( * int_fptr)();
-   int_fptr GTM_MALLOC;
-   int init_functable(ydb_string_t * ptr) {
-       /* This function demonstrates the initialization of other function pointers as well (if the user-code needs them for any reason, they should be defined as globals) */
-       char * pcAddress;
-       long lAddress;
-       void ** functable;
-       void( * setup_timer)();
-       void( * cancel_timer)();
-       pcAddress = getenv(ENV_VAR);
-       if (pcAddress == NULL) {
-           ptr -> length = strlen(errorstring1);
-           ptr -> address = errorstring1;
+
+   /* Load table.dat once: one "<handle> <global-directory>" pair per line.
+    * Returns 0 on success, or non-zero with a message left in *err. */
+   static int init_table(ydb_string_t *err) {
+       static char msg[] = "ydb_env_xlate: cannot open table.dat";
+       char handle[256], gld[1024];
+       FILE *f = fopen("table.dat", "r");
+       if (f == NULL) {
+           err->address = msg;
+           err->length  = strlen(msg);
            return 1;
        }
-       lAddress = -1;
-       lAddress = atol(pcAddress);
-       if (lAddress == -1) {
-           ptr -> length = strlen(errorstring2);
-           ptr -> address = errorstring2;
-           return 1;
+       while (n_entries < MAX_ENTRIES &&
+              fscanf(f, "%255s %1023s", handle, gld) == 2) {
+           table[n_entries].key.length  = strlen(handle);
+           table[n_entries].key.address = dup_str(handle, strlen(handle));
+           table[n_entries].gld.length  = strlen(gld);
+           table[n_entries].gld.address = dup_str(gld, strlen(gld));
+           n_entries++;
        }
-       functable = (void * ) lAddress;
-       setup_timer = (void( * )()) functable[2];
-       cancel_timer = (void( * )()) functable[3];
-       GTM_MALLOC = (int_fptr) functable[4];
+       fclose(f);
        return 0;
    }
-   void copy_string(char ** loc1, char * loc2, int length) {
-       char * ptr;
-       ptr = (char * ) ydb_malloc(length);
-       strncpy(ptr, loc2, length);
-       * loc1 = ptr;
-   }
-   int init_table(ydb_string_t * ptr) {
-       int i = 0;
-       char buf[100];
-       char * buf1, * buf2;
-       FILE * tablefile;
-       char * space = " ";
-       char * errorstr1 = "Error opening table file table.dat";
-       char * errorstr2 = "UNDETERMINED ERROR FROM GTM_ENV_XLATE";
-       if ((tablefile = fopen("table.dat", "r")) == (FILE * ) NULL) {
-           ptr -> length = strlen(errorstr1);
-           copy_string( & (ptr -> address), errorstr1, strlen(errorstr1));
-           return 1;
+
+   int ydb_env_xlate(ydb_string_t *in1, ydb_string_t *in2,
+                     ydb_string_t *in3, ydb_string_t *out) {
+       static char unknown[] = "ydb_env_xlate: unknown environment handle";
+       int i, rc;
+
+       /* Load the table on the first call. */
+       if (!initialized) {
+           rc = init_table(out);       /* on failure, out holds the error text */
+           if (rc != 0) return rc;
+           initialized = 1;
        }
-       while (fgets(buf, (int) sizeof(buf), tablefile) != (char * ) NULL) {
-           line = & table[i++];
-           buf1 = buf;
-           buf2 = strstr(buf1, space);
-           line -> field1.length = buf2 - buf1;
-           copy_string( & (line -> field1.address), buf1, line -> field1.length);
-           buf1 = buf2 + 1;
-           buf2 = strstr(buf1, space);
-           line -> field2.length = buf2 - buf1;
-           copy_string( & (line -> field2.address), buf1, line -> field2.length);
-           buf1 = buf2 + 1;
-           line -> ret.length = strlen(buf1) - 1;
-           copy_string( & (line -> ret.address), buf1, line -> ret.length);
+
+       /* An empty specification means "use the current $ZGBLDIR". */
+       if (in1->length == 0) {
+           out->length = 0;
+           return 0;
        }
-       fclose(tablefile);
-       /* In this example, the last entry in the table is the error string */
-       line = & table[4];
-       copy_string( & (line -> ret.address), errorstr2, strlen(errorstr2));
-       line -> ret.length = strlen(errorstr2);
-       return 0;
-   }
-   int cmp_string(ydb_string_t str1, ydb_string_t str2) {
-       if (str1.length == str2.length)
-           return strncmp(str1.address, str2.address, (int) str1.length);
-       else
-          return str1.length - str2.length;
-   }
-   int cmp_line(line_entry * line1, line_entry * line2) {
-       return (((cmp_string(line1 -> field1, line2 -> field1)) || (cmp_string(line1 -> field2, line2 -> field2))));
-   }
-   int look_up_table(line_entry * aline, ydb_string_t * ret_ptr) {
-       int i;
-       int ret_v;
-       for (i = 0; i < 4; i++) {
-           line = & table[i];
-           ret_v = cmp_line(aline, line);
-           if (!ret_v) {
-               ret_ptr -> length = line -> ret.length;
-               ret_ptr -> address = line -> ret.address;
+
+       /* Look up in1 and return the matching global directory. */
+       for (i = 0; i < n_entries; i++) {
+           if (in1->length == table[i].key.length &&
+               memcmp(in1->address, table[i].key.address, in1->length) == 0) {
+               out->address = table[i].gld.address;
+               out->length  = table[i].gld.length;
                return 0;
            }
        }
-       /*ERROR OUT*/
-       line = & table[4];
-       ret_ptr -> length = line -> ret.length;
-       ret_ptr -> address = line -> ret.address;
+
+       /* No match: report an error back to YottaDB. */
+       out->address = unknown;
+       out->length  = strlen(unknown);
        return 1;
    }
-   int ydb_env_xlate(ydb_string_t * ptr1, ydb_string_t * ptr2, ydb_string_t * ptr_zdir, ydb_string_t * ret_ptr) {
-       int return_val, return_val_init;
-       if (!init) {
-           return_val_init = init_functable(ret_ptr);
-           if (return_val_init) return return_val_init;
-           return_val_init = init_table(ret_ptr);
-           if (return_val_init) return return_val_init;
-           init = 1;
-       }
-       linetmp.field1.length = ptr1 -> length;
-       linetmp.field1.address = ptr1 -> address;
-       linetmp.field2.length = ptr2 -> length;
-       linetmp.field2.address = ptr2 -> address;
-       return_val = look_up_table( & linetmp, ret_ptr);
-       return return_val;
-   }
-   > cat table.dat
-   day1 week1 yottadb
-   day2 week1 a
-   day3 week2 b
-   day4 week2 c.gld
 
-This example demonstrates the mechanism. A table is set up the first time for proper memory management, and for each reference, a table lookup is performed. Note that for the purpose of simplicity, no error checking is done, so table.dat is assumed to be in the correct format, and have exactly four entries. This routine should be built as a shared library, see `Chapter 11: "Integrating External Routines" <./extrout.html>`_ for information on building as a shared library. The function init_functable is necessary to set up the YottaDB memory management functions.
+with :code:`table.dat` holding one ``handle  global-directory`` pair per line:
+
+.. code-block:: none
+
+   RED    /var/db/red.gld
+   WHITE  /var/db/white.gld
+   BLUE   /var/db/blue.gld
+
+With this library named by :code:`ydb_env_translate`, :code:`^|"WHITE"|A` accesses :code:`^A` through :code:`/var/db/white.gld`, just as if $ZGBLDIR were set to that file for the reference.
 
 .. _opt-ydb-gbldir-xltn-fac:
 
@@ -820,20 +845,22 @@ This example demonstrates the mechanism. A table is set up the first time for pr
 Optional YottaDB Global Directory Translation Facility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Enable the facility by setting the environment variable :code:`ydb_gbldir_translate` to the path of a shared library with the entry point :code:`ydb_gbldir_xlate()`. The global directory used is the value assigned to $zgbldir as translated by the routine. :code:`ydb_gbldir_xlate()` has the same signature as the ydb_env_xlate() routine used for :ref:`environment translation <opt-ydb-env-xltn-fac>`.
+Unlike :ref:`environment translation <opt-ydb-env-xltn-fac>`, which fires for the explicit specification in an extended reference (the text between the ``| |`` or ``[ ]``), this facility translates the value of $ZGBLDIR itself - the global directory used when a global is named without an extended reference. The two are configured independently and a program may use either or both.
 
-.. code-block:: bash
+Enable the facility by setting the environment variable :code:`ydb_gbldir_translate` to the path of a shared library with the entry point :code:`ydb_gbldir_xlate()`. Once enabled, the routine translates *every* value of $ZGBLDIR - both the value the process starts with (from the :code:`ydb_gbldir` environment variable) and any value subsequently assigned with :code:`SET $ZGBLDIR` - and YottaDB uses the global directory that the routine returns. :code:`ydb_gbldir_xlate()` has the same signature as the ydb_env_xlate() routine used for :ref:`environment translation <opt-ydb-env-xltn-fac>`.
 
-   int ydb_gbldir_xlate(ydb_string_t \*in1, ydb_string_t \*in2, ydb_string_t \*in3, ydb_string_t \*out)
+.. code-block:: C
+
+   int ydb_gbldir_xlate(ydb_string_t *in1, ydb_string_t *in2, ydb_string_t *in3, ydb_string_t *out)
 
 where ydb_string_t is a structure defined in libyottadb.h as follows:
 
-.. code-block:: bash
+.. code-block:: C
 
    typedef struct
    {
-	unsigned long	length;
-	char		\*address;
+       unsigned long  length;
+       char           *address;
    } ydb_string_t;
 
 and
@@ -844,6 +871,31 @@ and
 * :code:`out` is a return value that references the actual global directory file to be used.
 
 A return value other than zero (0) indicates an error in translation, and is reported as a YottaDB error.
+
+The following routine translates the value assigned to $ZGBLDIR into a global directory of that name in the process's current directory (:code:`in3`, which references $ZDIRECTORY). For example, :code:`SET $ZGBLDIR="prod"` selects :code:`prod.gld` in that directory. Build it as a shared library the same way as the :code:`ydb_env_xlate()` routine above.
+
+.. code-block:: C
+
+   #include <stdio.h>
+   #include <string.h>
+   #include "libyottadb.h"
+
+   /* Translate the value assigned to $ZGBLDIR (in1) into an actual global
+    * directory file: the logical name <name> selects <name>.gld in the
+    * process's current directory ($ZDIRECTORY, passed as in3). */
+   int ydb_gbldir_xlate(ydb_string_t *in1, ydb_string_t *in2,
+                        ydb_string_t *in3, ydb_string_t *out) {
+       static char path[1024];   /* BSS: reused for each translation */
+
+       /* Build "<current directory>/<name>.gld" into the static buffer. */
+       out->length = snprintf(path, sizeof(path), "%.*s/%.*s.gld",
+                              (int)in3->length, in3->address,
+                              (int)in1->length, in1->address);
+       out->address = path;
+       return 0;
+   }
+
+After :code:`ydb_gbldir_translate` names this library, :code:`SET $ZGBLDIR="prod"` makes YottaDB use :code:`prod.gld` in the process's current directory, while $ZGBLDIR itself still reports the logical name :code:`prod`. Because the translation applies from process startup, a process launched with :code:`ydb_gbldir="prod"` uses :code:`prod.gld` as well, with no :code:`SET $ZGBLDIR` in the M code. :code:`$VIEW("GBLDIRXLATE",expr)` returns the global directory that the routine translates :code:`expr` to, which is convenient for checking the mapping.
 
 ----------------------------
 Literals
