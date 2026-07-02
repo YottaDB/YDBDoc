@@ -1526,6 +1526,8 @@ Specifies that after image records (AIMG) be applied to the database as part of 
 
 By default, RECOVER FORWARD does not apply AIMG record into the database. APPLY_AFTER_IMAGE is compatible with RECOVER, or ROLLBACK action qualifiers only.
 
+.. _brokentrans:
+
 .. code-block:: none
 
    -[NO]BR[OKENTRANS]=<extract file>
@@ -1533,6 +1535,20 @@ By default, RECOVER FORWARD does not apply AIMG record into the database. APPLY_
 [NO]BROKENTRANS is an optional qualifier for ROLLBACK, RECOVER and EXTRACT. If this is not specified and a broken transaction file creation is necessary, MUPIP JOURNAL creates one using the name of the current journal file being processed with a .broken extension.
 
 Note that, if selection qualifiers are specified, the broken transaction determination (and therefore lost transaction determination as well) is done based on the journal file that is filtered by the selection qualifiers. This means that a transaction's journal records may be considered complete or broken or lost, depending on the nature of the selection qualifiers. Using :code:`-fences=none` along with the selection qualifiers will result in every journal record to be considered complete and hence prevent broken or lost transaction processing.
+
+Here is an example of a series of updates that can result in broken transactions. There are three regions, A, B, and C, with global variables ^A, ^B and ^C respectively mapped to them. Processes P1 and P2 make the following updates using transactions.
+
++---------+----------+----------+----------+
+| Process | Region A | Region B | Region C |
++=========+==========+==========+==========+
+|    P1   |  SET ^A  |          |  SET ^C  |
++---------+----------+----------+----------+
+|    P2   |          |  SET ^B  |  SET ^C  |
++---------+----------+----------+----------+
+|    P1   |  SET ^A  |          |  SET ^C  |
++---------+----------+----------+----------+
+
+Consider a system crash in which the journal records for region A and C are hardened, but those for region B are not. A subsequent MUPIP JOURNAL EXTRACT, RECOVER, or ROLLBACK would recover or extract the first transaction of P1, but would not be able to recover or extract the transaction of P2 because the SET ^B is not recoverable. The SET ^C from process P2 would be recorded in the broken transaction file. The second transaction of P1 cannot be recovered to the database, since the transaction property of Consistency requires its update to region C to follow the update of transaction P2 to region C. But the region C update of P2 is in the broken transaction file because its transaction's update to region B cannot be recovered. Therefore, this second transaction of P1 would be placed in the `lost transaction file <#lost-transaction-file>`_.
 
 .. code-block:: none
 
@@ -1628,6 +1644,24 @@ Journal processing treats any complete transaction after a broken transaction as
 Note that, if selection qualifiers are specified, journal processing does the broken transaction determination (and therefore lost transaction determination as well) based on the journal file that is filtered by the selection qualifiers. This means that a transaction's journal records may be considered complete or broken or lost, depending on the nature of the selection qualifiers. Using :code:`fences=none` along with the selection qualifiers results in every journal record being considered complete and hence preventing broken or lost transaction processing.
 
 In a replicated database, lost transactions can have an additional cause. If failover occurs (i.e. the originating Source Server A fails, and the replicating Source Server B assumes the originating instance's role), some transactions committed to A's database may not be reflected in B's database. Before the former originating instance becomes the new replicating instance, these transactions must be rolled back. These transactions are known as "lost transactions". Note that these are complete transactions and different from a broken transaction. MUPIP JOURNAL ROLLBACK stores extracted lost transactions in the extract-file specified by this qualifier. The starting point for the search for lost transactions is the journal sequence number obtained from the originating Source Server in the FETCHRESYNC operation.
+
+Consider the following example where ^A is mapped to region A and ^B is mapped to region B. None of the updates are inside transactions. After a system crash, while the journal files for region A have been hardended, the journal files for region B have not. This means that the SET ^B by process P2 is not recoverable.
+
++---------+----------+----------+
+| Process | Region A | Region B |
++=========+==========+==========+
+|    P1   |  SET ^A  |          |
++---------+----------+----------+
+|    P2   |          |  SET ^B  |
++---------+----------+----------+
+|    P1   |  SET ^A  |          |
++---------+----------+----------+
+
+- In an unreplicated instance, MUPIP JOURNAL RECOVER will recover the second SET ^A by process P1, without recovering the SET ^B by process P2. Since transaction processing is not in use, they are independent updates.
+- For the same reason, MUPIP JOURNAL EXTRACT will extract both the SET ^A updates, but not the SET ^B update.
+- In a replicated environment, MUPIP JOURNAL ROLLBACK will recover the first SET ^A by process P1, and place its second SET ^A in the lost transaction file, since replication enforces strict serialization across regions even when transaction processing is not in use.
+
+See also the example with the :ref:`[NO]BROKENTRANS <brokentrans>` option, which uses transactions.
 
 .. code-block:: none
 
