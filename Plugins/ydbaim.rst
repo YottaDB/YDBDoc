@@ -143,7 +143,7 @@ This illustrates the use of :ref:`xrefsub` to replace scanning of application su
 
 Consider a global variable ``^X(a,b,c)`` where an application needs to find all nodes whose second subscript (``b``) meets some criterion. In SQL terms, this is like a table with a primary key consisting of three columns, and statement SELECT a,b,c WHERE b meets some condition. This is illustrated in the M program `<scandemo2.m>`_; equivalent programs can be written in any supported language.
 
-The program generates a global with a number of nodes. The number can be specified on the command line to run the program, e.g., ``yottadb -run scandemo2 10000``, with the number defaulting to 100,000 if not specfied. Each of the subscripts is a random number from 0 through 999,999. The program then scans the global variable to find nodes (i.e., SELECTs from the table) that meet four different criteria. For each criterion, it scans in two ways, without using XREFSUB() and using XREFSUB(). In each case it prints the time taken and the number of nodes/rows found; the latter must be the same regardless of how the global variable is scanned.
+The program generates a global with a number of nodes. The number can be specified on the command line to run the program, e.g., ``yottadb -run scandemo2 10000``, with the number defaulting to 100,000 if not specified. Each of the subscripts is a random number from 0 through 999,999. The program then scans the global variable to find nodes (i.e., SELECTs from the table) that meet four different criteria. For each criterion, it scans in two ways, without using XREFSUB() and using XREFSUB(). In each case it prints the time taken and the number of nodes/rows found; the latter must be the same regardless of how the global variable is scanned.
 
 - The first is to identify all nodes where b>750000, i.e., a simple numerical scan.
 - The second is to scan all nodes where b follows "700000", i.e., a `lexical scan <#forcing>`_. For example, US zip codes are numeric, but should be ordered lexically (a numeric scan would ignore leading zeroes).
@@ -223,9 +223,11 @@ For a Fileman schema (i.e., type 1 or type 3), when
 * a node with that constant subscript does not exist; and
 * other nodes exist at the level of that constant subscript, i.e., there is at least one other node whose subscripts are identical except for that constant last subscript.
 
-AIM creates and maintains metadata nodes for the requested pieces using the empty string ("") as the last subscript intead of the specified constant. For example, the node :code:`^ORD(100.01,0)="ORDER STATUS^100.01I^99^16"` when cross referenced with the call :code:`$$XREFDATA^%YDBAIM("^ORD",.sub,"^",1,0,0,1,0,1,0)` where :code:`sub(1)=100.01,sub(2)=":"" """,sub(3)=.1` produces the cross reference :code:`^%ydbAIMDu1oVZCaYBv7SgPmwQNP201(1,"",0)=""` even though there is no :code:`^ORD(100.01,0,.1)` node.
+AIM creates and maintains metadata nodes for the requested pieces using the empty string ("") as the last subscript instead of the specified constant. For example, the node :code:`^ORD(100.01,0)="ORDER STATUS^100.01I^99^16"` when cross referenced with the call :code:`$$XREFDATA^%YDBAIM("^ORD",.sub,"^",1,0,0,1,0,1,0)` where :code:`sub(1)=100.01,sub(2)=":"" """,sub(3)=.1` produces the cross reference :code:`^%ydbAIMDu1oVZCaYBv7SgPmwQNP201(1,"",0)=""` even though there is no :code:`^ORD(100.01,0,.1)` node.
 
 While type 1 and type 3 both apply to Fileman schemas, the cross references for type 1 are the actual data, whereas the cross references for type 3 use :ref:`transformation`.
+
+For a type 3 cross reference, the metadata node for such a missing constant-subscript node, as well as any node whose transformed value is the empty string, uses the transformation function applied to the empty string, i.e., :code:`f("")`, as the cross-referenced value rather than a bare empty string (:code:`""`). This is consistent with how the transformation function is applied to values that are present. Forcing string collation (type 1 with **force** 1) is the special case of a transformation that prepends :code:`#`: an empty value :code:`""` becomes :code:`#`, which is that same transformation applied to :code:`""`.
 
 .. _forcing:
 
@@ -276,9 +278,9 @@ The most common use of cross reference is to find global nodes that contain the 
 * There are multiple formats for storing dates and times, and comparing values directly can slow Octo queries. But if the cross reference for each time stamp is its `UNIX time <https://en.wikipedia.org/wiki/Unix_time>`_ (i.e., its `$ZUT <../ProgrammersGuide/isv.html#zut>`_ value), then comparing time stamps, or choosing dates and times within a range becomes a much simpler proposition. This is a 1:1 transformation function.
 * Cross referencing a hash or checksum allows an application to locate the original data for the hash or checksum. This is potentially a many:1 transformation function.
 
-Transformation is accomplished by provding the M code for a function in the :code:`force` parameter with a value of 2 or 3 for the :code:`type` parameter. For example, if :code:`"$$ABC^DEF()"` is the value passed in :code:`force`, triggers for cross referenced nodes will use the value returned by the transformation function as the value to cross reference. When the function is called at runtime by the trigger, the first parameter is the actual node or piece value, e.g., :code:`$$ABC^DEF("2024-02-21T13:31:48.05098021+07:00")` would yield the actual cross-referenced value if the timestamp in the global node is :code:`2024-02-21T13:31:48.05098021+07:00`. If the function requires additional parameters, they can be specified as comma separated values for the second and subsequent parameters, e.g., :code:`"$$ABC^DEF(,1,""two"")"`. As local variables cannot be passed to triggers, these additional parameters can only be constants, global variable references, or function calls whose parameters are constants, global variables, or function calls. Application code that needs to pass local variable values to the transformation function should use `$ZTWORMHOLE <../ProgrammersGuide/isv.html#ztwormhole-isv>`_.
+Transformation is accomplished by providing the M code for a function in the :code:`force` parameter with a value of 2 or 3 for the :code:`type` parameter. For example, if :code:`"$$ABC^DEF()"` is the value passed in :code:`force`, triggers for cross referenced nodes will use the value returned by the transformation function as the value to cross reference. When the function is called at runtime by the trigger, the first parameter is the actual node or piece value, e.g., :code:`$$ABC^DEF("2024-02-21T13:31:48.05098021+07:00")` would yield the actual cross-referenced value if the timestamp in the global node is :code:`2024-02-21T13:31:48.05098021+07:00`. If the function requires additional parameters, they can be specified as comma separated values for the second and subsequent parameters, e.g., :code:`"$$ABC^DEF(,1,""two"")"`. As local variables cannot be passed to triggers, these additional parameters can only be constants, global variable references, or function calls whose parameters are constants, global variables, or function calls. Application code that needs to pass local variable values to the transformation function should use `$ZTWORMHOLE <../ProgrammersGuide/isv.html#ztwormhole-isv>`_.
 
-For example, with the ^USPresidents global variable mentioned earlier, the node :code:`^USPresidents(1797,1801)="John||Adams"` would generate the cross refence :code:`^%ydbAIMDHgTwbHgcmyZEIfADw7Xq07(3,"0x5d156e592ad2e9a83eb48043c59213d0",1797,1801)=""` with a call to :code:`$$XREFDATA^%YDBAIM("^USPresidents",2,"|",3,0,0,0,0,2,"$ZYHASH()"`.
+For example, with the ^USPresidents global variable mentioned earlier, the node :code:`^USPresidents(1797,1801)="John||Adams"` would generate the cross reference :code:`^%ydbAIMDHgTwbHgcmyZEIfADw7Xq07(3,"0x5d156e592ad2e9a83eb48043c59213d0",1797,1801)=""` with a call to :code:`$$XREFDATA^%YDBAIM("^USPresidents",2,"|",3,0,0,0,0,2,"$ZYHASH()")`.
 
 A value of 2 for :code:`type`, informs AIM that the schema for the global nodes is an ordinary schema; a value of 3, informs AIM that the global nodes have a Fileman schema.
 
@@ -300,7 +302,7 @@ Functions
 XREFDATA()
 +++++++++++
 
-XREFDATA() computes and maintain cross references for nodes values or pieces of node values, of a global variable at a specified subscript level.
+XREFDATA() computes and maintains cross references for nodes values or pieces of node values, of a global variable at a specified subscript level.
 
 The format for XREFDATA() is as follows:
 
@@ -328,7 +330,7 @@ where,
 
 * **zpiece**, if 1, means that $ZPIECE() should be used as the piece separator instead of $PIECE(). AIM can have cross references for the same nodes with both options; the cross references are in different global variables.
 
-* **omitfix**, if 1, instructs XREFDATA() to omit from the subscripts of the cross reference any subscripts of the application global that are fixed constants because the code to traverse the application global using the cross reference will include those known fixed subscripts when making the access. If not specified, omitfix defaults to 1.
+* **omitfix**, if 1, instructs XREFDATA() to omit from the subscripts of the cross reference any subscripts of the application global that are fixed constants because the code to traverse the application global using the cross reference will include those known fixed subscripts when making the access. If not specified, omitfix defaults to 1. When **type** is 1 or 3, **omitfix** must be 1 (the default); a call with omitfix=0 and **type** 1 or 3 raises a ``NOOMITFIX`` error.
 
 * **stat** if 1 or 2 says the metadata should include statistics, as described above under :ref:`statistics`.
 
@@ -383,7 +385,7 @@ Applications can read and use the above metadata, but should not attempt to alte
 XREFSUB()
 ++++++++++
 
-XREFSUB() computes and maintain cross references for subscripts of a global variable at specified subscript levels.
+XREFSUB() computes and maintains cross references for subscripts of a global variable at specified subscript levels.
 
 The format for XREFDATA() is as follows:
 
@@ -482,7 +484,7 @@ UNXREFDATA() / UNXREFSUB()
 * UNXREFDATA(aimgbl) and UNXREFSUB(aimgbl) where aimgbl is an AIM metadata global variable, removes the metadata stored in that AIM global. Note that an AIM global variable stores either data metadata or subscript metadata, but not both.
 * UNXREFDATA(gbl) where gbl is an application global name removes all data metadata for that application global; UNXREFSUB(gbl) does likewise for subscript metadata.
 
-UNXREFDATA() and UNXREFSUB() provide an API for removing specific cross references. The APIs mirror those of :ref:`xrefdata` and :ref:`xrefsub`, allowing for removal of a specific cross reference by replicating the paramaters used to call the functions that created the cross references in the first place. The APIs are as follows and the parameters are described in :ref:`xrefdata` and :ref:`xrefsub`. Note that some parameters are specific to one function or the othyer.
+UNXREFDATA() and UNXREFSUB() provide an API for removing specific cross references. The APIs mirror those of :ref:`xrefdata` and :ref:`xrefsub`, allowing for removal of a specific cross reference by replicating the parameters used to call the functions that created the cross references in the first place. The APIs are as follows and the parameters are described in :ref:`xrefdata` and :ref:`xrefsub`. Note that some parameters are specific to one function or the other.
 
  .. code:: none
 
@@ -505,7 +507,7 @@ where,
 
 * **omitfix** and **stat** are ignored.
 
-* **type** and **force** must match the :ref:`xrefdata` or :ref:`xrefsub` that set up the criss reference.
+* **type** and **force** must match the :ref:`xrefdata` or :ref:`xrefsub` that set up the cross reference.
 
 ++++++++++
 VERSION()
@@ -513,21 +515,24 @@ VERSION()
 
 VERSION() provides `semantic version <https://semver.org/>`_ information for AIM, consisting of a major version number and a minor version number, separated by a period.
 
-* A change to the major version, number indicates a breaking change, which for AIM primarily means a change to the metadata schema. There are separate major version numbers for data and subscript metadata.
-* A change to the minor version number indidates an upward-compatible (non-breaking) change. The minor version number is common to data and subscript metadata.
+* A change to the major version number indicates a breaking change, which for AIM primarily means a change to the metadata schema. There are separate major version numbers for data and subscript metadata.
+* A change to the minor version number indicates an upward-compatible (non-breaking) change. The minor version number is common to data and subscript metadata.
 
 There is one optional parameter, as follows:
 
-* VERSION(str) where ``str`` is case-insensitive ``"TEXT"`` or ``"DATA"`` reports the major version number for selected type of metadata, as well as the minor version number.
-* VERSION() reports the major version as the sum of the text and subscript metadata, as well as the minor version number.
+* VERSION(str) where ``str`` is case-insensitive ``"DATA"`` or ``"SUB"`` reports the major version number for the selected type of metadata, as well as the minor version number.
+* VERSION() reports the major version as the sum of the data and subscript metadata, as well as the minor version number.
 
 For example:
 
 .. code:: none
 
    YDB>write $$VERSION^%YDBAIM
-   3.1
+   6.2
    YDB>
+
+.. note::
+   The version numbers shown above are illustrative; the values your installation reports may differ as AIM evolves.
 
 ----------------------------
 Extended References
