@@ -4066,6 +4066,16 @@ Run Time Error: This indicates that a device EXCEPTION string contained invalid 
 
 Action: Review the exception string. To get more information about the errors, SET a temporary variable to the contents of the exception string and XECUTE the temporary variable. The EXCEPTION deviceparameter on an OPEN, USE, or CLOSE command defines an error handler for an I/O device.
 
+---------------------
+ERRWSIGWINCH
+---------------------
+
+ERRWSIGWINCH, Error while processing SIGWINCH deviceparameter handler
+
+Run Time Error: This indicates that the code specified by the SIGWINCH deviceparameter, XECUTEd because the terminal window changed size, encountered an error that it did not handle.
+
+Action: Examine and correct the code specified by the SIGWINCH deviceparameter of the $PRINCIPAL device; other accompanying messages identify the underlying error.
+
 ------------------
 ERRWZBRK
 ------------------

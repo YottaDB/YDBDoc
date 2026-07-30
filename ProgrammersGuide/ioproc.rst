@@ -511,6 +511,9 @@ The following tables provide a brief summary of deviceparameters for terminals, 
 | [NO]PASTHRU                   | U                        | Controls interpretation by the operating system of special control characters (for example        |
 |                               |                          | <CTRL-B>).                                                                                        |
 +-------------------------------+--------------------------+---------------------------------------------------------------------------------------------------+
+| [NO]SIGWINCH[=expr]           | O/U                      | Controls tracking of terminal window size changes and provides code to XECUTE when the terminal   |
+|                               |                          | window changes size.                                                                              |
++-------------------------------+--------------------------+---------------------------------------------------------------------------------------------------+
 | [NO]TERMINATOR[=expr]         | U                        | Controls characters that end a READ                                                               |
 +-------------------------------+--------------------------+---------------------------------------------------------------------------------------------------+
 
@@ -3226,6 +3229,14 @@ SHELL Applies to: PIPE
 
 The SHELL deviceparameter specifies the shell for the new process. By default the newly created process uses the shell specified by the $SHELL environment variable, otherwise, if the environment variable SHELL is undefined the process uses /bin/sh.
 
+~~~~~~~~~
+SIGWINCH
+~~~~~~~~~
+
+[NO]SIGWINCH[=expr] Applies to: TRM
+
+Controls whether YottaDB updates the WIDTH and LENGTH of the device when the process receives a SIGWINCH signal from the operating system, indicating that the terminal window has changed size, and optionally provides code for YottaDB to XECUTE on such a signal. For details, refer to :ref:`SIGWINCH <use-sigwinch>` under USE deviceparameters.
+
 ~~~~~~~
 STDERR
 ~~~~~~~
@@ -4193,6 +4204,36 @@ Positions the current file pointer to the location specified in strexpr. The for
 
 SEEK on redirected input for $PRINCIPAL is the same as INSEEK.
 
+.. _use-sigwinch:
+
+~~~~~~~~~
+SIGWINCH
+~~~~~~~~~
+
+[NO]SIGWINCH[=expr] Applies to: TRM
+
+SIGWINCH arranges for YottaDB to update the WIDTH and LENGTH of the device with the new window dimensions each time the process receives a SIGWINCH signal from the operating system, indicating that the terminal window has changed size, so that subsequent IO uses the new size. As a SIGWINCH signal describes the terminal on which the process was started, YottaDB recognizes the deviceparameter only when applied to a `$PRINCIPAL <isv.html#principal>`_ device that is a terminal, and ignores it for all other devices. NOSIGWINCH, the default, restores the behavior of ignoring SIGWINCH signals, so that the WIDTH and LENGTH remain those the device had when YottaDB opened it.
+
+SIGWINCH=expr additionally provides code for YottaDB to XECUTE, after the above update of WIDTH and LENGTH, each time the terminal window changes size; the XECUTEd code, and all subsequent IO, therefore see the new size. SIGWINCH and SIGWINCH="" are equivalent - both track the window size with no code to XECUTE - and both replace any code previously specified with SIGWINCH=expr.
+
+If the signal arrives while a READ is in progress, the READ resumes when expr completes, retaining any input already entered; a READ from a terminal additionally picks up the updated WIDTH. Within the XECUTEd code, WRITE and USE commands for the interrupted terminal work as usual, so expr can, for example, redraw the screen; however a READ from a device whose READ was interrupted produces a `ZINTRECURSEIO <../MessageRecovery/errors.html#zintrecurseio>`_ error. While executing expr, YottaDB defers additional SIGWINCH signals, coalescing the rapid series of signals produced by interactively dragging a window edge into at most one additional XECUTE of expr after the current one completes. YottaDB also defers XECUTEing expr while executing $ZINTERRUPT, while $ETRAP error handling is in progress, and inside a TP transaction outside of trigger code. An error in the XECUTEd code that the code does not handle is reported with an `ERRWSIGWINCH <../MessageRecovery/errors.html#errwsigwinch>`_ error. A valueless SIGWINCH never interrupts a READ, as there is no code to XECUTE.
+
+Example:
+
+.. code-block:: none
+
+   USE $PRINCIPAL:SIGWINCH
+
+This arranges for the WIDTH and LENGTH of $PRINCIPAL to track the size of the terminal window, so that, for example, output wraps at the current window width.
+
+Example:
+
+.. code-block:: none
+
+   USE $PRINCIPAL:SIGWINCH="DO REDRAW^APPSCREEN"
+
+This arranges for the process to XECUTE DO REDRAW^APPSCREEN, for example to reformat the display for the new window dimensions, each time the terminal window changes size.
+
 .. _use-socket:
 
 ~~~~~~~
@@ -4483,6 +4524,8 @@ Note that LOCAL sockets ignore the ZIBFSIZE deviceparameter.
 | REWIND                              |              | X               |                 |                 |                 |                  |
 +-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
 | SEEK=strexpr                        |              | X               |                 |                 |                 |                  |
++-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
+| [NO]SIGWINCH[=expr]                 | X            |                 |                 |                 |                 |                  |
 +-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
 | SOCKET                              |              |                 |                 |                 |                 | X                |
 +-------------------------------------+--------------+-----------------+-----------------+-----------------+-----------------+------------------+
@@ -4948,6 +4991,8 @@ The following table lists all of the deviceparameters and shows the commands to 
 | [NO]RETRY                       | X                   | X                   |                     |
 +---------------------------------+---------------------+---------------------+---------------------+
 | REWIND                          | X                   | X                   | X                   |
++---------------------------------+---------------------+---------------------+---------------------+
+| [NO]SIGWINCH[=expr]             | X                   | X                   |                     |
 +---------------------------------+---------------------+---------------------+---------------------+
 | SKIPFILE=intexpr                |                     | X                   |                     |
 +---------------------------------+---------------------+---------------------+---------------------+
