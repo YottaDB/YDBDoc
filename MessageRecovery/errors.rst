@@ -4127,16 +4127,6 @@ Run Time Error: This indicates that the user is unable to access the event loggi
 Action: Review accompanying messages for additional information.
 
 ------------------
-EXCEEDRCTLRNDWN
-------------------
-
-EXCEEDRCTLRNDWN, Maximum relinkctl rundown retries limit of nnnn exceeded
-
-MUPIP Error: This indicates competing processes tried to rundown relinkctl more than nnnn times while another process was trying to connect to the relinkctl.
-
-Action: Consider a `MUPIP STOP <../AdminOpsGuide/dbmgmt.html#stop>`_ to one (or more) of the competing processes
-
-------------------
 EXCEEDSPREALLOC
 ------------------
 
@@ -5540,11 +5530,11 @@ Action: Report this database error to the group responsible for database integri
 GVSUBOFLOW
 --------------------
 
-GVSUBOFLOW, Maximum combined length of subscripts exceeded
+GVSUBOFLOW, The combined length of subscripts (xxxx) is greater than maximum (yyyy) for region: zzzz
 
-Run Time Error: This indicates that a subscripted global variable reference required a key size in bytes (which includes the length of the specified global variable name and subscripts) that exceeds the maximum key size specified in the database file header for the region mapping this subscripted global reference. This message is accompanied by a GVIS message which indicates the subscripted global reference. If the subscripted global reference in the GVIS message has a * at the end, it indicates a truncated part of the specified global reference. If it does not have a * at the end, it accurately identifies the complete specified global reference. Note that if the unsubscripted global variable name exceeds the maximum key size, a KEY2BIG error is issued instead of a GVSUBOFLOW error.
+Run Time Error: This indicates that a subscripted global variable reference required a key size in bytes (which includes the length of the specified global variable name and subscripts) that exceeds the maximum key size specified in the database file header for the region mapping this subscripted global reference. This message is accompanied by a GVIS message which indicates the subscripted global reference. If the subscripted global reference in the GVIS message has ... at the end, it indicates a truncated part of the specified global reference. If it does not have ... at the end, it accurately identifies the complete specified global reference. Note that if the unsubscripted global variable name exceeds the maximum key size, a KEY2BIG error is issued instead of a GVSUBOFLOW error.
 
-Action: Use $VIEW("REGION") to identify the region corresponding to the specified subscripted global reference and DSE DUMP -FILE to identify the Maximum key size of the corresponding region. Specify smaller subscripted global references OR use MUPIP SET -REGION command with the -KEY_SIZE qualifier to modify the maximum key size as required by the application. To find out the key size needed for a given global variable reference, use ``$ZLENGTH($VIEW("YGVN2GDS",$name(global reference)))``; this call will show the exact number of bytes needed for this global variable reference.
+Action: Specify smaller subscripted global references OR use MUPIP SET -REGION command with the -KEY_SIZE qualifier to modify the maximum key size as required by the application. To find out the key size needed for a given global variable reference, use ``$ZLENGTH($VIEW("YGVN2GDS",$name(global reference)))``; this call will show the exact number of bytes needed for this global variable reference.
 
 ------------------
 GVUNDEF
@@ -7099,7 +7089,7 @@ Action: If the situation does not improve, kill the offending process xxxx. This
 JNLPVTINFO
 -------------------
 
-JNLPVTINFO, Pid aaaa cycle mmmm fd_mismatch nnnn channel rrrr sync_io ssss pini_addr xxxx qio_active yyyy old_channel zzzz
+JNLPVTINFO, Pid aaaa cycle mmmm fd_mismatch nnnn channel rrrr sync_io ssss pini_addr xxxx qio_active yyyy
 
 Run Time Information: This message always accompanies some other YottaDB journaling error message. This gives detailed information on the state of the journal buffers at the time of the accompanying error.
 
@@ -12546,6 +12536,16 @@ MUPIP Information: On a Supplementary Instance, MUPIP JOURNAL -ROLLBACK issues t
 Action: No action required.
 
 -------------------
+RLNKCTLOPENDEL
+-------------------
+
+RLNKCTLOPENDEL, The relinkctl file rrrr for $ZROUTINES directory dddd has been deleted by another process, will try to reconnect. (retry = nnnn)
+
+Run Time Warning: Indicates a process failed to connect to the relinkctl file rrrr for $ZROUTINES directory dddd because it has been deleted by a competing process.
+
+Action: Ignore when sporadic. If it persists (large nnnn), consider a MUPIP STOP to the process issuing the message and the process running down the relinkctl file.
+
+-------------------
 RLNKCTLRNDWNFL
 -------------------
 
@@ -13454,6 +13454,16 @@ Run Time Error: This error is issued:
 Action: Review the names of the sockets already present on that device and specify a unique name.
 
 ------------------
+SOCKHANGUP
+------------------
+
+SOCKHANGUP, Socket has disconnected
+
+Run Time Error: The process has a $PRINCIPAL that is a SOCKET device and the process received a SIGHUP signal.
+
+Action: Ensure the application error handling deals with this error by closing down the application gracefully without additional READs or WRITEs to $PRINCIPAL.
+
+------------------
 SOCKINIT
 ------------------
 
@@ -13560,6 +13570,16 @@ SOCKWRITE, Write to a socket failed
 Run Time Error: This indicates that YottaDB was unable to write to a socket.
 
 Action: Review the accompanying messages for more information on the cause of the failure.
+
+---------------------
+SPCFCBUFDELAY
+---------------------
+
+SPCFCBUFDELAY, Request for block 0xbbbb in database file dddd delayed by PID iiii
+
+Run Time Warning: Indicates a process with PID iiii has control of block 0xbbbb in database file dddd blocking other processes from appropriate access to that block.
+
+Action: Investigate the state and activity of process iiii to determine why the process is not releasing the block, for instance check whether there is evidence of a deadlock cycle that YottaDB was not successful in resolving. If process iiii is "stuck" consider the implications of terminating it, including with a triple MUPIP STOP. Report the results of your investigation to those responsible for ensuring database integrity.
 
 -------------------
 SPCLZMSG
@@ -14321,9 +14341,9 @@ Action: Address the reported problem described by eeee.
 TLSRENEGOTIATE
 ---------------------
 
-TLSRENEGOTIATE, Failed to renegotiate TLS/SSL connection
+TLSRENEGOTIATE, Failed to XXXX TLS/SSL connection
 
-Run Time/MUPIP Error: This indicates that an attempt to renegotiate the SSL/TLS connection failed.
+Run Time/MUPIP Error: The XXXX indicates that an attempt to renegotiate or update the keys for the SSL/TLS connection failed.
 
 Action: Review the following TEXT message from the plug-in for additional diagnostic information, and adjust the environment accordingly.
 
@@ -15467,9 +15487,9 @@ Action: Review the text for additional information. If the failure is due to fil
 WRITERSTUCK
 ------------------
 
-WRITERSTUCK, Buffer flush stuck waiting for xxxx concurrent writers to finish writing to database file aaaa
+WRITERSTUCK, Buffer flush stuck waiting for concurrent writer PID pppp (mmmm of xxxx) to finish writing to database file dddd
 
-Run Time Error: This indicates that YottaDB timed out after waiting nearly a minute for concurrent processes to complete flushing modified global buffers to the disk.
+Run Time Error: This indicates that YottaDB timed out after waiting nearly a minute for process pppp to complete flushing modified global buffers to the disk in database file dddd. This message repeats for each mmmm of xxxx writers.
 
 Action: This is usually symptomatic of a stressed I/O subsystem, where disk writes take a long time. System Administration might be warranted to improve the performance.
 
