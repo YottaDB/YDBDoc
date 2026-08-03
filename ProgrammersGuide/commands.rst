@@ -3537,7 +3537,7 @@ ZMESSAGE can be used as a tool to simulate an error condition. The additional ex
 ZMESSAGE transforms two sets of error messages into `SPCLZMSG <../MessageRecovery/errors.html#spclzmsg>`_ errors:
 
 * The internal error messages which should not be user visible.
-* The error messages which are expected to be driven when their corresponding internal state is available. The list of such errors is as follows: CTRLC, CTRAP, JOBINTRRQST, JOBINTRRETHROW, REPEATERROR, STACKCRIT, SPCLZMSG, TPRETRY, UNSOLCNTERR.
+* The error messages which are expected to be driven when their corresponding internal state is available. The list of such errors is as follows: CTRLC, CTRAP, JOBINTRRQST, JOBINTRRETHROW, REPEATERROR, SIGWINCHRQST, STACKCRIT, SPCLZMSG, TPRETRY, UNSOLCNTERR.
 * ZMESSAGE is conceptually similar to SET $ECODE=",<expr>,".
 
 +++++++++++++++++++++++++++++

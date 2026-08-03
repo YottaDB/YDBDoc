@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #################################################################
 #                                                               #
-# Copyright (c) 2024-2025 YottaDB LLC and/or its subsidiaries.  #
+# Copyright (c) 2024-2026 YottaDB LLC and/or its subsidiaries.  #
 # All rights reserved.                                          #
 #                                                               #
 #       This source code contains the intellectual property     #
@@ -84,6 +84,7 @@ UNDOCUMENTED_EXCEPTIONS = [
     "REPEATERROR",
     "JOBINTRRQST",
     "JOBINTRRETHROW",
+    "SIGWINCHRQST",
     "BADTAG",
     "ZLINKBYPASS",
     "REPLONLNRLBK",
