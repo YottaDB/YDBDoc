@@ -387,7 +387,7 @@ XREFSUB()
 
 XREFSUB() computes and maintains cross references for subscripts of a global variable at specified subscript levels.
 
-The format for XREFDATA() is as follows:
+The format for XREFSUB() is as follows:
 
 .. code:: none
 
@@ -544,6 +544,24 @@ If **gbl** is an extended reference, the cross reference variable returned by :r
 
 .. note::
    As using extended references has a small incremental performance cost on global variable accesses, define the cross reference using an extended reference only if the application global variable will normally be accessed by the application using an extended reference.
+
+----------------------------
+Environment Variables
+----------------------------
+
+.. _ydb_aim_nproc:
+
+++++++++++++++++
+ydb_aim_nproc
+++++++++++++++++
+
+:code:`ydb_aim_nproc` is the number of processes :ref:`xrefdata` and :ref:`xrefsub` use to scan a global variable for the nodes that exist when a cross reference is created. It must be a positive integer; any other value raises an ``INVNPROC`` error. If it is not set, the default is one less than the number of online CPUs, and one on a single CPU machine. The process that calls XREFDATA() or XREFSUB() is not idle while the others scan: it walks a subscript level to divide the work among them, so the default leaves a CPU for it.
+
+Since the processes contend with one another for the blocks of the cross reference they are all updating, as well as with whatever else is running on the system, a value smaller than the number of CPUs may complete the scan sooner than a value equal to it; measure rather than assume.
+
+:code:`ydb_aim_nproc` affects only how long the initial scan takes, and neither the cross reference produced nor its name. It is of no consequence when a cross reference is created for a global variable with no existing nodes, since there is nothing to scan.
+
+The scan divides the global variable at one subscript level: the outermost level whose specification in **xsub** is not a constant, skipping past any such level that holds just one subscript. The number of processes that can be kept busy is therefore limited by the number of distinct subscripts at the level chosen. A specification whose outermost such level has few subscripts, with the bulk of the global variable below it, does not benefit from a large :code:`ydb_aim_nproc`.
 
 ----------------------------
 Operational Considerations
