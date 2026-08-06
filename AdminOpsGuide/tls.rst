@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2024 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -198,7 +198,13 @@ The verify-level option takes a string value to specify any additional certifica
 verify-mode
 +++++++++++
 
-The verify-mode option specifies how OpenSSL verifies certificates. If no verify-mode is specified, it defaults to SSL_VERIFY_PEER. See the man page for SSL_set_verify for details. SSL_VERIFY_PEER has two additional flags which modify verification only for the server role; when adding them to the option string, use the colon (:) delimiter.
+The verify-mode option specifies how OpenSSL verifies certificates. If no verify-mode is specified, it defaults to SSL_VERIFY_PEER, except for the Receiver Server, which defaults to SSL_VERIFY_PEER:SSL_VERIFY_FAIL_IF_NO_PEER_CERT. SSL_VERIFY_PEER has three additional flags which modify verification only for the server role: SSL_VERIFY_CLIENT_ONCE, SSL_VERIFY_FAIL_IF_NO_PEER_CERT, and SSL_VERIFY_POST_HANDSHAKE. These flags may be added to the option string using the colon (:) delimiter.
+
+The additional flags may also be set for the client role, where they are ignored. Note that a client with SSL_VERIFY_PEER set always offers post-handshake authentication; it is up to the server to request and validate it.
+
+SSL_VERIFY_POST_HANDSHAKE requires TLSv1.3 and OpenSSL 1.1.1 or later; specifying it with an earlier OpenSSL results in an error.
+
+See the man page for SSL_set_verify for details.
 
 .. raw:: html
 
