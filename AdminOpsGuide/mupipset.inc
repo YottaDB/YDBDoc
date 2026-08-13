@@ -520,6 +520,42 @@ Specifies the size to be reserved in each database block. RESERVED_BYTES is gene
 
 * The minimum RESERVED_BYTES is 0 bytes. The maximum RESERVED_BYTES = Block Size - Max Key Size - 40 (Block/Record header overheads). The default RESERVED_BYTES is 0 bytes.
 
+.. _mupip-set-search-index-size:
+
+^^^^^^^^^^^^^^^^^^^^^
+[-]-SEARCH_INDEX_SIZE
+^^^^^^^^^^^^^^^^^^^^^
+
+As each record other than the first in a block stores as its key the difference from that of the preceding record, YottaDB by default must search records linearly within a block. Since index blocks are more frequently accessed than data blocks, YottaDB maintains a set of slots in the shared memory segment for each database region where it caches the expanded keys of selected records within frequently accessed index blocks. This speeds up searching within those blocks by allowing linear searches to start from the keys of nearby records, instead of from the key of the first record. The format of the SEARCH_INDEX_SIZE qualifier is:
+
+.. code-block:: none
+
+   [-]-SEA[RCH_INDEX_SIZE]=bytes[,slots]
+   [-]-[NO]SEARCH_INDEX
+
+* bytes is the size of one search index slot. The minimum is 128. The maximum is 8192, or 8 less than the block size of the database if that is smaller. YottaDB rounds a specified size up to a multiple of 8 and raises a smaller non-zero size to the minimum. MUPIP CREATE defaults it to a quarter of the block size, which is 1024 bytes at the default 4096 byte block size. Specifying 0 asks for that default size.
+
+* slots is the number of search index slots to use, and applies to both access methods. YottaDB rounds a specified count up to a power of two. If unspecified, MUPIP SET leaves the count the database already has, so that changing bytes alone does not alter a count you chose, and MUPIP CREATE defaults it to 1024.
+
+* :code:`-NOSEARCH_INDEX` turns search indexing off for the region; :code:`-SEARCH_INDEX` turns it back on at the default size and slot count. Any SEARCH_INDEX_SIZE given alongside :code:`-NOSEARCH_INDEX` is ignored.
+
+* Since these values determine the size of the database shared memory segment, SEARCH_INDEX_SIZE requires standalone access, and processes accessing a database use the values in effect when its shared memory segment was created.
+
+* Search index slots exist only in shared memory, and no database block changes, so you can enable and disable them at will: it is a file header change and nothing more, with no reorganization, no conversion and no effect on the data.
+
+* :code:`DSE DUMP -FILEHEADER` reports the values in effect as "Search Index Size" and "Search Index Slots".
+
+* As in most workloads that YottaDB tested use of this feature improved performance, this feature is enabled by default. If you determine empirically that your workloads do not benefit, then turn it off by setting it to zero.
+
+Sizing
+""""""
+
+Shared memory used is bytes multiplied by slots, for either access method. A database created with the defaults uses approximately 1MB per region, and :code:`-SEARCH_INDEX_SIZE=1024,32768` uses approximately 32MB. The memory used does not depend on the size of the database or, for BG, on the number of global buffers, but it does apply per region, so a global directory with many regions uses more shared memory.
+
+Set the number of slots empirically. For BG regions, compare memory rather than counts, and keep bytes multiplied by slots well below :code:`GLOBAL_BUFFER_COUNT` multiplied by the block size. At the defaults there are as many slots as there are global buffers, but a slot is a quarter the size of a block, so the slots use approximately 1MB against approximately 4MB of global buffers. YottaDB measured a workload lose its entire gain on one platform where the two used the same amount of memory. If you plan to tune it for your database, a good starting point is the total number of index blocks above level 1, the level just above data blocks, for the global variables in a region.
+
+Larger values of bytes hold more sampled records and so start searches closer to the record sought, but a size approaching the block size cannot pay for itself, since a slot only caches the keys of selected records of one block. A quarter of the block size is a reasonable starting point; YottaDB measured a benchmark 10% to 19% faster with :code:`-SEARCH_INDEX_SIZE=1024` on a database with 4096 byte blocks.
+
 ^^^^^^^^^^^^^^^^^^^^
 [-]-SLEEP_SPIN_COUNT
 ^^^^^^^^^^^^^^^^^^^^

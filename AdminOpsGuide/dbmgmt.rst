@@ -97,8 +97,8 @@ Most MUPIP operations require write access to the database files with which they
 | Properly close database files when processes terminate abnormally.| MUPIP RUNDOWN                         | Standalone access                                                                   |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
 | Modify database and/or journal file characteristics               | MUPIP SET                             | Standalone access is required if the MUPIP SET command specifies ACCESS_METHOD,     |
-|                                                                   |                                       | GLOBAL_BUFFERS, MUTEX_SLOTS, LOCK_SPACE or NOJOURNAL, or if any of the JOURNAL      |
-|                                                                   |                                       | options ENABLE, DISABLE, or BUFFER_SIZE are specified.                              |
+|                                                                   |                                       | GLOBAL_BUFFERS, LOCK_SPACE, MUTEX_SLOTS, NOJOURNAL or SEARCH_INDEX_SIZE, or if any  |
+|                                                                   |                                       | of the JOURNAL options ENABLE, DISABLE, or BUFFER_SIZE are specified.               |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
 | Grow the size of BG database files                                | MUPIP EXTEND                          | Concurrent Access                                                                   |
 +-------------------------------------------------------------------+---------------------------------------+-------------------------------------------------------------------------------------+
@@ -2721,6 +2721,7 @@ MUPIP Command Summary
 |                                      |                                             | * REG[ION] region-list                                                                   | N                 |
 |                                      |                                             | * REP[LICATION]={ON|OFF}                                                                 | Y                 |
 |                                      |                                             | * RES[ERVED_BYTES]=integer                                                               | Y                 |
+|                                      |                                             | * SEA[RCH_INDEX_SIZE]=bytes[,slots]                                                      | Y                 |
 |                                      |                                             | * SLEE[P_SPIN_COUNT]=integer                                                             | N                 |
 |                                      |                                             | * SPIN[_SLEEP_MASK]=hexa_mask                                                            | N                 |
 |                                      |                                             | * STAN[DALONENOT]                                                                        | Y                 |

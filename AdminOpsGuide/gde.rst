@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -175,11 +175,15 @@ A Global Directory looks like this:
                                                                                 DALL=YES
                                                                                 AIO=OFF
 										FBWR=0
+										SIDX=AUTO
+										SISL=1024
     <default>                            MM   DYN     4096       100      100   DEFER
                                                                                 LOCK=40
                                                                                 MSLT=1024
                                                                                 DALL=YES
 										FBWR=0
+										SIDX=AUTO
+										SISL=1024
 
 
              *** NAMES ***
@@ -205,6 +209,8 @@ A Global Directory looks like this:
                                                                                       DALL=YES
                                                                                       AIO=OFF
 										      FBWR=0
+										      SIDX=AUTO
+										      SISL=1024
 
                                         *** MAP ***
     ----------------------------- Names ---------------------------------------------
@@ -321,6 +327,10 @@ GDE uses the following abbreviations to display the output of a global directory
 +-----------------------------------------+----------------------------------------+
 | Region                                  | -REGION                                |
 +-----------------------------------------+----------------------------------------+
+| SIDX                                    | -SEARCH_INDEX_SIZE                     |
++-----------------------------------------+----------------------------------------+
+| SISL                                    | -SEARCH_INDEX_SLOTS                    |
++-----------------------------------------+----------------------------------------+
 | Stats                                   | -[NO]STATS                             |
 +-----------------------------------------+----------------------------------------+
 | Typ                                     | -DYNAMIC_SEGMENT                       |
@@ -402,7 +412,7 @@ To leave GDE:
 
      GDE> QUIT
 
-* Use CTRL+C, which acts similarly to QUIT. 
+* Use CTRL+C, which acts similarly to QUIT.
 
   .. code-block:: bash
 
@@ -1084,11 +1094,15 @@ Example:
                                                                                    DALL=YES
                                                                                    AIO=OFF
 										   FBWR=0
+										   SIDX=AUTO
+										   SISL=1024
   <default>                            MM      DYN    4096         100       100   DEFER
                                                                                    LOCK=40
                                                                                    MSLT=1024
                                                                                    DALL=YES
 										   FBWR=0
+										   SIDX=AUTO
+										   SISL=1024
 
 This displays only the TEMPLATES section of the Global Directory.
 
@@ -1788,6 +1802,46 @@ The minimum RESERVED_BYTES is 0 bytes. The maximum RESERVED_BYTES = Block Size -
 
 By default, GDE uses a RESERVED_BYTES size of zero bytes.
 
+.. _segment-search-index:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-[NO]SEARCH_INDEX
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Enables or disables search indexes for databases created from this global directory. :code:`-NOSEARCH_INDEX` is equivalent to :code:`-SEARCH_INDEX_SLOTS=0`, since no slots is no search index, and :code:`-SEARCH_INDEX` restores the default slot count if the segment currently has none. GDE records only SEARCH_INDEX_SIZE and SEARCH_INDEX_SLOTS, and SHOW displays those two.
+
+:code:`-SEARCH_INDEX` does not override a count given in the same command, so :code:`-SEARCH_INDEX -SEARCH_INDEX_SLOTS=4096` yields 4096 slots.
+
+Note that :code:`-SEARCH_INDEX_SIZE=0` does NOT disable search indexes; in a global directory it means "choose a size for me". Use :code:`-NOSEARCH_INDEX` or :code:`-SEARCH_INDEX_SLOTS=0` to disable, and :ref:`MUPIP SET -NOSEARCH_INDEX <mupip-set-search-index-size>` to disable them on an existing database. MUPIP reads a size of 0 the same way this does, as a request for the default.
+
+.. _segment-search-index-size:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-SEA[RCH_INDEX_SIZE]=size
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Specifies the size in bytes of one search index slot, which YottaDB maintains in shared memory to speed up searches of index blocks. See :ref:`mupip-set-search-index-size` for what a search index slot is and how to size one.
+
+The minimum SEARCH_INDEX_SIZE is 128 bytes and the maximum is 8192 bytes, or 8 less than the BLOCK_SIZE of the segment if that is smaller. MUPIP CREATE rounds a specified size up to a multiple of 8 and raises a smaller non-zero size to the minimum.
+
+By default, GDE leaves SEARCH_INDEX_SIZE unspecified, which SHOW displays as AUTO and which lets MUPIP CREATE choose a quarter of the BLOCK_SIZE, for example, 1024 bytes at the default block size of 4096. In a global directory 0 means AUTO rather than off; to create a database with search indexes disabled, set :code:`-SEARCH_INDEX_SLOTS=0` instead.
+
+Since these values determine the size of the database shared memory segment, changing them on an existing database requires standalone access.
+
+.. _segment-search-index-slots:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-SEARCH_INDEX_SL[OTS]=count
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Specifies how many search index slots YottaDB uses for the segment. The count applies to both the BG and MM access methods.
+
+The minimum SEARCH_INDEX_SLOTS is 0, which turns search indexes off for databases created from this global directory, since no slots is no search index; SHOW displays it as OFF, and any SEARCH_INDEX_SIZE in effect is then ignored. The maximum is 1048576. MUPIP CREATE rounds a specified non-zero count up to a power of two. Shared memory used is SEARCH_INDEX_SIZE multiplied by SEARCH_INDEX_SLOTS, so the default settings on a database with 4096 byte blocks use approximately 1MB per region.
+
+By default, GDE uses a SEARCH_INDEX_SLOTS count of 1024. Turning search indexes off for an existing database is a :ref:`MUPIP SET <mupip-set-search-index-size>` operation, using :code:`-SEARCH_INDEX_SIZE=0`.
+
+Size this to the number of index blocks the application actually searches, and keep the resulting memory well below the size of the global buffer pool; see :ref:`mupip-set-search-index-size` for the measurements behind that advice.
+
 **Summary**
 
 The following table summarizes GDE segment qualifiers. It provides abbreviations, defaults (as provided by YottaDB), and allowable minimum and maximum values.
@@ -1820,6 +1874,12 @@ The following table summarizes GDE segment qualifiers. It provides abbreviations
 | -M[UTEX_SLOTS]=integer                                                 | 1024                   | 64                         | 32768                          |
 +------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
 | -R[ESERVED_BYTES]=size (bytes)                                         | 0                      | 0                          | blocksize-7                    |
++------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
+| -[NO]SEARCH_INDEX                                                      | SEARCH_INDEX           | N/A                        | N/A                            |
++------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
+| -SEA[RCH_INDEX_SIZE]=size (bytes)                                      | AUTO                   | 128                        | 8192, or blocksize-8 if less   |
++------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
+| -SEARCH_INDEX_SL[OTS]=count                                            | 1024                   | 0                          | 1048576                        |
 +------------------------------------------------------------------------+------------------------+----------------------------+--------------------------------+
 
 **\*\* BLOCK_SIZE minus the size of the block header**
