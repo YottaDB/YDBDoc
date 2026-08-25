@@ -3488,7 +3488,7 @@ Sends a signal to a process. The format for the $ZSIGPROC function is:
 
    $ZSIGPROC(expr1,expr2)
 
-* The first expression is the pid of the process to which the signal is to be sent.
+* The first expression is the pid of the process to which the signal is to be sent. It must be greater than zero; $ZSIGPROC() returns EINVAL for any other value.
 * The second expression is the system signal name (e.g., :code:`"SIGUSR1"` or just :code:`"USR1"` - YottaDB accepts either) or number (e.g., 10 for SIGUSR1). YottaDB recommends using signal names to maintain code portability across different platforms.
 
 If the second expression is 0, $ZSIGPROC() checks the validity of the pid specified in the first expression.
@@ -3504,7 +3504,7 @@ There are four possible return values from $ZSIGPROC():
 +------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
 | ESRCH                                          | The specified pid does not exist.                                                                                         |
 +------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
-| EINVAL                                         | Invalid expression(s).                                                                                                    |
+| EINVAL                                         | Invalid expression(s). This includes a pid that is not greater than zero.                                                 |
 +------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+
 
 .. note::
@@ -3512,9 +3512,11 @@ There are four possible return values from $ZSIGPROC():
 
 In release `r1.30 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ $ZSIGPROC() was enhanced to allow signals to be specified by name.
 
+In release `r2.08 <https://gitlab.com/YottaDB/DB/YDB/-/tags/r2.08>`_ $ZSIGPROC() was changed to return EINVAL for a pid that is not greater than zero.
+
 .. note::
 
-   $ZSIGPROC() is implemented using `kill(2) <https://man7.org/linux/man-pages/man2/kill.2.html>`_. If the pid of the process is zero or negative, $ZSIGPROC() may behave unexpectedly.
+   $ZSIGPROC() is implemented using `kill(2) <https://man7.org/linux/man-pages/man2/kill.2.html>`_ with the restriction that the pid must be a positive integer.
 
 ++++++++++++++++++++++++++
 Examples of $ZSIGPROC()
