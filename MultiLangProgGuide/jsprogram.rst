@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2022-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2022-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. #     This document contains the intellectual property        #
@@ -41,7 +41,7 @@ Please access documentation for the MGateway wrappers at `mg-dbx-napi <https://g
 Installation
 --------------
 
-The minimum required version of Nodem is 0.20.4. It should run on every version of Node.js starting with version 0.12.0, through the current release (v20.6.0 at this time), as well as every version of IO.js. However, in the future, both Node.js and the V8 JavaScript engine at its core could change their APIs in a non-backwards compatible way, which might break Nodem for that version.
+The minimum required version of Nodem is 0.20.4. It should run on every version of Node.js starting with version 0.12.0, through the current release (v26.7.0 at this time), as well as every version of IO.js. However, in the future, both Node.js and the V8 JavaScript engine at its core could change their APIs in a non-backwards compatible way, which might break Nodem for that version.
 
 In order to use Nodem, YottaDB must be installed and configured correctly, including setting up the required YottaDB environment variables, or setting the appropriate options in the :code:`open()` API. Make sure to have :code:`$ydb_dist` set to the root of the YottaDB instance before compiling Nodem, whether manually or via :code:`npm`. Node.js must be installed and working as well.
 
