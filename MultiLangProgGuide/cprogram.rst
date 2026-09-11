@@ -627,6 +627,12 @@ The :code:`ydb_decode_s()` and :code:`ydb_decode_st()` functions parse a JSON st
 
 Note that :code:`value` must be initialized with an :code:`address` member that is not NULL and a :code:`length` member that is not 0, before calling :code:`ydb_decode_s()` or :code:`ydb_decode_st()`. Also note that the :code:`length` member of the :code:`value` parameter, containing the length of the JSON string in the :code:`address` member, should be set to the byte length not including the terminating NULL byte.
 
+.. note::
+
+   JSON cannot represent a node that has both a value and descendants (:ref:`ydb_data_s() / ydb_data_st() <ydb-data-s-st-fn>` is 11). :code:`ydb_encode_s()`/:code:`ydb_encode_st()` therefore store the value of such a node under a JSON key that is the empty string (:code:`""`), and :code:`ydb_decode_s()`/:code:`ydb_decode_st()` store the value of every :code:`""` key at the node that contains that key. As a result, YottaDB local or global variables with :code:`""` subscripts do not survive encoding followed by decoding: each :code:`""` subscript level is removed, and the nodes below it move up one level, where they can overwrite nodes that already exist there. See `Example of ZYDECODE with empty string subscripts <../ProgrammersGuide/commands.html#example-of-zydecode-with-empty-string-subscripts>`_ in the M Programmer's Guide.
+
+   In the third case of that example, :code:`b("test","")=2` and :code:`b("test","","subtree")=1` decode to :code:`d("test")=2` and :code:`d("test","subtree")=1`: the :code:`""` subscript is lost. If :code:`b("test","subtree")` had also existed, only one of the two :code:`"subtree"` values would remain in :code:`d`.
+
 Return values are:
 
 - :code:`YDB_OK` for a normal return;

@@ -4793,6 +4793,46 @@ Example of ZYDECODE
 
 This example illustrates how ZYDECODE decodes a JSON string into a global sub-tree. It shows how ZYDECODE encodes the JSON values of null, true, and false, which are not data types in M, as well as a string ("1.5") that would otherwise be coerced in to a number when stored in M, per M's canonical number rules.
 
+.. note::
+
+   JSON cannot represent a node that has both a value and descendants ($DATA() is 11). ZYENCODE therefore stores the value of such a node under a JSON key that is the empty string (:code:`""`), and ZYDECODE stores the value of every :code:`""` key at the node that contains that key. As a result, M data with :code:`""` subscripts does not survive ZYENCODE followed by ZYDECODE: each :code:`""` subscript level is removed, and the nodes below it move up one level, where they can overwrite nodes that already exist there.
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+Example of ZYDECODE with empty string subscripts
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code-block:: bash
+
+   YDB>kill b,c set b("test","subtree")=1 write $data(b("test")),! zyencode c=b zwrite c
+   10
+   c=1
+   c(1)="{""test"": {""subtree"": 1}}"
+
+   YDB>kill d zydecode d=c zwrite d
+   d("test","subtree")=1
+
+   YDB>kill b,c set b("test","subtree")=1,b("test")=2 write $data(b("test")),! zyencode c=b zwrite c
+   11
+   c=1
+   c(1)="{""test"": {"""": 2, ""subtree"": 1}}"
+
+   YDB>kill d zydecode d=c zwrite d
+   d("test")=2
+   d("test","subtree")=1
+
+   YDB>kill b,c set b("test","","subtree")=1,b("test","")=2 write $data(b("test","")),! zyencode c=b zwrite c
+   11
+   c=1
+   c(1)="{""test"": {"""": {"""": 2, ""subtree"": 1}}}"
+
+   YDB>kill d zydecode d=c zwrite d
+   d("test")=2
+   d("test","subtree")=1
+
+   YDB>
+
+In the third case, :code:`b("test","","subtree")=1` and :code:`b("test","")=2` decode to :code:`d("test")=2` and :code:`d("test","subtree")=1`: the :code:`""` subscript is lost. If :code:`b("test","subtree")` had also existed, only one of the two :code:`"subtree"` values would remain in :code:`d`.
+
 -------------------
 ZYENCODE
 -------------------
@@ -4814,6 +4854,10 @@ The format of ZYENCODE command is:
 * If $DATA(glvn2) is 0 then YottaDB issues a `ZYENCODESRCUNDEF <..//MessageRecovery/errors.html#zyencodesrcundef>`_ error.
 * An indirection operator and an expression atom evaluating to a list of one or more ZYENCODE arguments form a legal argument for a ZYENCODE.
 * M variables starting a subscript level with 0, with successive integer subscripts at the same level, with no other subscripts not matching that series, are encoded as JSON arrays, otherwise they are encoded as JSON objects.
+
+.. note::
+
+   ZYENCODE stores the value of a node that has both a value and descendants ($DATA() is 11) under a JSON key that is the empty string (:code:`""`). If that node also has a descendant with a :code:`""` subscript, the two share the same key, and the value of the node is not encoded. See `Example of ZYDECODE with empty string subscripts`_.
 
 .. note::
 
