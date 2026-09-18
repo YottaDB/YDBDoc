@@ -2947,9 +2947,9 @@ DBOPNERR
 
 DBOPNERR, Error opening database file xxxx
 
-Run Time Error: This indicates that a database operation tried to open the database file xxxx, which was inaccessible.
+MUPIP Warning/Run Time Error: This indicates that a database operation tried to open the database file xxxx, which was inaccessible. For MUPIP CREATE it usually means that the file already exists.
 
-Action: Use GDE to ensure that the files in the Global Directory are properly named. Use the host shell command to ensure that the files exist and have proper security. Review the accompanying message(s) that indicate the reason for file-open failure.
+Action: Use GDE to ensure that the files in the Global Directory are properly named. Use the host shell command to ensure that the files exist and have proper security. Review the accompanying message(s) that indicate the reason for file-open failure. For MUPIP CREATE, if the existing database file should continue to be used, ignore the message. If a new database file should be created, delete or rename the database file and run the command again.
 
 -------------
 DBPREMATEOF
