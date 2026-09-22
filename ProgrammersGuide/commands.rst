@@ -1358,6 +1358,7 @@ The format of the QUIT command is:
 * An indirection operator and an expression atom evaluating to a QUIT argument form a legal argument for a QUIT.
 * An unsubscripted lvn (lname) specifies the root of an array, while a subscripted lvn must specify an alias container.
 * When QUIT * terminates an extrinsic function or an extrinsic special variable, it always returns an alias container. If lvn is an lname that is not an alias, QUIT * creates an alias container.
+* $QUIT indicates which form of QUIT the current invocation requires: 0 for an argumentless QUIT, 1 for a QUIT with a value, and 11 for a QUIT \*. For more information, refer to :ref:`quit-isv`.
 * The QUIT performs two similar, but different, functions depending on its context. Because FORs do not add levels to the YottaDB invocation stack, QUITs inside FOR loops simply terminate the loop. QUITs that terminate DOs, XECUTEs and extrinsics remove a YottaDB invocation stack level and therefore may adjust the local variable environment resulting from previous NEWs or parameter passing. A QUIT from an extrinsic or a frame created by an argumentless DO restores $TEST to its stacked value.
 * An indirection operator and an expression atom evaluating QUIT arguments forms a legal argument for a QUIT other than from a FOR.
 * Attempting to QUIT (implicitly or explicitly) from code invoked by a DO, XECUTE or extrinsic after that code issued a TSTART not yet matched by a TCOMMIT produces an error.

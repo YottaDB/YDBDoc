@@ -256,13 +256,17 @@ When $PRINCIPAL identifies a device that supports REWIND, the REWIND or INREWIND
 
 When $PRINCIPAL has different input/output devices, the USE command recognizes intrinsic special variables $ZPIN or $ZPOUT and applies appropriate deviceparameters to the input or output side of $PRINCIPAL, respectively. A USE with $ZPIN or $ZPOUT sets $IO to $PRINCIPAL for READs and WRITEs from the input and output side of $PRINCIPAL. For more information refer to "$ZPIN" or "$ZPOUT" .
 
+.. _quit-isv:
+
 ---------------
 $QUIT
 ---------------
 
-$Q[UIT] indicates whether the current block of code was called as an extrinsic function or as a subroutine.
+$Q[UIT] indicates whether the current block of code was called as a subroutine or as an extrinsic function and, when it was called as an extrinsic function, whether the invocation requires an alias return value. $Q[UIT] has one of the following three values:
 
-If $Q[UIT] contains 1 (when the current process-stack frame is invoked by an extrinsic function), the QUIT would therefore require an argument.
+* 0 - YottaDB invoked the current process-stack frame as a subroutine, for example, DO label. A QUIT from the current frame must not have an argument.
+* 1 - YottaDB invoked the current process-stack frame as an extrinsic function or extrinsic special variable whose value a SET without an asterisk (\*) assigns, for example, SET x=$$label. A QUIT from the current frame requires an argument, that is, QUIT expr.
+* 11 - YottaDB invoked the current process-stack frame as an extrinsic function or extrinsic special variable whose value a SET \* assigns, for example, SET \*x=$$label. A QUIT from the current frame requires an alias argument, that is, QUIT \*lname or QUIT \*lvn. For more information on Alias Variables, refer to :ref:`alias-var-ext`.
 
 .. note::
    When a process is initiated, but before any commands are processed, the value of $Q[UIT] is zero (0).
@@ -274,6 +278,17 @@ A typical way of exiting from an error trap is:
 .. code-block:: none
 
    QUIT:$QUIT "" QUIT
+
+Because 11 is a non-zero, and therefore true, value, that idiom continues to select the argumented QUIT when the invocation requires an alias return value. In that case, however, the empty string is not an alias, and the QUIT produces an `ALIASEXPECTED <../MessageRecovery/errors.html#aliasexpected>`_ error; an argumentless QUIT in that case produces a `QUITARGREQD <../MessageRecovery/errors.html#quitargreqd>`_ error. Conversely, a QUIT \* from a frame for which $Q[UIT] is 1 produces a `QUITALSINV <../MessageRecovery/errors.html#quitalsinv>`_ error. Code that callers can invoke in all three ways must therefore test $Q[UIT] against all three values, for example:
+
+.. code-block:: none
+
+   dbl(x) ; double x, however the caller invoked this label
+        NEW result
+        SET result=2*x
+        QUIT:$QUIT=0                       ; invoked with DO dbl(n)
+        QUIT:$QUIT=1 result                ; invoked with SET y=$$dbl(n)
+        QUIT *result                       ; invoked with SET *y=$$dbl(n)
 
 .. note::
    YottaDB does not permit $QUIT to be SET or NEWed.
