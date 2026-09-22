@@ -150,9 +150,9 @@ ALIASEXPECTED
 
 ALIASEXPECTED, Alias or alias container variable expected in this context
 
-Compile Time/Run Time Error: This indicates the argument for a SET * or KILL * command used a non-alias local variable where the syntax requires an alias or alias container variable.
+Compile Time/Run Time Error: This indicates the argument for a SET * or KILL * command used a non-alias local variable where the syntax requires an alias or alias container variable. YottaDB also produces this error at run time when an extrinsic function or extrinsic special variable invoked with SET * terminates with a QUIT whose argument is not an alias or alias container.
 
-Action: Correct the code or investigate the program logic to determine why the local variable in question is not in the expected state.
+Action: Correct the code or investigate the program logic to determine why the local variable in question is not in the expected state. If the routine should conditionally return an alias, use `$QUIT <../ProgrammersGuide/isv.html#quit>`_, which has the value 11 when the invocation requires an alias return value, to select the proper type of return.
 
 -------------
 AMBISYIPARAM
@@ -11352,7 +11352,7 @@ QUITALSINV, QUIT * return when the extrinsic was not invoked with SET *
 
 Run Time Error: A [sub-]routine tried to pass an alias back to the caller, but the routine was not invoked to accept an alias return.
 
-Action: Rework either the invocation or the return, or troubleshoot why the inappropriate invocation occurred. If the routine should conditionally return an alias, use $QUIT to select the proper type of return.
+Action: Rework either the invocation or the return, or troubleshoot why the inappropriate invocation occurred. If the routine should conditionally return an alias, use `$QUIT <../ProgrammersGuide/isv.html#quit>`_ to select the proper type of return; $QUIT has the value 11 when the invocation requires an alias return value, and 1 when it requires an ordinary value.
 
 -------------------
 QUITARGLST
