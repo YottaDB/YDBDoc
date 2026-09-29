@@ -2081,6 +2081,16 @@ Starts a string-pool garbage collection, which normally happens automatically at
 .. note::
    There are no visible effects from STP_GCOL, LV_GCOL and LV_REHASH except for the passage of time depending on the state of your process. YottaDB uses these VIEW "LV_GCOL","LV_REHASH","STP_GCOL" facilities in testing. They are documented to ensure completeness in product documentation. You may (or may not) find them useful during application development for debugging or performance testing implementation alternatives.
 
+.. _view-stpgcolfree:
+
+~~~~~~~~~~~~~~~
+STP_GCOL_FREE
+~~~~~~~~~~~~~~~
+
+Starts a string-pool garbage collection, as VIEW "STP_GCOL" does, and then returns to the operating system the physical memory of the unused part of the stringpool, as well as other memory the process has freed, for example the memory of local variables removed by a KILL. An application that needs a large amount of memory for a short time, for example once or twice a day, can use VIEW "STP_GCOL_FREE" afterwards to reduce the memory use of a long running process. Without it, the process keeps the memory it has once used until it exits.
+
+The stringpool keeps its size, and the virtual memory size of the process (VmSize in /proc/<pid>/status, VSZ in ps) does not shrink. What shrinks is its resident memory (VmRSS, or RSS in ps and RES in top), the part of its memory backed by physical RAM. When the process uses that memory again, the operating system supplies it afresh, at a small cost, so use VIEW "STP_GCOL_FREE" after a peak of memory use rather than routinely.
+
 .. _view-stpgcolnosort:
 
 ~~~~~~~~~~~~~~~~~~~~~~
