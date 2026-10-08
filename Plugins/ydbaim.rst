@@ -204,30 +204,20 @@ Statistics can be used to optimize queries. For example, if one wants a query wh
 
 Consider another example, a global variable that contains all of the U.S. State Capitals and you would like to find out which capitals are named after the Presidents. In this case it would make sense to look at the last names of the Presidents first, since there are 39 distinct last names and 50 distinct state capitals.
 
+.. _schematype:
+
 --------------------------
 Application Schema Type
 --------------------------
 
-The above description describes the most straightforward type of application schema, where all application nodes with metadata managed by AIM have the same number of subscripts. However, the freedom that global variables provide to application designers means that different applications design their schemas in different ways.
+AIM supports two schema types:
 
-The default type parameter in the call to XREFDATA() creates metadata for straightforward case above. Adding schemas consists of:
+- Type 0/2 (default/default when a transformation function is supplied): Indexes existing data only.
+- Type 4/6: Indexes data and generates "" (NULL) entries based on a comparison of the subscripts to be indexed versus subscripts based on sub-trees and potentially in another global variable.
 
-* Creating new trigger templates as needed, and creating triggers from new and existing trigger templates.
-* Adding logic in XREFDATA() to create the initial metadata.
+See :ref:`record specification <recspec>` for further discussion of type 4/6.
 
-With a value of 1 or 3 for type, AIM creates and manages metadata for a schema used by the `VistA Fileman software <https://www.va.gov/vdl/application.asp?appid=5>`_.
-
-For a Fileman schema (i.e., type 1 or type 3), when
-
-* the last subscript specification specifies a constant;
-* a node with that constant subscript does not exist; and
-* other nodes exist at the level of that constant subscript, i.e., there is at least one other node whose subscripts are identical except for that constant last subscript.
-
-AIM creates and maintains metadata nodes for the requested pieces using the empty string ("") as the last subscript instead of the specified constant. For example, the node :code:`^ORD(100.01,0)="ORDER STATUS^100.01I^99^16"` when cross referenced with the call :code:`$$XREFDATA^%YDBAIM("^ORD",.sub,"^",1,0,0,1,0,1,0)` where :code:`sub(1)=100.01,sub(2)=":"" """,sub(3)=.1` produces the cross reference :code:`^%ydbAIMDu1oVZCaYBv7SgPmwQNP201(1,"",0)=""` even though there is no :code:`^ORD(100.01,0,.1)` node.
-
-While type 1 and type 3 both apply to Fileman schemas, the cross references for type 1 are the actual data, whereas the cross references for type 3 use :ref:`transformation`.
-
-For a type 3 cross reference, the metadata node for such a missing constant-subscript node, as well as any node whose transformed value is the empty string, uses the transformation function applied to the empty string, i.e., :code:`f("")`, as the cross-referenced value rather than a bare empty string (:code:`""`). This is consistent with how the transformation function is applied to values that are present. Forcing string collation (type 1 with **force** 1) is the special case of a transformation that prepends :code:`#`: an empty value :code:`""` becomes :code:`#`, which is that same transformation applied to :code:`""`.
+Type 1/3 were an earlier iteration of the same idea behind 4/6, but they were specific to Fileman globals. Type 4/6 handle all Type 1/3 cases, and if the user supplies 1/3, AIM treats them as types 4/6.
 
 .. _forcing:
 
@@ -275,14 +265,14 @@ Transformation Functions
 
 The most common use of cross reference is to find global nodes that contain the data being cross referenced, for example to traverse that data in order. But cross references are useful for many reasons. For example:
 
-* There are multiple formats for storing dates and times, and comparing values directly can slow Octo queries. But if the cross reference for each time stamp is its `UNIX time <https://en.wikipedia.org/wiki/Unix_time>`_ (i.e., its `$ZUT <../ProgrammersGuide/isv.html#zut>`_ value), then comparing time stamps, or choosing dates and times within a range becomes a much simpler proposition. This is a 1:1 transformation function.
+* There are multiple formats for storing dates and times, and comparing values directly can slow queries. But if the cross reference for each time stamp is its `UNIX time <https://en.wikipedia.org/wiki/Unix_time>`_ (i.e., its `$ZUT <../ProgrammersGuide/isv.html#zut>`_ value), then comparing time stamps, or choosing dates and times within a range becomes a much simpler proposition. This is a 1:1 transformation function.
 * Cross referencing a hash or checksum allows an application to locate the original data for the hash or checksum. This is potentially a many:1 transformation function.
 
-Transformation is accomplished by providing the M code for a function in the :code:`force` parameter with a value of 2 or 3 for the :code:`type` parameter. For example, if :code:`"$$ABC^DEF()"` is the value passed in :code:`force`, triggers for cross referenced nodes will use the value returned by the transformation function as the value to cross reference. When the function is called at runtime by the trigger, the first parameter is the actual node or piece value, e.g., :code:`$$ABC^DEF("2024-02-21T13:31:48.05098021+07:00")` would yield the actual cross-referenced value if the timestamp in the global node is :code:`2024-02-21T13:31:48.05098021+07:00`. If the function requires additional parameters, they can be specified as comma separated values for the second and subsequent parameters, e.g., :code:`"$$ABC^DEF(,1,""two"")"`. As local variables cannot be passed to triggers, these additional parameters can only be constants, global variable references, or function calls whose parameters are constants, global variables, or function calls. Application code that needs to pass local variable values to the transformation function should use `$ZTWORMHOLE <../ProgrammersGuide/isv.html#ztwormhole-isv>`_.
+Transformation is accomplished by providing the M code for a function in the :code:`force` parameter with a value of 2 or 6 for the :code:`type` parameter. For example, if :code:`"$$ABC^DEF()"` is the value passed in :code:`force`, triggers for cross referenced nodes will use the value returned by the transformation function as the value to cross reference. When the function is called at runtime by the trigger, the first parameter is the actual node or piece value, e.g., :code:`$$ABC^DEF("2024-02-21T13:31:48.05098021+07:00")` would yield the actual cross-referenced value if the timestamp in the global node is :code:`2024-02-21T13:31:48.05098021+07:00`. If the function requires additional parameters, they can be specified as comma separated values for the second and subsequent parameters, e.g., :code:`"$$ABC^DEF(,1,""two"")"`. As local variables cannot be passed to triggers, these additional parameters can only be constants, global variable references, or function calls whose parameters are constants, global variables, or function calls. Application code that needs to pass local variable values to the transformation function should use `$ZTWORMHOLE <../ProgrammersGuide/isv.html#ztwormhole-isv>`_.
 
 For example, with the ^USPresidents global variable mentioned earlier, the node :code:`^USPresidents(1797,1801)="John||Adams"` would generate the cross reference :code:`^%ydbAIMDHgTwbHgcmyZEIfADw7Xq07(3,"0x5d156e592ad2e9a83eb48043c59213d0",1797,1801)=""` with a call to :code:`$$XREFDATA^%YDBAIM("^USPresidents",2,"|",3,0,0,0,0,2,"$ZYHASH()")`.
 
-A value of 2 for :code:`type`, informs AIM that the schema for the global nodes is an ordinary schema; a value of 3, informs AIM that the global nodes have a Fileman schema.
+A value of 2 for :code:`type`, informs AIM that the schema for the global nodes is an ordinary schema; a value of 6, that the global nodes have a :ref:`record specification <recspec>`.
 
 .. _comment:
 
@@ -291,6 +281,105 @@ Comments
 ------------
 
 Since an application can have many cross-references, to facilitate connecting a cross reference with the motivation for that cross reference, the :ref:`xrefdata` and :ref:`xrefsub` functions have an optional ``comment`` parameter. Any value passed to the function is stored in the metadata about the cross reference.
+
+.. _recspec:
+
+-------------------------------------
+Record Specifications (types 4 and 6)
+-------------------------------------
+
+The need for types 4/6 came originally from the need to provide cross-references for applications that needed to map their global schema to relational tables for Octo.
+
+In AIM, a **record** global is a global variable that may differ from the global variable being cross referenced, the **value** global, with which it shares subscripts.
+
+Say the values are in ``^value(i)``, but what defines that a record exists is ``^record(i)``, where ``i`` is common to ``^value`` and ``^record``.
+
+ * If ``^record(i)`` exists but the same ``i`` at ``^value(i)`` does not exist, then the empty string should be used as the cross reference for ``i``.
+ * If ``^record(i)`` does not exist, but ``^value(i)`` exists, there should be no cross reference.
+
+Type 0 can only represent the data it sees in ``^value(i)``: it misses the "" entries and adds an extra entry to the cross reference, both of which are incorrect.
+
+Here is a fully specified example:
+
+.. code:: none
+
+   ^G(1)=""           ^G is the "record" global, holding records 1 and 2
+   ^G(2)=""
+   ^H(1)="Alice"      ^H is the value global (the target of an AIM cross-reference); a value for record 1,
+   ^H(3)="Bob"        and one for a record that does not exist
+
+Both type 0 and type 4 will have cross references of :code:`(0,"Alice",1)`. However, the common type 0 will have a cross reference of :code:`(0,"Bob",3)` whereas type 4 will have a cross reference of :code:`(0,"",2)` - see the call to :ref:`xrefdata` below for the latter.
+
+With a value of 4 for **type**, :ref:`xrefdata` takes a **record specification** as well, in the **recgbl** and **recsub** parameters:
+
+.. code:: bash
+
+   YDB>set xsub(1)=":",recsub(1)=":",recsub=1
+   YDB>set x=$$XREFDATA^%YDBAIM("^H",.xsub,,,,,,,4,,,"^G",.recsub)
+   YDB>zwrite @x@(0,*)
+   ^%ydbAIMD...(0,"",2)=""
+   ^%ydbAIMD...(0,"Alice",1)=""
+
+Record 2 is cross referenced under the empty string, and record 3 is not cross referenced.
+
+**recgbl** is the global variable in which records live. It defaults to **gbl** if not supplied; it may name a different global variable, even an :ref:`extended reference <extref>` to a global variable in different database.
+
+**recsub** uses the syntax of **xsub**:
+
+* :code:`":"`, optionally a range such as :code:`"1:1900"`, is a **record subscript**. The i-th :code:`":"` in **recsub** is the same subscript as the i-th :code:`":"` in **xsub**. The subscripts of the value specification must be a left prefix of those of the record specification: the value may be keyed by fewer subscripts than the record, e.g. :code:`^H(A)` vs :code:`^G(A,B)`.
+* A constant pins a fixed subscript, e.g., the 0 of :code:`^G(A,B,0)`.
+* The value at the root of **recsub** is the **depth** of the record specification. This is a tricky concept but is needed for triggers to work properly: If a record is created at ``^G(A,B,C,D,E,F)``, since ``^G(A)`` exists, it should count for ``^H(A)``; but AIM cannot monitor every single level for a trigger due to the way that triggers work (triggers for ``^G(A)`` don't know about ``^G(A,B,C,D,E,F)``), so the depth tells AIM how many levels below ``^G(A)`` to watch: **recsub** would be 6 in this example.
+
+Here are various examples for **recsub**:
+
+.. code:: none
+
+   recsub(1)=":",recsub=1                             a record is ^G(A), and nothing below it
+   recsub(1)=":",recsub=2                             a record is ^G(A), cross referenced while any ^G(A,x) exists
+   recsub(1)=":",recsub(2)=":",recsub(3)=0,recsub=3   a record is ^G(A,B,0)
+   recsub(1)=1,recsub(2)=":",recsub=3                 a record is ^G(1,B), cross referenced while any ^G(1,B,x) exists
+
+Here is another example where the value global and the record global are the same: Employee records where the name is on one node and the e-mail address, which not every employee has, one level down:
+
+.. code:: none
+
+   ^EMP(1,0)="Alice^Cardiology"
+   ^EMP(1,0,"EMAIL")="alice@hosp.org"
+   ^EMP(2,0)="Bob^Cardiology"
+
+A record is :code:`^EMP(A)`, and the e-mail address lives two levels below it, so the record specification is :code:`recsub(1)=":"` with a depth of 3. Cross referencing the e-mail address:
+
+.. code:: bash
+
+   YDB>set xsub(1)=":",xsub(2)=0,xsub(3)="""EMAIL""",recsub(1)=":",recsub=3
+   YDB>set x=$$XREFDATA^%YDBAIM("^EMP",.xsub,,,,,,,4,,,,.recsub)
+   YDB>zwrite @x@(0,*)
+   ^%ydbAIMD...(0,"",2)=""
+   ^%ydbAIMD...(0,"alice@hosp.org",1)=""
+
+If **type** is 4 and neither **recgbl** nor **recsub** is supplied, the value specification serves as the record specification: a record is the value node itself, with nothing below it, and the cross reference holds what the default type holds. A **recgbl** other than **gbl** must come with a **recsub**.
+
+A value of 6 for **type** is type 4 with a :ref:`transformation function <transformation>` in **force**, as type 2 is to type 0. A record whose value node does not exist is then cross referenced under the transformation function applied to the empty string, :code:`f("")`. For example, to cross reference the e-mail addresses of the ``^EMP`` example in lower case, whatever case they are stored in:
+
+.. code:: bash
+
+   YDB>set x=$$XREFDATA^%YDBAIM("^EMP",.xsub,,,,,,,6,"$ZCONVERT(,""L"")",,,.recsub)
+   YDB>zwrite @x@(0,*)
+   ^%ydbAIMD...(0,"",2)=""
+   ^%ydbAIMD...(0,"alice@hosp.org",1)=""
+   YDB>set ^EMP(2,0,"EMAIL")="BOB@hosp.org"
+   YDB>zwrite @x@(0,*)
+   ^%ydbAIMD...(0,"alice@hosp.org",1)=""
+   ^%ydbAIMD...(0,"bob@hosp.org",2)=""
+
+Employee 2's entry stays the empty string, as :code:`$ZCONVERT("","L")` is :code:`""`.
+
+The following errors are specific to record specifications:
+
+* ``RECSPEC``: **recgbl** or **recsub** given with a **type** other than 4 or 6; or **type** 4 with a **recgbl** other than **gbl** and no **recsub**.
+* ``RECPREFIX``: the value specification has more record subscripts than the record specification.
+* ``RECWILD``: a :code:`":"` subscript of **recsub** below a level that is left unnamed.
+* ``RECDEPTH``: the depth is not an integer from 1 through 29, or is less than the deepest named subscript of **recsub**.
 
 ------------
 Functions
@@ -308,7 +397,7 @@ The format for XREFDATA() is as follows:
 
 .. code:: none
 
-  $$XREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force,comment)
+  $$XREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force,comment,recgbl,recsub)
 
 where,
 
@@ -330,33 +419,35 @@ where,
 
 * **zpiece**, if 1, means that $ZPIECE() should be used as the piece separator instead of $PIECE(). AIM can have cross references for the same nodes with both options; the cross references are in different global variables.
 
-* **omitfix**, if 1, instructs XREFDATA() to omit from the subscripts of the cross reference any subscripts of the application global that are fixed constants because the code to traverse the application global using the cross reference will include those known fixed subscripts when making the access. If not specified, omitfix defaults to 1. When **type** is 1 or 3, **omitfix** must be 1 (the default); a call with omitfix=0 and **type** 1 or 3 raises a ``NOOMITFIX`` error.
+* **omitfix**, if 1, instructs XREFDATA() to omit from the subscripts of the cross reference any subscripts of the application global that are fixed constants because the code to traverse the application global using the cross reference will include those known fixed subscripts when making the access. If not specified, omitfix defaults to 1.
 
 * **stat** if 1 or 2 says the metadata should include statistics, as described above under :ref:`statistics`.
 
-* **type**, defaulting to the empty string, specifies the application schema for which AIM is being asked to compute and maintain metadata.
+* **type**, defaulting to the empty string, specifies the application schema for which AIM is being asked to compute and maintain metadata; see :ref:`schematype` and :ref:`recspec`.
 
-* **force**, defaults to the empty string. A value of 1 specifies that AIM cross references should prepend a hash (:code:`#`) to the data being cross referenced. If **type** is 1 or 3, **force** specifies either string collation or a transformation function for an application global using the Fileman schema; if **type** is 2, **force** specifies a transformation function. See :ref:`forcing`.
+* **force**, defaults to the empty string. A value of 1 specifies that AIM cross references should prepend a hash (:code:`#`) to the data being cross referenced. If **type** is 2 or 6, **force** specifies a transformation function. See :ref:`forcing`.
 
-* **comment**, if any value is passed by the caller, results in that value stored in the metadata of the cross reference.
+* **comment**, if any value is passed by the caller, results in that value stored in the metadata of the cross reference, under the piece number when **sep** is specified, since several pieces of one node share a cross reference and each may be described separately.
 
-The relationship between **type** and **force** is shown below. Combinations of values other than those shown are reserved.
+* **recgbl** and **recsub**, for **type** 4 and 6, are the :ref:`record specification <recspec>`: the global variable in which records live, defaulting to **gbl**, and the subscripts that locate a record, in the syntax of **xsub** with the depth at the root.
 
-+-----------------------------------------------------------------------------------------------------------------------------------------+
-|	                                                            **type**                                                              |
-+-------------------------------+----------------------------+------------------------+-------------------------+-------------------------+
-|                               | **0, "", or omitted**      |          **1**         |          **2**          |          **3**          |
-+===========+===================+============================+========================+=========================+=========================+
-|           | **0, "", or**     | Normal schema;             | Fileman schema;        |                                                   |
-|           | **omitted**       | normal M ordering          | normal M ordering      |                                                   |
-|           +-------------------+----------------------------+------------------------+                                                   |
-|           |       **1**       | Normal schema;             | Fileman schema;        |                                                   |
-| **force** |                   | forced String ordering     | forced string ordering |                                                   |
-|           +-------------------+----------------------------+------------------------+-------------------------+-------------------------+
-|           |                   |                                                     | Normal schema           | Fileman schema;         |
-|           |  **Function**     |                                                     | transformation function | transformation function |
-|           |                   |                                                     | ordering                | ordering                |
-+-----------+-------------------+-----------------------------------------------------+-------------------------+-------------------------+
+The relationship between **type** and **force** is shown below. Types 1 and 3 are accepted as 4 and 6, as described under :ref:`schematype`. Combinations of values other than those shown are reserved.
+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                                           **type**                                                                           |
++-------------------------------+----------------------------+-------------------------+-----------------------------------+-----------------------------------+
+|                               |   **0, "", or omitted**    |          **2**          |               **4**               |               **6**               |
++===========+===================+============================+=========================+===================================+===================================+
+|           | **0, "", or**     | Normal schema;             |                         | Record specification;             |                                   |
+|           | **omitted**       | normal M ordering          |                         | normal M ordering                 |                                   |
+|           +-------------------+----------------------------+                         +-----------------------------------+                                   |
+| **force** |       **1**       | Normal schema;             |                         | Record specification;             |                                   |
+|           |                   | forced string ordering     |                         | forced string ordering            |                                   |
+|           +-------------------+----------------------------+-------------------------+-----------------------------------+-----------------------------------+
+|           |                   |                            | Normal schema;          |                                   | Record specification;             |
+|           |    **Function**   |                            | transformation function |                                   | transformation function           |
+|           |                   |                            | ordering                |                                   | ordering                          |
++-----------+-------------------+----------------------------+-------------------------+-----------------------------------+-----------------------------------+
 
 Metadata about the cross reference itself is stored in nodes of the cross-reference global variable as follows:
 
@@ -374,8 +465,11 @@ Metadata about the cross reference itself is stored in nodes of the cross-refere
   *  \(8) ZKILL trigger for this cross reference.
   *  \(9) 1 means that omitting fixed subscripts was requested, whether or not any subscripts were actually omitted.
   *  \(10) if 1 or 2 means that statistics are maintained, as specified by the ``stat`` parameter.
-  *  \(11) stores any value that is passed in the ``comment`` parameter.
+  *  \(11) stores any value that is passed in the ``comment`` parameter; \(11,piece) when **sep** is specified.
   *  \(12) & up - triggers for KILLs of higher level nodes.
+  *  \(51) & \(53) & up - for types 4 and 6, triggers for KILLs of the record global variable and of the nodes above the record node, where these are not already among the triggers above.
+  *  \(99) for types 4 and 6, the global directory of the database holding records, present only when that is not the database of the cross reference.
+  *  \(100+i) & \(140+i) for types 4 and 6, the SET and ZKILL triggers of record level i, one pair for the record node and for each watched level below it.
 
 Applications can read and use the above metadata, but should not attempt to alter it. Changes can result in unpredictable and/or undesirable behavior.
 
@@ -399,7 +493,7 @@ where
 
 * **snum** uses the same syntax as **pnum** for XREFDATA() to specify subscripts that should be cross-referenced. Unlike **pnum**, it is not optional. Any subscript that is specified by **snum** must be part of **xsub**, e.g., if **snum** specifies cross referencing of the third subscript, **xsub** must specify a global variable with at least 3 subscripts.
 
-* **type** defaults to the empty string, which is also equivalent to 0. A value of 2 indicates that **force** is a transformation function. Unlike XREFDATA(), XREFSUB() does not implement special logic for Fileman subscripts.
+* **type** defaults to the empty string, which is also equivalent to 0. A value of 2 indicates that **force** is a transformation function. XREFSUB() has no record specification.
 
 * **force** defaults to the empty string, which is equivalent to 0. A value of 1 when **type** is defaulted or zero indicates that AIM cross references should prepend a hash (``#``) to the cross reference, which forces string collation even for numbers (e.g., US zip codes). If **type** is 2, **force** should be a string specifying a transformation function for cross references (see :ref:`forcing`).
 
@@ -488,7 +582,7 @@ UNXREFDATA() and UNXREFSUB() provide an API for removing specific cross referenc
 
  .. code:: none
 
-   DO UNXREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force)
+   DO UNXREFDATA^%YDBAIM(gbl,xsub,sep,pnum,nmonly,zpiece,omitfix,stat,type,force,recgbl,recsub)
    DO UNXREFSUB^%YDBAIM(gbl,xsub,snum,nmonly,omitfix,stat,type,force)
 
 where,
@@ -509,6 +603,8 @@ where,
 
 * **type** and **force** must match the :ref:`xrefdata` or :ref:`xrefsub` that set up the cross reference.
 
+* **recgbl** and **recsub**, for types 4 and 6, must match the :ref:`record specification <recspec>` given to :ref:`xrefdata`.
+
 ++++++++++
 VERSION()
 ++++++++++
@@ -528,11 +624,13 @@ For example:
 .. code:: none
 
    YDB>write $$VERSION^%YDBAIM
-   6.2
+   7.3
    YDB>
 
 .. note::
    The version numbers shown above are illustrative; the values your installation reports may differ as AIM evolves.
+
+.. _extref:
 
 ----------------------------
 Extended References
@@ -540,7 +638,9 @@ Extended References
 
 If **gbl** is an extended reference, the cross reference variable returned by :ref:`xrefdata` and :ref:`xrefsub` is an extended reference using the same global directory as **gbl**. The triggers that maintain the cross references also use the extended reference, since it is not known at the time that the functions are called whether a future update to the global variable will use an extended reference or set `$ZGBLDIR <../ProgrammersGuide/isv.html#zgbldir>`_. Using an extended reference in the trigger ensures that the application global variable and cross reference use the same global directory.
 
-:ref:`lsxref`, and :ref:`unxref` all accept extended references. The cross references reported by the first two functions do not include the global directory name, i.e., they are reported as normal global variables and not as extended references.
+:ref:`lsxref`, and :ref:`unxref` all accept extended references.
+
+For types 4 and 6, **recgbl** may be an extended reference, placing records in a database other than that of **gbl** and the cross reference. The triggers that maintain the record side of the cross reference are then defined in that database, and name the cross reference with its own database. The cross references reported by the first two functions do not include the global directory name, i.e., they are reported as normal global variables and not as extended references.
 
 .. note::
    As using extended references has a small incremental performance cost on global variable accesses, define the cross reference using an extended reference only if the application global variable will normally be accessed by the application using an extended reference.
