@@ -3060,6 +3060,8 @@ The RECORDSIZE of a fixed length record for a YottaDB sequential disk device is 
 
 For all UTF-16 CHSET values, RECORDSIZE must be even and PAD characters each occupy two bytes in the record.
 
+For a UTF-8, UTF-16, UTF-16LE or UTF-16BE ICHSET or OCHSET, RECORDSIZE must be at least 4, the largest number of bytes a character can take in those encodings; otherwise OPEN and USE issue a `RECSIZETOOSMALL <../MessageRecovery/errors.html#recsizetoosmall>`_ error.
+
 The maximum size of intexpr is 1,048,576 bytes. YottaDB produces an error if you specify a value greater than 1,048,576.
 
 When a CHSET related to Unicode® characters is in use, YottaDB treats RECORDSIZE as a byte limit at which to wrap or truncate output depending on [Z][NO]WRAP. For any Unicode character set, YottaDB ignores RECORDSIZE for a device which is already open if any I/O has been done.

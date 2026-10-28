@@ -11534,6 +11534,16 @@ Run Time Error: This error is issued when the OPEN command specifies an ICHSET o
 
 Action: Specify a RECORDSIZE that is a multiple of 2.
 
+----------------------
+RECSIZETOOSMALL
+----------------------
+
+RECSIZETOOSMALL, RECORDSIZE xxxx needs to be at least yyyy if ICHSET or OCHSET is UTF-8, UTF-16, UTF-16LE or UTF-16BE
+
+Run Time Error: This error is issued when an OPEN or USE command results in a device whose ICHSET or OCHSET is UTF-8, UTF-16, UTF-16LE or UTF-16BE having a RECORDSIZE (xxxx) smaller than the largest number of bytes (yyyy) that a character can take in those encodings, so that a record could not hold every character. An OPEN of a device that is not already open leaves the device closed; for a PIPE device, the command has already started, and gets an end of file on its input. A USE, or an OPEN of a device that is already open, leaves the device open with its RECORDSIZE and CHSET unchanged.
+
+Action: Specify a RECORDSIZE of at least yyyy.
+
 -------------------
 RECSIZIS
 -------------------
