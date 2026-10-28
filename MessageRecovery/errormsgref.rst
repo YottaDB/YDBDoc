@@ -3193,6 +3193,8 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381866 | TRESTMAX, TRESTART not allowed in a final TP retry more than once                                                                                                      |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 151028282 | TRESTNEW, Cannot restart transaction because the restart cannot undo an argumentless or exclusive NEW done after its TSTART                                            |
++-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150376066 | TRESTNOT, Cannot TRESTART, transaction is not restartable                                                                                                              |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381720 | TRIG2NOTRIG, Sending transaction sequence number xxxx which used triggers to a replicator that does not support triggers                                               |

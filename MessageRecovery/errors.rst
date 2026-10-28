@@ -14705,6 +14705,16 @@ Run Time Error: The code contained one or more explicit TRESTART command(s) whic
 Action: Investigate the cause and reason(s) for the explicit restart. When combined with a subsequent TROLLBACK, explicit TRESTARTs may provide a way to manipulate the variable context and flow of control in useful ways, but other uses are unusual. If explicit TRESTARTs are appropriate, consider whether they should be conditional on the value of $TRESTART.
 
 ----------------
+TRESTNEW
+----------------
+
+TRESTNEW, Cannot restart transaction because the restart cannot undo an argumentless or exclusive NEW done after its TSTART
+
+Run Time Error: This indicates that a TRESTART command, or an implicit restart, of a transaction could not be done because an argumentless or exclusive NEW followed its TSTART in Direct Mode, or in a ZBREAK, ZSTEP or device EXCEPTION action. Such a NEW lasts beyond the point to which a restart returns, so the local variables cannot be restored to their state at the TSTART. The accompanying TRESTLOC message identifies where the transaction started and where the restart was attempted. The transaction is left as it was before the restart, so an error handler can TROLLBACK it.
+
+Action: Move the TSTART, the NEW and the rest of the transaction into a routine or an XECUTE, or do the NEW before the TSTART.
+
+----------------
 TRESTNOT
 ----------------
 
