@@ -1,6 +1,6 @@
 .. ###############################################################
 .. #                                                             #
-.. # Copyright (c) 2017-2025 YottaDB LLC and/or its subsidiaries.#
+.. # Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.#
 .. # All rights reserved.                                        #
 .. #                                                             #
 .. # Portions Copyright (c) Fidelity National                    #
@@ -859,7 +859,7 @@ This routine is an example of how $ETRAP handling can be coded to perform the sa
 Terminating Execution on an Error
 +++++++++++++++++++++++++++++++++
 
-If both $ETRAP and $ZTRAP are set to the empty string upon encountering an error, the current level is discarded and the error is reissued at the invoking level. When already at the lowest M stack level, YottaDB terminates routine execution and returns control to the shell level. If $ZTRAP is used exclusively, $ZTRAP="" suppresses the unstacking of NEWed values of $ZTRAP associated with lower levels. $ETRAP values are always unstacked, however if the lowest level $ETRAP is the empty string (which it is by default when YottaDB starts), YottaDB performs the same termination as it does with $ZTRAP. These terminations with both ISVs empty provides a mechanism for returning to the shell with a status message when YottaDB encounters an error.
+If both $ETRAP and $ZTRAP are set to the empty string upon encountering an error, the current level is discarded and the error is reissued at the invoking level. When already at the lowest M stack level, YottaDB terminates routine execution and returns control to the shell level. If $ZTRAP is used exclusively, $ZTRAP="" suppresses the unstacking of NEWed values of $ZTRAP associated with lower levels. $ETRAP values are always unstacked, however if the lowest level $ETRAP is the empty string (which it is by default when YottaDB starts), YottaDB performs the same termination as it does with $ZTRAP. These terminations with both ISVs empty provide a mechanism for returning to the shell, with an exit status derived from the error, when YottaDB encounters an error.
 
 Example:
 
@@ -876,11 +876,11 @@ Example:
 
    YDB>do ^EP7
    THIS IS EP7
-   %YDB-E-UNDEF, Undefined local variable: A
-   %YDB-I-RTSLOC, At M source location BAD^EP7
+   $ echo $?
+   218
    $
 
-YottaDB issues a message describing the M error and releases control to the shell.
+YottaDB releases control to the shell without issuing a message. The exit status of the process is derived from the error: 218 for LVUNDEF in this example.
 
 When the action specified by $ZTRAP results in another run-time error before changing the value of $ZTRAP, the routine may iteratively invoke $ZTRAP until a stack overflow terminates the YottaDB image. SETting $ZTRAP="" at the beginning of error processing ensures that this type of infinite loop does not occur. Because $ETRAP is implicitly followed by a QUIT it does not have the tendency to recurse. While $ETRAP is resistant to recursion, it is not completely immune, because a GOTO or a ZGOTO within the same level can evade the implicit QUIT. $ETRAP error handling involving errors on more than one stack level can also be induced to recurse if $ECODE is inappropriately cleared before the errors at all levels have been properly dealt with.
 
