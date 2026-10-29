@@ -65,15 +65,34 @@ if [ "$ydb" = 1 ]; then
 		# YDB master. Therefore, return "master" for this case, unless the current branch corresponds to an
 		# open upstream YDB merge request.
 		target_branch=master
-		# Check if there is an open upstream YDB MR corresponding to the current YDBDoc branch
-		# 7957109 is the GitLab project ID the upstream YDB repository
-		curl -s -k "https://gitlab.com/api/v4/projects/7957109/merge_requests?scope=all&state=opened" > ydb_open_mrs.json
-		ydbdoc_branches=$(jq -r '.[] | "\(.source_branch) \(.iid)"' ydb_open_mrs.json)
-		ydbdoc_mr=$(echo "$ydbdoc_branches" | grep "$CI_COMMIT_BRANCH" | cut -f 2 -d " ")
-		if [[ $CI_COMMIT_BRANCH != "master" ]] && [[ "$ydbdoc_mr" != "" ]]; then
-			# The YDBDoc commit branch matches the branch an upstream YDB MR.
-			# In that case, return that branch as the YDB target branch.
-			target_branch=$ydbdoc_mr
+		# Check if there is an open upstream YDB MR from a branch with the same name as the current YDBDoc branch.
+		# 7957109 is the GitLab project ID of the upstream YDB repository. Ask for MRs from this exact source branch.
+		# Listing all open YDB MRs instead returns only the first page (20) of them, and matching the branch name
+		# against that list as a pattern also matches longer branch names that contain it.
+		# A YDBDoc change for a YDB issue (its commit title names one, e.g. "[YDB#NNNN]") usually goes with a YDB MR
+		# from a branch of the same name, and that YDB MR is often created a few seconds after this pipeline starts.
+		# So, for such a change, keep retrying the lookup for a while before falling back to master. The wait messages
+		# go to stderr because the caller reads the result of this script from stdout.
+		ydb_mr=""
+		if [[ $CI_COMMIT_BRANCH != "master" ]]; then
+			commit_title=${CI_COMMIT_TITLE:-$(git log -1 --format=%s)}
+			waited_secs=0
+			max_wait_secs=60
+			while true; do
+				curl -s -k "https://gitlab.com/api/v4/projects/7957109/merge_requests?scope=all&state=opened&source_branch=${CI_COMMIT_BRANCH}" > ydb_open_mrs.json
+				ydb_mr=$(jq -r --arg branch "$CI_COMMIT_BRANCH" '.[] | select(.source_branch == $branch) | .iid' ydb_open_mrs.json | head -1)
+				if [[ "$ydb_mr" != "" ]] || [[ ! "$commit_title" =~ YDB#[0-9] ]] || [[ $waited_secs -ge $max_wait_secs ]]; then
+					break
+				fi
+				echo "# Commit title names a YDB issue: wait 30 seconds for a YDB MR from branch [$CI_COMMIT_BRANCH] to be created (waited $waited_secs of $max_wait_secs seconds so far)" >&2
+				sleep 30
+				waited_secs=$((waited_secs + 30))
+			done
+		fi
+		if [[ "$ydb_mr" != "" ]]; then
+			# The YDBDoc commit branch matches the branch of an upstream YDB MR.
+			# In that case, return that MR as the YDB target branch.
+			target_branch=$ydb_mr
 		fi
 		echo $target_branch
 	else
