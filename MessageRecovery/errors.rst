@@ -4178,6 +4178,16 @@ Compile Time Error: This indicates that YottaDB did not encounter a valid expres
 
 Action: Look for missing expressions or extra delimiters, such as a space, comma, or colon.
 
+-----------------------
+EXPRTOODEEP
+-----------------------
+
+EXPRTOODEEP, Expression nesting depth exceeds maximum supported limit
+
+Compile / Run Time Error: An expression is nested more deeply than YottaDB can compile. The YottaDB limits are 1024 levels of nested expression items (unary operators, parenthesized expressions, function and extrinsic arguments, subscripts, indirection etc.) and 4096 levels of operators, for example in a chain of binary operators other than concatenation. The limits differ because each level of a nested expression item uses several times as much stack as an operator in a chain.
+
+Action: Fix the coding issue, for example by computing parts of the expression in separate commands. Exceeding these limits is a pathological error that is most likely to occur in generated code.
+
 --------------------------
 EXTCALLBOUNDS
 --------------------------
