@@ -14689,9 +14689,9 @@ TRESTLOC
 
 TRESTLOC, Transaction start: xxxx, Transaction failure: yyyy
 
-Run Time Error: This indicates that YottaDB detected a resource conflict that attempted to RESTART a transaction that did not enable RESTART. This message follows TRESTNOT error message, xxxx is the starting location for the transaction and yyyy is the point of failure.
+Run Time Error: This message follows a TRESTNOT or TRESTNEW error message, when a TRESTART command, or an implicit restart after a resource conflict, cannot restart a transaction. xxxx is the starting location of the transaction, which is the location of its outermost TSTART, and yyyy is the point of failure.
 
-Action: Enable RESTART with the initial TSTART command argument, or add external LOCKs to serialize the transaction.
+Action: Refer to the TRESTNOT or TRESTNEW error that this message follows.
 
 
 ------------------
@@ -14720,9 +14720,9 @@ TRESTNOT
 
 TRESTNOT, Cannot TRESTART, transaction is not restartable
 
-Run Time Error: This indicates that a TRESTART command attempted to RESTART a transaction that did not enable RESTART; the error occurs at the point of the initial TSTART, so all global updates within the transaction are rolled back and any local variables specified have their values as of the TSTART.
+Run Time Error: This indicates that a TRESTART command, or an implicit restart after a resource conflict, attempted to RESTART a transaction that cannot restart. If the outermost TSTART of the transaction did not enable RESTART, the error occurs at the point of that outermost TSTART, so all global updates within the transaction are rolled back, and any local variables that its TSTARTs specify have their values as of the outermost TSTART that specifies them. If the outermost TSTART was done at a Direct Mode prompt that a BREAK started in $ZTRAP code, in a ZBREAK, ZSTEP or device EXCEPTION action, or in Direct Mode itself, a restart cannot resume at that outermost TSTART, so the transaction is left as it was before the restart, and can be committed or rolled back. The accompanying TRESTLOC message identifies where the transaction started and where the restart was attempted.
 
-Action: Enable RESTART with the initial TSTART command argument, add external LOCKs to serialize the transaction, or eliminate the TRESTART command.
+Action: Enable RESTART with the outermost TSTART command argument, add external LOCKs to serialize the transaction, or eliminate the TRESTART command. If the outermost TSTART was done at such a Direct Mode prompt, do the transaction in a routine or an XECUTE instead.
 
 ------------------
 TRIG2NOTRIG
