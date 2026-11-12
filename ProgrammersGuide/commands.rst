@@ -4741,6 +4741,7 @@ The format of ZYDECODE command is:
 * If any subscript in the sequence of positive integers, represented by the number at the root node is missing then YottaDB issues a `GVUNDEF <../MessageRecovery/errors.html#gvundef>`_ or `LVUNDEF <../MessageRecovery/errors.html#lvundef>`_ error.
 * An indirection operator and an expression atom evaluating to a list of one or more ZYDECODE arguments form a legal argument for a ZYDECODE.
 * JSON arrays are decoded into M variables starting with subscript 0.
+* As M does not distinguish between strings and numbers, ZYDECODE stores a JSON string that is a canonical M number (for example, ``"123456"``) with a leading ``$CHAR(0)`` (for example, ``$CHAR(0)_"123456"``), so that ZYENCODE encodes it back as a JSON string and not as a JSON number. Likewise, ZYDECODE stores the JSON values ``true``, ``false``, and ``null``, which are not M data types, as ``$CHAR(0)_"true"``, ``$CHAR(0)_"false"``, and ``$CHAR(0)_"null"``. JSON strings that are not canonical M numbers (for example, ``"admin"`` or ``"0123"``) are stored unchanged. An application that needs only the value, and not its JSON type, can remove the leading ``$CHAR(0)``.
 
 .. note::
 
@@ -4802,6 +4803,7 @@ The format of ZYENCODE command is:
 * If $DATA(glvn2) is 0 then YottaDB issues a `ZYENCODESRCUNDEF <..//MessageRecovery/errors.html#zyencodesrcundef>`_ error.
 * An indirection operator and an expression atom evaluating to a list of one or more ZYENCODE arguments form a legal argument for a ZYENCODE.
 * M variables starting a subscript level with 0, with successive integer subscripts at the same level, with no other subscripts not matching that series, are encoded as JSON arrays, otherwise they are encoded as JSON objects.
+* ZYENCODE encodes a value that is ``$CHAR(0)`` followed by a canonical M number as a JSON string containing that number (for example, ``$CHAR(0)_"123456"`` as ``"123456"``), and encodes the values ``$CHAR(0)_"true"``, ``$CHAR(0)_"false"``, and ``$CHAR(0)_"null"`` as the JSON values ``true``, ``false``, and ``null``. This is the format in which ZYDECODE stores these JSON values, so they round-trip unchanged.
 
 .. note::
 
