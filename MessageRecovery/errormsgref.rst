@@ -3226,6 +3226,8 @@ Some messages can have more than one number,, depending on where they are issued
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381706 | TRIGREPLSTATE, Trigger cannot update replicated database file dddd since triggering update was not replicated                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 151028298 | TRIGSUBS2BIG, Trigger definition for global ^gggg with subscripts ssss has a subscript that is too long to fit in a key with the current collation of the global       |
++-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381818 | TRIGSUBSCRANGE, Trigger definition for global ^gggg has one or more invalid subscript range(s) : ssss                                                                  |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | 150381738 | TRIGTCOMMIT, TCOMMIT at $ZTLEVEL=LLLL not allowed as corresponding TSTART was done at lower $ZTLEVEL=BBBB                                                              |

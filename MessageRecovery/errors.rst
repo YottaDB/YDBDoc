@@ -14869,6 +14869,16 @@ Run Time Error: A process performed an update on a global in a database region w
 Action: Investigate whether the global directories, journaling characteristics or trigger logic need revision.
 
 -------------------
+TRIGSUBS2BIG
+-------------------
+
+TRIGSUBS2BIG, Trigger definition for global ^gggg with subscripts ssss has a subscript that is too long to fit in a key with the current collation of the global
+
+Trigger/Run Time Error: An update of global gggg loaded a trigger whose subscript specification ssss has a subscript that, with the current collation of the global, is too long to fit in a key. $ZTRIGGER() and MUPIP TRIGGER reject such a trigger when it is added, but the collation of a global can change after the trigger is added (for example, with ^%GBLDEF when the global has no data). The update fails, and every update of the global issues this error until the trigger is deleted. The TRIGIS message that follows gives the name of the trigger.
+
+Action: Delete the trigger with $ZTRIGGER() or MUPIP TRIGGER, or restore the collation that the global had when the trigger was added. If needed, add the trigger again with subscripts that fit in a key with the current collation of the global.
+
+-------------------
 TRIGSUBSCRANGE
 -------------------
 
